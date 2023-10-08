@@ -41,15 +41,22 @@ public class OtherTests {
                 "key2": #array
             }
             """;
-        var json =
+        var json1 =
             """
             {
                 "key1": [1, 10, 100],
                 "key2": [100, 1000, [10, 10000]]
             }
             """;
+        var json2 =
+            """
+            {
+                "key1": [10.5, "test", 500],
+                "key2": ["test", 1000, [10.7, 10000]]
+            }
+            """;
         var jsonAssert = new JsonAssert(schema);
-        jsonAssert.isValid(json);
-        jsonAssert.isValid(json);
+        jsonAssert.isValid(json1);
+        jsonAssert.isValid(json2);
     }
 }
