@@ -1,10 +1,10 @@
 package com.relogiclabs.json.schema;
 
+import com.relogiclabs.json.schema.internal.util.DebugUtils;
 import com.relogiclabs.json.schema.message.MessageFormatter;
 import com.relogiclabs.json.schema.tree.JsonTree;
 import com.relogiclabs.json.schema.tree.RuntimeContext;
 import com.relogiclabs.json.schema.tree.SchemaTree;
-import com.relogiclabs.json.schema.util.DebugUtils;
 import lombok.Getter;
 
 /**
@@ -26,6 +26,11 @@ public class JsonAssert {
         schemaTree = new SchemaTree(runtime, schema);
     }
 
+    /**
+     * Tests whether the input JSON string conforms to the Schema specified
+     * in the {@link JsonAssert} constructor.
+     * @param jsonActual The actual JSON to conform or validate
+     */
     public void isValid(String jsonActual) {
         runtime.getExceptions().clear();
         var jsonTree = new JsonTree(runtime, jsonActual);
