@@ -19,12 +19,12 @@ public abstract class JNumber extends JPrimitive {
 
     public double compare(double other) {
         double number = toDouble();
-        if(isDoubleEqual(number, other)) return 0;
+        if(areEqual(number, other)) return 0;
         return Math.signum(number - other);
     }
 
-    public boolean isDoubleEqual(double value1, double value2) {
-        return getRuntime().isDoubleEqual(value1, value2);
+    public boolean areEqual(double value1, double value2) {
+        return getRuntime().areEqual(value1, value2);
     }
 
     @Override

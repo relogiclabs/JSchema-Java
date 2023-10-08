@@ -3,7 +3,7 @@ package com.relogiclabs.json.schema.types;
 import lombok.EqualsAndHashCode;
 
 @EqualsAndHashCode
-public class JNull extends JPrimitive implements JsonTypable {
+public class JNull extends JPrimitive {
 
     public static final String NULL_MARKER = "null";
 

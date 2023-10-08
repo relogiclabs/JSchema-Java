@@ -12,7 +12,7 @@ import static java.util.Objects.requireNonNull;
 @EqualsAndHashCode
 public class JInclude extends JDirective {
     public static final String INCLUDE_MARKER = "%include";
-    public final String className;
+    private final String className;
 
     private JInclude(Builder builder) {
         super(builder.relations, builder.context);

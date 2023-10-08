@@ -9,9 +9,9 @@ import lombok.experimental.Accessors;
 @EqualsAndHashCode
 public class JVersion extends JDirective {
     public static final String VERSION_MARKER = "%version";
-    public final String version;
+    private final String version;
 
-    protected JVersion(Builder builder) {
+    private JVersion(Builder builder) {
         super(builder.relations, builder.context);
         this.version = builder.version;
     }

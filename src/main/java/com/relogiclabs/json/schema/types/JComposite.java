@@ -6,7 +6,7 @@ import java.util.Collection;
 import java.util.Map;
 
 public abstract class JComposite extends JBranch implements JsonTypable {
-    public JComposite(Map<JNode, JNode> relations, Context context) {
+    protected JComposite(Map<JNode, JNode> relations, Context context) {
         super(relations, context);
     }
 

@@ -1,4 +1,4 @@
-package com.relogiclabs.json.schema.time;
+package com.relogiclabs.json.schema.internal.time;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

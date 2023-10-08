@@ -1,4 +1,4 @@
-package com.relogiclabs.json.schema.time;
+package com.relogiclabs.json.schema.internal.time;
 
 import com.relogiclabs.json.schema.exception.InvalidDateTimeException;
 import lombok.Getter;
@@ -42,7 +42,6 @@ public class DateTimeContext {
     private static final int[] DAYS_IN_MONTH = { 0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
     private static final Map<String, Integer> MONTHS = new HashMap<>();
     private static final Map<String, Integer> WEEKDAYS = new HashMap<>();
-
 
     static {
         addMonth("january", "jan", 1);

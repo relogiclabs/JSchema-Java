@@ -1,9 +1,9 @@
-package com.relogiclabs.json.schema.time;
+package com.relogiclabs.json.schema.internal.time;
 
 import com.relogiclabs.json.schema.exception.InvalidDateTimeException;
 import com.relogiclabs.json.schema.internal.antlr.DateTimeLexer;
+import com.relogiclabs.json.schema.internal.util.DebugUtils;
 import com.relogiclabs.json.schema.internal.util.LexerErrorListener;
-import com.relogiclabs.json.schema.util.DebugUtils;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.Token;
 

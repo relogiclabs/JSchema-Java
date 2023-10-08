@@ -25,7 +25,7 @@ public class JProperty extends JBranch implements Keyable<String> {
     private final String key;
     private final JNode value;
 
-    public JProperty(Builder builder) {
+    private JProperty(Builder builder) {
         super(builder.relations, builder.context);
         this.key = requireNonNull(builder.key);
         this.value = requireNonNull(builder.value);

@@ -4,7 +4,6 @@ import com.relogiclabs.json.schema.message.ErrorDetail;
 import lombok.Getter;
 
 public class CommonException extends RuntimeException {
-
     @Getter
     private String code;
 

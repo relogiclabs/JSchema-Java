@@ -23,13 +23,14 @@ public class CollectionHelper {
 
     public static Set<String> containsKeys(IndexMap<String, JProperty> map, JString... keys) {
         Set<String> set = Arrays.stream(keys).map(JString::getValue).collect(toSet());
-        map.values().stream().filter(p -> set.remove(p.getKey())).forEach(p -> {});
+        map.values().stream().forEach(p -> set.remove(p.getKey()));
         return set;
     }
 
     public static Set<JNode> containsValues(IndexMap<String, JProperty> map, JNode... values) {
+        // Here values should be distinct on parameter
         Set<JNode> set = Arrays.stream(values).collect(toSet());
-        map.values().stream().filter(p -> set.remove(p.getValue())).forEach(p -> {});
+        map.values().stream().forEach(p -> set.remove(p.getValue()));
         return set;
     }
 }

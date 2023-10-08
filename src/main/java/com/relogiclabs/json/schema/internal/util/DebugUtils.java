@@ -1,6 +1,6 @@
-package com.relogiclabs.json.schema.util;
+package com.relogiclabs.json.schema.internal.util;
 
-import com.relogiclabs.json.schema.time.DateTimeContext;
+import com.relogiclabs.json.schema.internal.time.DateTimeContext;
 import com.relogiclabs.json.schema.tree.JsonTree;
 import com.relogiclabs.json.schema.tree.SchemaTree;
 import org.antlr.v4.runtime.Parser;

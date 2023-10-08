@@ -1,4 +1,4 @@
-package com.relogiclabs.json.schema.time;
+package com.relogiclabs.json.schema.internal.time;
 
 import com.relogiclabs.json.schema.exception.InvalidDateTimeException;
 import org.antlr.v4.runtime.Token;
@@ -43,7 +43,7 @@ import static java.util.regex.Pattern.compile;
 import static org.apache.commons.lang3.StringUtils.replaceChars;
 import static org.apache.commons.lang3.StringUtils.substring;
 
-public abstract class SegmentProcessor {
+abstract class SegmentProcessor {
 
     private static final Pattern EraRegex = compile("^(BC|AD)", CASE_INSENSITIVE);
     private static final Pattern YearNum4Regex = compile("^(\\d{4})");

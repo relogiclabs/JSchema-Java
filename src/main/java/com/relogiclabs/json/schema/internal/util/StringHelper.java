@@ -4,7 +4,8 @@ import com.relogiclabs.json.schema.types.JNode;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.Collection;
-import java.util.stream.Collectors;
+
+import static java.util.stream.Collectors.joining;
 
 public class StringHelper {
     private StringHelper() {
@@ -56,19 +57,19 @@ public class StringHelper {
         return target;
     }
 
-    public static String toUnitedString(Collection<? extends JNode> list, String delimiter,
-                                        String prefix, String suffix) {
-        String result = list.stream().map(JNode::toString).collect(Collectors.joining(delimiter));
+    public static String join(Collection<? extends JNode> list, String delimiter,
+                              String prefix, String suffix) {
+        String result = list.stream().map(JNode::toString).collect(joining(delimiter));
         if(!result.isEmpty()) return prefix + result + suffix;
         return result;
     }
 
-    public static String toUnitedString(Collection<? extends JNode> list, String delimiter, String prefix) {
-        return toUnitedString(list, delimiter, prefix, "");
+    public static String join(Collection<? extends JNode> list, String delimiter, String prefix) {
+        return join(list, delimiter, prefix, "");
     }
 
-    public static String toUnitedString(Collection<? extends JNode> list, String delimiter) {
-        return toUnitedString(list, delimiter, "", "");
+    public static String join(Collection<? extends JNode> list, String delimiter) {
+        return join(list, delimiter, "", "");
     }
 
     public static String concat(Object s1, Object s2) {
