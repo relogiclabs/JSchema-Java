@@ -37,7 +37,7 @@ Let's explore an example of our schema for a typical JSON API response containin
     }
 }
 ```
-In the above example, two types of constraint or rule descriptors are used: constraint functions (also known as validation functions, such as `@range(1, 10000)`) and constraint data types (also known as validation data types, such as `#integer`). All constraint functions begin with the `@` symbol, while all constraint data types start with `#`. C-style comments are also permitted in the schema. Please note that `address` can be `null` (eg. an optional input for users) and if it is `null` then no constraints of `address` are applicable. The following JSON is one of the examples which can successfully validate against the above schema. To start your journey with the JSON validation library, please consult the documentation available [here](https://relogiclabs.github.io/JsonSchema-DotNet/articles/intro.html).
+In the above example, two types of constraint or rule descriptors are used: constraint functions (also known as validation functions, such as `@range(1, 10000)`) and constraint data types (also known as validation data types, such as `#integer`). All constraint functions begin with the `@` symbol, while all constraint data types start with `#`. C-style comments are also permitted in the schema. Please note that `address` can be `null` (eg. an optional input for users) and if it is `null` then no constraints of `address` are applicable. The following JSON is one of the examples which can successfully validate against the above schema. To start your journey with the JSON validation library, please consult the documentation available [here](https://relogiclabs.github.io/JsonSchema-Java/articles/intro).
 ```json
 {
     "user": {
@@ -63,7 +63,7 @@ In the above example, two types of constraint or rule descriptors are used: cons
 }
 ```
 ## Extended Example
-The next example represents an expanded version of the previous one, which brings more complexity. To effectively construct such schemas with multiple layers of nested structures, it's beneficial to have a fundamental understanding of this schema format. While the syntax may seem difficult at first, it becomes straightforward once you have a basic understanding of it. For more detailed information, reference documentation is available [here](https://relogiclabs.github.io/JsonSchema-DotNet/articles/intro.html).
+The next example represents an expanded version of the previous one, which brings more complexity. To effectively construct such schemas with multiple layers of nested structures, it's beneficial to have a fundamental understanding of this schema format. While the syntax may seem difficult at first, it becomes straightforward once you have a basic understanding of it. For more detailed information, reference documentation is available [here](https://relogiclabs.github.io/JsonSchema-Java/articles/intro).
 ```cpp
 %title: "Extended User Profile Dashboard API Response"
 %version: 2.0.0
@@ -220,4 +220,4 @@ The subsequent JSON sample is an illustrative example that successfully validate
     }
 }
 ```
-For more information about the schema syntax format and library functionalities, please refer to the reference documentation [here](https://relogiclabs.github.io/JsonSchema-DotNet/api/index.html).
+For more information about the schema syntax format and library functionalities, please refer to the reference documentation [here](https://relogiclabs.github.io/JsonSchema-Java/api/index.html).
