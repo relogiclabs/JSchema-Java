@@ -6,14 +6,14 @@ import lombok.EqualsAndHashCode;
 public class JUndefined extends JLeaf {
     public static final String UNDEFINED_MARKER = "!";
 
-    public JUndefined(Builder builder) {
+    private JUndefined(Builder builder) {
         super(builder.relations, builder.context);
     }
 
     public static Builder builder() {
         return new Builder();
     }
-    
+
     @Override
     public boolean match(JNode node) {
         return true;

@@ -1,0 +1,247 @@
+<!doctype html><html lang=en><head><meta charset=utf-8><meta http-equiv=x-ua-compatible content="ie=edge"><title>Specification - Json Schema</title><meta name=viewport content="width=device-width,initial-scale=1"><link rel=icon href=https://relogiclabs.github.io/JsonSchema-Java/favicon.ico><link rel=stylesheet href=/JsonSchema-Java/css/style.min.41a4e7d0a42107faafb72a9a4a48b19d588103a47ebcd6bb45a2b5f7be80886e.css></head><body class='page page-default-single'><div id=main-menu-mobile class=main-menu-mobile><ul><li class=menu-item-home><a href=/JsonSchema-Java/><span>Home</span></a></li><li class=menu-item-articles><a href=/JsonSchema-Java/articles/intro><span>Articles</span></a></li></ul></div><div class=wrapper><div class=header><div class=container><div class=logo><a href=https://relogiclabs.github.io/JsonSchema-Java><img alt=Logo src=/JsonSchema-Java/images/logo.svg></a></div><div class=logo-mobile><a href=https://relogiclabs.github.io/JsonSchema-Java><img width=70 height=70 alt=Logo src=/JsonSchema-Java/images/logo-mobile.svg></a></div><div id=main-menu class=main-menu><ul><li class=menu-item-home><a href=/JsonSchema-Java/><span>Home</span></a></li><li class=menu-item-articles><a href=/JsonSchema-Java/articles/intro><span>Articles</span></a></li></ul></div><button id=toggle-main-menu-mobile class="hamburger hamburger--slider" type=button>
+<span class=hamburger-box><span class=hamburger-inner></span></span></button></div></div><div class="container pt-2 pt-md-6 pb-3 pb-md-6"><div class=row><div class="col-12 col-md-3 mb-3"><div class=sidebar><div class=docs-menu><h4>Articles</h4><ul><li><a href=https://relogiclabs.github.io/JsonSchema-Java/articles/intro/>Introduction</a></li><li><a href=https://relogiclabs.github.io/JsonSchema-Java/articles/quickstart/>Quick Start</a></li><li><a href=https://relogiclabs.github.io/JsonSchema-Java/articles/validation/>Validation Syntax</a></li><li><a href=https://relogiclabs.github.io/JsonSchema-Java/articles/directives/>Directives</a></li><li class=active><a href=https://relogiclabs.github.io/JsonSchema-Java/articles/specification/>Specification</a></li><li><a href=https://relogiclabs.github.io/JsonSchema-Java/articles/datatypes/>Data Types</a></li><li><a href=https://relogiclabs.github.io/JsonSchema-Java/articles/functions/>Functions</a></li><li><a href=https://relogiclabs.github.io/JsonSchema-Java/articles/datetime/>Date and Time</a></li></ul></div></div></div><div class="col-12 col-md-9"><div class=content><h1 id=specification>Specification</h1><p>New JSON Schema is a vocabulary that allows you to describe the structure and constraints of JSON documents. It provides a way to define rules for validating the data in a JSON document. With JSON Schema, you can ensure that your JSON data follows a specific format and adheres to certain rules.</p><h2 id=grammar>Grammar</h2><p>The New JSON Schema grammar is introduced through a notation similar to what is known as the McKeeman form grammar notation, which is a simplified version of the Backus-Naur form and Extended Backus–Naur form. This form minimizes the usage of complex structures of meta-characters, making the grammar highly readable and easy to understand without requiring extensive prior knowledge of grammar syntax. Moreover, inside the grammar whitespace defining rules are ignored to make it clear and concise.</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-html data-lang=html><span class=line><span class=cl>schema
+</span></span><span class=line><span class=cl>    schema-header-opt defines-opt schema-core defines-opt
+</span></span><span class=line><span class=cl>    validator
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>schema-header-opt
+</span></span><span class=line><span class=cl>    title-opt version-opt includes-opt pragmas-opt
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>title-opt
+</span></span><span class=line><span class=cl>    &#39;&#39;
+</span></span><span class=line><span class=cl>    &#39;%title&#39; &#39;:&#39; string
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>version-opt
+</span></span><span class=line><span class=cl>    &#39;&#39;
+</span></span><span class=line><span class=cl>    &#39;%version&#39; &#39;:&#39; version-digits
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>version-digits
+</span></span><span class=line><span class=cl>    digits
+</span></span><span class=line><span class=cl>    digits &#39;.&#39; version-digits
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>includes-opt
+</span></span><span class=line><span class=cl>    &#39;&#39;
+</span></span><span class=line><span class=cl>    includes
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>includes
+</span></span><span class=line><span class=cl>    include includes
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>include
+</span></span><span class=line><span class=cl>    &#39;%include&#39; &#39;:&#39; class-identifier
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>class-identifier
+</span></span><span class=line><span class=cl>    identifier
+</span></span><span class=line><span class=cl>    identifier &#39;.&#39; class-identifier
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>pragmas-opt
+</span></span><span class=line><span class=cl>    &#39;&#39;
+</span></span><span class=line><span class=cl>    pragmas
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>pragmas
+</span></span><span class=line><span class=cl>    pragma pragmas
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>pragma
+</span></span><span class=line><span class=cl>    &#39;%pragma&#39; identifier &#39;:&#39; primitive
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>defines-opt
+</span></span><span class=line><span class=cl>    &#39;&#39;
+</span></span><span class=line><span class=cl>    defines
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>defines
+</span></span><span class=line><span class=cl>    define defines
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>define
+</span></span><span class=line><span class=cl>    &#39;%define&#39; alias-name &#39;:&#39; validator-main
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>alias-name
+</span></span><span class=line><span class=cl>    &#39;$&#39; identifier
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>schema-core
+</span></span><span class=line><span class=cl>    &#39;%schema&#39; &#39;:&#39; validator
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>validator
+</span></span><span class=line><span class=cl>    validator-main
+</span></span><span class=line><span class=cl>    alias-name
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>validator-main
+</span></span><span class=line><span class=cl>    value-opt functions-opt datatypes-opt this-opt
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>value-opt
+</span></span><span class=line><span class=cl>    &#39;&#39;
+</span></span><span class=line><span class=cl>    value
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>value
+</span></span><span class=line><span class=cl>    primitive
+</span></span><span class=line><span class=cl>    object
+</span></span><span class=line><span class=cl>    array
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>functions-opt
+</span></span><span class=line><span class=cl>    &#39;&#39;
+</span></span><span class=line><span class=cl>    functions
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>functions
+</span></span><span class=line><span class=cl>    function functions
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>function
+</span></span><span class=line><span class=cl>    function-name function-params-opt
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>function-name
+</span></span><span class=line><span class=cl>    &#39;@&#39; identifier
+</span></span><span class=line><span class=cl>    &#39;@&#39; identifier &#39;*&#39;
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>function-params-opt
+</span></span><span class=line><span class=cl>    &#39;&#39;
+</span></span><span class=line><span class=cl>    &#39;(&#39; &#39;)&#39;
+</span></span><span class=line><span class=cl>    &#39;(&#39; function-params &#39;)&#39;
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>function-params
+</span></span><span class=line><span class=cl>    value
+</span></span><span class=line><span class=cl>    value &#39;,&#39; function-params
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>datatypes-opt
+</span></span><span class=line><span class=cl>    &#39;&#39;
+</span></span><span class=line><span class=cl>    datatypes
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>datatypes
+</span></span><span class=line><span class=cl>    datatype datatypes
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>datatype
+</span></span><span class=line><span class=cl>    datatype-name datatype-param-opt
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>datatype-name
+</span></span><span class=line><span class=cl>    &#39;#&#39; alphas
+</span></span><span class=line><span class=cl>    &#39;#&#39; alphas &#39;*&#39;
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>alphas
+</span></span><span class=line><span class=cl>    alpha alphas
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>datatype-param-opt
+</span></span><span class=line><span class=cl>    &#39;&#39;
+</span></span><span class=line><span class=cl>    &#39;(&#39; alias-name &#39;)&#39;
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>this-opt
+</span></span><span class=line><span class=cl>    &#39;&#39;
+</span></span><span class=line><span class=cl>    &#39;?&#39;
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>object
+</span></span><span class=line><span class=cl>    &#39;{&#39; &#39;}&#39;
+</span></span><span class=line><span class=cl>    &#39;{&#39; properties &#39;}&#39;
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>properties
+</span></span><span class=line><span class=cl>    property
+</span></span><span class=line><span class=cl>    property &#39;,&#39; properties
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>property
+</span></span><span class=line><span class=cl>    string &#39;:&#39; validator
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>array
+</span></span><span class=line><span class=cl>    &#39;[&#39; &#39;]&#39;
+</span></span><span class=line><span class=cl>    &#39;[&#39; elements &#39;]&#39;
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>elements
+</span></span><span class=line><span class=cl>    validator
+</span></span><span class=line><span class=cl>    validator &#39;,&#39; elements
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>primitive
+</span></span><span class=line><span class=cl>    string
+</span></span><span class=line><span class=cl>    number
+</span></span><span class=line><span class=cl>    undefined
+</span></span><span class=line><span class=cl>    &#39;true&#39;
+</span></span><span class=line><span class=cl>    &#39;false&#39;
+</span></span><span class=line><span class=cl>    &#39;null&#39;
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>undefined
+</span></span><span class=line><span class=cl>    &#39;!&#39;
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>identifier
+</span></span><span class=line><span class=cl>    alpha
+</span></span><span class=line><span class=cl>    alpha alpha-numerics
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>alpha-numerics
+</span></span><span class=line><span class=cl>    alpha-numeric alpha-numerics
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>alpha-numeric
+</span></span><span class=line><span class=cl>    alpha
+</span></span><span class=line><span class=cl>    &#39;0&#39; . &#39;9&#39;
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>alpha
+</span></span><span class=line><span class=cl>    &#39;A&#39; . &#39;Z&#39;
+</span></span><span class=line><span class=cl>    &#39;a&#39; . &#39;z&#39;
+</span></span><span class=line><span class=cl>    &#39;_&#39;
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>string
+</span></span><span class=line><span class=cl>    &#39;&#34;&#39; characters &#39;&#34;&#39;
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>characters
+</span></span><span class=line><span class=cl>    &#39;&#39;
+</span></span><span class=line><span class=cl>    character characters
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>character
+</span></span><span class=line><span class=cl>    &#39;0020&#39; . &#39;10FFFF&#39; - &#39;&#34;&#39; - &#39;\&#39;
+</span></span><span class=line><span class=cl>    &#39;\&#39; escape
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>escape
+</span></span><span class=line><span class=cl>    &#39;&#34;&#39;
+</span></span><span class=line><span class=cl>    &#39;\&#39;
+</span></span><span class=line><span class=cl>    &#39;/&#39;
+</span></span><span class=line><span class=cl>    &#39;b&#39;
+</span></span><span class=line><span class=cl>    &#39;f&#39;
+</span></span><span class=line><span class=cl>    &#39;n&#39;
+</span></span><span class=line><span class=cl>    &#39;r&#39;
+</span></span><span class=line><span class=cl>    &#39;t&#39;
+</span></span><span class=line><span class=cl>    &#39;u&#39; hex hex hex hex
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>hex
+</span></span><span class=line><span class=cl>    digit
+</span></span><span class=line><span class=cl>    &#39;A&#39; . &#39;F&#39;
+</span></span><span class=line><span class=cl>    &#39;a&#39; . &#39;f&#39;
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>number
+</span></span><span class=line><span class=cl>    integer
+</span></span><span class=line><span class=cl>    float
+</span></span><span class=line><span class=cl>    double
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>integer
+</span></span><span class=line><span class=cl>    positive-integer
+</span></span><span class=line><span class=cl>    negative-integer
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>float
+</span></span><span class=line><span class=cl>    integer fraction
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>fraction
+</span></span><span class=line><span class=cl>    &#39;.&#39; digits
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>double
+</span></span><span class=line><span class=cl>    integer fraction-opt exponent
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>fraction-opt
+</span></span><span class=line><span class=cl>    &#39;&#39;
+</span></span><span class=line><span class=cl>    &#39;.&#39; digits
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>exponent
+</span></span><span class=line><span class=cl>    &#39;E&#39; sign-opt digits
+</span></span><span class=line><span class=cl>    &#39;e&#39; sign-opt digits
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>sign-opt
+</span></span><span class=line><span class=cl>    &#39;&#39;
+</span></span><span class=line><span class=cl>    &#39;+&#39;
+</span></span><span class=line><span class=cl>    &#39;-&#39;
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>positive-integer
+</span></span><span class=line><span class=cl>    digit
+</span></span><span class=line><span class=cl>    one-to-nine digits
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>negative-integer
+</span></span><span class=line><span class=cl>    &#39;-&#39; digit
+</span></span><span class=line><span class=cl>    &#39;-&#39; one-to-nine digits
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>digits
+</span></span><span class=line><span class=cl>    digit
+</span></span><span class=line><span class=cl>    digit digits
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>digit
+</span></span><span class=line><span class=cl>    &#39;0&#39;
+</span></span><span class=line><span class=cl>    one-to-nine
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>one-to-nine
+</span></span><span class=line><span class=cl>    &#39;1&#39; . &#39;9&#39;
+</span></span></code></pre></div><p>To explore more about McKeeman form grammar notation and standard JSON document grammar in McKeeman form notation, please visit <a href=https://www.json.org>this page</a>. The resource offers valuable information regarding JSON specification and implementations in different programming languages.</p></div></div></div></div></div></div><div class=sub-footer><div class=container><div class=row><div class=col-12><div class=sub-footer-inner><div class=copyright>© <a href=https://www.relogiclabs.com>Relogic Labs</a>. All rights reserved.</div></div></div></div></div></div><script type=text/javascript src=/JsonSchema-Java/js/scripts.min.302a6fc365d5139fb98cf60bdb8f715d96257ea189161d36c190ccfa8182e569.js></script></body></html>

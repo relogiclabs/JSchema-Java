@@ -8,7 +8,7 @@ public class AggregatedTests {
     public void When_SchemaAggregatedTest_ValidTrue() {
         var schema = """
         %title: "Example Schema For Some Json HTTP Request or Response"
-        %version: 1.0.1
+        %version: 2023.09.11
         %include: com.relogiclabs.json.schema.positive.ExternalFunctions
         %pragma IgnoreUndefinedProperties: true
 

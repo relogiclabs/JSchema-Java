@@ -37,7 +37,7 @@ public class JDouble extends JNumber implements PragmaValue<Double> {
     public boolean match(JNode node) {
         var other = castType(node, JDouble.class);
         if(other == null) return false;
-        if (isDoubleEqual(value, other.value)) return true;
+        if(areEqual(value, other.value)) return true;
         return failWith(new JsonSchemaException(
                 new ErrorDetail(DUBL01, ValueMismatch),
                 ExpectedHelper.asValueMismatch(this),

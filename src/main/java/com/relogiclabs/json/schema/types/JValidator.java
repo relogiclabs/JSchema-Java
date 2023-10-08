@@ -16,7 +16,7 @@ import java.util.List;
 import static com.relogiclabs.json.schema.internal.message.MessageHelper.ValidationFailed;
 import static com.relogiclabs.json.schema.internal.util.StreamHelper.allTrue;
 import static com.relogiclabs.json.schema.internal.util.StreamHelper.anyTrue;
-import static com.relogiclabs.json.schema.internal.util.StringHelper.toUnitedString;
+import static com.relogiclabs.json.schema.internal.util.StringHelper.join;
 import static com.relogiclabs.json.schema.message.ErrorCode.VALD01;
 import static java.util.Collections.unmodifiableCollection;
 
@@ -31,7 +31,7 @@ public class JValidator extends JBranch {
     private final List<JDataType> dataTypes;
     private final boolean optional;
 
-    public JValidator(Builder builder) {
+    private JValidator(Builder builder) {
         super(builder.relations, builder.context);
         this.value = builder.value;
         this.functions = builder.functions;
@@ -100,8 +100,8 @@ public class JValidator extends JBranch {
     public String toString() {
         StringBuilder builder = new StringBuilder();
         if(value != null) builder.append(value);
-        builder.append(toUnitedString(functions, " ", " "));
-        builder.append(toUnitedString(dataTypes, " ", " "));
+        builder.append(join(functions, " ", " "));
+        builder.append(join(dataTypes, " ", " "));
         if(optional) builder.append(" " + OPTIONAL_MARKER);
         return builder.toString().trim();
     }

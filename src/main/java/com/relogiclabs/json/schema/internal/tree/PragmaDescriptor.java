@@ -15,7 +15,7 @@ public class PragmaDescriptor<T> {
     public static final PragmaDescriptor<Boolean> IGNORE_UNDEFINED_PROPERTIES
             = new PragmaDescriptor<>("IgnoreUndefinedProperties", JBoolean.class, false);
     public static final PragmaDescriptor<Double> FLOATING_POINT_TOLERANCE
-            = new PragmaDescriptor<>("FloatingPointTolerance", JNumber.class, 1E-7);
+            = new PragmaDescriptor<>("FloatingPointTolerance", JNumber.class, 1E-10);
     public static final PragmaDescriptor<Boolean> IGNORE_OBJECT_PROPERTY_ORDER
             = new PragmaDescriptor<>("IgnoreObjectPropertyOrder", JBoolean.class, true);
 

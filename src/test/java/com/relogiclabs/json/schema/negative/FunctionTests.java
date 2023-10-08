@@ -3,6 +3,7 @@ package com.relogiclabs.json.schema.negative;
 import com.relogiclabs.json.schema.JsonAssert;
 import com.relogiclabs.json.schema.exception.ClassInstantiationException;
 import com.relogiclabs.json.schema.exception.DuplicateIncludeException;
+import com.relogiclabs.json.schema.exception.FunctionMismatchException;
 import com.relogiclabs.json.schema.exception.FunctionNotFoundException;
 import com.relogiclabs.json.schema.exception.InvalidFunctionException;
 import com.relogiclabs.json.schema.exception.InvalidIncludeException;
@@ -15,11 +16,30 @@ import static com.relogiclabs.json.schema.message.ErrorCode.CLAS03;
 import static com.relogiclabs.json.schema.message.ErrorCode.CLAS04;
 import static com.relogiclabs.json.schema.message.ErrorCode.FUNC01;
 import static com.relogiclabs.json.schema.message.ErrorCode.FUNC02;
+import static com.relogiclabs.json.schema.message.ErrorCode.FUNC03;
 import static com.relogiclabs.json.schema.message.ErrorCode.FUNC05;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class FunctionTests {
+
+    @Test
+    public void When_FunctionAppliedOnWrongType_ExceptionThrown() {
+        var schema =
+                """
+                %schema: @range(10, 20)
+                """;
+        var json =
+                """
+                "test"
+                """;
+
+        //JsonSchema.IsValid(schema, json);
+        var exception = assertThrows(FunctionMismatchException.class,
+                () -> JsonAssert.isValid(schema, json));
+        assertEquals(FUNC03, exception.getCode());
+        exception.printStackTrace();
+    }
 
     @Test
     public void When_ExternalIncludeNotInheritBaseClass_ExceptionThrown() {

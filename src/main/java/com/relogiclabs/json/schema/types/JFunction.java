@@ -16,18 +16,18 @@ import java.util.List;
 import static com.relogiclabs.json.schema.internal.message.MessageHelper.InvalidNestedFunction;
 import static com.relogiclabs.json.schema.internal.util.MiscellaneousHelper.nonNull;
 import static com.relogiclabs.json.schema.internal.util.StreamHelper.allTrue;
-import static com.relogiclabs.json.schema.internal.util.StringHelper.toUnitedString;
+import static com.relogiclabs.json.schema.internal.util.StringHelper.join;
 import static com.relogiclabs.json.schema.message.ErrorCode.FUNC06;
 import static java.util.Objects.requireNonNull;
 
 @Getter
 @EqualsAndHashCode
 public class JFunction extends JBranch implements NestedMode {
-    public final String name;
-    public final List<JNode> arguments;
-    public final boolean nested;
+    private final String name;
+    private final List<JNode> arguments;
+    private final boolean nested;
 
-    public JFunction(Builder builder) {
+    private JFunction(Builder builder) {
         super(builder.relations, builder.context);
         this.name = requireNonNull(builder.name);
         this.arguments = requireNonNull(builder.arguments);
@@ -77,16 +77,16 @@ public class JFunction extends JBranch implements NestedMode {
     public String toString() {
         StringBuilder builder = new StringBuilder(name);
         if(nested) builder.append(NestedMode.NESTED_MARKER);
-        builder.append(toUnitedString(arguments, ", ", "(", ")"));
+        builder.append(join(arguments, ", ", "(", ")"));
         return builder.toString();
     }
 
     @Setter
     @Accessors(fluent = true)
     public static class Builder extends JNode.Builder<Builder> {
-        public String name;
-        public List<JNode> arguments;
-        public boolean nested;
+        protected String name;
+        protected List<JNode> arguments;
+        protected boolean nested;
 
         @Override
         public JFunction build() {

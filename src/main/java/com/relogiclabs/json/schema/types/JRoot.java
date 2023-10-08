@@ -1,6 +1,5 @@
 package com.relogiclabs.json.schema.types;
 
-import com.relogiclabs.json.schema.internal.util.StringHelper;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -10,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import static com.relogiclabs.json.schema.internal.util.StringHelper.join;
 import static java.util.Collections.unmodifiableCollection;
 import static java.util.Objects.requireNonNull;
 
@@ -26,7 +26,7 @@ public class JRoot extends JNode {
     private final JNode value;
     private Collection<JNode> children;
 
-    protected JRoot(Builder builder) {
+    private JRoot(Builder builder) {
         super(builder.relations, builder.context);
         this.title = builder.title;
         this.version = builder.version;
@@ -92,7 +92,7 @@ public class JRoot extends JNode {
 
     private void appendTo(StringBuilder builder, List<? extends JNode> list) {
         if(list == null || list.isEmpty()) return;
-        builder.append(StringHelper.toUnitedString(list, NEW_LINE, "", NEW_LINE));
+        builder.append(join(list, NEW_LINE, "", NEW_LINE));
     }
 
     @Setter()

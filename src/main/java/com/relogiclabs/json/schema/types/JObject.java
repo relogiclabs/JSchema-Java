@@ -17,7 +17,7 @@ import static com.relogiclabs.json.schema.internal.message.MessageHelper.Propert
 import static com.relogiclabs.json.schema.internal.message.MessageHelper.PropertyOrderMismatch;
 import static com.relogiclabs.json.schema.internal.message.MessageHelper.UndefinedPropertyFound;
 import static com.relogiclabs.json.schema.internal.util.MiscellaneousHelper.nonNull;
-import static com.relogiclabs.json.schema.internal.util.StringHelper.toUnitedString;
+import static com.relogiclabs.json.schema.internal.util.StringHelper.join;
 import static com.relogiclabs.json.schema.message.ErrorCode.PROP05;
 import static com.relogiclabs.json.schema.message.ErrorCode.PROP06;
 import static com.relogiclabs.json.schema.message.ErrorCode.PROP07;
@@ -73,7 +73,7 @@ public class JObject extends JComposite {
         if(unresolved.size() > 0 && !getRuntime().getIgnoreUndefinedProperties()) {
             for(String key : unresolved) {
                 var property = other.properties.get(key);
-                return failWith(new JsonSchemaException(
+                result &= failWith(new JsonSchemaException(
                         new ErrorDetail(PROP06, UndefinedPropertyFound),
                         ExpectedHelper.asUndefinedProperty(this, property),
                         ActualHelper.asUndefinedProperty(property)));
@@ -87,7 +87,7 @@ public class JObject extends JComposite {
         JProperty otherProp = null;
         if(!getRuntime().getIgnoreObjectPropertyOrder()) {
             var atProp = getPropAt(other.properties, index);
-            if(isKeyEquals(atProp, thisProp)) otherProp = atProp;
+            if(AreKeysEqual(atProp, thisProp)) otherProp = atProp;
             JProperty existing = null;
             if(otherProp == null) existing = other.properties.get(thisProp.getKey());
             if(otherProp == null && existing != null)
@@ -103,14 +103,14 @@ public class JObject extends JComposite {
         return index >= properties.size() ? null : properties.get(index);
     }
 
-    private boolean isKeyEquals(JProperty p1, JProperty p2) {
+    private boolean AreKeysEqual(JProperty p1, JProperty p2) {
         if(p1 == null || p2 == null) return false;
         return p1.getKey().equals(p2.getKey());
     }
 
     @Override
     public String toString() {
-        return "{" + toUnitedString(properties.values(), ", ") + "}";
+        return "{" + join(properties.values(), ", ") + "}";
     }
 
     @Override

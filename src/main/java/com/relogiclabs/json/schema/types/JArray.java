@@ -3,7 +3,6 @@ package com.relogiclabs.json.schema.types;
 import com.relogiclabs.json.schema.exception.JsonSchemaException;
 import com.relogiclabs.json.schema.internal.message.ActualHelper;
 import com.relogiclabs.json.schema.internal.message.ExpectedHelper;
-import com.relogiclabs.json.schema.internal.util.StringHelper;
 import com.relogiclabs.json.schema.message.ErrorDetail;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -14,13 +13,13 @@ import java.util.Collection;
 import java.util.List;
 
 import static com.relogiclabs.json.schema.internal.message.MessageHelper.ArrayElementNotFound;
+import static com.relogiclabs.json.schema.internal.util.StringHelper.join;
 import static com.relogiclabs.json.schema.message.ErrorCode.ARRY01;
 import static java.util.Objects.requireNonNull;
 
 @Getter
 @EqualsAndHashCode
 public class JArray extends JComposite {
-
     private final List<JNode> elements;
 
     private JArray(Builder builder) {
@@ -66,7 +65,7 @@ public class JArray extends JComposite {
 
     @Override
     public String toString() {
-        return "[" + StringHelper.toUnitedString(elements, ", ") + "]";
+        return "[" + join(elements, ", ") + "]";
     }
 
     @Setter

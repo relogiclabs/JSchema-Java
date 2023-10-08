@@ -4,9 +4,11 @@ import com.relogiclabs.json.schema.message.ActualDetail;
 import com.relogiclabs.json.schema.message.ErrorDetail;
 import com.relogiclabs.json.schema.message.ExpectedDetail;
 import com.relogiclabs.json.schema.tree.Context;
+import lombok.Getter;
 
 import static com.relogiclabs.json.schema.internal.util.MiscellaneousHelper.nonNull;
 
+@Getter
 public class JsonSchemaException extends CommonException {
 
     private final ExpectedDetail expected;

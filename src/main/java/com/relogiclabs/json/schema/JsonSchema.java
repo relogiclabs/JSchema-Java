@@ -1,10 +1,10 @@
 package com.relogiclabs.json.schema;
 
+import com.relogiclabs.json.schema.internal.util.DebugUtils;
 import com.relogiclabs.json.schema.message.MessageFormatter;
 import com.relogiclabs.json.schema.tree.JsonTree;
 import com.relogiclabs.json.schema.tree.RuntimeContext;
 import com.relogiclabs.json.schema.tree.SchemaTree;
-import com.relogiclabs.json.schema.util.DebugUtils;
 import lombok.Getter;
 
 import java.util.Queue;

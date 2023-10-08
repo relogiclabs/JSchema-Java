@@ -6,16 +6,24 @@ import com.relogiclabs.json.schema.message.ErrorDetail;
 import com.relogiclabs.json.schema.message.ExpectedDetail;
 import com.relogiclabs.json.schema.tree.RuntimeContext;
 import com.relogiclabs.json.schema.types.JArray;
+import com.relogiclabs.json.schema.types.JBoolean;
 import com.relogiclabs.json.schema.types.JNumber;
 import com.relogiclabs.json.schema.types.JObject;
 import com.relogiclabs.json.schema.types.JString;
 import com.relogiclabs.json.schema.types.JUndefined;
 
 import java.util.Arrays;
+import java.util.function.Supplier;
 
-import static com.relogiclabs.json.schema.internal.util.StringHelper.toUnitedString;
+import static com.relogiclabs.json.schema.internal.util.StringHelper.join;
 import static com.relogiclabs.json.schema.message.ErrorCode.ENUM01;
 import static com.relogiclabs.json.schema.message.ErrorCode.ENUM02;
+import static com.relogiclabs.json.schema.message.ErrorCode.MAXI01;
+import static com.relogiclabs.json.schema.message.ErrorCode.MAXI02;
+import static com.relogiclabs.json.schema.message.ErrorCode.MAXI03;
+import static com.relogiclabs.json.schema.message.ErrorCode.MINI01;
+import static com.relogiclabs.json.schema.message.ErrorCode.MINI02;
+import static com.relogiclabs.json.schema.message.ErrorCode.MINI03;
 import static com.relogiclabs.json.schema.message.ErrorCode.NEGI01;
 import static com.relogiclabs.json.schema.message.ErrorCode.NEMT01;
 import static com.relogiclabs.json.schema.message.ErrorCode.NEMT02;
@@ -31,11 +39,12 @@ public class CoreFunctions2 extends CoreFunctions1 {
         super(runtime);
     }
 
+    // enum is a keyword in Java but _ will be escaped
     public boolean _enum(JString target, JString... items) {
         var list = Arrays.asList(items);
         if(!list.contains(target)) return failWith(new JsonSchemaException(
                 new ErrorDetail(ENUM01, "String is not in enum list"),
-                new ExpectedDetail(function, "string in list ", toUnitedString(list, ", ", "[", "]")),
+                new ExpectedDetail(function, "string in list ", join(list, ", ", "[", "]")),
                 new ActualDetail(target, "string ", target, " is not found in list")));
         return true;
     }
@@ -44,8 +53,62 @@ public class CoreFunctions2 extends CoreFunctions1 {
         var list = Arrays.asList(items);
         if(!list.contains(target)) return failWith(new JsonSchemaException(
                 new ErrorDetail(ENUM02, "Number is not in enum list"),
-                new ExpectedDetail(function, "number in list ", toUnitedString(list, ", ", "[", "]")),
+                new ExpectedDetail(function, "number in list ", join(list, ", ", "[", "]")),
                 new ActualDetail(target, "number ", target, " is not found in list")));
+        return true;
+    }
+
+    public boolean minimum(JNumber target, JNumber minimum) {
+        if(target.compare(minimum) < 0)
+            return failWith(new JsonSchemaException(
+                    new ErrorDetail(MINI01, "Number is less than provided minimum"),
+                    new ExpectedDetail(function, "a number greater than or equal to ", minimum),
+                    new ActualDetail(target, "number ", target, " is less than ", minimum)));
+        return true;
+    }
+
+    public boolean minimum(JNumber target, JNumber minimum, JBoolean exclusive) {
+        Supplier<String> relationTo = () -> exclusive.getValue()
+                ? "greater than"
+                : "greater than or equal to";
+
+        if(target.compare(minimum) < 0)
+            return failWith(new JsonSchemaException(
+                    new ErrorDetail(MINI02, "Number is less than provided minimum"),
+                    new ExpectedDetail(function, "a number ", relationTo.get(), " ", minimum),
+                    new ActualDetail(target, "number ", target, " is less than ", minimum)));
+        if(exclusive.getValue() && target.compare(minimum) == 0)
+            return failWith(new JsonSchemaException(
+                    new ErrorDetail(MINI03, "Number is equal to provided minimum"),
+                    new ExpectedDetail(function, "a number ", relationTo.get(), " ", minimum),
+                    new ActualDetail(target, "number ", target, " is equal to ", minimum)));
+        return true;
+    }
+
+    public boolean maximum(JNumber target, JNumber maximum) {
+        if(target.compare(maximum) > 0)
+            return failWith(new JsonSchemaException(
+                    new ErrorDetail(MAXI01, "Number is greater than provided maximum"),
+                    new ExpectedDetail(function, "a number less than or equal ", maximum),
+                    new ActualDetail(target, "number ", target, " is greater than ", maximum)));
+        return true;
+    }
+
+    public boolean maximum(JNumber target, JNumber maximum, JBoolean exclusive) {
+        Supplier<String> relationTo = () -> exclusive.getValue()
+                ? "less than"
+                : "less than or equal to";
+
+        if(target.compare(maximum) > 0)
+            return failWith(new JsonSchemaException(
+                    new ErrorDetail(MAXI02, "Number is greater than provided maximum"),
+                    new ExpectedDetail(function, "a number ", relationTo.get(), " ", maximum),
+                    new ActualDetail(target, "number ", target, " is greater than ", maximum)));
+        if(exclusive.getValue() && target.compare(maximum) == 0)
+            return failWith(new JsonSchemaException(
+                    new ErrorDetail(MAXI03, "Number is equal to provided maximum"),
+                    new ExpectedDetail(function, "a number ", relationTo.get(), " ", maximum),
+                    new ActualDetail(target, "number ", target, " is equal to ", maximum)));
         return true;
     }
 

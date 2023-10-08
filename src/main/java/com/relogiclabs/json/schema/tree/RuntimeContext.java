@@ -81,7 +81,7 @@ public class RuntimeContext {
         return functionManager.invokeFunction(function, target);
     }
 
-    public boolean isDoubleEqual(double value1, double value2) {
+    public boolean areEqual(double value1, double value2) {
         return Math.abs(value1 - value2) < getFloatingPointTolerance();
     }
 

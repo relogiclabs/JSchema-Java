@@ -39,7 +39,7 @@ public class ExpectedHelper {
     }
 
     public static ExpectedDetail asPropertyNotFound(JProperty property) {
-        return new ExpectedDetail(property, "property schema (", property.getOutline(), ")");
+        return new ExpectedDetail(property, "property {", property.getOutline(), "}");
     }
 
     public static ExpectedDetail asUndefinedProperty(JObject object, JProperty property) {

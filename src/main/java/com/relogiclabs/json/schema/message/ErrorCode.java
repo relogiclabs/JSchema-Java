@@ -93,6 +93,12 @@ public interface ErrorCode {
     String JLEX01 = "JLEX01";
     String JPRS01 = "JPRS01";
     String KEYS01 = "KEYS01";
+    String MAXI01 = "MAXI01";
+    String MAXI02 = "MAXI02";
+    String MAXI03 = "MAXI03";
+    String MINI01 = "MINI01";
+    String MINI02 = "MINI02";
+    String MINI03 = "MINI03";
     String NEGI01 = "NEGI01";
     String NEMT01 = "NEMT01";
     String NEMT02 = "NEMT02";

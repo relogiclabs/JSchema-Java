@@ -21,8 +21,8 @@ import static java.util.Objects.requireNonNull;
 public class JPragma extends JDirective {
     public static final String PRAGMA_MARKER = "%pragma";
 
-    public final String name;
-    public final PragmaValue<?> value;
+    private final String name;
+    private final PragmaValue<?> value;
 
     private JPragma(Builder builder) {
         super(builder.relations, builder.context);

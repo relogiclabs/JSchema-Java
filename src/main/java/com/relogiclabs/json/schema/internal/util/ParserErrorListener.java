@@ -3,7 +3,6 @@ package com.relogiclabs.json.schema.internal.util;
 import com.relogiclabs.json.schema.exception.CommonException;
 import com.relogiclabs.json.schema.exception.JsonParserException;
 import com.relogiclabs.json.schema.exception.SchemaParserException;
-import com.relogiclabs.json.schema.util.DebugUtils;
 import org.antlr.v4.runtime.BaseErrorListener;
 import org.antlr.v4.runtime.RecognitionException;
 import org.antlr.v4.runtime.Recognizer;

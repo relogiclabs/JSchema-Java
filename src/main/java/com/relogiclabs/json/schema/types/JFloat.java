@@ -19,7 +19,7 @@ public class JFloat extends JNumber implements PragmaValue<Double> {
     private static final DecimalFormat FLOAT_FORMAT = new DecimalFormat("0.0##############");
     private final double value;
 
-    public JFloat(Builder builder) {
+    private JFloat(Builder builder) {
         super(builder.relations, builder.context);
         this.value = requireNonNull(builder.value);
     }
@@ -37,7 +37,7 @@ public class JFloat extends JNumber implements PragmaValue<Double> {
     public boolean match(JNode node) {
         var other = castType(node, JFloat.class);
         if(other == null) return false;
-        if(isDoubleEqual(value, other.value)) return true;
+        if(areEqual(value, other.value)) return true;
         return failWith(new JsonSchemaException(
                 new ErrorDetail(FLOT01, ValueMismatch),
                 ExpectedHelper.asValueMismatch(this),

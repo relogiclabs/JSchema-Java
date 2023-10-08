@@ -45,10 +45,12 @@ public abstract class JNode {
     public ParserRuleContext getParser() {
         return context.getParser();
     }
+
     public RuntimeContext getRuntime() {
         return context.getRuntime();
     }
-    public MessageFormatter getMessageFormatter() {
+
+    protected MessageFormatter getMessageFormatter() {
         return getRuntime().getMessageFormatter();
     }
 
@@ -72,7 +74,7 @@ public abstract class JNode {
         return createOutline(toString(), getMessageFormatter().getOutlineLength());
     }
 
-    public boolean failWith(CommonException exception) {
+    protected boolean failWith(CommonException exception) {
         return getRuntime().failWith(exception);
     }
 

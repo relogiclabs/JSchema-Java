@@ -1,9 +1,10 @@
 package com.relogiclabs.json.schema.types;
 
 import com.relogiclabs.json.schema.exception.InvalidDataTypeException;
+import com.relogiclabs.json.schema.internal.time.DateTimeValidator;
 import com.relogiclabs.json.schema.message.MessageFormatter;
-import com.relogiclabs.json.schema.time.DateTimeValidator;
 import com.relogiclabs.json.schema.tree.Location;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.antlr.v4.runtime.tree.TerminalNode;
 
@@ -13,6 +14,7 @@ import java.util.Map;
 import static com.relogiclabs.json.schema.message.ErrorCode.DTYP01;
 
 @Getter
+@AllArgsConstructor
 public enum JsonType {
     BOOLEAN("#boolean", JBoolean.class),
     STRING("#string", JString.class),
@@ -37,10 +39,6 @@ public enum JsonType {
     private final String name;
     private final Class<?> type;
 
-    JsonType(String name, Class<?> type) {
-        this.name = name;
-        this.type = type;
-    }
 
     static {
         typeMap = new HashMap<>();
