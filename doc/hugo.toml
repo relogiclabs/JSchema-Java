@@ -1,0 +1,10 @@
+baseURL = "https://relogiclabs.github.io/JsonSchema-Java"
+languageCode = "en-us"
+title = "New Json Schema"
+
+pygmentsCodeFences = true
+pygmentsCodefencesGuessSyntax = true
+pygmentsUseClasses = true
+
+[markup.goldmark.renderer]
+unsafe = true

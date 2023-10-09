@@ -1,0 +1,15 @@
+{{ $CurrentPage := . }}
+<div class="sidebar">
+    <ul>
+        {{ range .Site.Home.Sections.ByWeight }}
+        <li class="section-header {{ if eq .File.UniqueID $CurrentPage.File.UniqueID }}active{{ end }}">
+            <a href="{{ .RelPermalink }}">{{ .Title }}</a>
+        </li>
+        {{ range .Pages.ByWeight }}
+        <li class="section-item {{ if eq .File.UniqueID $CurrentPage.File.UniqueID }}active{{ end }}">
+            <a href="{{ .RelPermalink }}">{{ .Title }}</a>
+        </li>
+        {{ end }}
+        {{ end }}
+    </ul>
+</div>
