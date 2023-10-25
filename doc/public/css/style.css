@@ -54,10 +54,12 @@ ul, ol {
 
 table {
     margin: 20px 0;
+    width: 100%;
 }
 
 table, th, td {
     border: 1px solid #d7d7d7;
+    text-align: inherit;
     border-collapse: collapse;
     padding: 5px;
 }
