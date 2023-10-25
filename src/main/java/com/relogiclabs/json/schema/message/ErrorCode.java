@@ -16,7 +16,6 @@ public interface ErrorCode {
     String CLAS06 = "CLAS06";
     String CLAS07 = "CLAS07";
     String DCNF01 = "DCNF01";
-    String DCNF02 = "DCNF02";
     String DDAY01 = "DDAY01";
     String DDAY02 = "DDAY02";
     String DDAY03 = "DDAY03";
@@ -24,6 +23,7 @@ public interface ErrorCode {
     String DEFI01 = "DEFI01";
     String DEFI02 = "DEFI02";
     String DEFI03 = "DEFI03";
+    String DEFI04 = "DEFI04";
     String DERA01 = "DERA01";
     String DERA02 = "DERA02";
     String DFRC01 = "DFRC01";
@@ -63,6 +63,7 @@ public interface ErrorCode {
     String DTYP04 = "DTYP04";
     String DTYP05 = "DTYP05";
     String DTYP06 = "DTYP06";
+    String DTYP07 = "DTYP07";
     String DUBL01 = "DUBL01";
     String DUTC01 = "DUTC01";
     String DUTC02 = "DUTC02";
@@ -119,7 +120,6 @@ public interface ErrorCode {
     String PROP04 = "PROP04";
     String PROP05 = "PROP05";
     String PROP06 = "PROP06";
-    String PROP07 = "PROP07";
     String RANG01 = "RANG01";
     String RANG02 = "RANG02";
     String RANG03 = "RANG03";

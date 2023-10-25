@@ -16,7 +16,7 @@ import java.util.Map;
 
 import static com.relogiclabs.json.schema.internal.message.MessageHelper.DataTypeMismatch;
 import static com.relogiclabs.json.schema.internal.util.StringHelper.createOutline;
-import static com.relogiclabs.json.schema.message.ErrorCode.DTYP03;
+import static com.relogiclabs.json.schema.message.ErrorCode.DTYP02;
 import static java.util.Objects.requireNonNull;
 
 public abstract class JNode {
@@ -57,7 +57,7 @@ public abstract class JNode {
     protected <T> T castType(JNode node, Class<T> type) {
         if(type.isInstance(node)) return type.cast(node);
         failWith(new JsonSchemaException(
-                new ErrorDetail(DTYP03, DataTypeMismatch),
+                new ErrorDetail(DTYP02, DataTypeMismatch),
                 ExpectedHelper.asDataTypeMismatch(this),
                 ActualHelper.asDataTypeMismatch(node)));
         return null;

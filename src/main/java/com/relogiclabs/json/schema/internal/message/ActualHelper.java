@@ -22,9 +22,13 @@ public class ActualHelper {
         return new ActualDetail(node, "found ", node.getOutline());
     }
 
-    public static ActualDetail asInvalidDataType(JNode node) {
-        return new ActualDetail(node, "applied on non-composite type ",
+    public static ActualDetail asInvalidNestedDataType(JNode node) {
+        return new ActualDetail(node, "found non-composite type ",
                 getTypeName(node));
+    }
+
+    public static ActualDetail asDataTypeArgumentFailed(JNode node) {
+        return new ActualDetail(node, "found invalid value ", node.getOutline());
     }
 
     public static ActualDetail asDataTypeMismatch(JNode node) {
@@ -42,8 +46,9 @@ public class ActualHelper {
 
     public static ActualDetail asPropertyOrderMismatch(JNode node) {
         return node instanceof JProperty property
-            ? new ActualDetail(property, "key ", quote(property.getKey()), " is found at position")
-            : new ActualDetail(node, "key not found at position");
+            ? new ActualDetail(property, "key ", quote(property.getKey()),
+                " is found at current position")
+            : new ActualDetail(node, "key not found at current position");
     }
 
     public static ActualDetail asInvalidFunction(JNode node) {
