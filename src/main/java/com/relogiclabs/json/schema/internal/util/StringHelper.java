@@ -47,8 +47,8 @@ public class StringHelper {
         return builder.toString();
     }
 
-    public static String quote(String source) {
-        return '"' + source + '"';
+    public static String quote(Object source) {
+        return '"' + source.toString() + '"';
     }
 
     public static String unquote(String target) {

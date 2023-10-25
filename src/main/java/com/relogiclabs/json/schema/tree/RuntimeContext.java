@@ -17,20 +17,22 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.Queue;
+import java.util.function.Supplier;
 
 import static com.relogiclabs.json.schema.internal.util.StringHelper.concat;
 import static com.relogiclabs.json.schema.message.ErrorCode.DEFI01;
 
 
-@Getter
 public class RuntimeContext {
-
     private final FunctionManager functionManager;
     private final PragmaManager pragmaManager;
-    private final Map<JAlias, JValidator> definitions;
-    private final boolean throwException;
-    private final Queue<Exception> exceptions;
-    private final MessageFormatter messageFormatter;
+    private int disableException = 0;
+
+    @Getter private final Map<JAlias, JValidator> definitions;
+    @Getter private final boolean throwException;
+    @Getter private final Queue<Exception> exceptions;
+    @Getter private final MessageFormatter messageFormatter;
+    
 
     public RuntimeContext(MessageFormatter messageFormatter, boolean throwException) {
         this.messageFormatter = messageFormatter;
@@ -85,9 +87,18 @@ public class RuntimeContext {
         return Math.abs(value1 - value2) < getFloatingPointTolerance();
     }
 
+    public <T> T tryMatch(Supplier<T> function) {
+        try {
+            disableException += 1;
+            return function.get();
+        } finally {
+            disableException -= 1;
+        }
+    }
+
     public boolean failWith(RuntimeException exception) {
-        if(throwException) throw exception;
-        exceptions.add(exception);
+        if(throwException && disableException == 0) throw exception;
+        if(disableException == 0) exceptions.add(exception);
         return false;
     }
 }

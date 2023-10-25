@@ -79,7 +79,6 @@ public class JValidator extends JBranch {
                 ExpectedHelper.asValueMismatch(value),
                 ActualHelper.asValueMismatch(node)));
         var rDataType = matchDataType(node);
-        if(!rDataType) dataTypes.forEach(d -> d.matchForReport(node));
         var fDataType = rDataType && dataTypes.size() != 0;
         boolean rFunction = allTrue(functions.stream()
                 .filter(f -> f.isApplicable(node) || !fDataType)
@@ -88,12 +87,19 @@ public class JValidator extends JBranch {
     }
 
     private boolean matchDataType(JNode node) {
+        if(getRuntime().tryMatch(() -> checkDataType(node))) return true;
+        dataTypes.stream().filter(d -> !d.getNested()).forEach(d -> d.matchForReport(node));
+        dataTypes.stream().filter(d -> d.getNested()).forEach(d -> d.matchForReport(node));
+        return false;
+    }
+
+    private boolean checkDataType(JNode node) {
         var list1 = dataTypes.stream().filter(d -> !d.getNested()).map(d -> d.match(node)).toList();
-        var result1 = list1.stream().anyMatch(anyTrue()) || list1.size() == 0;
+        var result1 = list1.stream().anyMatch(anyTrue());
         var list2 = dataTypes.stream().filter(d -> d.getNested() && (d.isApplicable(node) || !result1))
-            .map(d -> d.match(node)).toList();
+                .map(d -> d.match(node)).toList();
         var result2 = list2.stream().anyMatch(anyTrue()) || list2.size() == 0;
-        return result1 && result2;
+        return (result1 || list1.size() == 0) && result2;
     }
 
     @Override

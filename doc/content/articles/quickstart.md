@@ -82,7 +82,7 @@ public class SampleSchema {
 }
 ```
 
-## Create Some Validation Errors
+## Create Validation Errors
 Let's intentionally introduce a few errors by modifying the previous JSON document and then examine the validation results. To begin, we'll alter the `id` within the `user` object to a string type and observe the outcome. Additionally, we'll modify the `username` by inserting a space into its value, thus creating an invalid `username`. Below is the revised JSON representation, now containing these purposeful errors.
 ```json
 {

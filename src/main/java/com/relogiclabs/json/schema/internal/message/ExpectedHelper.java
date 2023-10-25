@@ -18,7 +18,7 @@ public class ExpectedHelper {
 
     public static ExpectedDetail asArrayElementNotFound(JNode node, int index) {
         return new ExpectedDetail(node, "element at ", index,
-                " (", node.getOutline(), ")");
+                " '", node.getOutline(), "'");
     }
 
     public static ExpectedDetail asValueMismatch(JNode node) {
@@ -29,8 +29,12 @@ public class ExpectedHelper {
         return new ExpectedDetail(dataType, "data type ", dataType.toString(true));
     }
 
-    public static ExpectedDetail asInvalidDataType(JDataType dataType) {
-        return new ExpectedDetail(dataType, "applying on composite type");
+    public static ExpectedDetail asInvalidNestedDataType(JDataType dataType) {
+        return new ExpectedDetail(dataType, "composite data type");
+    }
+
+    public static ExpectedDetail asDataTypeArgumentFailed(JDataType dataType) {
+        return new ExpectedDetail(dataType, "a valid value for ", quote(dataType.getAlias()));
     }
 
     public static ExpectedDetail asDataTypeMismatch(JNode node) {
@@ -48,7 +52,7 @@ public class ExpectedHelper {
 
     public static ExpectedDetail asPropertyOrderMismatch(JProperty property) {
         return new ExpectedDetail(property, "property with key ",
-                quote(property.getKey()), " at position");
+                quote(property.getKey()), " at current position");
     }
 
     public static ExpectedDetail asInvalidFunction(JFunction function) {

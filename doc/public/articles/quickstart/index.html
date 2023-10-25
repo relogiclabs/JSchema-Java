@@ -132,7 +132,7 @@
 </span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="n">jsonSchema</span><span class="o">.</span><span class="na">isValid</span><span class="o">(</span><span class="n">json</span><span class="o">);</span>
 </span></span><span class="line"><span class="cl">    <span class="o">}</span>
 </span></span><span class="line"><span class="cl"><span class="o">}</span>
-</span></span></code></pre></div><h2 id="create-some-validation-errors">Create Some Validation Errors</h2>
+</span></span></code></pre></div><h2 id="create-validation-errors">Create Validation Errors</h2>
 <p>Let&rsquo;s intentionally introduce a few errors by modifying the previous JSON document and then examine the validation results. To begin, we&rsquo;ll alter the <code>id</code> within the <code>user</code> object to a string type and observe the outcome. Additionally, we&rsquo;ll modify the <code>username</code> by inserting a space into its value, thus creating an invalid <code>username</code>. Below is the revised JSON representation, now containing these purposeful errors.</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-json" data-lang="json"><span class="line"><span class="cl"><span class="p">{</span>
 </span></span><span class="line"><span class="cl">    <span class="nt">&#34;user&#34;</span><span class="p">:</span> <span class="p">{</span>

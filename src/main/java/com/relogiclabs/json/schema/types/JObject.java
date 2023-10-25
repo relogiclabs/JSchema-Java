@@ -18,9 +18,9 @@ import static com.relogiclabs.json.schema.internal.message.MessageHelper.Propert
 import static com.relogiclabs.json.schema.internal.message.MessageHelper.UndefinedPropertyFound;
 import static com.relogiclabs.json.schema.internal.util.MiscellaneousHelper.nonNull;
 import static com.relogiclabs.json.schema.internal.util.StringHelper.join;
+import static com.relogiclabs.json.schema.message.ErrorCode.PROP04;
 import static com.relogiclabs.json.schema.message.ErrorCode.PROP05;
 import static com.relogiclabs.json.schema.message.ErrorCode.PROP06;
-import static com.relogiclabs.json.schema.message.ErrorCode.PROP07;
 import static java.util.Objects.requireNonNull;
 
 @Getter
@@ -66,7 +66,7 @@ public class JObject extends JComposite {
             }
             if(!((JValidator) thisProp.getValue()).getOptional())
                 return failWith(new JsonSchemaException(
-                        new ErrorDetail(PROP05, PropertyNotFound),
+                        new ErrorDetail(PROP04, PropertyNotFound),
                         ExpectedHelper.asPropertyNotFound(thisProp),
                         ActualHelper.asPropertyNotFound(node, thisProp)));
         }
@@ -74,7 +74,7 @@ public class JObject extends JComposite {
             for(String key : unresolved) {
                 var property = other.properties.get(key);
                 result &= failWith(new JsonSchemaException(
-                        new ErrorDetail(PROP06, UndefinedPropertyFound),
+                        new ErrorDetail(PROP05, UndefinedPropertyFound),
                         ExpectedHelper.asUndefinedProperty(this, property),
                         ActualHelper.asUndefinedProperty(property)));
             }
@@ -92,7 +92,7 @@ public class JObject extends JComposite {
             if(otherProp == null) existing = other.properties.get(thisProp.getKey());
             if(otherProp == null && existing != null)
                 failWith(new JsonSchemaException(
-                        new ErrorDetail(PROP07, PropertyOrderMismatch),
+                        new ErrorDetail(PROP06, PropertyOrderMismatch),
                         ExpectedHelper.asPropertyOrderMismatch(thisProp),
                         ActualHelper.asPropertyOrderMismatch(nonNull(atProp, other))));
         } else otherProp = other.properties.get(thisProp.getKey());
