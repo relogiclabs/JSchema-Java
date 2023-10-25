@@ -90,7 +90,7 @@ The next example represents an expanded version of the previous one, which bring
     } #object #null
 }
 
-%define $tags: @length(1, 10) #array($tag)
+%define $tags: @length(1, 10) #string*($tag) #array
 %define $tag: @length(3, 20) @regex("[A-Za-z_]+") #string
 
 %schema: 
@@ -99,10 +99,9 @@ The next example represents an expanded version of the previous one, which bring
         "id": @range(1, 10000) #integer,
         /*username does not allow special characters*/
         "username": @regex("[a-z_]{3,30}") #string,
-        /*currently only one role is allowed by system*/
-        "role": "user" #string,
+        "role": @enum("user", "admin") #string,
         "isActive": #boolean, //user account current status
-        "registeredAt": #time,
+        "registeredAt": @time("DD-MM-YYYY hh:mm:ss") #string,
         "profile": {
             "firstName": @regex("[A-Za-z]{3,50}") #string,
             "lastName": @regex("[A-Za-z]{3,50}") #string,
@@ -137,9 +136,9 @@ The subsequent JSON sample is an illustrative example that successfully validate
     "user": {
         "id": 1234,
         "username": "johndoe",
-        "role": "user",
+        "role": "admin",
         "isActive": true,
-        "registeredAt": "2023-09-06T15:10:30.639Z",
+        "registeredAt": "06-09-2023 15:10:30",
         "profile": {
             "firstName": "John",
             "lastName": "Doe",
@@ -196,7 +195,7 @@ The subsequent JSON sample is an illustrative example that successfully validate
             "id": "p1",
             "name": "Smartphone",
             "brand": "TechGiant",
-            "price": 1.99,
+            "price": 599.99,
             "inStock": true,
             "specs": null
         },
@@ -204,12 +203,12 @@ The subsequent JSON sample is an illustrative example that successfully validate
             "id": "p2",
             "name": "Laptop",
             "brand": "SuperTech",
-            "price": 159999.99,
+            "price": 1299.99,
             "inStock": false,
             "specs": {
-                "cpu": "Ryzen 01",
-                "ram": "8GB",
-                "storage": "256GB SSD"
+                "cpu": "Ryzen 11",
+                "ram": "11GB",
+                "storage": "11GB SSD"
             }
         }
     ],

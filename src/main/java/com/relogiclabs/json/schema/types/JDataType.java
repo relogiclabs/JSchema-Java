@@ -4,6 +4,7 @@ import com.relogiclabs.json.schema.exception.DefinitionNotFoundException;
 import com.relogiclabs.json.schema.exception.JsonSchemaException;
 import com.relogiclabs.json.schema.internal.message.ActualHelper;
 import com.relogiclabs.json.schema.internal.message.ExpectedHelper;
+import com.relogiclabs.json.schema.internal.message.MatchReport;
 import com.relogiclabs.json.schema.message.ErrorDetail;
 import com.relogiclabs.json.schema.message.MessageFormatter;
 import lombok.EqualsAndHashCode;
@@ -14,14 +15,16 @@ import lombok.experimental.Accessors;
 import java.util.Collection;
 import java.util.List;
 
+import static com.relogiclabs.json.schema.internal.message.MatchReport.AliasError;
+import static com.relogiclabs.json.schema.internal.message.MatchReport.ArgumentError;
+import static com.relogiclabs.json.schema.internal.message.MatchReport.Success;
+import static com.relogiclabs.json.schema.internal.message.MatchReport.TypeError;
+import static com.relogiclabs.json.schema.internal.message.MessageHelper.DataTypeArgumentFailed;
 import static com.relogiclabs.json.schema.internal.message.MessageHelper.DataTypeMismatch;
 import static com.relogiclabs.json.schema.internal.message.MessageHelper.InvalidNestedDataType;
 import static com.relogiclabs.json.schema.internal.util.StreamHelper.allTrue;
-import static com.relogiclabs.json.schema.message.ErrorCode.DEFI03;
-import static com.relogiclabs.json.schema.message.ErrorCode.DTYP02;
-import static com.relogiclabs.json.schema.message.ErrorCode.DTYP04;
-import static com.relogiclabs.json.schema.message.ErrorCode.DTYP05;
-import static com.relogiclabs.json.schema.message.ErrorCode.DTYP06;
+import static com.relogiclabs.json.schema.internal.util.StringHelper.quote;
+import static com.relogiclabs.json.schema.message.ErrorCode.DTYP03;
 import static java.util.Collections.emptyList;
 import static java.util.Objects.requireNonNull;
 
@@ -57,45 +60,50 @@ public class JDataType extends JBranch implements NestedMode {
 
     @Override
     public boolean match(JNode node) {
-        if(!nested) return jsonType.match(node);
-        if(!(node instanceof JComposite composite))
-            return failWith(new JsonSchemaException(
-                    new ErrorDetail(DTYP02, InvalidNestedDataType),
-                    ExpectedHelper.asInvalidDataType(this),
-                    ActualHelper.asInvalidDataType(node)));
-        return composite.components().stream().map(this::matchCurrent).allMatch(allTrue());
+        if(!nested) return isMatchCurrent(node);
+        if(!(node instanceof JComposite composite)) return false;
+        return composite.components().stream().map(this::isMatchCurrent).allMatch(allTrue());
     }
 
-    private boolean matchCurrent(JNode node) {
-        boolean result = true;
-        result &= jsonType.match(node);
-        if(alias == null) return result;
+    private boolean isMatchCurrent(JNode node) {
+        return matchCurrent(node) == Success;
+    }
+
+    private MatchReport matchCurrent(JNode node) {
+        var result = jsonType.match(node) ? Success : TypeError;
+        if(alias == null || result != Success) return result;
         var validator = getRuntime().getDefinitions().get(alias);
-        if(validator == null) return failWith(new DefinitionNotFoundException(
-                MessageFormatter.formatForSchema(DEFI03, alias.getName(), getContext())));
-        result &= validator.match(node);
+        if(validator == null) return AliasError;
+        result = validator.match(node) ? Success : ArgumentError;
         return result;
     }
 
     public boolean matchForReport(JNode node) {
-        if(!nested && !jsonType.match(node))
-            return failWith(new JsonSchemaException(
-                    new ErrorDetail(DTYP04, DataTypeMismatch),
-                    ExpectedHelper.asDataTypeMismatch(this),
-                    ActualHelper.asDataTypeMismatch(node)));
+        if(!nested) return matchForReport(node, false);
         if(!(node instanceof JComposite composite))
             return failWith(new JsonSchemaException(
-                    new ErrorDetail(DTYP05, InvalidNestedDataType),
-                    ExpectedHelper.asInvalidDataType(this),
-                    ActualHelper.asInvalidDataType(node)));
+                    new ErrorDetail(DTYP03, InvalidNestedDataType),
+                    ExpectedHelper.asInvalidNestedDataType(this),
+                    ActualHelper.asInvalidNestedDataType(node)));
         boolean result = true;
-        for(var c : composite.components()) {
-            if(!matchCurrent(c)) result &= failWith(new JsonSchemaException(
-                    new ErrorDetail(DTYP06, DataTypeMismatch),
-                    ExpectedHelper.asDataTypeMismatch(this),
-                    ActualHelper.asDataTypeMismatch(c)));
-        }
+        for(var c : composite.components()) result &= matchForReport(c, true);
         return result;
+    }
+
+    private boolean matchForReport(JNode node, boolean nested) {
+        var result = matchCurrent(node);
+        if(result == TypeError) return failWith(new JsonSchemaException(
+                new ErrorDetail(TypeError.getCode(nested), DataTypeMismatch),
+                ExpectedHelper.asDataTypeMismatch(this),
+                ActualHelper.asDataTypeMismatch(node)));
+        if(result == AliasError) return failWith(new DefinitionNotFoundException(
+                MessageFormatter.formatForSchema(AliasError.getCode(nested),
+                        "No definition found for " + quote(alias), getContext())));
+        if(result == ArgumentError) return failWith(new JsonSchemaException(
+                new ErrorDetail(ArgumentError.getCode(nested), DataTypeArgumentFailed),
+                ExpectedHelper.asDataTypeArgumentFailed(this),
+                ActualHelper.asDataTypeArgumentFailed(node)));
+        return true;
     }
 
     public boolean isApplicable(JNode node) {
