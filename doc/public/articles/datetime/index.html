@@ -2,10 +2,19 @@
 <html lang="en-us"><link rel="stylesheet" href="/JsonSchema-Java/css/style.css" type="text/css" media="all" />
 <link rel="stylesheet" href="/JsonSchema-Java/css/syntax.css" type="text/css" media="all" />
 <link rel="icon" href="/JsonSchema-Java/images/favicon.ico">
-<body><header>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script src="/JsonSchema-Java/js/script.js"></script><body><header>
     <nav class="header" role="navigation">
         <div class="header-left">
-            <a href="https://www.relogiclabs.com"><img src="/JsonSchema-Java/images/logo.svg"></a>
+            <label for="menu-checkbox">
+                <input id="menu-checkbox" type="checkbox" class="menu-checkbox"/>
+                <div class="menu-button">
+                    <span class="menu-icon icon-bar1"></span>
+                    <span class="menu-icon icon-bar2"></span>
+                    <span class="menu-icon icon-bar3"></span>
+                </div>
+            </label>
+            <a href="https://www.relogiclabs.com"><img src="/JsonSchema-Java/images/logo.svg" alt="Relogic Labs"></a>
         </div>
         <div class="header-right">
             <a href="/JsonSchema-Java">Home</a>
@@ -14,6 +23,7 @@
         </div>
     </nav>
 </header>
+<div class="overlay"></div>
 <div class="sidebar">
     <ul>
         
@@ -68,6 +78,7 @@
 <table>
 <thead>
 <tr>
+<th>SN</th>
 <th>Pattern</th>
 <th>Description</th>
 <th>Example</th>
@@ -75,129 +86,172 @@
 </thead>
 <tbody>
 <tr>
-<td>G</td>
-<td>Era period designator</td>
-<td>AD</td>
-</tr>
-<tr>
-<td>YYYY</td>
-<td>Four digit year number</td>
-<td>1970</td>
-</tr>
-<tr>
-<td>YY</td>
-<td>Two digit year number</td>
-<td>70</td>
-</tr>
-<tr>
-<td>MM</td>
-<td>Month number in year (2 digit form)</td>
-<td>01</td>
-</tr>
-<tr>
-<td>MMMM</td>
-<td>Full name of month</td>
-<td>January</td>
-</tr>
-<tr>
-<td>MMM</td>
-<td>Short name of month</td>
-<td>Jan</td>
-</tr>
-<tr>
-<td>M</td>
-<td>Month number in year (1-2 digit form)</td>
-<td>1, 01</td>
-</tr>
-<tr>
-<td>DDDD</td>
-<td>Full name of day in week</td>
-<td>Monday</td>
-</tr>
-<tr>
-<td>DDD</td>
-<td>Short name of day in week</td>
-<td>Mon</td>
-</tr>
-<tr>
-<td>DD</td>
-<td>Day in month (2 digit form)</td>
-<td>01</td>
-</tr>
-<tr>
-<td>D</td>
-<td>Day in month (1-2 digit form)</td>
-<td>1, 01</td>
-</tr>
-<tr>
-<td>t</td>
-<td>AM/PM designator</td>
-<td>AM, PM</td>
-</tr>
-<tr>
-<td>hh</td>
-<td>Hour in day (2 digit form)</td>
-<td>01, 12</td>
-</tr>
-<tr>
-<td>h</td>
-<td>Hour in day (1-2 digit form)</td>
-<td>1, 01</td>
-</tr>
-<tr>
-<td>mm</td>
-<td>Minute in hour (2 digit form)</td>
-<td>01, 20</td>
-</tr>
-<tr>
-<td>m</td>
-<td>Minute in hour (1-2 digit form)</td>
-<td>1, 01</td>
-</tr>
-<tr>
-<td>ss</td>
-<td>Second in minute (2 digit form)</td>
-<td>1, 01</td>
-</tr>
-<tr>
-<td>s</td>
-<td>Second in minute (1-2 digit form)</td>
-<td>1, 01</td>
-</tr>
-<tr>
-<td>f</td>
-<td>Tenths of a second</td>
 <td>1</td>
+<td><code>G</code></td>
+<td>Era period designator</td>
+<td><code>AD</code></td>
 </tr>
 <tr>
-<td>ff</td>
-<td>Hundredths of a second</td>
+<td>2</td>
+<td><code>YYYY</code></td>
+<td>Four digit year number</td>
+<td><code>1970</code></td>
+</tr>
+<tr>
+<td>3</td>
+<td><code>YY</code></td>
+<td>Two digit year number</td>
+<td><code>70</code></td>
+</tr>
+<tr>
+<td>4</td>
+<td><code>MM</code></td>
+<td>Month number in year (2 digit form)</td>
+<td><code>01</code></td>
+</tr>
+<tr>
+<td>5</td>
+<td><code>MMMM</code></td>
+<td>Full name of month</td>
+<td><code>January</code></td>
+</tr>
+<tr>
+<td>6</td>
+<td><code>MMM</code></td>
+<td>Short name of month</td>
+<td><code>Jan</code></td>
+</tr>
+<tr>
+<td>7</td>
+<td><code>M</code></td>
+<td>Month number in year (1-2 digit form)</td>
+<td><code>1</code>; <code>01</code></td>
+</tr>
+<tr>
+<td>8</td>
+<td><code>DDDD</code></td>
+<td>Full name of day in week</td>
+<td><code>Monday</code></td>
+</tr>
+<tr>
+<td>9</td>
+<td><code>DDD</code></td>
+<td>Short name of day in week</td>
+<td><code>Mon</code></td>
+</tr>
+<tr>
+<td>10</td>
+<td><code>DD</code></td>
+<td>Day in month (2 digit form)</td>
+<td><code>01</code></td>
+</tr>
+<tr>
 <td>11</td>
+<td><code>D</code></td>
+<td>Day in month (1-2 digit form)</td>
+<td><code>1</code>; <code>01</code></td>
 </tr>
 <tr>
-<td>fff</td>
+<td>12</td>
+<td><code>t</code></td>
+<td>AM/PM designator</td>
+<td><code>AM</code>; <code>PM</code></td>
+</tr>
+<tr>
+<td>13</td>
+<td><code>hh</code></td>
+<td>Hour in day (2 digit form)</td>
+<td><code>01</code>; <code>12</code></td>
+</tr>
+<tr>
+<td>14</td>
+<td><code>h</code></td>
+<td>Hour in day (1-2 digit form)</td>
+<td><code>1</code>; <code>01</code></td>
+</tr>
+<tr>
+<td>15</td>
+<td><code>mm</code></td>
+<td>Minute in hour (2 digit form)</td>
+<td><code>01</code>; <code>20</code></td>
+</tr>
+<tr>
+<td>16</td>
+<td><code>m</code></td>
+<td>Minute in hour (1-2 digit form)</td>
+<td><code>1</code>; <code>01</code></td>
+</tr>
+<tr>
+<td>17</td>
+<td><code>ss</code></td>
+<td>Second in minute (2 digit form)</td>
+<td><code>01</code>; <code>30</code></td>
+</tr>
+<tr>
+<td>18</td>
+<td><code>s</code></td>
+<td>Second in minute (1-2 digit form)</td>
+<td><code>1</code>; <code>01</code></td>
+</tr>
+<tr>
+<td>19</td>
+<td><code>f</code></td>
+<td>Tenths of a second</td>
+<td><code>1</code></td>
+</tr>
+<tr>
+<td>20</td>
+<td><code>ff</code></td>
+<td>Hundredths of a second</td>
+<td><code>11</code></td>
+</tr>
+<tr>
+<td>21</td>
+<td><code>fff</code></td>
 <td>Milliseconds of a second</td>
-<td>111</td>
+<td><code>111</code></td>
 </tr>
 <tr>
-<td>ffff</td>
+<td>22</td>
+<td><code>ffff</code></td>
 <td>Ten thousandths of a second</td>
-<td>1111</td>
+<td><code>1111</code></td>
 </tr>
 <tr>
-<td>fffff</td>
+<td>23</td>
+<td><code>fffff</code></td>
 <td>Hundred thousandths of a second</td>
-<td>11111</td>
+<td><code>11111</code></td>
 </tr>
 <tr>
-<td>ffffff</td>
+<td>24</td>
+<td><code>ffffff</code></td>
 <td>Millionths of a second</td>
-<td>111111</td>
+<td><code>111111</code></td>
 </tr>
 <tr>
-<td>F</td>
+<td>25</td>
+<td><code>F</code></td>
 <td>Fraction of a second upto 6 digits</td>
-<td>1, 111</td>
+<td><code>1</code>; <code>111</code>; <code>111111</code></td>
+</tr>
+<tr>
+<td>26</td>
+<td><code>Z</code></td>
+<td>Time zone hours only offset</td>
+<td><code>+06</code>; <code>-05</code>; <code>Z</code></td>
+</tr>
+<tr>
+<td>27</td>
+<td><code>ZZ</code></td>
+<td>Time zone hours and minutes offset</td>
+<td><code>+09:30</code>; <code>−03:30</code>; <code>Z</code></td>
+</tr>
+<tr>
+<td>28</td>
+<td><code>ZZZ</code></td>
+<td>Time zone hours and minutes offset</td>
+<td><code>+0930</code>; <code>−0330</code>; <code>Z</code></td>
 </tr>
 </tbody>
 </table>
@@ -205,42 +259,58 @@
 <table>
 <thead>
 <tr>
+<th>SN</th>
+<th>Usage</th>
 <th>Combined Pattern</th>
 <th>Example</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>YYYY-MM-DD</td>
-<td>2023-09-01</td>
+<td>1</td>
+<td><code>#date</code></td>
+<td><code>YYYY-MM-DD</code></td>
+<td><code>2023-09-01</code></td>
 </tr>
 <tr>
-<td>YYYY-MM-DD&rsquo;T&rsquo;hh:mm:ss.fffZZ</td>
-<td>2023-09-01T14:35:10.123+06:00</td>
+<td>2</td>
+<td><code>#time</code></td>
+<td><code>YYYY-MM-DD'T'hh:mm:ss.FZZ</code></td>
+<td><code>2023-09-01T14:35:10.111+06:00</code></td>
 </tr>
 <tr>
-<td>MMMM DD, YYYY G</td>
-<td>January 01, 1980 AD</td>
+<td>3</td>
+<td><code>@date</code></td>
+<td><code>MMMM DD, YYYY G</code></td>
+<td><code>January 01, 1980 AD</code></td>
 </tr>
 <tr>
-<td>DDDD, D MMMM YYYY</td>
-<td>Tuesday, 11 July 2023</td>
+<td>4</td>
+<td><code>@date</code></td>
+<td><code>DDDD, D MMMM YYYY</code></td>
+<td><code>Tuesday, 11 July 2023</code></td>
 </tr>
 <tr>
-<td>YYYY.MM.DD hh.mm.ss t</td>
-<td>1980.11.21 10.30.50 pm</td>
+<td>5</td>
+<td><code>@time</code></td>
+<td><code>YYYY.MM.DD hh.mm.ss t</code></td>
+<td><code>1980.11.21 10.30.50 pm</code></td>
 </tr>
 <tr>
-<td>DDD, D MMM YY hh:mm:ss ZZ</td>
-<td>Sun, 4 Jul 99 12:08:56 -06:00</td>
+<td>6</td>
+<td><code>@time</code></td>
+<td><code>DDD, D MMM YY hh:mm:ss ZZ</code></td>
+<td><code>Sun, 4 Jul 99 12:08:56 -06:00</code></td>
 </tr>
 <tr>
-<td>hh:mm:ss t ZZ</td>
-<td>03:11:30 AM +06:00</td>
+<td>7</td>
+<td><code>@time</code></td>
+<td><code>hh:mm:ss t ZZ</code></td>
+<td><code>03:11:30 AM +06:00</code></td>
 </tr>
 </tbody>
 </table>
-<p>The first pattern in the table above adheres to the ISO 8601 date format and is used to validate the <code>#date</code> data type within the schema. The second pattern in the table follows the ISO 8601 format for date and time, validating the <code>#time</code> data type in the schema. Instead of explicitly specifying these patterns in the <code>@date</code> or <code>@time</code> functions, a more concise approach is to directly utilize the <code>#date</code> or <code>#time</code> type within the schema.</p>
+<p>The first pattern in the table above adheres to the ISO 8601 date format and is used to validate the <code>#date</code> data type within the schema. The second pattern in the table follows the ISO 8601 format for date and time, validating the <code>#time</code> data type in the schema. Instead of explicitly specifying these patterns in the <code>@date</code> or <code>@time</code> functions, a more concise approach is to directly utilize the <code>#date</code> or <code>#time</code> type within the schema. Detailed explanations regarding the date and time format of the ISO 8601 standard are available in this <a href="https://www.iso.org/iso-8601-date-and-time-format.html">document</a>.</p>
 <p>When the AM/PM designator is included in the date and time pattern, the presence of any hour format specifier indicates that the time is in the 12-hour clock format. Conversely, when the AM/PM designator is omitted, the presence of any hour format specifier indicates that the time is in the 24-hour clock format.</p>
 
 </div>
