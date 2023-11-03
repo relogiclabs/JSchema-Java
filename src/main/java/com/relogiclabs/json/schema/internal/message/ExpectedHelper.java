@@ -10,7 +10,7 @@ import com.relogiclabs.json.schema.types.JProperty;
 import static com.relogiclabs.json.schema.internal.message.MessageHelper.getTypeName;
 import static com.relogiclabs.json.schema.internal.util.StringHelper.quote;
 
-public class ExpectedHelper {
+public final class ExpectedHelper {
 
     private ExpectedHelper() {
         throw new UnsupportedOperationException();

@@ -10,7 +10,6 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
-import java.util.Collection;
 import java.util.List;
 
 import static com.relogiclabs.json.schema.internal.message.MessageHelper.InvalidNestedFunction;
@@ -22,25 +21,17 @@ import static java.util.Objects.requireNonNull;
 
 @Getter
 @EqualsAndHashCode
-public class JFunction extends JBranch implements NestedMode {
+public final class JFunction extends JBranch implements NestedMode {
     private final String name;
-    private final List<JNode> arguments;
     private final boolean nested;
+    private final List<JNode> arguments;
 
     private JFunction(Builder builder) {
-        super(builder.relations, builder.context);
-        this.name = requireNonNull(builder.name);
-        this.arguments = requireNonNull(builder.arguments);
-        this.nested = builder.nested;
-    }
-
-    public static Builder builder() {
-        return new Builder();
-    }
-
-    @Override
-    public Collection<? extends JNode> getChildren() {
-        return arguments;
+        super(builder);
+        name = requireNonNull(builder.name);
+        nested = requireNonNull(builder.nested);
+        arguments = requireNonNull(builder.arguments);
+        children = arguments;
     }
 
     @Override
@@ -84,13 +75,13 @@ public class JFunction extends JBranch implements NestedMode {
     @Setter
     @Accessors(fluent = true)
     public static class Builder extends JNode.Builder<Builder> {
-        protected String name;
-        protected List<JNode> arguments;
-        protected boolean nested;
+        private String name;
+        private Boolean nested;
+        private List<JNode> arguments;
 
         @Override
         public JFunction build() {
-            return new JFunction(this).initialize();
+            return build(new JFunction(this));
         }
     }
 }

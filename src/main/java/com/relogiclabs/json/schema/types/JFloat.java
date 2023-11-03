@@ -15,17 +15,13 @@ import static java.util.Objects.requireNonNull;
 
 @Getter
 @EqualsAndHashCode
-public class JFloat extends JNumber implements PragmaValue<Double> {
+public final class JFloat extends JNumber implements PragmaValue<Double> {
     private static final DecimalFormat FLOAT_FORMAT = new DecimalFormat("0.0##############");
     private final double value;
 
     private JFloat(Builder builder) {
-        super(builder.relations, builder.context);
-        this.value = requireNonNull(builder.value);
-    }
-
-    public static Builder builder() {
-        return new Builder();
+        super(builder);
+        value = requireNonNull(builder.value);
     }
 
     @Override
@@ -59,10 +55,10 @@ public class JFloat extends JNumber implements PragmaValue<Double> {
         return FLOAT_FORMAT.format(value);
     }
 
-    public static class Builder extends JNumber.Builder<Double> {
+    public static class Builder extends JPrimitive.Builder<Double> {
         @Override
         public JFloat build() {
-            return new JFloat(this).initialize();
+            return build(new JFloat(this));
         }
     }
 }

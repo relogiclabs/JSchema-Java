@@ -1,6 +1,6 @@
 package com.relogiclabs.json.schema;
 
-import com.relogiclabs.json.schema.internal.util.DebugUtils;
+import com.relogiclabs.json.schema.internal.util.DebugUtilities;
 import com.relogiclabs.json.schema.message.MessageFormatter;
 import com.relogiclabs.json.schema.tree.JsonTree;
 import com.relogiclabs.json.schema.tree.RuntimeContext;
@@ -38,7 +38,7 @@ public class JsonSchema {
     public boolean isValid(String json) {
         exceptions.clear();
         var jsonTree = new JsonTree(runtime, json);
-        DebugUtils.print(schemaTree, jsonTree);
+        DebugUtilities.print(schemaTree, jsonTree);
         return schemaTree.getRoot().match(jsonTree.getRoot());
     }
 

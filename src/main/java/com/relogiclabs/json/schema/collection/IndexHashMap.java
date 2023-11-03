@@ -9,9 +9,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-public class IndexHashMap<TK, TV extends Keyable<TK>> implements IndexMap<TK, TV> {
+public final class IndexHashMap<TK, TV extends Keyable<TK>> implements IndexMap<TK, TV> {
 
-    private boolean readOnly;
+    private boolean unmodifiable;
     private Map<TK, TV> map;
     private List<TV> list;
 
@@ -42,16 +42,17 @@ public class IndexHashMap<TK, TV extends Keyable<TK>> implements IndexMap<TK, TV
     }
 
     @Override
-    public boolean isReadOnly() {
-        return readOnly;
+    public boolean isUnmodifiable() {
+        return unmodifiable;
     }
 
     @Override
-    public void makeReadOnly() {
-        if(readOnly) return;
+    public IndexHashMap<TK, TV> asUnmodifiable() {
+        if(unmodifiable) return this;
         list = Collections.unmodifiableList(list);
         map = Collections.unmodifiableMap(map);
-        readOnly = true;
+        unmodifiable = true;
+        return this;
     }
 
     @Override

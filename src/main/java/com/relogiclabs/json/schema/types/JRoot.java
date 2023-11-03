@@ -6,16 +6,16 @@ import lombok.Setter;
 import lombok.experimental.Accessors;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
+import static com.relogiclabs.json.schema.internal.util.CollectionHelper.addToList;
 import static com.relogiclabs.json.schema.internal.util.StringHelper.join;
 import static java.util.Collections.unmodifiableCollection;
 import static java.util.Objects.requireNonNull;
 
 @Getter
 @EqualsAndHashCode
-public class JRoot extends JNode {
+public final class JRoot extends JNode {
     private static final String NEW_LINE = System.lineSeparator();
 
     private final JTitle title;
@@ -24,46 +24,20 @@ public class JRoot extends JNode {
     private final List<JPragma> pragmas;
     private final List<JDefinition> definitions;
     private final JNode value;
-    private Collection<JNode> children;
 
     private JRoot(Builder builder) {
-        super(builder.relations, builder.context);
-        this.title = builder.title;
-        this.version = builder.version;
-        this.includes = builder.includes;
-        this.pragmas = builder.pragmas;
-        this.definitions = builder.definitions;
-        this.value = requireNonNull(builder.value);
-    }
-
-    public static Builder builder() {
-        return new Builder();
-    }
-
-    @Override
-    public Collection<? extends JNode> getChildren() {
-        return children;
-    }
-
-    @Override
-    protected <T extends JNode> T initialize() {
-        children = new ArrayList<>();
-        addToList(children, title);
-        addToList(children, version);
-        addToList(children, includes);
-        addToList(children, pragmas);
-        addToList(children, definitions);
-        addToList(children, value);
+        super(builder);
+        title = builder.title;
+        version = builder.version;
+        includes = builder.includes;
+        pragmas = builder.pragmas;
+        definitions = builder.definitions;
+        value = requireNonNull(builder.value);
+        var nodes = new ArrayList<JNode>();
+        addToList(nodes, title, version);
+        addToList(nodes, includes, pragmas, definitions);
+        addToList(nodes, value);
         children = unmodifiableCollection(children);
-        return super.initialize();
-    }
-
-    private void addToList(Collection<JNode> list, JNode node) {
-        if(node != null) list.add(node);
-    }
-
-    private void addToList(Collection<JNode> list, List<? extends JNode> nodes) {
-        if(nodes != null) list.addAll(nodes);
     }
 
     @Override
@@ -95,19 +69,19 @@ public class JRoot extends JNode {
         builder.append(join(list, NEW_LINE, "", NEW_LINE));
     }
 
-    @Setter()
+    @Setter
     @Accessors(fluent = true)
     public static class Builder extends JNode.Builder<Builder> {
-        protected JTitle title;
-        protected JVersion version;
-        protected List<JInclude> includes;
-        protected List<JPragma> pragmas;
-        protected List<JDefinition> definitions;
-        protected JNode value;
+        private JTitle title;
+        private JVersion version;
+        private List<JInclude> includes;
+        private List<JPragma> pragmas;
+        private List<JDefinition> definitions;
+        private JNode value;
 
         @Override
         public JRoot build() {
-            return new JRoot(this).initialize();
+            return build(new JRoot(this));
         }
     }
 }

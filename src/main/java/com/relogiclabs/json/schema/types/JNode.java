@@ -17,29 +17,26 @@ import java.util.Map;
 import static com.relogiclabs.json.schema.internal.message.MessageHelper.DataTypeMismatch;
 import static com.relogiclabs.json.schema.internal.util.StringHelper.createOutline;
 import static com.relogiclabs.json.schema.message.ErrorCode.DTYP02;
+import static java.util.Collections.emptyList;
 import static java.util.Objects.requireNonNull;
 
 public abstract class JNode {
 
     private final Map<JNode, JNode> relations;
+    @Getter private final Context context;
+    @Getter protected Collection<? extends JNode> children = emptyList();
 
-    @Getter
-    private final Context context;
-
-    protected JNode(Map<JNode, JNode> relations, Context context) {
-        this.relations = requireNonNull(relations);
-        this.context = requireNonNull(context);
+    protected JNode(Builder<?> builder) {
+        relations = requireNonNull(builder.relations);
+        context = requireNonNull(builder.context);
     }
 
     public JNode getParent() {
         return relations.get(this);
     }
-    public abstract Collection<? extends JNode> getChildren();
 
-    @SuppressWarnings("unchecked")
-    protected <T extends JNode> T initialize() {
+    protected void initialize() {
         for(var c : getChildren()) relations.put(c, this);
-        return (T) this;
     }
 
     public ParserRuleContext getParser() {
@@ -63,7 +60,7 @@ public abstract class JNode {
         return null;
     }
 
-    protected <T> boolean isOfType(JNode node, Class<T> type) {
+    protected <T> boolean checkType(JNode node, Class<T> type) {
         return castType(node, type) != null;
     }
 
@@ -95,5 +92,10 @@ public abstract class JNode {
         }
 
         public abstract JNode build();
+
+        public static <T extends JNode> T build(T node) {
+            node.initialize();
+            return node;
+        }
     }
 }

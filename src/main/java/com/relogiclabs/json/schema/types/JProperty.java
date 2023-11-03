@@ -9,35 +9,26 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
-import java.util.Collection;
-import java.util.List;
 import java.util.Objects;
 
 import static com.relogiclabs.json.schema.internal.message.MessageHelper.PropertyKeyMismatch;
 import static com.relogiclabs.json.schema.internal.message.MessageHelper.PropertyValueMismatch;
+import static com.relogiclabs.json.schema.internal.util.CollectionHelper.asList;
 import static com.relogiclabs.json.schema.internal.util.StringHelper.quote;
 import static com.relogiclabs.json.schema.message.ErrorCode.PROP01;
 import static com.relogiclabs.json.schema.message.ErrorCode.PROP02;
 import static java.util.Objects.requireNonNull;
 
 @Getter
-public class JProperty extends JBranch implements Keyable<String> {
+public final class JProperty extends JBranch implements Keyable<String> {
     private final String key;
     private final JNode value;
 
     private JProperty(Builder builder) {
-        super(builder.relations, builder.context);
-        this.key = requireNonNull(builder.key);
-        this.value = requireNonNull(builder.value);
-    }
-
-    public static Builder builder() {
-        return new Builder();
-    }
-
-    @Override
-    public Collection<? extends JNode> getChildren() {
-        return List.of(value);
+        super(builder);
+        key = requireNonNull(builder.key);
+        value = requireNonNull(builder.value);
+        children = asList(value);
     }
 
     @Override
@@ -76,12 +67,12 @@ public class JProperty extends JBranch implements Keyable<String> {
     @Setter
     @Accessors(fluent = true)
     public static class Builder extends JNode.Builder<Builder> {
-        protected String key;
-        protected JNode value;
+        private String key;
+        private JNode value;
 
         @Override
         public JProperty build() {
-            return new JProperty(this).initialize();
+            return build(new JProperty(this));
         }
     }
 }

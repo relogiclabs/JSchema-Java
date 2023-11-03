@@ -4,7 +4,7 @@ import lombok.Getter;
 import org.antlr.v4.runtime.ParserRuleContext;
 
 @Getter
-public class Context {
+public final class Context {
     private final ParserRuleContext parser;
     private final RuntimeContext runtime;
     private final Location location;

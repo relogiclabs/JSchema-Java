@@ -1,6 +1,6 @@
 package com.relogiclabs.json.schema;
 
-import com.relogiclabs.json.schema.internal.util.DebugUtils;
+import com.relogiclabs.json.schema.internal.util.DebugUtilities;
 import com.relogiclabs.json.schema.message.MessageFormatter;
 import com.relogiclabs.json.schema.tree.JsonTree;
 import com.relogiclabs.json.schema.tree.RuntimeContext;
@@ -34,7 +34,7 @@ public class JsonAssert {
     public void isValid(String jsonActual) {
         runtime.getExceptions().clear();
         var jsonTree = new JsonTree(runtime, jsonActual);
-        DebugUtils.print(schemaTree, jsonTree);
+        DebugUtilities.print(schemaTree, jsonTree);
         schemaTree.getRoot().match(jsonTree.getRoot());
         if(!schemaTree.getRoot().match(jsonTree.getRoot()))
             throw new IllegalStateException("Exception not thrown");
@@ -50,7 +50,7 @@ public class JsonAssert {
         var runtime = new RuntimeContext(MessageFormatter.SCHEMA_ASSERTION, true);
         var schemaTree = new SchemaTree(runtime, schemaExpected);
         var jsonTree = new JsonTree(runtime, jsonActual);
-        DebugUtils.print(schemaTree, jsonTree);
+        DebugUtilities.print(schemaTree, jsonTree);
         if(!schemaTree.getRoot().match(jsonTree.getRoot()))
             throw new IllegalStateException("Exception not thrown");
     }
@@ -66,7 +66,7 @@ public class JsonAssert {
         var runtime = new RuntimeContext(MessageFormatter.JSON_ASSERTION, true);
         var expectedTree = new JsonTree(runtime, jsonExpected);
         var actualTree = new JsonTree(runtime, jsonActual);
-        DebugUtils.print(expectedTree, actualTree);
+        DebugUtilities.print(expectedTree, actualTree);
         if(!expectedTree.getRoot().match(actualTree.getRoot()))
             throw new IllegalStateException("Exception not thrown");
     }

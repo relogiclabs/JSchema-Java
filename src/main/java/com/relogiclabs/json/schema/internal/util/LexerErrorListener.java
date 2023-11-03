@@ -22,7 +22,7 @@ public abstract class LexerErrorListener extends BaseErrorListener {
     protected abstract CommonException createException(String message, Throwable cause);
     protected abstract String getMessageFormat();
 
-    private static class SchemaErrorListener extends LexerErrorListener {
+    private static final class SchemaErrorListener extends LexerErrorListener {
 
         @Override
         protected CommonException createException(String message, Throwable cause) {
@@ -35,7 +35,7 @@ public abstract class LexerErrorListener extends BaseErrorListener {
         }
     }
 
-    private static class JsonErrorListener extends LexerErrorListener {
+    private static final class JsonErrorListener extends LexerErrorListener {
 
         @Override
         protected CommonException createException(String message, Throwable cause) {
@@ -48,7 +48,7 @@ public abstract class LexerErrorListener extends BaseErrorListener {
         }
     }
 
-    private static class DateTimeErrorListener extends LexerErrorListener {
+    private static final class DateTimeErrorListener extends LexerErrorListener {
 
         @Override
         protected CommonException createException(String message, Throwable cause) {

@@ -3,7 +3,7 @@ package com.relogiclabs.json.schema.internal.util;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
-public class StreamHelper {
+public final class StreamHelper {
     public static <T> T halt(RuntimeException exception) {
         throw exception;
     }

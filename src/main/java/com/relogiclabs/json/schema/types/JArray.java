@@ -19,26 +19,18 @@ import static java.util.Objects.requireNonNull;
 
 @Getter
 @EqualsAndHashCode
-public class JArray extends JComposite {
+public final class JArray extends JComposite {
     private final List<JNode> elements;
 
     private JArray(Builder builder) {
-        super(builder.relations, builder.context);
-        this.elements = requireNonNull(builder.elements);
-    }
-
-    public static Builder builder() {
-        return new Builder();
+        super(builder);
+        elements = requireNonNull(builder.elements);
+        children = elements;
     }
 
     @Override
     public JsonType getType() {
         return JsonType.ARRAY;
-    }
-
-    @Override
-    public Collection<? extends JNode> getChildren() {
-        return elements;
     }
 
     @Override
@@ -71,11 +63,11 @@ public class JArray extends JComposite {
     @Setter
     @Accessors(fluent = true)
     public static class Builder extends JNode.Builder<Builder> {
-        protected List<JNode> elements;
+        private List<JNode> elements;
 
         @Override
         public JArray build() {
-            return new JArray(this).initialize();
+            return build(new JArray(this));
         }
     }
 }

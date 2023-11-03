@@ -11,7 +11,7 @@ import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 
 @Getter
-public class SchemaTree {
+public final class SchemaTree {
     private final JRoot root;
 
     public SchemaTree(RuntimeContext context, String input) {

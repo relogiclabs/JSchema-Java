@@ -10,10 +10,10 @@ import lombok.Setter;
 import lombok.experimental.Accessors;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 import static com.relogiclabs.json.schema.internal.message.MessageHelper.ValidationFailed;
+import static com.relogiclabs.json.schema.internal.util.CollectionHelper.addToList;
 import static com.relogiclabs.json.schema.internal.util.StreamHelper.allTrue;
 import static com.relogiclabs.json.schema.internal.util.StreamHelper.anyTrue;
 import static com.relogiclabs.json.schema.internal.util.StringHelper.join;
@@ -22,48 +22,24 @@ import static java.util.Collections.unmodifiableCollection;
 
 @Getter
 @EqualsAndHashCode
-public class JValidator extends JBranch {
+public final class JValidator extends JBranch {
     public static final String OPTIONAL_MARKER = "?";
 
-    private Collection<JNode> children;
     private final JNode value;
     private final List<JFunction> functions;
     private final List<JDataType> dataTypes;
     private final boolean optional;
 
     private JValidator(Builder builder) {
-        super(builder.relations, builder.context);
-        this.value = builder.value;
-        this.functions = builder.functions;
-        this.dataTypes = builder.dataTypes;
-        this.optional = builder.optional;
-    }
-
-    public static Builder builder() {
-        return new Builder();
-    }
-
-    @Override
-    public Collection<? extends JNode> getChildren() {
-        return children;
-    }
-
-    @Override
-    protected <T extends JNode> T initialize() {
-        children = new ArrayList<>();
-        addToList(children, value);
-        addToList(children, functions);
-        addToList(children, dataTypes);
-        children = unmodifiableCollection(children);
-        return super.initialize();
-    }
-
-    private void addToList(Collection<JNode> list, JNode node) {
-        if(node != null) list.add(node);
-    }
-
-    private void addToList(Collection<JNode> list, List<? extends JNode> nodes) {
-        if(nodes != null) list.addAll(nodes);
+        super(builder);
+        value = builder.value;
+        functions = builder.functions;
+        dataTypes = builder.dataTypes;
+        optional = builder.optional;
+        var nodes = new ArrayList<JNode>();
+        addToList(nodes, value);
+        addToList(nodes, functions, dataTypes);
+        children = unmodifiableCollection(nodes);
     }
 
     @Override
@@ -115,14 +91,14 @@ public class JValidator extends JBranch {
     @Setter
     @Accessors(fluent = true)
     public static class Builder extends JNode.Builder<Builder> {
-        protected JNode value;
-        protected List<JFunction> functions;
-        protected List<JDataType> dataTypes;
-        protected boolean optional;
+        private JNode value;
+        private List<JFunction> functions;
+        private List<JDataType> dataTypes;
+        private boolean optional;
 
         @Override
         public JValidator build() {
-            return new JValidator(this).initialize();
+            return build(new JValidator(this));
         }
     }
 }

@@ -16,16 +16,12 @@ import static java.util.Objects.requireNonNull;
 
 @Getter
 @EqualsAndHashCode
-public class JString extends JPrimitive {
+public final class JString extends JPrimitive {
     private final String value;
 
     private JString(Builder builder) {
-        super(builder.relations, builder.context);
-        this.value = requireNonNull(builder.value);
-    }
-
-    public static Builder builder() {
-        return new Builder();
+        super(builder);
+        value = requireNonNull(builder.value);
     }
 
     @Override
@@ -51,12 +47,10 @@ public class JString extends JPrimitive {
 
     @Setter
     @Accessors(fluent = true)
-    public static class Builder extends JNode.Builder<Builder> {
-        protected String value;
-
+    public static class Builder extends JPrimitive.Builder<String> {
         @Override
         public JString build() {
-            return new JString(this).initialize();
+            return build(new JString(this));
         }
     }
 }

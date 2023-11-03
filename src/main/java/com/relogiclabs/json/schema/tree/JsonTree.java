@@ -11,7 +11,7 @@ import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 
 @Getter
-public class JsonTree {
+public final class JsonTree {
     private final JRoot root;
 
     public JsonTree(RuntimeContext context, String input) {

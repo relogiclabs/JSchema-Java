@@ -46,8 +46,8 @@ public abstract class MessageFormatter {
 
     public abstract String format(ErrorDetail error, ExpectedDetail expected, ActualDetail actual);
 
-    private static class ValidationFormatter extends MessageFormatter {
-        protected ValidationFormatter(String summary, String expected, String actual) {
+    private static final class ValidationFormatter extends MessageFormatter {
+        private ValidationFormatter(String summary, String expected, String actual) {
             super(summary, expected, actual);
         }
 
@@ -60,7 +60,7 @@ public abstract class MessageFormatter {
         }
     }
 
-    private static class AssertionFormatter extends MessageFormatter {
+    private static final class AssertionFormatter extends MessageFormatter {
         public AssertionFormatter(String summary, String expected, String actual) {
             super(summary, expected, actual);
         }

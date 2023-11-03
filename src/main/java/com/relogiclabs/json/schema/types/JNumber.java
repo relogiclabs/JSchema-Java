@@ -1,14 +1,8 @@
 package com.relogiclabs.json.schema.types;
 
-import com.relogiclabs.json.schema.tree.Context;
-import lombok.Setter;
-import lombok.experimental.Accessors;
-
-import java.util.Map;
-
 public abstract class JNumber extends JPrimitive {
-    protected JNumber(Map<JNode, JNode> relations, Context context) {
-        super(relations, context);
+    protected JNumber(Builder<?> builder) {
+        super(builder);
     }
 
     public abstract double toDouble();
@@ -30,12 +24,5 @@ public abstract class JNumber extends JPrimitive {
     @Override
     public JsonType getType() {
         return JsonType.NUMBER;
-    }
-
-    @Setter
-    @Accessors(fluent = true)
-    public abstract static class Builder<T extends Number>
-            extends JNode.Builder<Builder<T>> {
-        protected T value;
     }
 }

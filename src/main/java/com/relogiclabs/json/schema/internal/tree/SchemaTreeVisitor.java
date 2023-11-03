@@ -3,7 +3,6 @@ package com.relogiclabs.json.schema.internal.tree;
 import com.relogiclabs.json.schema.function.CoreFunctions3;
 import com.relogiclabs.json.schema.internal.antlr.SchemaParser;
 import com.relogiclabs.json.schema.internal.antlr.SchemaParserBaseVisitor;
-import com.relogiclabs.json.schema.internal.util.StringHelper;
 import com.relogiclabs.json.schema.tree.Context;
 import com.relogiclabs.json.schema.tree.RuntimeContext;
 import com.relogiclabs.json.schema.types.JAlias;
@@ -37,9 +36,11 @@ import java.util.Map;
 
 import static com.relogiclabs.json.schema.internal.tree.TreeHelper.checkForDuplicate;
 import static com.relogiclabs.json.schema.internal.util.StringHelper.toEncoded;
+import static com.relogiclabs.json.schema.internal.util.StringHelper.unquote;
+import static com.relogiclabs.json.schema.message.ErrorCode.PROP04;
 import static java.util.stream.Collectors.joining;
 
-public class SchemaTreeVisitor extends SchemaParserBaseVisitor<JNode> {
+public final class SchemaTreeVisitor extends SchemaParserBaseVisitor<JNode> {
     private final Map<JNode, JNode> relations;
     private final RuntimeContext runtime;
 
@@ -50,7 +51,7 @@ public class SchemaTreeVisitor extends SchemaParserBaseVisitor<JNode> {
 
     @Override
     public JNode visitAggregateSchema(SchemaParser.AggregateSchemaContext ctx) {
-        return JRoot.builder()
+        return new JRoot.Builder()
                 .relations(relations)
                 .context(new Context(ctx, runtime))
                 .title((JTitle) visit(ctx.title()))
@@ -64,7 +65,7 @@ public class SchemaTreeVisitor extends SchemaParserBaseVisitor<JNode> {
 
     @Override
     public JNode visitCoreSchema(SchemaParser.CoreSchemaContext ctx) {
-        return JRoot.builder()
+        return new JRoot.Builder()
                 .relations(relations)
                 .context(new Context(ctx, runtime))
                 .includes(processIncludes(Collections.emptyList()))
@@ -84,7 +85,7 @@ public class SchemaTreeVisitor extends SchemaParserBaseVisitor<JNode> {
 
     @Override
     public JNode visitTitle(SchemaParser.TitleContext ctx) {
-        return JTitle.builder()
+        return new JTitle.Builder()
                 .relations(relations)
                 .context(new Context(ctx, runtime))
                 .title(ctx.STRING().getText())
@@ -93,7 +94,7 @@ public class SchemaTreeVisitor extends SchemaParserBaseVisitor<JNode> {
 
     @Override
     public JNode visitVersion(SchemaParser.VersionContext ctx) {
-        return JVersion.builder()
+        return new JVersion.Builder()
                 .relations(relations)
                 .context(new Context(ctx, runtime))
                 .version(ctx.VERSION_NUMBER1().getText())
@@ -102,7 +103,7 @@ public class SchemaTreeVisitor extends SchemaParserBaseVisitor<JNode> {
 
     @Override
     public JNode visitInclude(SchemaParser.IncludeContext ctx) {
-        var include = JInclude.builder()
+        var include = new JInclude.Builder()
                 .relations(relations)
                 .context(new Context(ctx, runtime))
                 .className(ctx.IDENTIFIER().stream().map(ParseTree::getText)
@@ -113,7 +114,7 @@ public class SchemaTreeVisitor extends SchemaParserBaseVisitor<JNode> {
 
     @Override
     public JNode visitPragma(SchemaParser.PragmaContext ctx) {
-        var pragma = JPragma.builder()
+        var pragma = new JPragma.Builder()
                 .relations(relations)
                 .context(new Context(ctx, runtime))
                 .name(ctx.IDENTIFIER().getText())
@@ -123,7 +124,7 @@ public class SchemaTreeVisitor extends SchemaParserBaseVisitor<JNode> {
 
     @Override
     public JNode visitDefine(SchemaParser.DefineContext ctx) {
-        var definition = JDefinition.builder()
+        var definition = new JDefinition.Builder()
                 .relations(relations)
                 .context(new Context(ctx, runtime))
                 .alias((JAlias) visit(ctx.aliasName()))
@@ -134,7 +135,7 @@ public class SchemaTreeVisitor extends SchemaParserBaseVisitor<JNode> {
 
     @Override
     public JNode visitAliasName(SchemaParser.AliasNameContext ctx) {
-        return JAlias.builder()
+        return new JAlias.Builder()
                 .relations(relations)
                 .context(new Context(ctx, runtime))
                 .name(ctx.ALIAS().getText())
@@ -143,7 +144,7 @@ public class SchemaTreeVisitor extends SchemaParserBaseVisitor<JNode> {
 
     @Override
     public JNode visitValidatorMain(SchemaParser.ValidatorMainContext ctx) {
-        return JValidator.builder()
+        return new JValidator.Builder()
                 .relations(relations)
                 .context(new Context(ctx, runtime))
                 .value(visit(ctx.value()))
@@ -170,27 +171,27 @@ public class SchemaTreeVisitor extends SchemaParserBaseVisitor<JNode> {
 
     @Override
     public JNode visitObject(SchemaParser.ObjectContext ctx) {
-        return JObject.builder()
+        return new JObject.Builder()
                 .relations(relations)
                 .context(new Context(ctx, runtime))
                 .properties(checkForDuplicate(ctx.property().stream()
-                        .map(c -> (JProperty) visit(c)).toList()))
+                        .map(c -> (JProperty) visit(c)).toList(), PROP04))
                 .build();
     }
 
     @Override
     public JNode visitProperty(SchemaParser.PropertyContext ctx) {
-        return JProperty.builder()
+        return new JProperty.Builder()
                 .relations(relations)
                 .context(new Context(ctx, runtime))
-                .key(StringHelper.unquote(ctx.STRING().getText()))
+                .key(unquote(ctx.STRING().getText()))
                 .value(visit(ctx.validator()))
                 .build();
     }
 
     @Override
     public JNode visitArray(SchemaParser.ArrayContext ctx) {
-        return JArray.builder()
+        return new JArray.Builder()
                 .relations(relations)
                 .context(new Context(ctx, runtime))
                 .elements(ctx.validator().stream().map(this::visit).toList())
@@ -199,7 +200,7 @@ public class SchemaTreeVisitor extends SchemaParserBaseVisitor<JNode> {
 
     @Override
     public JNode visitDatatype(SchemaParser.DatatypeContext ctx) {
-        return JDataType.builder()
+        return new JDataType.Builder()
                 .relations(relations)
                 .context(new Context(ctx, runtime))
                 .jsonType(JsonType.from(ctx.DATATYPE()))
@@ -210,7 +211,7 @@ public class SchemaTreeVisitor extends SchemaParserBaseVisitor<JNode> {
 
     @Override
     public JNode visitFunction(SchemaParser.FunctionContext ctx) {
-        return JFunction.builder()
+        return new JFunction.Builder()
                 .relations(relations)
                 .context(new Context(ctx, runtime))
                 .name(ctx.FUNCTION().getText())
@@ -221,7 +222,7 @@ public class SchemaTreeVisitor extends SchemaParserBaseVisitor<JNode> {
 
     @Override
     public JNode visitPrimitiveTrue(SchemaParser.PrimitiveTrueContext ctx) {
-        return JBoolean.builder()
+        return new JBoolean.Builder()
                 .relations(relations)
                 .context(new Context(ctx, runtime))
                 .value(true).build();
@@ -229,7 +230,7 @@ public class SchemaTreeVisitor extends SchemaParserBaseVisitor<JNode> {
 
     @Override
     public JNode visitPrimitiveFalse(SchemaParser.PrimitiveFalseContext ctx) {
-        return JBoolean.builder()
+        return new JBoolean.Builder()
                 .relations(relations)
                 .context(new Context(ctx, runtime))
                 .value(false).build();
@@ -237,7 +238,7 @@ public class SchemaTreeVisitor extends SchemaParserBaseVisitor<JNode> {
 
     @Override
     public JNode visitPrimitiveString(SchemaParser.PrimitiveStringContext ctx) {
-        return JString.builder()
+        return new JString.Builder()
                 .relations(relations)
                 .context(new Context(ctx, runtime))
                 .value(toEncoded(ctx.STRING().getText()))
@@ -246,7 +247,7 @@ public class SchemaTreeVisitor extends SchemaParserBaseVisitor<JNode> {
 
     @Override
     public JNode visitPrimitiveInteger(SchemaParser.PrimitiveIntegerContext ctx) {
-        return JInteger.builder()
+        return new JInteger.Builder()
                 .relations(relations)
                 .context(new Context(ctx, runtime))
                 .value(Long.valueOf(ctx.INTEGER().getText()))
@@ -255,7 +256,7 @@ public class SchemaTreeVisitor extends SchemaParserBaseVisitor<JNode> {
 
     @Override
     public JNode visitPrimitiveFloat(SchemaParser.PrimitiveFloatContext ctx) {
-        return JFloat.builder()
+        return new JFloat.Builder()
                 .relations(relations)
                 .context(new Context(ctx, runtime))
                 .value(Double.valueOf(ctx.FLOAT().getText()))
@@ -264,7 +265,7 @@ public class SchemaTreeVisitor extends SchemaParserBaseVisitor<JNode> {
 
     @Override
     public JNode visitPrimitiveDouble(SchemaParser.PrimitiveDoubleContext ctx) {
-        return JDouble.builder()
+        return new JDouble.Builder()
                 .relations(relations)
                 .context(new Context(ctx, runtime))
                 .value(Double.valueOf(ctx.DOUBLE().getText()))
@@ -273,7 +274,7 @@ public class SchemaTreeVisitor extends SchemaParserBaseVisitor<JNode> {
 
     @Override
     public JNode visitPrimitiveNull(SchemaParser.PrimitiveNullContext ctx) {
-        return JNull.builder()
+        return new JNull.Builder()
                 .relations(relations)
                 .context(new Context(ctx, runtime))
                 .build();
@@ -281,7 +282,7 @@ public class SchemaTreeVisitor extends SchemaParserBaseVisitor<JNode> {
 
     @Override
     public JNode visitPrimitiveUndefined(SchemaParser.PrimitiveUndefinedContext ctx) {
-        return JUndefined.builder()
+        return new JUndefined.Builder()
                 .relations(relations)
                 .context(new Context(ctx, runtime))
                 .build();

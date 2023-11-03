@@ -17,7 +17,7 @@ import static com.relogiclabs.json.schema.message.ErrorCode.FUNC08;
 import static java.util.stream.Collectors.joining;
 
 @Getter
-public class MethodPointer {
+public final class MethodPointer {
 
     private final FunctionBase instance;
     private final Method method;
@@ -55,7 +55,6 @@ public class MethodPointer {
 
     private static String stringOf(Parameter parameter) {
         var builder = new StringBuilder(parameter.getType().getSimpleName());
-        if(parameter.isVarArgs()) builder.append("...");
         builder.append(" ").append(parameter.getName());
         return builder.toString();
     }

@@ -7,7 +7,7 @@ import static com.relogiclabs.json.schema.internal.util.StringHelper.concat;
 
 @Getter
 @AllArgsConstructor
-public class ErrorDetail {
+public final class ErrorDetail {
     private String code;
     private String message;
 

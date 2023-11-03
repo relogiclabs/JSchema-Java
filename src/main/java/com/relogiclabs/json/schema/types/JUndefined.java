@@ -3,15 +3,11 @@ package com.relogiclabs.json.schema.types;
 import lombok.EqualsAndHashCode;
 
 @EqualsAndHashCode
-public class JUndefined extends JLeaf {
+public final class JUndefined extends JLeaf {
     public static final String UNDEFINED_MARKER = "!";
 
     private JUndefined(Builder builder) {
-        super(builder.relations, builder.context);
-    }
-
-    public static Builder builder() {
-        return new Builder();
+        super(builder);
     }
 
     @Override
@@ -27,7 +23,7 @@ public class JUndefined extends JLeaf {
     public static class Builder extends JNode.Builder<Builder> {
         @Override
         public JUndefined build() {
-            return new JUndefined(this).initialize();
+            return build(new JUndefined(this));
         }
     }
 }
