@@ -1,21 +1,26 @@
 package com.relogiclabs.json.schema.types;
 
-import com.relogiclabs.json.schema.tree.Context;
-
-import java.util.Map;
+import lombok.Setter;
+import lombok.experimental.Accessors;
 
 public abstract class JPrimitive extends JLeaf implements JsonTypable {
-    protected JPrimitive(Map<JNode, JNode> relations, Context context) {
-        super(relations, context);
+    protected JPrimitive(JNode.Builder<?> builder) {
+        super(builder);
     }
 
     @Override
     public JsonType getType() {
-        return JsonType.ANY;
+        return JsonType.PRIMITIVE;
     }
 
     @Override
     public JNode getNode() {
         return this;
+    }
+
+    @Setter
+    @Accessors(fluent = true)
+    public abstract static class Builder<T> extends JNode.Builder<Builder<T>> {
+        protected T value;
     }
 }

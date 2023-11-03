@@ -10,32 +10,28 @@ import static java.util.Objects.requireNonNull;
 
 @Getter
 @EqualsAndHashCode
-public class JTitle extends JDirective {
+public final class JTitle extends JDirective {
     public static final String TITLE_MARKER = "%title";
     private final String title;
 
     private JTitle(Builder builder) {
-        super(builder.relations, builder.context);
-        this.title = requireNonNull(builder.title);
-    }
-
-    public static Builder builder() {
-        return new Builder();
+        super(builder);
+        title = requireNonNull(builder.title);
     }
 
     @Override
     public String toString() {
-        return concat(TITLE_MARKER, " ", title);
+        return concat(TITLE_MARKER, ": ", title);
     }
 
     @Setter
     @Accessors(fluent = true)
     public static class Builder extends JNode.Builder<Builder> {
-        protected String title;
+        private String title;
 
         @Override
         public JTitle build() {
-            return new JTitle(this).initialize();
+            return build(new JTitle(this));
         }
     }
 }

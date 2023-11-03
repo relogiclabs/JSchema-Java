@@ -1,20 +1,17 @@
 package com.relogiclabs.json.schema.types;
 
-import com.relogiclabs.json.schema.tree.Context;
-
 import java.util.Collection;
-import java.util.Map;
 
 public abstract class JComposite extends JBranch implements JsonTypable {
-    protected JComposite(Map<JNode, JNode> relations, Context context) {
-        super(relations, context);
+    protected JComposite(Builder<?> builder) {
+        super(builder);
     }
 
     public abstract Collection<? extends JNode> components();
 
     @Override
     public JsonType getType() {
-        return JsonType.ANY;
+        return JsonType.COMPOSITE;
     }
 
     @Override

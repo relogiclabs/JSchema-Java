@@ -18,36 +18,28 @@ import static com.relogiclabs.json.schema.internal.message.MessageHelper.Propert
 import static com.relogiclabs.json.schema.internal.message.MessageHelper.UndefinedPropertyFound;
 import static com.relogiclabs.json.schema.internal.util.MiscellaneousHelper.nonNull;
 import static com.relogiclabs.json.schema.internal.util.StringHelper.join;
-import static com.relogiclabs.json.schema.message.ErrorCode.PROP04;
 import static com.relogiclabs.json.schema.message.ErrorCode.PROP05;
 import static com.relogiclabs.json.schema.message.ErrorCode.PROP06;
+import static com.relogiclabs.json.schema.message.ErrorCode.PROP07;
 import static java.util.Objects.requireNonNull;
 
 @Getter
 @EqualsAndHashCode
-public class JObject extends JComposite {
+public final class JObject extends JComposite {
     private final IndexMap<String, JProperty> properties;
     private final List<JNode> components;
 
     private JObject(Builder builder) {
-        super(builder.relations, builder.context);
-        this.properties = requireNonNull(builder.properties);
-        this.components = builder.properties.values()
-                .stream().map(JProperty::getValue).toList();
-    }
-
-    public static Builder builder() {
-        return new Builder();
+        super(builder);
+        properties = requireNonNull(builder.properties);
+        components = builder.properties.values().stream()
+                .map(JProperty::getValue).toList();
+        children = properties.values();
     }
 
     @Override
     public JsonType getType() {
         return JsonType.OBJECT;
-    }
-
-    @Override
-    public Collection<? extends JNode> getChildren() {
-        return properties.values();
     }
 
     @Override
@@ -66,18 +58,17 @@ public class JObject extends JComposite {
             }
             if(!((JValidator) thisProp.getValue()).getOptional())
                 return failWith(new JsonSchemaException(
-                        new ErrorDetail(PROP04, PropertyNotFound),
+                        new ErrorDetail(PROP05, PropertyNotFound),
                         ExpectedHelper.asPropertyNotFound(thisProp),
                         ActualHelper.asPropertyNotFound(node, thisProp)));
         }
-        if(unresolved.size() > 0 && !getRuntime().getIgnoreUndefinedProperties()) {
-            for(String key : unresolved) {
-                var property = other.properties.get(key);
-                result &= failWith(new JsonSchemaException(
-                        new ErrorDetail(PROP05, UndefinedPropertyFound),
-                        ExpectedHelper.asUndefinedProperty(this, property),
-                        ActualHelper.asUndefinedProperty(property)));
-            }
+        if(unresolved.isEmpty() || getRuntime().getIgnoreUndefinedProperties()) return result;
+        for(String key : unresolved) {
+            var property = other.properties.get(key);
+            result &= failWith(new JsonSchemaException(
+                    new ErrorDetail(PROP06, UndefinedPropertyFound),
+                    ExpectedHelper.asUndefinedProperty(this, property),
+                    ActualHelper.asUndefinedProperty(property)));
         }
         return result;
     }
@@ -92,7 +83,7 @@ public class JObject extends JComposite {
             if(otherProp == null) existing = other.properties.get(thisProp.getKey());
             if(otherProp == null && existing != null)
                 failWith(new JsonSchemaException(
-                        new ErrorDetail(PROP06, PropertyOrderMismatch),
+                        new ErrorDetail(PROP07, PropertyOrderMismatch),
                         ExpectedHelper.asPropertyOrderMismatch(thisProp),
                         ActualHelper.asPropertyOrderMismatch(nonNull(atProp, other))));
         } else otherProp = other.properties.get(thisProp.getKey());
@@ -119,18 +110,16 @@ public class JObject extends JComposite {
     }
 
     public static class Builder extends JNode.Builder<Builder> {
-        protected IndexMap<String, JProperty> properties;
+        private IndexMap<String, JProperty> properties;
 
         public Builder properties(List<JProperty> properties) {
-            var indexMap = new IndexHashMap<>(properties);
-            indexMap.makeReadOnly();
-            this.properties = indexMap;
+            this.properties = new IndexHashMap<>(properties).asUnmodifiable();
             return this;
         }
 
         @Override
         public JObject build() {
-            return new JObject(this).initialize();
+            return build(new JObject(this));
         }
     }
 }

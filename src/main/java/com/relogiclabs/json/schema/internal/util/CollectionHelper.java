@@ -5,14 +5,17 @@ import com.relogiclabs.json.schema.types.JNode;
 import com.relogiclabs.json.schema.types.JProperty;
 import com.relogiclabs.json.schema.types.JString;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import static java.util.stream.Collectors.toSet;
 
-public class CollectionHelper {
+public final class CollectionHelper {
     public static <K, V> void merge(Map<K, List<V>> target, Map<K, List<V>> source) {
         source.forEach((sk, sv) -> {
             var tv = target.get(sk);
@@ -32,5 +35,22 @@ public class CollectionHelper {
         Set<JNode> set = Arrays.stream(values).collect(toSet());
         map.values().stream().forEach(p -> set.remove(p.getValue()));
         return set;
+    }
+
+    @SafeVarargs
+    public static <T> List<T> asList(T... elements) {
+        List<T> list = new ArrayList<>(elements.length);
+        for(var e : elements) if(e != null) list.add(e);
+        return Collections.unmodifiableList(list);
+    }
+
+    @SafeVarargs
+    public static <T> void addToList(Collection<T> source, T... elements) {
+        for(var e : elements) if(e != null) source.add(e);
+    }
+
+    @SafeVarargs
+    public static <T> void addToList(Collection<T> source, Collection<? extends T>... collections) {
+        for(var c : collections) if(c != null) source.addAll(c);
     }
 }

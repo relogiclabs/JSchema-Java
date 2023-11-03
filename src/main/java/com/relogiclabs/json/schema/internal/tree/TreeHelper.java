@@ -10,15 +10,14 @@ import java.util.function.Function;
 import static com.relogiclabs.json.schema.internal.util.StreamHelper.halt;
 import static com.relogiclabs.json.schema.internal.util.StringHelper.concat;
 import static com.relogiclabs.json.schema.internal.util.StringHelper.quote;
-import static com.relogiclabs.json.schema.message.ErrorCode.PROP03;
 import static java.util.stream.Collectors.toMap;
 
-public class TreeHelper {
+public final class TreeHelper {
 
-    public static List<JProperty> checkForDuplicate(List<JProperty> list) {
+    public static List<JProperty> checkForDuplicate(List<JProperty> list, String errorCode) {
         list.stream().collect(toMap(JProperty::getKey, Function.identity(),
                 (p1, p2) -> halt(new DuplicatePropertyKeyException(MessageFormatter.formatForJson(
-                        PROP03, concat("Multiple key with name ", quote(p2.getKey()), " found"),
+                        errorCode, concat("Multiple key with name ", quote(p2.getKey()), " found"),
                         p2.getContext())))
         ));
         return list;
