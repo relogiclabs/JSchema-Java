@@ -5,7 +5,7 @@ import com.relogiclabs.json.schema.types.JNode;
 
 import static com.relogiclabs.json.schema.internal.util.StringHelper.concat;
 
-public class ActualDetail extends ContextDetail {
+public final class ActualDetail extends ContextDetail {
     public ActualDetail(Context context, String message) {
         super(context, message);
     }

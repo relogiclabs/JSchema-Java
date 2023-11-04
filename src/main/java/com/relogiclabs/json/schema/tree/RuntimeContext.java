@@ -20,10 +20,11 @@ import java.util.Queue;
 import java.util.function.Supplier;
 
 import static com.relogiclabs.json.schema.internal.util.StringHelper.concat;
+import static com.relogiclabs.json.schema.internal.util.StringHelper.quote;
 import static com.relogiclabs.json.schema.message.ErrorCode.DEFI01;
 
 
-public class RuntimeContext {
+public final class RuntimeContext {
     private final FunctionManager functionManager;
     private final PragmaManager pragmaManager;
     private int disableException = 0;
@@ -32,7 +33,7 @@ public class RuntimeContext {
     @Getter private final boolean throwException;
     @Getter private final Queue<Exception> exceptions;
     @Getter private final MessageFormatter messageFormatter;
-    
+
 
     public RuntimeContext(MessageFormatter messageFormatter, boolean throwException) {
         this.messageFormatter = messageFormatter;
@@ -60,7 +61,7 @@ public class RuntimeContext {
         var previous = definitions.get(definition.getAlias());
         if(previous != null)
             throw new DuplicateDefinitionException(MessageFormatter.formatForSchema(
-                DEFI01, concat("Duplicate definition of ", definition.getAlias(),
+                DEFI01, concat("Duplicate definition of ", quote(definition.getAlias()),
                             " is found and already defined as ", previous.getOutline()),
                     definition.getContext()));
         definitions.put(definition.getAlias(), definition.getValidator());

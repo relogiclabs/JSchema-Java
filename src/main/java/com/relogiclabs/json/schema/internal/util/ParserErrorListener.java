@@ -11,16 +11,13 @@ import static com.relogiclabs.json.schema.message.ErrorCode.JPRS01;
 import static com.relogiclabs.json.schema.message.ErrorCode.SPRS01;
 
 public abstract class ParserErrorListener extends BaseErrorListener {
-
     public static final ParserErrorListener SCHEMA = new SchemaErrorListener();
     public static final ParserErrorListener JSON = new JsonErrorListener();
-
 
     protected abstract CommonException createException(String message, Throwable cause);
     protected abstract String getMessageFormat();
 
-    private static class SchemaErrorListener extends ParserErrorListener {
-
+    private static final class SchemaErrorListener extends ParserErrorListener {
         @Override
         protected CommonException createException(String message, Throwable cause) {
             return new SchemaParserException(SPRS01, message, cause);
@@ -32,8 +29,7 @@ public abstract class ParserErrorListener extends BaseErrorListener {
         }
     }
 
-    private static class JsonErrorListener extends ParserErrorListener {
-
+    private static final class JsonErrorListener extends ParserErrorListener {
         @Override
         protected CommonException createException(String message, Throwable cause) {
             return new JsonParserException(JPRS01, message, cause);
@@ -48,7 +44,7 @@ public abstract class ParserErrorListener extends BaseErrorListener {
     @Override
     public void syntaxError(Recognizer<?, ?> recognizer, Object offendingSymbol, int line,
                             int charPositionInLine, String msg, RecognitionException e) {
-        DebugUtils.print(recognizer);
+        DebugUtilities.print(recognizer);
         var message = getMessageFormat().formatted(line, charPositionInLine, msg, offendingSymbol);
         throw createException(message, e);
     }

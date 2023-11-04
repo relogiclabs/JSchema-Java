@@ -3,16 +3,11 @@ package com.relogiclabs.json.schema.types;
 import lombok.EqualsAndHashCode;
 
 @EqualsAndHashCode
-public class JNull extends JPrimitive {
-
+public final class JNull extends JPrimitive {
     public static final String NULL_MARKER = "null";
 
     private JNull(Builder builder) {
-        super(builder.relations, builder.context);
-    }
-
-    public static Builder builder() {
-        return new Builder();
+        super(builder);
     }
 
     @Override
@@ -22,7 +17,7 @@ public class JNull extends JPrimitive {
 
     @Override
     public boolean match(JNode node) {
-        return isOfType(node, JNull.class);
+        return checkType(node, JNull.class);
     }
 
     @Override
@@ -33,7 +28,7 @@ public class JNull extends JPrimitive {
     public static class Builder extends JNode.Builder<Builder> {
         @Override
         public JNull build() {
-            return new JNull(this).initialize();
+            return build(new JNull(this));
         }
     }
 }

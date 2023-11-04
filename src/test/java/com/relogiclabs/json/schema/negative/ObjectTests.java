@@ -16,6 +16,7 @@ import static com.relogiclabs.json.schema.message.ErrorCode.OLEN02;
 import static com.relogiclabs.json.schema.message.ErrorCode.OLEN04;
 import static com.relogiclabs.json.schema.message.ErrorCode.OLEN05;
 import static com.relogiclabs.json.schema.message.ErrorCode.PROP03;
+import static com.relogiclabs.json.schema.message.ErrorCode.PROP04;
 import static com.relogiclabs.json.schema.message.ErrorCode.VALU01;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -264,7 +265,7 @@ public class ObjectTests {
         //JsonSchema.IsValid(schema, json);
         var exception = assertThrows(DuplicatePropertyKeyException.class,
                 () -> JsonAssert.isValid(schema, json));
-        assertEquals(PROP03, exception.getCode());
+        assertEquals(PROP04, exception.getCode());
         exception.printStackTrace();
     }
 

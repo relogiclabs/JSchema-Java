@@ -15,16 +15,12 @@ import static java.util.Objects.requireNonNull;
 
 @Getter
 @EqualsAndHashCode
-public class JBoolean extends JPrimitive implements PragmaValue<Boolean> {
+public final class JBoolean extends JPrimitive implements PragmaValue<Boolean> {
     private final boolean value;
 
     private JBoolean(Builder builder) {
-        super(builder.relations, builder.context);
-        this.value = requireNonNull(builder.value);
-    }
-
-    public static Builder builder() {
-        return new Builder();
+        super(builder);
+        value = requireNonNull(builder.value);
     }
 
     @Override
@@ -55,12 +51,10 @@ public class JBoolean extends JPrimitive implements PragmaValue<Boolean> {
 
     @Setter
     @Accessors(fluent = true)
-    public static class Builder extends JNode.Builder<Builder> {
-        protected Boolean value;
-
+    public static class Builder extends JPrimitive.Builder<Boolean> {
         @Override
         public JBoolean build() {
-            return new JBoolean(this).initialize();
+            return build(new JBoolean(this));
         }
     }
 }

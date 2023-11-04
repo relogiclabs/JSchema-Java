@@ -8,7 +8,7 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public class ContextDetail {
+public abstract class ContextDetail {
     private Context context;
     private String message;
 

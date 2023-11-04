@@ -120,6 +120,7 @@ public interface ErrorCode {
     String PROP04 = "PROP04";
     String PROP05 = "PROP05";
     String PROP06 = "PROP06";
+    String PROP07 = "PROP07";
     String RANG01 = "RANG01";
     String RANG02 = "RANG02";
     String RANG03 = "RANG03";

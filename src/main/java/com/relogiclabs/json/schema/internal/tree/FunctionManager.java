@@ -3,18 +3,20 @@ package com.relogiclabs.json.schema.internal.tree;
 import com.relogiclabs.json.schema.exception.ClassInstantiationException;
 import com.relogiclabs.json.schema.exception.CommonException;
 import com.relogiclabs.json.schema.exception.DuplicateIncludeException;
-import com.relogiclabs.json.schema.exception.FunctionMismatchException;
 import com.relogiclabs.json.schema.exception.FunctionNotFoundException;
 import com.relogiclabs.json.schema.exception.InvalidFunctionException;
 import com.relogiclabs.json.schema.exception.InvalidIncludeException;
+import com.relogiclabs.json.schema.exception.JsonSchemaException;
 import com.relogiclabs.json.schema.exception.NotFoundClassException;
 import com.relogiclabs.json.schema.function.FunctionBase;
+import com.relogiclabs.json.schema.message.ActualDetail;
+import com.relogiclabs.json.schema.message.ErrorDetail;
+import com.relogiclabs.json.schema.message.ExpectedDetail;
 import com.relogiclabs.json.schema.message.MessageFormatter;
 import com.relogiclabs.json.schema.tree.Context;
 import com.relogiclabs.json.schema.tree.RuntimeContext;
 import com.relogiclabs.json.schema.types.JFunction;
 import com.relogiclabs.json.schema.types.JNode;
-import com.relogiclabs.json.schema.types.JsonType;
 
 import java.lang.reflect.Array;
 import java.lang.reflect.InvocationTargetException;
@@ -26,6 +28,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import static com.relogiclabs.json.schema.internal.message.MessageHelper.getTypeName;
 import static com.relogiclabs.json.schema.internal.tree.MethodPointer.getSignature;
 import static com.relogiclabs.json.schema.internal.util.CollectionHelper.merge;
 import static com.relogiclabs.json.schema.internal.util.StringHelper.concat;
@@ -42,7 +45,7 @@ import static com.relogiclabs.json.schema.message.ErrorCode.FUNC03;
 import static com.relogiclabs.json.schema.message.ErrorCode.FUNC04;
 import static com.relogiclabs.json.schema.message.ErrorCode.FUNC05;
 
-public class FunctionManager {
+public final class FunctionManager {
     private final Set<String> includes;
     private final Map<FunctionKey, List<MethodPointer>> functions;
     private final RuntimeContext runtime;
@@ -127,30 +130,28 @@ public class FunctionManager {
 
     public boolean invokeFunction(JFunction function, JNode target) {
         var methods = getMethods(function);
-        String mismatchMessage = null;
+        Parameter mismatchParameter = null;
+
         for(var method : methods) {
             var parameters = method.getParameters();
             var arguments = function.getArguments();
             var schemaArgs = processArgs(parameters, arguments);
             if(schemaArgs == null) continue;
-            if(!isMatch(parameters.get(0), target)) {
-                mismatchMessage = "Function %s is applicable on %s but applied on %s of %s"
-                        .formatted(function.getOutline(), getTypeName(parameters.get(0).getType()),
-                                getTypeName(target.getClass()), target);
-                continue;
-            }
-            return method.invoke(function, addTarget(schemaArgs, target));
+            if(isMatch(parameters.get(0), target))
+                return method.invoke(function, addTarget(schemaArgs, target));
+            mismatchParameter = parameters.get(0);
         }
-        if(mismatchMessage != null) return failWith(new FunctionMismatchException(
-            MessageFormatter.formatForSchema(FUNC03, mismatchMessage, function.getContext())));
+
+        if(mismatchParameter != null)
+            return failWith(new JsonSchemaException(new ErrorDetail(FUNC03,
+                    "Function ", function.getOutline(), " is incompatible with the target data type"),
+                    new ExpectedDetail(function, "applying to a supported data type such as ",
+                            getTypeName(mismatchParameter.getType())),
+                    new ActualDetail(target, "applied to an unsupported data type ",
+                            getTypeName(target.getClass()), " of ", target)));
+
         return failWith(new FunctionNotFoundException(MessageFormatter
             .formatForSchema(FUNC04, function.getOutline(), function.getContext())));
-    }
-
-    private static String getTypeName(Class<?> type) {
-        JsonType t = JsonType.from(type);
-        if(t != null) return t.getName();
-        else return type.getSimpleName();
     }
 
     private List<MethodPointer> getMethods(JFunction function) {

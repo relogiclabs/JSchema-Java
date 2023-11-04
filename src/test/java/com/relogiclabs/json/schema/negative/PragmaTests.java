@@ -13,8 +13,8 @@ import static com.relogiclabs.json.schema.message.ErrorCode.FLOT01;
 import static com.relogiclabs.json.schema.message.ErrorCode.PRAG01;
 import static com.relogiclabs.json.schema.message.ErrorCode.PRAG02;
 import static com.relogiclabs.json.schema.message.ErrorCode.PRAG03;
-import static com.relogiclabs.json.schema.message.ErrorCode.PROP05;
 import static com.relogiclabs.json.schema.message.ErrorCode.PROP06;
+import static com.relogiclabs.json.schema.message.ErrorCode.PROP07;
 import static com.relogiclabs.json.schema.message.ErrorCode.SPRS01;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -40,7 +40,7 @@ public class PragmaTests {
         JsonSchema.isValid(schema, json);
         var exception = assertThrows(JsonSchemaException.class,
                 () -> JsonAssert.isValid(schema, json));
-        assertEquals(PROP05, exception.getCode());
+        assertEquals(PROP06, exception.getCode());
         exception.printStackTrace();
     }
 
@@ -139,7 +139,7 @@ public class PragmaTests {
         JsonSchema.isValid(schema, json);
         var exception = assertThrows(JsonSchemaException.class,
                 () -> JsonAssert.isValid(schema, json));
-        assertEquals(PROP06, exception.getCode());
+        assertEquals(PROP07, exception.getCode());
         exception.printStackTrace();
     }
 

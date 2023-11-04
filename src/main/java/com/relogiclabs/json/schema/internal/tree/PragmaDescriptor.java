@@ -8,7 +8,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Getter
-public class PragmaDescriptor<T> {
+public final class PragmaDescriptor<T> {
 
     private static final Map<String, PragmaDescriptor<?>> PRAGMAS = new HashMap<>();
 

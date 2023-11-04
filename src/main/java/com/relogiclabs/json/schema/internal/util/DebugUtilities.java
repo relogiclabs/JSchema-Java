@@ -9,7 +9,9 @@ import org.antlr.v4.runtime.Recognizer;
 import java.util.Collections;
 import java.util.List;
 
-public class DebugUtils {
+// External logging library may consider
+// Kept it lightweight for now
+public final class DebugUtilities {
 
     public static boolean debugPrint = false;
 

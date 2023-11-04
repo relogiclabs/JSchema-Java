@@ -1,12 +1,13 @@
 package com.relogiclabs.json.schema.negative;
 
 import com.relogiclabs.json.schema.JsonAssert;
+import com.relogiclabs.json.schema.JsonSchema;
 import com.relogiclabs.json.schema.exception.ClassInstantiationException;
 import com.relogiclabs.json.schema.exception.DuplicateIncludeException;
-import com.relogiclabs.json.schema.exception.FunctionMismatchException;
 import com.relogiclabs.json.schema.exception.FunctionNotFoundException;
 import com.relogiclabs.json.schema.exception.InvalidFunctionException;
 import com.relogiclabs.json.schema.exception.InvalidIncludeException;
+import com.relogiclabs.json.schema.exception.JsonSchemaException;
 import com.relogiclabs.json.schema.exception.NotFoundClassException;
 import org.junit.jupiter.api.Test;
 
@@ -34,8 +35,8 @@ public class FunctionTests {
                 "test"
                 """;
 
-        //JsonSchema.IsValid(schema, json);
-        var exception = assertThrows(FunctionMismatchException.class,
+        JsonSchema.isValid(schema, json);
+        var exception = assertThrows(JsonSchemaException.class,
                 () -> JsonAssert.isValid(schema, json));
         assertEquals(FUNC03, exception.getCode());
         exception.printStackTrace();

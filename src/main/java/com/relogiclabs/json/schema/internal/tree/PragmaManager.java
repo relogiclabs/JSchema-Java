@@ -11,7 +11,7 @@ import java.util.Map;
 import static com.relogiclabs.json.schema.message.ErrorCode.PRAG03;
 
 @Getter
-public class PragmaManager {
+public final class PragmaManager {
 
     public static final String IGNORE_UNDEFINED_PROPERTIES = "IgnoreUndefinedProperties";
     public static final String FLOATING_POINT_TOLERANCE = "FloatingPointTolerance";

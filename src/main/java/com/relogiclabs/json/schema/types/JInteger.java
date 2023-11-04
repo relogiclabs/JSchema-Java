@@ -13,16 +13,12 @@ import static java.util.Objects.requireNonNull;
 
 @Getter
 @EqualsAndHashCode
-public class JInteger extends JNumber implements PragmaValue<Long> {
+public final class JInteger extends JNumber implements PragmaValue<Long> {
     private final long value;
 
     private JInteger(Builder builder) {
-        super(builder.relations, builder.context);
-        this.value = requireNonNull(builder.value);
-    }
-
-    public static Builder builder() {
-        return new Builder();
+        super(builder);
+        value = requireNonNull(builder.value);
     }
 
     @Override
@@ -56,10 +52,10 @@ public class JInteger extends JNumber implements PragmaValue<Long> {
         return String.valueOf(value);
     }
 
-    public static class Builder extends JNumber.Builder<Long> {
+    public static class Builder extends JPrimitive.Builder<Long> {
         @Override
         public JInteger build() {
-            return new JInteger(this).initialize();
+            return build(new JInteger(this));
         }
     }
 }

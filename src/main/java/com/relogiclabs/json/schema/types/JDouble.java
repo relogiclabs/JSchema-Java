@@ -15,17 +15,13 @@ import static java.util.Objects.requireNonNull;
 
 @Getter
 @EqualsAndHashCode
-public class JDouble extends JNumber implements PragmaValue<Double> {
+public final class JDouble extends JNumber implements PragmaValue<Double> {
     private static final DecimalFormat DOUBLE_FORMAT = new DecimalFormat("0.0##############E0");
     private final double value;
 
     private JDouble(Builder builder) {
-        super(builder.relations, builder.context);
-        this.value = requireNonNull(builder.value);
-    }
-
-    public static Builder builder() {
-        return new Builder();
+        super(builder);
+        value = requireNonNull(builder.value);
     }
 
     @Override
@@ -59,10 +55,10 @@ public class JDouble extends JNumber implements PragmaValue<Double> {
         return DOUBLE_FORMAT.format(value);
     }
 
-    public static class Builder extends JNumber.Builder<Double> {
+    public static class Builder extends JPrimitive.Builder<Double> {
         @Override
         public JDouble build() {
-            return new JDouble(this).initialize();
+            return build(new JDouble(this));
         }
     }
 }

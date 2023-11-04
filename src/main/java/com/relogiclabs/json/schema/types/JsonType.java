@@ -2,6 +2,7 @@ package com.relogiclabs.json.schema.types;
 
 import com.relogiclabs.json.schema.exception.InvalidDataTypeException;
 import com.relogiclabs.json.schema.internal.time.DateTimeValidator;
+import com.relogiclabs.json.schema.internal.util.Reference;
 import com.relogiclabs.json.schema.message.MessageFormatter;
 import com.relogiclabs.json.schema.tree.Location;
 import lombok.AllArgsConstructor;
@@ -27,6 +28,8 @@ public enum JsonType {
     NUMBER("#number", JNumber.class),
     DATE("#date", JString.class),
     TIME("#time", JString.class),
+    PRIMITIVE("#primitive", JPrimitive.class),
+    COMPOSITE("#composite", JComposite.class),
     ANY("#any", JsonTypable.class);
 
     private static final DateTimeValidator ISO_8601_DATE
@@ -34,41 +37,42 @@ public enum JsonType {
     private static final DateTimeValidator ISO_8601_TIME
             = new DateTimeValidator(DateTimeValidator.ISO_8601_TIME);
 
-    private static final Map<String, JsonType> typeMap;
+    private static final Map<String, JsonType> stringTypeMap;
+    private static final Map<Class<?>, JsonType> classTypeMap;
 
     private final String name;
     private final Class<?> type;
 
 
     static {
-        typeMap = new HashMap<>();
-        for(JsonType t : JsonType.values())
-            typeMap.put(t.name, t);
+        stringTypeMap = new HashMap<>();
+        classTypeMap = new HashMap<>();
+        for(JsonType t : JsonType.values()) {
+            stringTypeMap.put(t.name, t);
+            classTypeMap.putIfAbsent(t.type, t);
+        }
     }
 
     public static JsonType from(TerminalNode node) {
         return from(node.getText(), Location.from(node.getSymbol()));
     }
 
+    public static JsonType from(Class<?> type) {
+        return classTypeMap.get(type);
+    }
+
     public static JsonType from(String name, Location location) {
-        var result = typeMap.get(name);
+        var result = stringTypeMap.get(name);
         if(result == null) throw new InvalidDataTypeException(
                 MessageFormatter.formatForSchema(DTYP01,
                         "Invalid data type " + name, location));
         return result;
     }
 
-    public static JsonType from(Class<?> type) {
-        for(var t : values()) {
-            if(t.getType().isAssignableFrom(type)) return t;
-        }
-        return null;
-    }
-
-    public boolean match(JNode node) {
+    public boolean match(JNode node, Reference<String> error) {
         if(!type.isInstance(node)) return false;
-        if(this == DATE) return ISO_8601_DATE.IsValidDate(((JString) node).getValue());
-        if(this == TIME) return ISO_8601_TIME.IsValidTime(((JString) node).getValue());
+        if(this == DATE) return ISO_8601_DATE.IsValidDate(((JString) node).getValue(), error);
+        if(this == TIME) return ISO_8601_TIME.IsValidTime(((JString) node).getValue(), error);
         return true;
     }
 

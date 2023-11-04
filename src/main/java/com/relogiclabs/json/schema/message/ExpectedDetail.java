@@ -5,7 +5,7 @@ import com.relogiclabs.json.schema.types.JNode;
 
 import static com.relogiclabs.json.schema.internal.util.StringHelper.concat;
 
-public class ExpectedDetail extends ContextDetail {
+public final class ExpectedDetail extends ContextDetail {
     public ExpectedDetail(Context context, String message) {
         super(context, message);
     }

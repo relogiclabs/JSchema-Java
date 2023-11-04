@@ -2,8 +2,9 @@ package com.relogiclabs.json.schema.internal.message;
 
 import com.relogiclabs.json.schema.types.JNode;
 import com.relogiclabs.json.schema.types.JsonTypable;
+import com.relogiclabs.json.schema.types.JsonType;
 
-public class MessageHelper {
+public final class MessageHelper {
 
     public static final String ValidationFailed = "Validation failed";
     public static final String ValueMismatch = "Value mismatch";
@@ -26,5 +27,11 @@ public class MessageHelper {
         return node instanceof JsonTypable jsonNode
                 ? jsonNode.getType().getName()
                 : node.getClass().getName();
+    }
+
+    public static String getTypeName(Class<?> type) {
+        JsonType t = JsonType.from(type);
+        if(t != null) return t.getName();
+        else return type.getSimpleName();
     }
 }

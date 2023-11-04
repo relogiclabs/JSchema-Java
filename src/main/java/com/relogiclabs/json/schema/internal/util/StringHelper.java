@@ -6,8 +6,10 @@ import org.apache.commons.lang3.StringUtils;
 import java.util.Collection;
 
 import static java.util.stream.Collectors.joining;
+import static org.apache.commons.lang3.StringUtils.left;
+import static org.apache.commons.lang3.StringUtils.right;
 
-public class StringHelper {
+public final class StringHelper {
     private StringHelper() {
         throw new UnsupportedOperationException();
     }
@@ -16,8 +18,7 @@ public class StringHelper {
         int front = 2 * length / 3;
         int back = 1 * length / 3;
         if(front + back >= target.length()) return target;
-        return StringUtils.left(target, front) + "..." +
-                StringUtils.right(target, back);
+        return left(target, front) + "..." + right(target, back);
     }
 
     public static String toEncoded(String target)
@@ -78,7 +79,7 @@ public class StringHelper {
 
     public static String concat(Object s1, Object s2, Object s3) {
         var builder = new StringBuilder();
-        return builder.append(s1).append(s2.toString()).append(s3).toString();
+        return builder.append(s1).append(s2).append(s3).toString();
     }
 
     public static String concat(Object s1, Object s2, Object s3, Object s4) {

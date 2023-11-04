@@ -8,6 +8,6 @@ public interface IndexMap<TK, TV extends Keyable<TK>> extends Collection<TV> {
     TV get(TK key);
     Set<TK> keySet();
     Collection<TV> values();
-    boolean isReadOnly();
-    void makeReadOnly();
+    boolean isUnmodifiable();
+    IndexMap<TK, TV> asUnmodifiable();
 }

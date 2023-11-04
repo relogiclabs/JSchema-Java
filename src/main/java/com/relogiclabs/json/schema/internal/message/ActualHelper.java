@@ -8,7 +8,7 @@ import com.relogiclabs.json.schema.types.JProperty;
 import static com.relogiclabs.json.schema.internal.message.MessageHelper.getTypeName;
 import static com.relogiclabs.json.schema.internal.util.StringHelper.quote;
 
-public class ActualHelper {
+public final class ActualHelper {
 
     private ActualHelper() {
         throw new UnsupportedOperationException();

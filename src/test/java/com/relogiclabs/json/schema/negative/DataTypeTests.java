@@ -6,7 +6,11 @@ import com.relogiclabs.json.schema.exception.DefinitionNotFoundException;
 import com.relogiclabs.json.schema.exception.JsonSchemaException;
 import org.junit.jupiter.api.Test;
 
-import static com.relogiclabs.json.schema.message.ErrorCode.*;
+import static com.relogiclabs.json.schema.message.ErrorCode.DEFI03;
+import static com.relogiclabs.json.schema.message.ErrorCode.DEFI04;
+import static com.relogiclabs.json.schema.message.ErrorCode.DTYP03;
+import static com.relogiclabs.json.schema.message.ErrorCode.DTYP04;
+import static com.relogiclabs.json.schema.message.ErrorCode.DTYP06;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 

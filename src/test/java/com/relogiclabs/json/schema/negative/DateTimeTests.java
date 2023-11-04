@@ -42,7 +42,19 @@ public class DateTimeTests {
     @Test
     public void When_JsonNotDate_ExceptionThrown() {
         var schema = "#date";
-        var json = "\"This is not a valid date\"";
+        var json = "\"This is not a date\"";
+
+        JsonSchema.isValid(schema, json);
+        var exception = assertThrows(JsonSchemaException.class,
+                () -> JsonAssert.isValid(schema, json));
+        assertEquals(DTYP04, exception.getCode());
+        exception.printStackTrace();
+    }
+
+    @Test
+    public void When_JsonNotValidDate_ExceptionThrown() {
+        var schema = "#date";
+        var json = "\"1939-02-29\"";
 
         JsonSchema.isValid(schema, json);
         var exception = assertThrows(JsonSchemaException.class,
@@ -54,7 +66,19 @@ public class DateTimeTests {
     @Test
     public void When_JsonNotTime_ExceptionThrown() {
         var schema = "#time";
-        var json = "\"This is not a valid time\"";
+        var json = "\"This is not a time\"";
+
+        JsonSchema.isValid(schema, json);
+        var exception = assertThrows(JsonSchemaException.class,
+                () -> JsonAssert.isValid(schema, json));
+        assertEquals(DTYP04, exception.getCode());
+        exception.printStackTrace();
+    }
+
+    @Test
+    public void When_JsonNotValidTime_ExceptionThrown() {
+        var schema = "#time";
+        var json = "\"1939-09-02T2:12:12.000Z\"";
 
         JsonSchema.isValid(schema, json);
         var exception = assertThrows(JsonSchemaException.class,
