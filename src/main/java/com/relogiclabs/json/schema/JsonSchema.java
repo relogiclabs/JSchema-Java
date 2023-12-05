@@ -1,13 +1,12 @@
 package com.relogiclabs.json.schema;
 
+import com.relogiclabs.json.schema.internal.tree.ExceptionRegistry;
 import com.relogiclabs.json.schema.internal.util.DebugUtilities;
 import com.relogiclabs.json.schema.message.MessageFormatter;
 import com.relogiclabs.json.schema.tree.JsonTree;
 import com.relogiclabs.json.schema.tree.RuntimeContext;
 import com.relogiclabs.json.schema.tree.SchemaTree;
 import lombok.Getter;
-
-import java.util.Queue;
 
 /**
  * {@code JsonSchema} provides Schema validation functionalities for JSON document.
@@ -16,7 +15,7 @@ import java.util.Queue;
 public class JsonSchema {
     private final RuntimeContext runtime;
     private final SchemaTree schemaTree;
-    private final Queue<Exception> exceptions;
+    private final ExceptionRegistry exceptions;
 
     /**
      * Initializes a new instance of the {@link JsonSchema} class for the
@@ -36,10 +35,10 @@ public class JsonSchema {
      * @return Returns {@code true} if the JSON string conforms to the Schema and {@code false} otherwise.
      */
     public boolean isValid(String json) {
-        exceptions.clear();
+        runtime.clear();
         var jsonTree = new JsonTree(runtime, json);
         DebugUtilities.print(schemaTree, jsonTree);
-        return schemaTree.getRoot().match(jsonTree.getRoot());
+        return schemaTree.match(jsonTree);
     }
 
     /**

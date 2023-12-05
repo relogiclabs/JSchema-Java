@@ -56,7 +56,7 @@ public final class JRoot extends JNode {
         appendTo(builder, pragmas);
         appendTo(builder, definitions);
         appendTo(builder, value);
-        return builder.toString();
+        return builder.toString().trim();
     }
 
     private void appendTo(StringBuilder builder, JNode node) {

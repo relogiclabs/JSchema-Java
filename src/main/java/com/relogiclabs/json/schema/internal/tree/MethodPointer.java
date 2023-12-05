@@ -29,12 +29,16 @@ public final class MethodPointer {
         this.parameters = List.of(parameters);
     }
 
-    public boolean invoke(JFunction function, List<Object> arguments) {
+    public Parameter getParameter(int index) {
+        return parameters.get(index);
+    }
+
+    public Object invoke(JFunction function, Object[] arguments) {
         try {
             instance.setFunction(function);
-            Object result = method.invoke(instance, arguments.toArray());
-            if(!(result instanceof Boolean boolResult)) throw new IllegalStateException();
-            return boolResult;
+            Object result = method.invoke(instance, arguments);
+            if(result == null) throw new IllegalStateException("Function return cannot be null");
+            return result;
         } catch (InvocationTargetException e) {
             throw new TargetInvocationException(FUNC07,
                     "Target invocation exception occurred", e.getCause());
