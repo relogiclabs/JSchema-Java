@@ -9,6 +9,7 @@ import com.relogiclabs.json.schema.message.MessageFormatter;
 import com.relogiclabs.json.schema.tree.Context;
 import com.relogiclabs.json.schema.tree.RuntimeContext;
 import lombok.Getter;
+import lombok.Setter;
 import org.antlr.v4.runtime.ParserRuleContext;
 
 import java.util.Collection;
@@ -24,11 +25,19 @@ public abstract class JNode {
 
     private final Map<JNode, JNode> relations;
     @Getter private final Context context;
+    @Getter @Setter private JNode derived;
     @Getter protected Collection<? extends JNode> children = emptyList();
 
     protected JNode(Builder<?> builder) {
         relations = requireNonNull(builder.relations);
         context = requireNonNull(builder.context);
+        derived = this;
+    }
+
+    protected JNode(JNode node) {
+        relations = requireNonNull(node.relations);
+        context = requireNonNull(node.context);
+        derived = this;
     }
 
     public JNode getParent() {
@@ -71,7 +80,7 @@ public abstract class JNode {
         return createOutline(toString(), getMessageFormatter().getOutlineLength());
     }
 
-    protected boolean failWith(CommonException exception) {
+    public boolean failWith(CommonException exception) {
         return getRuntime().failWith(exception);
     }
 

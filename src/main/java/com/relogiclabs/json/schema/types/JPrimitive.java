@@ -8,6 +8,10 @@ public abstract class JPrimitive extends JLeaf implements JsonTypable {
         super(builder);
     }
 
+    protected JPrimitive(JPrimitive node) {
+        super(node);
+    }
+
     @Override
     public JsonType getType() {
         return JsonType.PRIMITIVE;

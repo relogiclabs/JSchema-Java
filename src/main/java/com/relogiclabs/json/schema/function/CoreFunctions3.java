@@ -1,10 +1,6 @@
 package com.relogiclabs.json.schema.function;
 
-import com.relogiclabs.json.schema.exception.DateTimeLexerException;
-import com.relogiclabs.json.schema.exception.InvalidDateTimeException;
 import com.relogiclabs.json.schema.exception.JsonSchemaException;
-import com.relogiclabs.json.schema.internal.time.DateTimeType;
-import com.relogiclabs.json.schema.internal.time.DateTimeValidator;
 import com.relogiclabs.json.schema.message.ActualDetail;
 import com.relogiclabs.json.schema.message.ErrorDetail;
 import com.relogiclabs.json.schema.message.ExpectedDetail;
@@ -21,7 +17,6 @@ import java.util.regex.Pattern;
 import static com.relogiclabs.json.schema.internal.util.CollectionHelper.containsKeys;
 import static com.relogiclabs.json.schema.internal.util.CollectionHelper.containsValues;
 import static com.relogiclabs.json.schema.internal.util.StreamHelper.count;
-import static com.relogiclabs.json.schema.internal.util.StringHelper.concat;
 import static com.relogiclabs.json.schema.internal.util.StringHelper.quote;
 import static com.relogiclabs.json.schema.message.ErrorCode.ELEM01;
 import static com.relogiclabs.json.schema.message.ErrorCode.EMAL01;
@@ -155,35 +150,5 @@ public class CoreFunctions3 extends CoreFunctions2 {
                     new ExpectedDetail(function, "a valid phone number"),
                     new ActualDetail(target, "found ", target, " that is invalid")));
         return true;
-    }
-
-    public boolean date(JString target, JString pattern) {
-        return dateTime(target, pattern, DateTimeType.DATE_TYPE);
-    }
-
-    public boolean time(JString target, JString pattern) {
-        return dateTime(target, pattern, DateTimeType.TIME_TYPE);
-    }
-
-    private boolean dateTime(JString target, JString pattern, DateTimeType type) {
-        try {
-            var validator = new DateTimeValidator(pattern.getValue());
-            if(type == DateTimeType.DATE_TYPE) validator.ValidateDate(target.getValue());
-            else if(type == DateTimeType.TIME_TYPE) validator.ValidateTime(target.getValue());
-            else throw new IllegalArgumentException(concat("Invalid ",
-                        DateTimeType.class.getSimpleName(), " value"));
-            return true;
-        } catch(DateTimeLexerException e) {
-            return failWith(new JsonSchemaException(
-                    new ErrorDetail(e.getCode(), e.getMessage()),
-                    new ExpectedDetail(function, "a valid ", type, " pattern"),
-                    new ActualDetail(target, "found ", pattern, " that is invalid"), e));
-        } catch(InvalidDateTimeException e) {
-            return failWith(new JsonSchemaException(
-                new ErrorDetail(e.getCode(), e.getMessage()),
-                new ExpectedDetail(function, "a valid ", type, " formatted as ", pattern),
-                new ActualDetail(target, "found ", target,
-                        " that is invalid or malformatted"), e));
-        }
     }
 }

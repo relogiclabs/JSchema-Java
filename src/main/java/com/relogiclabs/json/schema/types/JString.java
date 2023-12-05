@@ -16,12 +16,17 @@ import static java.util.Objects.requireNonNull;
 
 @Getter
 @EqualsAndHashCode
-public final class JString extends JPrimitive {
+public class JString extends JPrimitive implements PragmaValue<String> {
     private final String value;
 
     private JString(Builder builder) {
         super(builder);
         value = requireNonNull(builder.value);
+    }
+
+    protected JString(JString node) {
+        super(node);
+        this.value = requireNonNull(node.value);
     }
 
     @Override
@@ -38,6 +43,11 @@ public final class JString extends JPrimitive {
                 new ErrorDetail(STRN01, ValueMismatch),
                 ExpectedHelper.asValueMismatch(this),
                 ActualHelper.asValueMismatch(other)));
+    }
+
+    @Override
+    public String toNativeValue() {
+        return value;
     }
 
     @Override

@@ -33,29 +33,29 @@ public class CoreFunctions1 extends FunctionBase {
     }
 
     public boolean length(JString target, JInteger length) {
-        var len = target.getValue().length();
-        if(len != length.getValue()) return failWith(new JsonSchemaException(
-                new ErrorDetail(SLEN01, "Invalid string length"),
-                new ExpectedDetail(function, "length ", length),
-                new ActualDetail(target, "found ", len, " for ", target.getOutline())));
+        var rLength = target.getValue().length();
+        if(rLength != length.getValue()) return failWith(new JsonSchemaException(
+                new ErrorDetail(SLEN01, "Invalid length of string ", target),
+                new ExpectedDetail(function, "a string of length ", length),
+                new ActualDetail(target, "found ", rLength, " which does not match")));
         return true;
     }
 
     public boolean length(JArray target, JInteger length) {
-        var len = target.getElements().size();
-        if(len != length.getValue()) return failWith(new JsonSchemaException(
-                new ErrorDetail(ALEN01, "Invalid array length"),
-                new ExpectedDetail(function, "length ", length),
-                new ActualDetail(target, "found ", len, " for ", target.getOutline())));
+        var rLength = target.getElements().size();
+        if(rLength != length.getValue()) return failWith(new JsonSchemaException(
+                new ErrorDetail(ALEN01, "Invalid length of array ", target.getOutline()),
+                new ExpectedDetail(function, "an array of length ", length),
+                new ActualDetail(target, "found ", rLength, " which does not match")));
         return true;
     }
 
     public boolean length(JObject target, JInteger length) {
-        var len = target.getProperties().size();
-        if(len != length.getValue()) return failWith(new JsonSchemaException(
-                new ErrorDetail(OLEN01, "Invalid object size or length"),
-                new ExpectedDetail(function, "length ", length),
-                new ActualDetail(target, "found ", len, " for ", target.getOutline())));
+        var rLength = target.getProperties().size();
+        if(rLength != length.getValue()) return failWith(new JsonSchemaException(
+                new ErrorDetail(OLEN01, "Invalid size or length of object ", target.getOutline()),
+                new ExpectedDetail(function, "an object of length ", length),
+                new ActualDetail(target, "found ", rLength, " which does not match")));
         return true;
     }
 
