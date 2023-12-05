@@ -1,12 +1,16 @@
 package com.relogiclabs.json.schema.message;
 
 public interface ErrorCode {
+    String AFTR01 = "AFTR01";
+    String AFTR02 = "AFTR02";
     String ALEN01 = "ALEN01";
     String ALEN02 = "ALEN02";
     String ALEN03 = "ALEN03";
     String ALEN04 = "ALEN04";
     String ALEN05 = "ALEN05";
     String ARRY01 = "ARRY01";
+    String BFOR01 = "BFOR01";
+    String BFOR02 = "BFOR02";
     String BOOL01 = "BOOL01";
     String CLAS01 = "CLAS01";
     String CLAS02 = "CLAS02";
@@ -50,6 +54,14 @@ public interface ErrorCode {
     String DMON03 = "DMON03";
     String DMON04 = "DMON04";
     String DMON05 = "DMON05";
+    String DRNG01 = "DRNG01";
+    String DRNG02 = "DRNG02";
+    String DRNG03 = "DRNG03";
+    String DRNG04 = "DRNG04";
+    String DRNG05 = "DRNG05";
+    String DRNG06 = "DRNG06";
+    String DRNG07 = "DRNG07";
+    String DRNG08 = "DRNG08";
     String DSEC01 = "DSEC01";
     String DSEC02 = "DSEC02";
     String DSEC03 = "DSEC03";
@@ -79,6 +91,8 @@ public interface ErrorCode {
     String DYAR03 = "DYAR03";
     String ELEM01 = "ELEM01";
     String EMAL01 = "EMAL01";
+    String ENDE01 = "ENDE01";
+    String ENDE02 = "ENDE02";
     String ENUM01 = "ENUM01";
     String ENUM02 = "ENUM02";
     String FLOT01 = "FLOT01";
@@ -125,6 +139,10 @@ public interface ErrorCode {
     String RANG02 = "RANG02";
     String RANG03 = "RANG03";
     String RANG04 = "RANG04";
+    String RECV01 = "RECV01";
+    String RECV02 = "RECV02";
+    String RECV03 = "RECV03";
+    String RECV04 = "RECV04";
     String REGX01 = "REGX01";
     String SLEN01 = "SLEN01";
     String SLEN02 = "SLEN02";
@@ -134,6 +152,8 @@ public interface ErrorCode {
     String SLEX01 = "SLEX01";
     String SPRS01 = "SPRS01";
     String STRN01 = "STRN01";
+    String STRT01 = "STRT01";
+    String STRT02 = "STRT02";
     String URLA01 = "URLA01";
     String URLA02 = "URLA02";
     String URLA03 = "URLA03";

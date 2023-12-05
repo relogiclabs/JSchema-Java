@@ -1,6 +1,6 @@
 package com.relogiclabs.json.schema.internal.tree;
 
-import com.relogiclabs.json.schema.function.CoreFunctions3;
+import com.relogiclabs.json.schema.function.CoreFunctions4;
 import com.relogiclabs.json.schema.internal.antlr.SchemaParser;
 import com.relogiclabs.json.schema.internal.antlr.SchemaParserBaseVisitor;
 import com.relogiclabs.json.schema.tree.Context;
@@ -20,6 +20,7 @@ import com.relogiclabs.json.schema.types.JNull;
 import com.relogiclabs.json.schema.types.JObject;
 import com.relogiclabs.json.schema.types.JPragma;
 import com.relogiclabs.json.schema.types.JProperty;
+import com.relogiclabs.json.schema.types.JReceiver;
 import com.relogiclabs.json.schema.types.JRoot;
 import com.relogiclabs.json.schema.types.JString;
 import com.relogiclabs.json.schema.types.JTitle;
@@ -79,7 +80,7 @@ public final class SchemaTreeVisitor extends SchemaParserBaseVisitor<JNode> {
     }
 
     private List<JInclude> processIncludes(List<SchemaParser.IncludeContext> contexts) {
-        runtime.addClass(CoreFunctions3.class.getName(), null);
+        runtime.addClass(CoreFunctions4.class.getName(), null);
         return contexts.stream().map(c -> (JInclude) visit(c)).toList();
     }
 
@@ -127,14 +128,14 @@ public final class SchemaTreeVisitor extends SchemaParserBaseVisitor<JNode> {
         var definition = new JDefinition.Builder()
                 .relations(relations)
                 .context(new Context(ctx, runtime))
-                .alias((JAlias) visit(ctx.aliasName()))
+                .alias((JAlias) visit(ctx.alias()))
                 .validator((JValidator) visit(ctx.validatorMain()))
                 .build();
         return runtime.addDefinition(definition);
     }
 
     @Override
-    public JNode visitAliasName(SchemaParser.AliasNameContext ctx) {
+    public JNode visitAlias(SchemaParser.AliasContext ctx) {
         return new JAlias.Builder()
                 .relations(relations)
                 .context(new Context(ctx, runtime))
@@ -150,13 +151,14 @@ public final class SchemaTreeVisitor extends SchemaParserBaseVisitor<JNode> {
                 .value(visit(ctx.value()))
                 .functions(ctx.function().stream().map(c -> (JFunction) visit(c)).toList())
                 .dataTypes(ctx.datatype().stream().map(c -> (JDataType) visit(c)).toList())
+                .receivers(ctx.receiver().stream().map(c -> (JReceiver) visit(c)).toList())
                 .optional(ctx.OPTIONAL() != null)
                 .build();
     }
 
     @Override
     public JNode visitValidator(SchemaParser.ValidatorContext ctx) {
-        if(ctx.aliasName() != null) return visit(ctx.aliasName());
+        if(ctx.alias() != null) return visit(ctx.alias());
         if(ctx.validatorMain() != null) return visit(ctx.validatorMain());
         throw new IllegalStateException("Invalid parser state");
     }
@@ -204,7 +206,7 @@ public final class SchemaTreeVisitor extends SchemaParserBaseVisitor<JNode> {
                 .relations(relations)
                 .context(new Context(ctx, runtime))
                 .jsonType(JsonType.from(ctx.DATATYPE()))
-                .alias((JAlias) visit(ctx.aliasName()))
+                .alias((JAlias) visit(ctx.alias()))
                 .nested(ctx.STAR() != null)
                 .build();
     }
@@ -215,9 +217,24 @@ public final class SchemaTreeVisitor extends SchemaParserBaseVisitor<JNode> {
                 .relations(relations)
                 .context(new Context(ctx, runtime))
                 .name(ctx.FUNCTION().getText())
-                .arguments(ctx.value().stream().map(this::visit).toList())
+                .arguments(ctx.argument().stream().map(this::visit).toList())
                 .nested(ctx.STAR() != null)
                 .build();
+    }
+
+    @Override
+    public JNode visitArgument(SchemaParser.ArgumentContext ctx) {
+        if(ctx.value() != null) return visit(ctx.value());
+        if(ctx.receiver() != null) return visit(ctx.receiver());
+        throw new IllegalStateException("Invalid parser state");
+    }
+
+    @Override
+    public JNode visitReceiver(SchemaParser.ReceiverContext ctx) {
+        return new JReceiver.Builder()
+                .relations(relations)
+                .context(new Context(ctx, runtime))
+                .name(ctx.RECEIVER().getText()).build();
     }
 
     @Override
