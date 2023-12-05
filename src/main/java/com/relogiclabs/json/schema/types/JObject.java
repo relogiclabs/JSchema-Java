@@ -62,7 +62,8 @@ public final class JObject extends JComposite {
                         ExpectedHelper.asPropertyNotFound(thisProp),
                         ActualHelper.asPropertyNotFound(node, thisProp)));
         }
-        if(unresolved.isEmpty() || getRuntime().getIgnoreUndefinedProperties()) return result;
+        if(unresolved.isEmpty() || getRuntime().getPragmas()
+                .getIgnoreUndefinedProperties()) return result;
         for(String key : unresolved) {
             var property = other.properties.get(key);
             result &= failWith(new JsonSchemaException(
@@ -76,7 +77,7 @@ public final class JObject extends JComposite {
     private JProperty getOtherProp(JObject other, int index) {
         var thisProp = properties.get(index);
         JProperty otherProp = null;
-        if(!getRuntime().getIgnoreObjectPropertyOrder()) {
+        if(!getRuntime().getPragmas().getIgnoreObjectPropertyOrder()) {
             var atProp = getPropAt(other.properties, index);
             if(AreKeysEqual(atProp, thisProp)) otherProp = atProp;
             JProperty existing = null;

@@ -237,7 +237,7 @@ public class ObjectTests {
                 "key2": [10, 20, 30]
             }
             """;
-        //JsonSchema.IsValid(schema, json);
+        //JsonSchema.isValid(schema, json);
         var exception = assertThrows(DuplicatePropertyKeyException.class,
                 () -> JsonAssert.isValid(schema, json));
         assertEquals(PROP03, exception.getCode());
@@ -262,7 +262,7 @@ public class ObjectTests {
                 "key3": [10, 20, 30]
             }
             """;
-        //JsonSchema.IsValid(schema, json);
+        //JsonSchema.isValid(schema, json);
         var exception = assertThrows(DuplicatePropertyKeyException.class,
                 () -> JsonAssert.isValid(schema, json));
         assertEquals(PROP04, exception.getCode());

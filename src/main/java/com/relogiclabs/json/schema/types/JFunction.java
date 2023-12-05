@@ -4,6 +4,7 @@ import com.relogiclabs.json.schema.exception.JsonSchemaException;
 import com.relogiclabs.json.schema.exception.TargetInvocationException;
 import com.relogiclabs.json.schema.internal.message.ActualHelper;
 import com.relogiclabs.json.schema.internal.message.ExpectedHelper;
+import com.relogiclabs.json.schema.internal.tree.FunctionCache;
 import com.relogiclabs.json.schema.message.ErrorDetail;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -25,6 +26,7 @@ public final class JFunction extends JBranch implements NestedMode {
     private final String name;
     private final boolean nested;
     private final List<JNode> arguments;
+    private final FunctionCache cache;
 
     private JFunction(Builder builder) {
         super(builder);
@@ -32,6 +34,7 @@ public final class JFunction extends JBranch implements NestedMode {
         nested = requireNonNull(builder.nested);
         arguments = requireNonNull(builder.arguments);
         children = arguments;
+        cache = new FunctionCache();
     }
 
     @Override
@@ -49,9 +52,9 @@ public final class JFunction extends JBranch implements NestedMode {
         try {
             return getRuntime().invokeFunction(this, node);
         } catch(Exception ex) {
-            var cause = ex instanceof TargetInvocationException ? nonNull(ex.getCause(), ex) : ex;
-            if(cause instanceof JsonSchemaException jsonSchema) throw jsonSchema;
-            throw ex;
+            var exception = ex instanceof TargetInvocationException ? nonNull(ex.getCause(), ex) : ex;
+            if(exception instanceof RuntimeException runtimeException) throw runtimeException;
+            else throw new RuntimeException(exception);
         }
     }
 

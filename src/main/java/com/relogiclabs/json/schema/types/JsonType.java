@@ -1,7 +1,6 @@
 package com.relogiclabs.json.schema.types;
 
 import com.relogiclabs.json.schema.exception.InvalidDataTypeException;
-import com.relogiclabs.json.schema.internal.time.DateTimeValidator;
 import com.relogiclabs.json.schema.internal.util.Reference;
 import com.relogiclabs.json.schema.message.MessageFormatter;
 import com.relogiclabs.json.schema.tree.Location;
@@ -31,11 +30,6 @@ public enum JsonType {
     PRIMITIVE("#primitive", JPrimitive.class),
     COMPOSITE("#composite", JComposite.class),
     ANY("#any", JsonTypable.class);
-
-    private static final DateTimeValidator ISO_8601_DATE
-            = new DateTimeValidator(DateTimeValidator.ISO_8601_DATE);
-    private static final DateTimeValidator ISO_8601_TIME
-            = new DateTimeValidator(DateTimeValidator.ISO_8601_TIME);
 
     private static final Map<String, JsonType> stringTypeMap;
     private static final Map<Class<?>, JsonType> classTypeMap;
@@ -71,8 +65,19 @@ public enum JsonType {
 
     public boolean match(JNode node, Reference<String> error) {
         if(!type.isInstance(node)) return false;
-        if(this == DATE) return ISO_8601_DATE.IsValidDate(((JString) node).getValue(), error);
-        if(this == TIME) return ISO_8601_TIME.IsValidTime(((JString) node).getValue(), error);
+        if(this == DATE) {
+            var stringDate = (JString) node;
+            var dateTime = node.getRuntime().getPragmas().getDateTypeParser()
+                    .tryParse(stringDate.getValue(), error);
+            if(dateTime == null) return false;
+            node.setDerived(new JDate(stringDate, dateTime));
+        } else if(this == TIME) {
+            var stringTime = (JString) node;
+            var dateTime = node.getRuntime().getPragmas().getTimeTypeParser()
+                    .tryParse(stringTime.getValue(), error);
+            if(dateTime == null) return false;
+            node.setDerived(new JTime(stringTime, dateTime));
+        }
         return true;
     }
 

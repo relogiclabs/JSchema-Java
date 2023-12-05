@@ -2,6 +2,7 @@ package com.relogiclabs.json.schema.internal.tree;
 
 import com.relogiclabs.json.schema.types.JBoolean;
 import com.relogiclabs.json.schema.types.JNumber;
+import com.relogiclabs.json.schema.types.JString;
 import lombok.Getter;
 
 import java.util.HashMap;
@@ -9,6 +10,8 @@ import java.util.Map;
 
 @Getter
 public final class PragmaDescriptor<T> {
+    public static final String ISO_8601_DATE = "YYYY-MM-DD";
+    public static final String ISO_8601_TIME = "YYYY-MM-DD'T'hh:mm:ss.FZZ";
 
     private static final Map<String, PragmaDescriptor<?>> PRAGMAS = new HashMap<>();
 
@@ -18,6 +21,10 @@ public final class PragmaDescriptor<T> {
             = new PragmaDescriptor<>("FloatingPointTolerance", JNumber.class, 1E-10);
     public static final PragmaDescriptor<Boolean> IGNORE_OBJECT_PROPERTY_ORDER
             = new PragmaDescriptor<>("IgnoreObjectPropertyOrder", JBoolean.class, true);
+    public static final PragmaDescriptor<String> DATE_DATA_TYPE_FORMAT
+            = new PragmaDescriptor<>("DateDataTypeFormat", JString.class, ISO_8601_DATE);
+    public static final PragmaDescriptor<String> TIME_DATA_TYPE_FORMAT
+            = new PragmaDescriptor<>("TimeDataTypeFormat", JString.class, ISO_8601_TIME);
 
     private final String name;
     private final Class<?> type;

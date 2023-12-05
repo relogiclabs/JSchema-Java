@@ -12,6 +12,7 @@ import static com.relogiclabs.json.schema.message.ErrorCode.INTE01;
 import static com.relogiclabs.json.schema.message.ErrorCode.NEGI01;
 import static com.relogiclabs.json.schema.message.ErrorCode.POSI01;
 import static com.relogiclabs.json.schema.message.ErrorCode.RANG01;
+import static com.relogiclabs.json.schema.message.ErrorCode.RANG03;
 import static com.relogiclabs.json.schema.message.ErrorCode.RANG04;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -181,7 +182,7 @@ public class IntegerTests {
     }
 
     @Test
-    public void When_NestedRangeWithUndefinedAndWrongIntegerInArray_ExceptionThrown() {
+    public void When_NestedRangeWithMinUndefinedAndWrongIntegerInArray_ExceptionThrown() {
         var schema =
             """
             @range*(!, 400) #integer*
@@ -194,6 +195,23 @@ public class IntegerTests {
         var exception = assertThrows(JsonSchemaException.class,
                 () -> JsonAssert.isValid(schema, json));
         assertEquals(RANG04, exception.getCode());
+        exception.printStackTrace();
+    }
+
+    @Test
+    public void When_NestedRangeWithMaxUndefinedAndWrongIntegerInArray_ExceptionThrown() {
+        var schema =
+            """
+            @range*(1000, !) #integer*
+            """;
+        var json =
+            """
+            [2000, 1000, 900]
+            """;
+        JsonSchema.isValid(schema, json);
+        var exception = assertThrows(JsonSchemaException.class,
+                () -> JsonAssert.isValid(schema, json));
+        assertEquals(RANG03, exception.getCode());
         exception.printStackTrace();
     }
 

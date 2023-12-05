@@ -28,6 +28,7 @@ public final class JValidator extends JBranch {
     private final JNode value;
     private final List<JFunction> functions;
     private final List<JDataType> dataTypes;
+    private final List<JReceiver> receivers;
     private final boolean optional;
 
     private JValidator(Builder builder) {
@@ -35,10 +36,12 @@ public final class JValidator extends JBranch {
         value = builder.value;
         functions = builder.functions;
         dataTypes = builder.dataTypes;
+        receivers = builder.receivers;
         optional = builder.optional;
+        getRuntime().register(receivers);
         var nodes = new ArrayList<JNode>();
         addToList(nodes, value);
-        addToList(nodes, functions, dataTypes);
+        addToList(nodes, functions, dataTypes, receivers);
         children = unmodifiableCollection(nodes);
     }
 
@@ -47,6 +50,7 @@ public final class JValidator extends JBranch {
         boolean rValue = true;
         var other = castType(node, JsonTypable.class);
         if(other == null) return false;
+        getRuntime().receive(receivers, node);
         if(node instanceof JNull && dataTypes.stream()
                 .map(JDataType::isMatchNull).anyMatch(anyTrue())) return true;
         if(value != null) rValue &= value.match(other.getNode());
@@ -63,7 +67,7 @@ public final class JValidator extends JBranch {
     }
 
     private boolean matchDataType(JNode node) {
-        if(getRuntime().tryMatch(() -> checkDataType(node))) return true;
+        if(getRuntime().tryExecute(() -> checkDataType(node))) return true;
         dataTypes.stream().filter(d -> !d.getNested()).forEach(d -> d.matchForReport(node));
         dataTypes.stream().filter(d -> d.getNested()).forEach(d -> d.matchForReport(node));
         return false;
@@ -94,6 +98,7 @@ public final class JValidator extends JBranch {
         private JNode value;
         private List<JFunction> functions;
         private List<JDataType> dataTypes;
+        private List<JReceiver> receivers;
         private boolean optional;
 
         @Override

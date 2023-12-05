@@ -60,11 +60,11 @@ public interface SchemaParserVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitDefine(SchemaParser.DefineContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link SchemaParser#aliasName}.
+	 * Visit a parse tree produced by {@link SchemaParser#alias}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitAliasName(SchemaParser.AliasNameContext ctx);
+	T visitAlias(SchemaParser.AliasContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link SchemaParser#validatorMain}.
 	 * @param ctx the parse tree
@@ -83,6 +83,12 @@ public interface SchemaParserVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitValue(SchemaParser.ValueContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link SchemaParser#receiver}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitReceiver(SchemaParser.ReceiverContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link SchemaParser#object}.
 	 * @param ctx the parse tree
@@ -113,6 +119,12 @@ public interface SchemaParserVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitFunction(SchemaParser.FunctionContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link SchemaParser#argument}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitArgument(SchemaParser.ArgumentContext ctx);
 	/**
 	 * Visit a parse tree produced by the {@code PrimitiveTrue}
 	 * labeled alternative in {@link SchemaParser#primitive}.

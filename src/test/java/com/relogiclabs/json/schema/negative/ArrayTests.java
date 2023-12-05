@@ -6,6 +6,11 @@ import com.relogiclabs.json.schema.exception.JsonParserException;
 import com.relogiclabs.json.schema.exception.JsonSchemaException;
 import org.junit.jupiter.api.Test;
 
+import static com.relogiclabs.json.schema.message.ErrorCode.ALEN01;
+import static com.relogiclabs.json.schema.message.ErrorCode.ALEN02;
+import static com.relogiclabs.json.schema.message.ErrorCode.ALEN03;
+import static com.relogiclabs.json.schema.message.ErrorCode.ALEN04;
+import static com.relogiclabs.json.schema.message.ErrorCode.ALEN05;
 import static com.relogiclabs.json.schema.message.ErrorCode.DTYP04;
 import static com.relogiclabs.json.schema.message.ErrorCode.DTYP06;
 import static com.relogiclabs.json.schema.message.ErrorCode.ELEM01;
@@ -158,7 +163,7 @@ public class ArrayTests {
         var schema = "#array";
         var json = "[,,]";
 
-        //JsonSchema.IsValid(schema, json);
+        //JsonSchema.isValid(schema, json);
         var exception = assertThrows(JsonParserException.class,
                 () -> JsonAssert.isValid(schema, json));
         assertEquals(JPRS01, exception.getCode());
@@ -185,6 +190,106 @@ public class ArrayTests {
         var exception = assertThrows(JsonSchemaException.class,
                 () -> JsonAssert.isValid(schema, json));
         assertEquals(NEMT02, exception.getCode());
+        exception.printStackTrace();
+    }
+
+    @Test
+    public void When_JsonWrongLengthInObject_ExceptionThrown() {
+        var schema =
+            """
+            @length*(2) #array* #object
+            """;
+        var json =
+            """
+            {
+                "key1": [10, 20],
+                "key2": [10]
+            }
+            """;
+        JsonSchema.isValid(schema, json);
+        var exception = assertThrows(JsonSchemaException.class,
+                () -> JsonAssert.isValid(schema, json));
+        assertEquals(ALEN01, exception.getCode());
+        exception.printStackTrace();
+    }
+
+    @Test
+    public void When_JsonWrongMinimumLengthInObject_ExceptionThrown() {
+        var schema =
+            """
+            @length*(2, 4) #array* #object
+            """;
+        var json =
+            """
+            {
+                "key1": [10, 20],
+                "key2": [10]
+            }
+            """;
+        JsonSchema.isValid(schema, json);
+        var exception = assertThrows(JsonSchemaException.class,
+                () -> JsonAssert.isValid(schema, json));
+        assertEquals(ALEN02, exception.getCode());
+        exception.printStackTrace();
+    }
+
+    @Test
+    public void When_JsonWrongMaximumLengthInObject_ExceptionThrown() {
+        var schema =
+            """
+            @length*(2, 4) #array* #object
+            """;
+        var json =
+            """
+            {
+                "key1": [10, 20],
+                "key2": [10, 20, 30, 40, 50]
+            }
+            """;
+        JsonSchema.isValid(schema, json);
+        var exception = assertThrows(JsonSchemaException.class,
+                () -> JsonAssert.isValid(schema, json));
+        assertEquals(ALEN03, exception.getCode());
+        exception.printStackTrace();
+    }
+
+    @Test
+    public void When_JsonWrongMinimumLengthWithUndefinedInObject_ExceptionThrown() {
+        var schema =
+            """
+            @length*(2, !) #array* #object
+            """;
+        var json =
+            """
+            {
+                "key1": [10, 20],
+                "key2": [10]
+            }
+            """;
+        JsonSchema.isValid(schema, json);
+        var exception = assertThrows(JsonSchemaException.class,
+                () -> JsonAssert.isValid(schema, json));
+        assertEquals(ALEN04, exception.getCode());
+        exception.printStackTrace();
+    }
+
+    @Test
+    public void When_JsonWrongMaximumLengthWithUndefinedInObject_ExceptionThrown() {
+        var schema =
+            """
+            @length*(!, 4) #array* #object
+            """;
+        var json =
+            """
+            {
+                "key1": [10, 20],
+                "key2": [10, 20, 30, 40, 50]
+            }
+            """;
+        JsonSchema.isValid(schema, json);
+        var exception = assertThrows(JsonSchemaException.class,
+                () -> JsonAssert.isValid(schema, json));
+        assertEquals(ALEN05, exception.getCode());
         exception.printStackTrace();
     }
 }

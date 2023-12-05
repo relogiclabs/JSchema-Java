@@ -27,7 +27,7 @@ public class ComponentTests {
                 "key2": { "key1": 20, "key2": "value22" }
             }
             """;
-        //JsonSchema.IsValid(schema, json);
+        //JsonSchema.isValid(schema, json);
         var exception = assertThrows(DefinitionNotFoundException.class,
                 () -> JsonAssert.isValid(schema, json));
         assertEquals(DEFI02, exception.getCode());
@@ -52,7 +52,7 @@ public class ComponentTests {
                 "key2": { "key1": 20, "key2": "value22" }
             }
             """;
-        //JsonSchema.IsValid(schema, json);
+        //JsonSchema.isValid(schema, json);
         var exception = assertThrows(DuplicateDefinitionException.class,
                 () -> JsonAssert.isValid(schema, json));
         assertEquals(DEFI01, exception.getCode());

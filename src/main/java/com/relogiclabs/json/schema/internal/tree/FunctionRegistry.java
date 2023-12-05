@@ -9,6 +9,7 @@ import com.relogiclabs.json.schema.exception.InvalidIncludeException;
 import com.relogiclabs.json.schema.exception.JsonSchemaException;
 import com.relogiclabs.json.schema.exception.NotFoundClassException;
 import com.relogiclabs.json.schema.function.FunctionBase;
+import com.relogiclabs.json.schema.function.FutureValidator;
 import com.relogiclabs.json.schema.message.ActualDetail;
 import com.relogiclabs.json.schema.message.ErrorDetail;
 import com.relogiclabs.json.schema.message.ExpectedDetail;
@@ -45,12 +46,12 @@ import static com.relogiclabs.json.schema.message.ErrorCode.FUNC03;
 import static com.relogiclabs.json.schema.message.ErrorCode.FUNC04;
 import static com.relogiclabs.json.schema.message.ErrorCode.FUNC05;
 
-public final class FunctionManager {
+public final class FunctionRegistry {
     private final Set<String> includes;
     private final Map<FunctionKey, List<MethodPointer>> functions;
     private final RuntimeContext runtime;
 
-    public FunctionManager(RuntimeContext runtime) {
+    public FunctionRegistry(RuntimeContext runtime) {
         this.runtime = runtime;
         this.includes = new HashSet<>();
         this.functions = new HashMap<>();
@@ -88,11 +89,10 @@ public final class FunctionManager {
             if(!baseclass.isAssignableFrom(m.getDeclaringClass())) continue;
             if(baseclass == m.getDeclaringClass()) continue;
             Parameter[] parameters = m.getParameters();
-            if(m.getReturnType() != boolean.class && m.getReturnType() != Boolean.class)
-                throw new InvalidFunctionException(FUNC01, concat("Function [", getSignature(m),
-                        "] requires return type boolean"));
+            if(!isValidReturnType(m.getReturnType())) throw new InvalidFunctionException(FUNC01,
+                    concat("Function [", getSignature(m), "] requires valid return type"));
             if(parameters.length < 1) throw new InvalidFunctionException(FUNC02,
-                    concat("Function [", getSignature(m), "] requires minimum one parameter"));
+                    concat("Function [", getSignature(m), "] requires target parameter"));
             var key = new FunctionKey(m, getParameterCount(parameters));
             var value = new MethodPointer(instance, m, parameters);
             var valueList = functions.get(key);
@@ -101,6 +101,13 @@ public final class FunctionManager {
             functions.put(key, valueList);
         }
         return functions;
+    }
+
+    private boolean isValidReturnType(Class<?> type) {
+        if(type == boolean.class) return true;
+        if(type == Boolean.class) return true;
+        if(type == FutureValidator.class) return true;
+        return false;
     }
 
     private int getParameterCount(Parameter[] parameters) {
@@ -128,7 +135,17 @@ public final class FunctionManager {
                 code, "Fail to create instance of " + type.getName(), context), ex);
     }
 
+    private boolean handleValidator(Object result) {
+        return result instanceof FutureValidator validator
+            ? runtime.addValidator(validator)
+            : (boolean) result;
+    }
+
     public boolean invokeFunction(JFunction function, JNode target) {
+        for(var e : function.getCache()) {
+            if (e.isTargetMatch(target))
+                return handleValidator(e.invoke(function, target));
+        }
         var methods = getMethods(function);
         Parameter mismatchParameter = null;
 
@@ -137,11 +154,14 @@ public final class FunctionManager {
             var arguments = function.getArguments();
             var schemaArgs = processArgs(parameters, arguments);
             if(schemaArgs == null) continue;
-            if(isMatch(parameters.get(0), target))
-                return method.invoke(function, addTarget(schemaArgs, target));
+            if(isMatch(parameters.get(0), target)) {
+                Object[] allArgs = addTarget(schemaArgs, target).toArray();
+                var result = method.invoke(function, allArgs);
+                function.getCache().add(method, allArgs);
+                return handleValidator(result);
+            }
             mismatchParameter = parameters.get(0);
         }
-
         if(mismatchParameter != null)
             return failWith(new JsonSchemaException(new ErrorDetail(FUNC03,
                     "Function ", function.getOutline(), " is incompatible with the target data type"),
@@ -164,10 +184,8 @@ public final class FunctionManager {
     }
 
     private static List<Object> addTarget(List<Object> arguments, JNode target) {
-        var args = new ArrayList<>(1 + arguments.size());
-        args.add(target);
-        args.addAll(arguments);
-        return args;
+        arguments.add(0, target.getDerived());
+        return arguments;
     }
 
     private static List<Object> processArgs(List<Parameter> parameters, List<JNode> arguments) {
@@ -187,7 +205,7 @@ public final class FunctionManager {
     }
 
     private static boolean isMatch(Parameter parameter, JNode argument) {
-        return parameter.getType().isInstance(argument);
+        return parameter.getType().isInstance(argument.getDerived());
     }
 
     private static Object processVarArgs(Parameter parameter, List<JNode> arguments) {

@@ -1,15 +1,19 @@
 package com.relogiclabs.json.schema.message;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 import static com.relogiclabs.json.schema.internal.util.StringHelper.concat;
+import static org.apache.commons.lang3.StringUtils.capitalize;
 
 @Getter
-@AllArgsConstructor
 public final class ErrorDetail {
-    private String code;
-    private String message;
+    private final String code;
+    private final String message;
+
+    public ErrorDetail(String code, String message) {
+        this.code = code;
+        this.message = capitalize(message);
+    }
 
     public ErrorDetail(String code, Object m1, Object m2) {
         this(code, concat(m1, m2));

@@ -1,6 +1,6 @@
 +++
 title = 'Directives'
-date = 2023-10-08T09:38:53+06:00
+date = 2023-12-04T09:38:53+06:00
 weight = 4
 +++
 
@@ -40,6 +40,18 @@ The `IgnoreUndefinedProperties` pragma directive serves the purpose of instructi
 The default value of this directive is `false`, which means that by default, undefined properties in the JSON document are not ignored, and validation errors will be raised for them. For example, the following usage of this directive instructs the validation process to ignore any undefined properties in the JSON document:
 ```js
 %pragma IgnoreUndefinedProperties: true
+```
+
+### Date Data Type Format
+The `DateDataTypeFormat` pragma directive enables you to customize the default format of the `#date` data type. By default, the `#date` data type follows the ISO 8601 standard, precisely using the format `YYYY-MM-DD`. Additional details on date-time patterns and formats are available [here](/JsonSchema-Java/articles/datetime). The subsequent example illustrates the process of defining a customized date format for the `#date` data type:
+```js
+%pragma DateDataTypeFormat: "DD-MM-YYYY"
+```
+
+### Time Data Type Format
+To customize the default format of the `#time` data type, utilize the `TimeDataTypeFormat` pragma directive. By default, the `#time` data type follows the ISO 8601 standard, precisely in the format `YYYY-MM-DD'T'hh:mm:ss.FZZ`. Further information on date-time patterns and formats can be found [here](/JsonSchema-Java/articles/datetime). The following example demonstrates how to specify a customized time format for the `#time` data type:
+```js
+%pragma TimeDataTypeFormat: "DD-MM-YYYY hh:mm:ss"
 ```
 
 ### Floating Point Tolerance

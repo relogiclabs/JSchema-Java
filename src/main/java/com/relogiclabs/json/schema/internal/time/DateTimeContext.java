@@ -9,6 +9,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
+import static com.relogiclabs.json.schema.internal.time.JsonDateTime.UNSET;
 import static com.relogiclabs.json.schema.internal.util.StringHelper.concat;
 import static com.relogiclabs.json.schema.message.ErrorCode.DCNF01;
 import static com.relogiclabs.json.schema.message.ErrorCode.DDAY03;
@@ -76,8 +77,6 @@ public class DateTimeContext {
         WEEKDAYS.put(key2, value);
     }
 
-    private static final int UNSET = -100;
-
     private int era = UNSET;
     private int year = UNSET;
     private int month = UNSET;
@@ -88,8 +87,8 @@ public class DateTimeContext {
     private int minute = UNSET;
     private int second = UNSET;
     private int fraction = UNSET;
-    private int utcOffsetHour = UNSET;
-    private int utcOffsetMinute = UNSET;
+    private int utcHour = UNSET;
+    private int utcMinute = UNSET;
 
     @Getter
     public final DateTimeType type;
@@ -177,8 +176,8 @@ public class DateTimeContext {
                 concat("Invalid ", type, " UTC offset hour out of range"));
         if(minute < 0 || minute > 59) throw new InvalidDateTimeException(DUTC05,
                 concat("Invalid ", type, " UTC offset minute out of range"));
-        utcOffsetHour = checkField(utcOffsetHour, hour);
-        utcOffsetMinute = checkField(utcOffsetMinute, minute);
+        utcHour = checkField(utcHour, hour);
+        utcMinute = checkField(utcMinute, minute);
     }
 
     private int checkField(int current, int newValue) {
@@ -192,31 +191,31 @@ public class DateTimeContext {
         return Arrays.stream(values).allMatch(v -> v != UNSET);
     }
 
-    public void validate() {
+    public JsonDateTime validate() {
         try {
-            LocalDate date;
+            JsonDateTime dateTime;
             if(isAllSet(year, month, day)) {
                 DAYS_IN_MONTH[2] = isLeapYear(year)? 29 : 28;
                 if(day < 1 || day > DAYS_IN_MONTH[month])
                     throw new InvalidDateTimeException(DDAY03,
                             concat("Invalid ", type, " day out of range"));
-                date = LocalDate.of(year, month, day);
-                if(weekday != UNSET && date.getDayOfWeek().getValue() != weekday)
+                dateTime = new JsonDateTime(type, year, month, day);
+                if(weekday != UNSET && dateTime.getDayOfWeek().getValue() != weekday)
                     throw new InvalidDateTimeException(DWKD03, concat("Invalid ",
                             type, " weekday input"));
             }
-            if(isAllSet(year, month)) date = LocalDate.of(year, month, 1);
-            if(isAllSet(year)) date = LocalDate.of(year, 1, 1);
+            if(isAllSet(hour, amPm)) convertTo24Hour();
+            if(hour != UNSET && (hour < 0 || hour > 23))
+                throw new InvalidDateTimeException(DHUR05, concat("Invalid ",
+                        type, " hour out of range"));
+            return new JsonDateTime(type, year, month, day, hour, minute, second,
+                    fraction, utcHour, utcMinute);
         } catch(InvalidDateTimeException e) {
             throw e;
         } catch(Exception e) {
             throw new InvalidDateTimeException(DINV01,
                     concat("Invalid ", type, " year, month or day out of range", e));
         }
-        if(isAllSet(hour, amPm)) convertTo24Hour();
-        if(hour != UNSET && (hour < 0 || hour > 23))
-            throw new InvalidDateTimeException(DHUR05, concat("Invalid ",
-                    type, " hour out of range"));
     }
 
     private void convertTo24Hour() {
@@ -246,8 +245,8 @@ public class DateTimeContext {
         if(minute != UNSET) append(builder, "Minute: ", minute);
         if(second != UNSET) append(builder, "Second: ", second);
         if(fraction != UNSET) append(builder, "Fraction: ", fraction);
-        if(utcOffsetHour != UNSET) append(builder, "UTC Offset Hour: ", utcOffsetHour);
-        if(utcOffsetMinute != UNSET) append(builder, "UTC Offset Minute: ", utcOffsetMinute);
+        if(utcHour != UNSET) append(builder, "UTC Offset Hour: ", utcHour);
+        if(utcMinute != UNSET) append(builder, "UTC Offset Minute: ", utcMinute);
         return removeEnd(builder.toString(), ", ") + "}";
     }
 

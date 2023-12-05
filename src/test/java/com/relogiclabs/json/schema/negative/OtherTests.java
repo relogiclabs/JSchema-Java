@@ -19,7 +19,7 @@ public class OtherTests {
         var schema = "#abcd";
         var json = "0";
 
-        //JsonSchema.IsValid(schema, json);
+        //JsonSchema.isValid(schema, json);
         var exception = assertThrows(InvalidDataTypeException.class,
                 () -> JsonAssert.isValid(schema, json));
         assertEquals(DTYP01, exception.getCode());

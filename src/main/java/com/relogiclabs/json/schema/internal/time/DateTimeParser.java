@@ -5,6 +5,7 @@ import com.relogiclabs.json.schema.internal.antlr.DateTimeLexer;
 import com.relogiclabs.json.schema.internal.util.DebugUtilities;
 import com.relogiclabs.json.schema.internal.util.LexerErrorListener;
 import com.relogiclabs.json.schema.internal.util.Reference;
+import lombok.Getter;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.Token;
 
@@ -77,13 +78,13 @@ import static com.relogiclabs.json.schema.internal.time.SegmentProcessor.YearNum
 import static com.relogiclabs.json.schema.internal.util.StringHelper.concat;
 import static com.relogiclabs.json.schema.message.ErrorCode.DINV02;
 
-public final class DateTimeValidator {
-    public static final String ISO_8601_DATE = "YYYY-MM-DD";
-    public static final String ISO_8601_TIME = "YYYY-MM-DD'T'hh:mm:ss.FZZ";
-
+public final class DateTimeParser {
     private static final Map<String, SegmentProcessor> PROCESSORS;
     private final DateTimeLexer dateTimeLexer;
     private final List<Token> lexerTokens;
+
+    @Getter private final String pattern;
+    @Getter private final DateTimeType type;
 
     static {
         PROCESSORS = new HashMap<>(50);
@@ -125,14 +126,16 @@ public final class DateTimeValidator {
     }
 
     @SuppressWarnings("unchecked")
-    public DateTimeValidator(String pattern) {
-        dateTimeLexer = new DateTimeLexer(CharStreams.fromString(pattern));
-        dateTimeLexer.removeErrorListeners();
-        dateTimeLexer.addErrorListener(LexerErrorListener.DATE_TIME);
-        lexerTokens = (List<Token>) dateTimeLexer.getAllTokens();
+    public DateTimeParser(String pattern, DateTimeType type) {
+        this.pattern = pattern;
+        this.type = type;
+        this.dateTimeLexer = new DateTimeLexer(CharStreams.fromString(pattern));
+        this.dateTimeLexer.removeErrorListeners();
+        this.dateTimeLexer.addErrorListener(LexerErrorListener.DATE_TIME);
+        this.lexerTokens = (List<Token>) dateTimeLexer.getAllTokens();
     }
 
-    private void Validate(String input, DateTimeContext context) {
+    private JsonDateTime parse(String input, DateTimeContext context) {
         for(var token : lexerTokens) {
             var processor = PROCESSORS.get(dateTimeLexer.getVocabulary().getSymbolicName(token.getType()));
             input = processor.process(input, token, context);
@@ -140,37 +143,22 @@ public final class DateTimeValidator {
         if(input.length() != 0) throw new InvalidDateTimeException(DINV02,
                 concat("Invalid ", context.getType(), " input format"));
 
-        context.validate();
+        var dateTime = context.validate();
         DebugUtilities.print(context);
+        return dateTime;
     }
 
-    public void ValidateDate(String input) {
-        Validate(input, new DateTimeContext(DateTimeType.DATE_TYPE));
+    public JsonDateTime parse(String input) {
+        return parse(input, new DateTimeContext(type));
     }
 
-    public void ValidateTime(String input) {
-        Validate(input, new DateTimeContext(DateTimeType.TIME_TYPE));
-    }
-
-    public boolean IsValidDate(String input, Reference<String> error) {
+    public JsonDateTime tryParse(String input, Reference<String> error) {
         try {
-            ValidateDate(input);
-            return true;
+            return parse(input);
         } catch(InvalidDateTimeException e) {
             DebugUtilities.print(e);
             error.setValue(e.getMessage());
-            return false;
-        }
-    }
-
-    public boolean IsValidTime(String input, Reference<String> error) {
-        try {
-            ValidateTime(input);
-            return true;
-        } catch(InvalidDateTimeException e) {
-            DebugUtilities.print(e);
-            error.setValue(e.getMessage());
-            return false;
+            return null;
         }
     }
 }

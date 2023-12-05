@@ -15,6 +15,7 @@ import static com.relogiclabs.json.schema.message.ErrorCode.JLEX01;
 import static com.relogiclabs.json.schema.message.ErrorCode.NEMT01;
 import static com.relogiclabs.json.schema.message.ErrorCode.PHON01;
 import static com.relogiclabs.json.schema.message.ErrorCode.REGX01;
+import static com.relogiclabs.json.schema.message.ErrorCode.SLEN01;
 import static com.relogiclabs.json.schema.message.ErrorCode.SLEN03;
 import static com.relogiclabs.json.schema.message.ErrorCode.SLEN04;
 import static com.relogiclabs.json.schema.message.ErrorCode.SLEN05;
@@ -42,7 +43,7 @@ public class StringTests {
         var schema = "\"\\uX0485\\uY486\\r\\n\\t\" #string";
         var json = "\"\\u0485\\u0486\\r\\n\\t\"";
 
-        //JsonSchema.IsValid(schema, json);
+        //JsonSchema.isValid(schema, json);
         var exception = assertThrows(SchemaLexerException.class,
                 () -> JsonAssert.isValid(schema, json));
         assertEquals(SLEX01, exception.getCode());
@@ -54,7 +55,7 @@ public class StringTests {
         var schema = "\"\\u0485\\u0486\\r\\n\\t\" #string";
         var json = "\"\\uX0485\\uY486\\r\\n\\t\"";
 
-        //JsonSchema.IsValid(schema, json);
+        //JsonSchema.isValid(schema, json);
         var exception = assertThrows(JsonLexerException.class,
                 () -> JsonAssert.isValid(schema, json));
         assertEquals(JLEX01, exception.getCode());
@@ -139,6 +140,27 @@ public class StringTests {
         var exception = assertThrows(JsonSchemaException.class,
                 () -> JsonAssert.isValid(schema, json));
         assertEquals(DTYP06, exception.getCode());
+        exception.printStackTrace();
+    }
+
+    @Test
+    public void When_WrongLengthWithStringInObject_ExceptionThrown() {
+        var schema =
+            """
+            @length*(5) #string*
+            """;
+        var json =
+            """
+            {
+                "key1": "12345",
+                "key2": "1234",
+                "key3": "123456"
+            }
+            """;
+        JsonSchema.isValid(schema, json);
+        var exception = assertThrows(JsonSchemaException.class,
+                () -> JsonAssert.isValid(schema, json));
+        assertEquals(SLEN01, exception.getCode());
         exception.printStackTrace();
     }
 

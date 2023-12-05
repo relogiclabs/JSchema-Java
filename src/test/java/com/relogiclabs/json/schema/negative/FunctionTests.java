@@ -51,7 +51,7 @@ public class FunctionTests {
             """;
         var json = "10";
 
-        //JsonSchema.IsValid(schema, json);
+        //JsonSchema.isValid(schema, json);
         var exception = assertThrows(InvalidIncludeException.class,
                 () -> JsonAssert.isValid(schema, json));
         assertEquals(CLAS03, exception.getCode());
@@ -67,7 +67,7 @@ public class FunctionTests {
             """;
         var json = "10";
 
-        //JsonSchema.IsValid(schema, json);
+        //JsonSchema.isValid(schema, json);
         var exception = assertThrows(NotFoundClassException.class,
                 () -> JsonAssert.isValid(schema, json));
         assertEquals(CLAS02, exception.getCode());
@@ -84,7 +84,7 @@ public class FunctionTests {
             """;
         var json = "10";
 
-        //JsonSchema.IsValid(schema, json);
+        //JsonSchema.isValid(schema, json);
         var exception = assertThrows(DuplicateIncludeException.class,
                 () -> JsonAssert.isValid(schema, json));
         assertEquals(CLAS01, exception.getCode());
@@ -100,7 +100,7 @@ public class FunctionTests {
             """;
         var json = "10";
 
-        //JsonSchema.IsValid(schema, json);
+        //JsonSchema.isValid(schema, json);
         var exception = assertThrows(ClassInstantiationException.class,
                 () -> JsonAssert.isValid(schema, json));
         assertEquals(CLAS04, exception.getCode());
@@ -116,7 +116,7 @@ public class FunctionTests {
             """;
         var json = "10";
 
-        //JsonSchema.IsValid(schema, json);
+        //JsonSchema.isValid(schema, json);
         var exception = assertThrows(InvalidFunctionException.class,
                 () -> JsonAssert.isValid(schema, json));
         assertEquals(FUNC01, exception.getCode());
@@ -132,7 +132,7 @@ public class FunctionTests {
             """;
         var json = "10";
 
-        //JsonSchema.IsValid(schema, json);
+        //JsonSchema.isValid(schema, json);
         var exception = assertThrows(InvalidFunctionException.class,
                 () -> JsonAssert.isValid(schema, json));
         assertEquals(FUNC02, exception.getCode());
@@ -148,10 +148,24 @@ public class FunctionTests {
             """;
         var json = "10";
 
-        //JsonSchema.IsValid(schema, json);
+        //JsonSchema.isValid(schema, json);
         var exception = assertThrows(FunctionNotFoundException.class,
                 () -> JsonAssert.isValid(schema, json));
         assertEquals(FUNC05, exception.getCode());
+        exception.printStackTrace();
+    }
+
+    @Test
+    public void When_FunctionThrowArbitraryException_ExceptionThrown() {
+        var schema =
+            """
+            %include: com.relogiclabs.json.schema.negative.function.ExternalFunctions4
+            %schema: @canTest #integer
+            """;
+        var json = "10";
+        JsonSchema.isValid(schema, json);
+        var exception = assertThrows(RuntimeException.class,
+                () -> JsonAssert.isValid(schema, json));
         exception.printStackTrace();
     }
 }
