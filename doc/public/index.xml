@@ -29,7 +29,7 @@ Maven Library Package To get started, launch your preferred IDE (such as Intelli
     <item>
       <title>Validation Syntax</title>
       <link>https://relogiclabs.github.io/JsonSchema-Java/articles/validation/</link>
-      <pubDate>Sun, 08 Oct 2023 09:38:53 +0600</pubDate>
+      <pubDate>Mon, 04 Dec 2023 09:38:53 +0600</pubDate>
       
       <guid>https://relogiclabs.github.io/JsonSchema-Java/articles/validation/</guid>
       <description>Validation Syntax A JSON document is a structured data format used for the exchange of information between applications. It primarily consists of two types of values: composite values and non-composite values, the latter also referred to as primitive values.
@@ -39,7 +39,7 @@ Composite values in a JSON document act as containers. They can hold zero or mor
     <item>
       <title>Directives</title>
       <link>https://relogiclabs.github.io/JsonSchema-Java/articles/directives/</link>
-      <pubDate>Sun, 08 Oct 2023 09:38:53 +0600</pubDate>
+      <pubDate>Mon, 04 Dec 2023 09:38:53 +0600</pubDate>
       
       <guid>https://relogiclabs.github.io/JsonSchema-Java/articles/directives/</guid>
       <description>Validation Directives Directives serve as special instructions or commands for the Schema and JSON parsers, interpreters, and validators. They are used to control various aspects of the validation process or to provide metadata for documentation. Additionally, they offer crucial information about Schema and JSON and provide custom validation functions to meet specific Schema validation requirements.
@@ -59,7 +59,7 @@ Grammar The New JSON Schema grammar is introduced through a notation similar to 
     <item>
       <title>Data Types</title>
       <link>https://relogiclabs.github.io/JsonSchema-Java/articles/datatypes/</link>
-      <pubDate>Sun, 08 Oct 2023 09:38:53 +0600</pubDate>
+      <pubDate>Mon, 04 Dec 2023 09:38:53 +0600</pubDate>
       
       <guid>https://relogiclabs.github.io/JsonSchema-Java/articles/datatypes/</guid>
       <description>Constraint Data Types Data types play a pivotal role in validating JSON data for compliance with the schema. Essentially, data types determine the kind of data that a JSON element or value can contain. This mechanism serves as a fundamental process in maintaining the accuracy, consistency, and integrity of JSON document and its structure throughout the system, where data quality and reliability are vital.
@@ -69,7 +69,7 @@ In the schema document, data types are denoted by the # prefix.</description>
     <item>
       <title>Functions</title>
       <link>https://relogiclabs.github.io/JsonSchema-Java/articles/functions/</link>
-      <pubDate>Sun, 08 Oct 2023 09:38:53 +0600</pubDate>
+      <pubDate>Mon, 04 Dec 2023 09:38:53 +0600</pubDate>
       
       <guid>https://relogiclabs.github.io/JsonSchema-Java/articles/functions/</guid>
       <description>Constraint Functions This document serves as a brief overview, providing key insights into the built-in constraint functions that are part of the core schema. These functions significantly extend the scope of data and structural validation, going beyond the limits of basic data type restrictions. These functions are designed to enhance the effectiveness of schema validation, ensuring the accuracy, consistency, integrity, and compliance of the JSON data to the schema.</description>
@@ -88,7 +88,7 @@ Date and time formats are defined using date and time pattern strings. Within th
     <item>
       <title>Source Build</title>
       <link>https://relogiclabs.github.io/JsonSchema-Java/articles/sourcebuild/</link>
-      <pubDate>Fri, 03 Nov 2023 09:38:53 +0600</pubDate>
+      <pubDate>Mon, 04 Dec 2023 09:38:53 +0600</pubDate>
       
       <guid>https://relogiclabs.github.io/JsonSchema-Java/articles/sourcebuild/</guid>
       <description>Build from Source Code This comprehensive guide illustrates the procedures for retrieving source code from a GitHub repository, compiling the project source code into a library, and seamlessly integrating the compiled library into your project. It is important to have a foundational understanding of the Java language, as well as a modest level of familiarity with the Java SDK and command-line interface. You also need a basic knowledge of how to work with Maven packages.</description>

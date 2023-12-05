@@ -1,6 +1,6 @@
 +++
 title = 'Functions'
-date = 2023-10-08T09:38:53+06:00
+date = 2023-12-04T09:38:53+06:00
 weight = 7
 +++
 
@@ -184,13 +184,51 @@ Validates whether the `target` string is a valid phone number. It follows the IT
 ```stylus
 #string target - @date(pattern)
 ```
-Validates that the `target` string matches the date and time pattern specified by the `pattern` parameter. It fully supports the ISO 8601 date and time format. Beyond this standard, it also allows custom date and time formats, ensuring compatibility with various systems and meeting diverse users and businesses requirements. This [document](/JsonSchema-DotNet/articles/datetime.html) provides a comprehensive overview of the date-time custom patterns.
+Validates that the `target` string matches the date and time pattern specified by the `pattern` parameter. It fully supports the ISO 8601 date and time format. Beyond this standard, it also allows custom date and time formats, ensuring compatibility with various systems and meeting diverse users and businesses requirements. This [document](/JsonSchema-Java/articles/datetime) provides a comprehensive overview of the date-time custom patterns.
 
 ```
 #string target - @time(pattern)
 ```
-Both the `@date` and `@time` functions support a complete range of date-time patterns, enabling the precise definition of any date and time scenario. Therefore, these functions can be used interchangeably. When the sole consideration is the date or day of the month in a year, employing the `@date` function is the more convenient choice. In contrast, when it becomes necessary to specify a particular time on a date, the `@time` function is the more appropriate option. To learn more about date-time patterns, please refer to [this page](/JsonSchema-DotNet/articles/datetime.html).
+Both the `@date` and `@time` functions support a complete range of date-time patterns, enabling the precise definition of any date and time scenario. Therefore, these functions can be used interchangeably. When the sole consideration is the date or day of the month in a year, employing the `@date` function is the more convenient choice. In contrast, when it becomes necessary to specify a particular time on a date, the `@time` function is the more appropriate option. To learn more about date-time patterns, please refer to [this page](/JsonSchema-Java/articles/datetime).
 
+### Date and Time Range
+```stylus
+#datetime target - @range(#string start, #string end)
+```
+Validates that the `target` date-time satisfies the range requirement specified by the parameters. It checks that the `target` date-time is from or after the `start` date-time specified and simultaneously until and before the `end` date-time specified. If not, a validation error will generate. The `start` and `end` parameters must be the string representation of the `target` data type, which can either be a `#date` or `#time` type.
+
+If either the parameter values for `start` or `end` are unspecified or undefined, the `undefined` symbol `!` can be used in place of either of these parameters. The following examples illustrate the various use cases of the `@range` function of the two variations described above, for the target type:
+
+| Ues Cases                                                        | Valid Values                                           | Invalid Values                           |
+|------------------------------------------------------------------|--------------------------------------------------------|------------------------------------------|
+| `@range("2010-01-01", "2010-12-31")`                             | `2010-01-01`; `2010-06-30`; `2010-12-31`               | `2009-12-31`; `2011-01-01`; `2030-11-05` |
+| `@range("2010-01-01T00:00:00.000Z", "2010-12-31T23:59:59.999Z")` | `2010-01-01T00:00:00.000Z`; `2010-12-31T23:59:59.999Z` | `2009-12-31T23:59:59.999Z`               |
+| `@range(!, "2010-12-31")`                                        | `1990-01-01`; `2010-12-31`                             | `2011-01-01`; `2030-11-05`               |
+| `@range("2010-01-01", !)`                                        | `2010-01-01`; `2030-11-05`                             | `1990-01-01`; `2009-12-31`               |
+
+### Date and Time Start
+```stylus
+#datetime target - @start(#string reference)
+```
+Validates that the `target` date-time starts from or finds after the specified `reference` date-time parameter. If the `target` date-time finds before the `reference` date-time, a validation error is triggered. The `reference` parameter must be the string representation of the `target` data type, which can either be a `#date` or `#time` type.
+
+### Date and Time End
+```stylus
+#datetime target - @end(#string reference)
+```
+Validates that the `target` date-time finds before or ends at the specified `reference` date-time parameter. If the `target` date-time finds after the `reference` date-time, a validation error is triggered. The `reference` parameter must be the string representation of the `target` data type, which can either be a `#date` or `#time` type.
+
+### Date and Time Before
+```stylus
+#datetime target - @before(#string reference)
+```
+Validates that the `target` date-time is exclusively before the `reference` date-time. If the `target` date-time finds on or after the `reference` date-time, a validation error is triggered. The `reference` parameter must be the string representation of the `target` data type, which can either be a `#date` or `#time` type.
+
+### Date and Time After
+```stylus
+#datetime target - @after(#string reference)
+```
+Validates that the `target` date-time is exclusively after the `reference` date-time. If the `target` date-time finds on or before the `reference` date-time, a validation error is triggered. The `reference` parameter must be the string representation of the `target` data type, which can either be a `#date` or `#time` type.
 
 ### Number Positive
 ```stylus

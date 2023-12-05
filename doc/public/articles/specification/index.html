@@ -142,7 +142,7 @@ pre code { font-size: 1.1em; }
 </span></span><span class="line"><span class="cl">    alias-name
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl">validator-main
-</span></span><span class="line"><span class="cl">    value-opt functions-opt datatypes-opt this-opt
+</span></span><span class="line"><span class="cl">    value-opt functions-opt datatypes-opt receivers-opt this-opt
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl">value-opt
 </span></span><span class="line"><span class="cl">    &#39;&#39;
@@ -161,20 +161,24 @@ pre code { font-size: 1.1em; }
 </span></span><span class="line"><span class="cl">    function functions
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl">function
-</span></span><span class="line"><span class="cl">    function-name function-params-opt
+</span></span><span class="line"><span class="cl">    function-name function-args-opt
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl">function-name
 </span></span><span class="line"><span class="cl">    &#39;@&#39; identifier
 </span></span><span class="line"><span class="cl">    &#39;@&#39; identifier &#39;*&#39;
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">function-params-opt
+</span></span><span class="line"><span class="cl">function-args-opt
 </span></span><span class="line"><span class="cl">    &#39;&#39;
 </span></span><span class="line"><span class="cl">    &#39;(&#39; &#39;)&#39;
-</span></span><span class="line"><span class="cl">    &#39;(&#39; function-params &#39;)&#39;
+</span></span><span class="line"><span class="cl">    &#39;(&#39; function-args &#39;)&#39;
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">function-params
+</span></span><span class="line"><span class="cl">function-args
+</span></span><span class="line"><span class="cl">    function-arg
+</span></span><span class="line"><span class="cl">    function-arg &#39;,&#39; function-args
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">function-arg
 </span></span><span class="line"><span class="cl">    value
-</span></span><span class="line"><span class="cl">    value &#39;,&#39; function-params
+</span></span><span class="line"><span class="cl">    receiver
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl">datatypes-opt
 </span></span><span class="line"><span class="cl">    &#39;&#39;
@@ -184,7 +188,7 @@ pre code { font-size: 1.1em; }
 </span></span><span class="line"><span class="cl">    datatype datatypes
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl">datatype
-</span></span><span class="line"><span class="cl">    datatype-name datatype-param-opt
+</span></span><span class="line"><span class="cl">    datatype-name datatype-arg-opt
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl">datatype-name
 </span></span><span class="line"><span class="cl">    &#39;#&#39; alphas
@@ -193,9 +197,19 @@ pre code { font-size: 1.1em; }
 </span></span><span class="line"><span class="cl">alphas
 </span></span><span class="line"><span class="cl">    alpha alphas
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">datatype-param-opt
+</span></span><span class="line"><span class="cl">datatype-arg-opt
 </span></span><span class="line"><span class="cl">    &#39;&#39;
 </span></span><span class="line"><span class="cl">    &#39;(&#39; alias-name &#39;)&#39;
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">receivers-opt
+</span></span><span class="line"><span class="cl">    &#39;&#39;
+</span></span><span class="line"><span class="cl">    receivers
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">receivers
+</span></span><span class="line"><span class="cl">    receiver receivers
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">receiver
+</span></span><span class="line"><span class="cl">    &#39;<span class="err">&amp;</span>&#39; identifier
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl">this-opt
 </span></span><span class="line"><span class="cl">    &#39;&#39;

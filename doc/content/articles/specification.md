@@ -79,7 +79,7 @@ validator
     alias-name
 
 validator-main
-    value-opt functions-opt datatypes-opt this-opt
+    value-opt functions-opt datatypes-opt receivers-opt this-opt
 
 value-opt
     ''
@@ -98,20 +98,24 @@ functions
     function functions
 
 function
-    function-name function-params-opt
+    function-name function-args-opt
 
 function-name
     '@' identifier
     '@' identifier '*'
 
-function-params-opt
+function-args-opt
     ''
     '(' ')'
-    '(' function-params ')'
+    '(' function-args ')'
 
-function-params
+function-args
+    function-arg
+    function-arg ',' function-args
+
+function-arg
     value
-    value ',' function-params
+    receiver
 
 datatypes-opt
     ''
@@ -121,7 +125,7 @@ datatypes
     datatype datatypes
 
 datatype
-    datatype-name datatype-param-opt
+    datatype-name datatype-arg-opt
 
 datatype-name
     '#' alphas
@@ -130,9 +134,19 @@ datatype-name
 alphas
     alpha alphas
 
-datatype-param-opt
+datatype-arg-opt
     ''
     '(' alias-name ')'
+
+receivers-opt
+    ''
+    receivers
+
+receivers
+    receiver receivers
+
+receiver
+    '&' identifier
 
 this-opt
     ''
