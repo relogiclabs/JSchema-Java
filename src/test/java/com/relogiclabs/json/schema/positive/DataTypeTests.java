@@ -63,4 +63,43 @@ public class DataTypeTests {
             """;
         JsonAssert.isValid(schema, json);
     }
+
+    @Test
+    public void When_DataTypeAnyInArray_ValidTrue() {
+        var schema =
+            """
+            #any* #array
+            """;
+        var json =
+            """
+            [[], {}, null, false, "test", 0.5, 1E-10, 0]
+            """;
+        JsonAssert.isValid(schema, json);
+    }
+
+    @Test
+    public void When_DataTypePrimitiveInArray_ValidTrue() {
+        var schema =
+            """
+            #primitive* #array
+            """;
+        var json =
+            """
+            ["test", 0, false, null]
+            """;
+        JsonAssert.isValid(schema, json);
+    }
+
+    @Test
+    public void When_DataTypeCompositeInArray_ValidTrue() {
+        var schema =
+            """
+            #composite* #array
+            """;
+        var json =
+            """
+            [[], {}, [10, 20], {"key": 100}]
+            """;
+        JsonAssert.isValid(schema, json);
+    }
 }
