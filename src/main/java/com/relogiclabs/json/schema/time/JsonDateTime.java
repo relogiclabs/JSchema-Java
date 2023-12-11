@@ -1,18 +1,19 @@
-package com.relogiclabs.json.schema.internal.time;
+package com.relogiclabs.json.schema.time;
 
-import com.relogiclabs.json.schema.types.JDate;
-import com.relogiclabs.json.schema.types.JDateTime;
-import com.relogiclabs.json.schema.types.JString;
-import com.relogiclabs.json.schema.types.JTime;
+import com.relogiclabs.json.schema.type.JDate;
+import com.relogiclabs.json.schema.type.JDateTime;
+import com.relogiclabs.json.schema.type.JString;
+import com.relogiclabs.json.schema.type.JTime;
 import lombok.Getter;
 
 import java.time.DayOfWeek;
-import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.util.Arrays;
 
-import static com.relogiclabs.json.schema.internal.time.DateTimeType.DATE_TYPE;
-import static com.relogiclabs.json.schema.internal.time.DateTimeType.TIME_TYPE;
+import static com.relogiclabs.json.schema.time.DateTimeType.DATE_TYPE;
+import static com.relogiclabs.json.schema.time.DateTimeType.TIME_TYPE;
+import static lombok.AccessLevel.PACKAGE;
+import static org.apache.commons.lang3.StringUtils.removeEnd;
 
 public class JsonDateTime {
     private static final int DEFAULT_YEAR = 2000;
@@ -22,8 +23,6 @@ public class JsonDateTime {
     private static final int DEFAULT_MINUTE = 0;
     private static final int DEFAULT_SECOND = 0;
     private static final int DEFAULT_FRACTION = 0;
-    private static final int DEFAULT_UTC_HOUR = 0;
-    private static final int DEFAULT_UTC_MINUTE = 0;
 
     public static final int UNSET = -1000;
 
@@ -35,18 +34,18 @@ public class JsonDateTime {
     @Getter private final int minute;
     @Getter private final int second;
     @Getter private final int fraction;
-    @Getter private final int utcHour;
-    @Getter private final int utcMinute;
+    @Getter private final JsonUtcOffset utcOffset;
 
-    private final ZonedDateTime dateTime;
+    @Getter(PACKAGE) private final ZonedDateTime dateTime;
 
     public JsonDateTime(DateTimeType type, int year, int month, int day) {
-        this(type, year, month, day, UNSET, UNSET, UNSET, UNSET, UNSET, UNSET);
+        this(type, year, month, day, UNSET, UNSET, UNSET, UNSET, null);
     }
 
     public JsonDateTime(DateTimeType type, int year, int month,
                         int day, int hour, int minute, int second,
-                        int fraction, int utcHour, int utcMinute) {
+                        int fraction, JsonUtcOffset utcOffset) {
+        if(utcOffset == null) utcOffset = new JsonUtcOffset();
         this.type = type;
         this.year = year;
         this.month = month;
@@ -55,8 +54,7 @@ public class JsonDateTime {
         this.minute = minute;
         this.second = second;
         this.fraction = fraction;
-        this.utcHour = utcHour;
-        this.utcMinute = utcMinute;
+        this.utcOffset = utcOffset;
         this.dateTime = ZonedDateTime.of(
                 defaultIfUnset(year, DEFAULT_YEAR),
                 defaultIfUnset(month, DEFAULT_MONTH),
@@ -65,16 +63,7 @@ public class JsonDateTime {
                 defaultIfUnset(minute, DEFAULT_MINUTE),
                 defaultIfUnset(second, DEFAULT_SECOND),
                 defaultIfUnset(fraction, DEFAULT_FRACTION),
-                getZoneOffset(utcHour, utcMinute));
-    }
-
-    private ZoneOffset getZoneOffset(int utcHour, int utcMinute) {
-        int signum = 1;
-        if(utcHour != UNSET) signum = (int) Math.signum(utcHour);
-        if(utcMinute != UNSET) utcMinute *= signum;
-        return ZoneOffset.ofHoursMinutes(
-                defaultIfUnset(utcHour, DEFAULT_UTC_HOUR),
-                defaultIfUnset(utcMinute, DEFAULT_UTC_MINUTE));
+                utcOffset.getZoneOffset());
     }
 
     public DayOfWeek getDayOfWeek() {
@@ -90,13 +79,31 @@ public class JsonDateTime {
         return Arrays.stream(values).allMatch(v -> v != UNSET);
     }
 
-    private static int defaultIfUnset(int value, int defaultValue) {
+    static int defaultIfUnset(int value, int defaultValue) {
         return value == UNSET ? defaultValue : value;
     }
 
-    public JDateTime create(JString dateTime) {
-        if(type == DATE_TYPE) return new JDate(dateTime, this);
-        if(type == TIME_TYPE) return new JTime(dateTime, this);
+    public JDateTime createNode(JString dateTime) {
+        if(type == DATE_TYPE) return JDate.from(dateTime, this);
+        if(type == TIME_TYPE) return JTime.from(dateTime, this);
         throw new IllegalStateException("Invalid date time type");
+    }
+
+    @Override
+    public String toString() {
+        var builder = new StringBuilder("{");
+        if(year != UNSET) append(builder, "Year: ", year);
+        if(month != UNSET) append(builder, "Month: ", month);
+        if(day != UNSET) append(builder, "Day: ", day);
+        if(hour != UNSET) append(builder, "Hour: ", hour);
+        if(minute != UNSET) append(builder, "Minute: ", minute);
+        if(second != UNSET) append(builder, "Second: ", second);
+        if(fraction != UNSET) append(builder, "Fraction: ", fraction);
+        builder.append(utcOffset);
+        return removeEnd(builder.toString(), ", ") + "}";
+    }
+
+    private static void append(StringBuilder builder, String label, int value) {
+        builder.append(label).append(value).append(", ");
     }
 }

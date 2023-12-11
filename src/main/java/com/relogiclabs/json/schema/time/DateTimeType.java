@@ -1,11 +1,11 @@
-package com.relogiclabs.json.schema.internal.time;
+package com.relogiclabs.json.schema.time;
 
-import com.relogiclabs.json.schema.types.JsonType;
+import com.relogiclabs.json.schema.type.JsonType;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
-import static com.relogiclabs.json.schema.types.JsonType.DATE;
-import static com.relogiclabs.json.schema.types.JsonType.TIME;
+import static com.relogiclabs.json.schema.type.JsonType.DATE;
+import static com.relogiclabs.json.schema.type.JsonType.TIME;
 
 @Getter
 @AllArgsConstructor
