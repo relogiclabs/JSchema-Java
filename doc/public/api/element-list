@@ -3,5 +3,7 @@ com.relogiclabs.json.schema.collection
 com.relogiclabs.json.schema.exception
 com.relogiclabs.json.schema.function
 com.relogiclabs.json.schema.message
+com.relogiclabs.json.schema.time
 com.relogiclabs.json.schema.tree
-com.relogiclabs.json.schema.types
+com.relogiclabs.json.schema.type
+com.relogiclabs.json.schema.util

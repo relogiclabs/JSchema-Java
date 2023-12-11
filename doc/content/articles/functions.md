@@ -102,11 +102,11 @@ If either the parameter values for `minimum` or `maximum` are unspecified or und
 ```
 Validates that the `target` number is greater than or equal to the `minimum` number specified as a parameter, unless the `exclusive` parameter flag is explicitly set to `true`, in which case the `target` number must be exclusively greater than the `minimum` number.
 
-| Ues Cases          | Valid Values             | Invalid Values           |
-|--------------------|--------------------------|--------------------------|
-| `minimum(0)`       | `0`; `1`; `1000`         | `-1`; `-10`; `-10000`    |
-| `minimum(10.5)`    | `10.5`; `10.6`; `1000.1` | `10.49`; `1.0`; `-100.1` |
-| `minimum(0, true)` | `0.001`; `1.01`; `100.1` | `0`; `-0.01`; `-100.1`   |
+| Ues Cases           | Valid Values             | Invalid Values           |
+|---------------------|--------------------------|--------------------------|
+| `@minimum(0)`       | `0`; `1`; `1000`         | `-1`; `-10`; `-10000`    |
+| `@minimum(10.5)`    | `10.5`; `10.6`; `1000.1` | `10.49`; `1.0`; `-100.1` |
+| `@minimum(0, true)` | `0.001`; `1.01`; `100.1` | `0`; `-0.01`; `-100.1`   |
 
 ### Number Maximum
 ```stylus
@@ -115,11 +115,11 @@ Validates that the `target` number is greater than or equal to the `minimum` num
 ```
 Validates that the `target` number is less than or equal to the `maximum` number specified as a parameter, unless the `exclusive` parameter flag is explicitly set to `true`, in which case the `target` number must be exclusively less than the `maximum` number.
 
-| Ues Cases          | Valid Values                 | Invalid Values            |
-|--------------------|------------------------------|---------------------------|
-| `maximum(100)`     | `100`; `-100`; `0`           | `101`; `1000`; `10000`    |
-| `maximum(10.5)`    | `10.50`; `10.49`; `-1000.1`  | `10.51`; `11.0`; `1000.1` |
-| `maximum(0, true)` | `-0.001`; `-1.01`; `-1000.1` | `0`; `0.01`; `100.1`      |
+| Ues Cases           | Valid Values                 | Invalid Values            |
+|---------------------|------------------------------|---------------------------|
+| `@maximum(100)`     | `100`; `-100`; `0`           | `101`; `1000`; `10000`    |
+| `@maximum(10.5)`    | `10.50`; `10.49`; `-1000.1`  | `10.51`; `11.0`; `1000.1` |
+| `@maximum(0, true)` | `-0.001`; `-1.01`; `-1000.1` | `0`; `0.01`; `100.1`      |
 
 ### String Enum
 ```stylus
@@ -230,17 +230,29 @@ Validates that the `target` date-time is exclusively before the `reference` date
 ```
 Validates that the `target` date-time is exclusively after the `reference` date-time. If the `target` date-time finds on or before the `reference` date-time, a validation error is triggered. The `reference` parameter must be the string representation of the `target` data type, which can either be a `#date` or `#time` type.
 
-### Number Positive
+### Number Positive and Negative
 ```stylus
 #number target - @positive
+#number target - @positive(#number reference)
 ```
-Validates that the `target` number is positive. If the `target` number is zero or negative, it generates a validation error.
+Validates that the `target` number is positive or positive from (or relative to) the specified `reference`. If the `target` number is zero or negative for the first definition or less than the `reference` for the second definition, it generates a validation error.
 
-### Number Negative
 ```stylus
 #number target - @negative
+#number target - @negative(#number reference)
 ```
-Validates that the `target` number is negative. If the `target` number is zero or positive, it generates a validation error.
+Validates that the `target` number is negative or negative from (or relative to) the specified `reference`. If the `target` number is zero or positive for the first definition or greater than the `reference` for the second definition, it generates a validation error.
+
+| Ues Cases        | Valid Values             | Invalid Values         |
+|------------------|--------------------------|------------------------|
+| `@positive`      | `1`; `5`; `1000`         | `0`; `-1`; `-1000`     |
+| `@negative`      | `-1`; `-5`; `-1000`      | `0`; `1`; `1000`       |
+| `@positive(0)`   | `0`; `1`; `5`; `1000`    | `-1`; `-5`; `-1000`    |
+| `@positive(10)`  | `10`; `100`; `10000`     | `1`; `5`; `-1000`      |
+| `@negative(0)`   | `0`; `-1`; `-5`; `-1000` | `1`; `5`; `1000`       |
+| `@negative(-10)` | `-10`; `-100`; `-10000`  | `0`; `-5`; `1000`      |
+| `@positive(-1)`  | `-1`; `0`; `10000`       | `-10`; `-100`; `-1000` |
+| `@negative(1)`   | `1`; `0`; `-10000`       | `10`; `100`; `1000`    |
 
 ### String Not Empty
 ```stylus

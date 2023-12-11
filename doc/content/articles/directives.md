@@ -28,7 +28,7 @@ In a schema, the version directive is used to provide a version number of the sc
 ## Include Directive
 Include directive enables the addition or inclusion of a class, as defined by object-oriented programming, to a schema along with a set of methods that have specific signatures for performing custom validations. This feature extends the built-in validation capabilities of the schema. The example below illustrates how to utilize the include directive in Java language:
 ```js
-%include: com.relogiclabs.json.schema.positive.ExternalFunctions
+%include: com.relogiclabs.json.schema.external.ExternalFunctions
 ```
 
 ## Pragma Directive
