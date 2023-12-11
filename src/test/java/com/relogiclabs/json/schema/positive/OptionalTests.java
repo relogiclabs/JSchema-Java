@@ -23,14 +23,14 @@ public class OptionalTests {
 
     @Test
     public void When_OptionalWithMandatoryInArray_ValidTrue() {
-        var schema = "[#number, #number?, #number?]";
-        var json = "[10.5, 200]";
+        var schema = "[@range(1, 10) #number, @range(10, 100) #number?, #number?]";
+        var json = "[8.5, 80]";
         JsonAssert.isValid(schema, json);
     }
 
     @Test
     public void When_OptionalWithFunctionInArray_ValidTrue() {
-        var schema = 
+        var schema =
             """
             [
                 @range(10, 11) #number,
@@ -44,7 +44,7 @@ public class OptionalTests {
 
     @Test
     public void When_OptionalWithFunctionsInObject_ValidTrue() {
-        var schema = 
+        var schema =
             """
             {
                 "key1": @positive #number,
@@ -52,7 +52,7 @@ public class OptionalTests {
                 "key3": @negative #number?
             }
             """;
-        var json = 
+        var json =
             """
             {
                 "key1": 0.11,

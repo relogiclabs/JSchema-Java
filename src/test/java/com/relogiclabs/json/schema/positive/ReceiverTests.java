@@ -8,7 +8,7 @@ public class ReceiverTests {
     public void When_ReceiveSingleValueInObject_ValidTrue() {
         var schema =
             """
-            %include: com.relogiclabs.json.schema.positive.ExternalFunctions
+            %include: com.relogiclabs.json.schema.external.ExternalFunctions
             %schema:
             {
                 "key1": #integer &dependent,
@@ -38,7 +38,7 @@ public class ReceiverTests {
     public void When_MultiReceiversValueInObject_ValidTrue() {
         var schema =
             """
-            %include: com.relogiclabs.json.schema.positive.ExternalFunctions
+            %include: com.relogiclabs.json.schema.external.ExternalFunctions
             %schema:
             {
                 "key1": #integer &receiver1 &receiver2 &receiver3,
@@ -59,7 +59,7 @@ public class ReceiverTests {
     public void When_ReceiveArrayValuesInObject_ValidTrue() {
         var schema =
             """
-            %include: com.relogiclabs.json.schema.positive.ExternalFunctions
+            %include: com.relogiclabs.json.schema.external.ExternalFunctions
             
             %define $numbers: @range(1, 10) #integer &relatedValues
             %schema:
@@ -82,7 +82,7 @@ public class ReceiverTests {
     public void When_ReceiveMultipleValuesInObject_ValidTrue() {
         var schema =
             """
-            %include: com.relogiclabs.json.schema.positive.ExternalFunctions
+            %include: com.relogiclabs.json.schema.external.ExternalFunctions
 
             %schema:
             {
@@ -112,7 +112,7 @@ public class ReceiverTests {
     public void When_MultiReceiversFunctionInObject_ValidTrue() {
         var schema =
             """
-            %include: com.relogiclabs.json.schema.positive.ExternalFunctions
+            %include: com.relogiclabs.json.schema.external.ExternalFunctions
 
             %schema:
             {

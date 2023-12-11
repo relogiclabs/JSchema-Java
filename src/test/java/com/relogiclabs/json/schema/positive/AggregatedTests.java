@@ -9,7 +9,7 @@ public class AggregatedTests {
         var schema = """
         %title: "Example Schema For Some Json HTTP Request or Response"
         %version: 2023.09.11
-        %include: com.relogiclabs.json.schema.positive.ExternalFunctions
+        %include: com.relogiclabs.json.schema.external.ExternalFunctions
         %pragma IgnoreUndefinedProperties: true
 
         %define $component1: {
@@ -63,7 +63,7 @@ public class AggregatedTests {
             "key2": "val2",
             "key3": [5, 10, 15, 20],
             "key4": 0.5,
-            "key5": 10,
+            "key5": 10E-10,
             "key6": {
                 "key11": "test",
                 "key12": "email.address@gmail.com",
@@ -71,7 +71,8 @@ public class AggregatedTests {
                 "key14": [10, 20, 30, 40]
             },
             "key7": true,
-            "key8": ["ABC", "EFG", "XYZ"]
+            "key8": ["ABC", "EFG", "XYZ"],
+            "key9": null
         }
         """;
         var actual = """
@@ -80,7 +81,7 @@ public class AggregatedTests {
             "key2": "val2",
             "key3": [5, 10, 15, 20],
             "key4": 0.5,
-            "key5": 10,
+            "key5": 10E-10,
             "key6": {
                 "key11": "test",
                 "key12": "email.address@gmail.com",
@@ -88,7 +89,8 @@ public class AggregatedTests {
                 "key14": [10, 20, 30, 40]
             },
             "key7": true,
-            "key8": ["ABC", "EFG", "XYZ"]
+            "key8": ["ABC", "EFG", "XYZ"],
+            "key9": null
         }
         """;
         JsonAssert.areEqual(expected, actual);
@@ -102,7 +104,7 @@ public class AggregatedTests {
             "key2" : "val2",
             "key3" : [5, 10, 15, 20],
             "key4" : 0.5,
-            "key5" : 10,
+            "key5" : 10E-10,
             "key6" : {
                 "key11" : "test",
                 "key12" : "email.address@gmail.com",
@@ -110,20 +112,21 @@ public class AggregatedTests {
                 "key14" : [ 10, 20, 30, 40 ]
             },
             "key8" : [ "ABC", "EFG", "XYZ" ],
-            "key7" : true
+            "key7" : true,
+            "key9" : null
         }
         """;
         var actual = """
         {
             "key3": [5, 10, 15, 20],
             "key1": 10, "key2": "val2",
-            "key4": 0.5, "key5": 10,
+            "key4": 0.5, "key5": 10E-10,
             "key6": {
                 "key12": "email.address@gmail.com",
                 "key13": ["Microsoft", "https://www.microsoft.com/en-us/"],
                 "key11": "test", "key14": [10, 20, 30, 40]
             },
-            "key8": ["ABC", "EFG", "XYZ"], "key7": true
+            "key8": ["ABC", "EFG", "XYZ"], "key7": true, "key9": null
         }
         """;
         JsonAssert.areEqual(expected, actual);
@@ -192,7 +195,7 @@ public class AggregatedTests {
         var schema = """
         %title: "Extended User Profile Dashboard API Response"
         %version: 2.0.0
-        %include: com.relogiclabs.json.schema.positive.ExternalFunctions
+        %include: com.relogiclabs.json.schema.external.ExternalFunctions
         
         %pragma DateDataTypeFormat: "DD-MM-YYYY"
         %pragma TimeDataTypeFormat: "DD-MM-YYYY hh:mm:ss"

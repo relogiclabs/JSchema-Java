@@ -131,4 +131,56 @@ public class NumberTests {
             """;
         JsonAssert.isValid(schema, json);
     }
+
+    @Test
+    public void When_NestedPositiveWithNumberInArray_ValidTrue() {
+        var schema =
+            """
+            @positive* #number*
+            """;
+        var json =
+            """
+            [1, 100, 500, 900]
+            """;
+        JsonAssert.isValid(schema, json);
+    }
+
+    @Test
+    public void When_NestedPositiveReferenceWithNumberInArray_ValidTrue() {
+        var schema =
+            """
+            @positive*(10) #number*
+            """;
+        var json =
+            """
+            [10, 100, 500, 900]
+            """;
+        JsonAssert.isValid(schema, json);
+    }
+
+    @Test
+    public void When_NestedNegativeWithNumberInArray_ValidTrue() {
+        var schema =
+            """
+            @negative* #number*
+            """;
+        var json =
+            """
+            [-1, -100, -500, -900]
+            """;
+        JsonAssert.isValid(schema, json);
+    }
+
+    @Test
+    public void When_NestedNegativeReferenceWithNumberInArray_ValidTrue() {
+        var schema =
+            """
+            @negative*(0) #number*
+            """;
+        var json =
+            """
+            [0, -100, -500, -900]
+            """;
+        JsonAssert.isValid(schema, json);
+    }
 }

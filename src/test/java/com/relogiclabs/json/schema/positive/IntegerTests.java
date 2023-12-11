@@ -121,30 +121,4 @@ public class IntegerTests {
             """;
         JsonAssert.isValid(schema, json);
     }
-
-    @Test
-    public void When_NestedPositiveWithIntegerInArray_ValidTrue() {
-        var schema =
-            """
-            @positive* #integer*
-            """;
-        var json =
-            """
-            [100, 500, 900]
-            """;
-        JsonAssert.isValid(schema, json);
-    }
-
-    @Test
-    public void When_NestedNegativeWithIntegerInArray_ValidTrue() {
-        var schema =
-            """
-            @negative* #integer*
-            """;
-        var json =
-            """
-            [-100, -500, -900]
-            """;
-        JsonAssert.isValid(schema, json);
-    }
 }

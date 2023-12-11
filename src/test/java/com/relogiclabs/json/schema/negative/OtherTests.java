@@ -4,12 +4,16 @@ import com.relogiclabs.json.schema.JsonAssert;
 import com.relogiclabs.json.schema.JsonSchema;
 import com.relogiclabs.json.schema.exception.InvalidDataTypeException;
 import com.relogiclabs.json.schema.exception.JsonSchemaException;
+import com.relogiclabs.json.schema.exception.MisplacedOptionalException;
 import org.junit.jupiter.api.Test;
 
+import static com.relogiclabs.json.schema.message.ErrorCode.ARRY01;
+import static com.relogiclabs.json.schema.message.ErrorCode.ARRY02;
 import static com.relogiclabs.json.schema.message.ErrorCode.DTYP01;
 import static com.relogiclabs.json.schema.message.ErrorCode.DTYP04;
 import static com.relogiclabs.json.schema.message.ErrorCode.DUBL01;
 import static com.relogiclabs.json.schema.message.ErrorCode.FLOT01;
+import static com.relogiclabs.json.schema.message.ErrorCode.PROP05;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -114,6 +118,50 @@ public class OtherTests {
         var exception = assertThrows(JsonSchemaException.class,
                 () -> jsonAssert.isValid(json2));
         assertEquals(DTYP04, exception.getCode());
+        exception.printStackTrace();
+    }
+
+    @Test
+    public void When_MandatoryValueMissingInArray_ExceptionThrown() {
+        var schema = "[@range(1, 10) #number, @range(10, 100) #number?, #number?]";
+        var json = "[]";
+        JsonSchema.isValid(schema, json);
+        var exception = assertThrows(JsonSchemaException.class,
+                () -> JsonAssert.isValid(schema, json));
+        assertEquals(ARRY01, exception.getCode());
+        exception.printStackTrace();
+    }
+
+    @Test
+    public void When_OptionalValueMisplacedInArray_ExceptionThrown() {
+        var schema = "[#number, #number?, #number]";
+        var json = "[10, 20]";
+        JsonSchema.isValid(schema, json);
+        var exception = assertThrows(MisplacedOptionalException.class,
+                () -> JsonAssert.isValid(schema, json));
+        assertEquals(ARRY02, exception.getCode());
+        exception.printStackTrace();
+    }
+
+    @Test
+    public void When_MandatoryPropertyMissingInObject_ExceptionThrown() {
+        var schema =
+            """
+            {
+                "key1": #integer,
+                "key2": #integer
+            }
+            """;
+        var json =
+            """
+            {
+                "key1": 10
+            }
+            """;
+        JsonSchema.isValid(schema, json);
+        var exception = assertThrows(JsonSchemaException.class,
+                () -> JsonAssert.isValid(schema, json));
+        assertEquals(PROP05, exception.getCode());
         exception.printStackTrace();
     }
 }

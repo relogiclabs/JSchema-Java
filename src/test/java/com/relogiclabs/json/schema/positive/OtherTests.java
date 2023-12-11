@@ -37,7 +37,7 @@ public class OtherTests {
         var schema =
             """
             %version: 2023.09.11
-            %include: com.relogiclabs.json.schema.positive.ExternalFunctions
+            %include: com.relogiclabs.json.schema.external.ExternalFunctions
             %pragma IgnoreUndefinedProperties: true
             %define $element: @range(1, 100) #integer
             %schema: {

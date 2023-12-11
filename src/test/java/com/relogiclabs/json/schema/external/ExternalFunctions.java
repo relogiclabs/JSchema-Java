@@ -1,4 +1,4 @@
-package com.relogiclabs.json.schema.positive;
+package com.relogiclabs.json.schema.external;
 
 import com.relogiclabs.json.schema.exception.JsonSchemaException;
 import com.relogiclabs.json.schema.function.FunctionBase;
@@ -7,16 +7,17 @@ import com.relogiclabs.json.schema.message.ActualDetail;
 import com.relogiclabs.json.schema.message.ErrorDetail;
 import com.relogiclabs.json.schema.message.ExpectedDetail;
 import com.relogiclabs.json.schema.tree.RuntimeContext;
-import com.relogiclabs.json.schema.types.JBoolean;
-import com.relogiclabs.json.schema.types.JInteger;
-import com.relogiclabs.json.schema.types.JNumber;
-import com.relogiclabs.json.schema.types.JReceiver;
-import com.relogiclabs.json.schema.types.JString;
+import com.relogiclabs.json.schema.type.JBoolean;
+import com.relogiclabs.json.schema.type.JInteger;
+import com.relogiclabs.json.schema.type.JNumber;
+import com.relogiclabs.json.schema.type.JReceiver;
+import com.relogiclabs.json.schema.type.JString;
 
 import java.util.Arrays;
 
 import static com.relogiclabs.json.schema.internal.util.StringHelper.join;
 
+// Functions for positive (valid) test cases
 public class ExternalFunctions extends FunctionBase {
     public static final String EVENFUNC01 = "EVENFUNC01";
     public static final String ERRACCESS01 = "ERRACCESS01";
@@ -31,7 +32,7 @@ public class ExternalFunctions extends FunctionBase {
 
     public boolean even(JNumber target) {
         boolean result = (target.toDouble() % 2 == 0);
-        if(!result) failWith(new JsonSchemaException(
+        if(!result) return failWith(new JsonSchemaException(
                 new ErrorDetail(EVENFUNC01, "Number is not even"),
                 new ExpectedDetail(target, "even number"),
                 new ActualDetail(target, "number ", target, " is odd")));
