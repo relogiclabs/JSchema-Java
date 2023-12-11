@@ -1,6 +1,6 @@
 package com.relogiclabs.json.schema.internal.tree;
 
-import com.relogiclabs.json.schema.types.JFunction;
+import com.relogiclabs.json.schema.type.JFunction;
 
 import java.lang.reflect.Method;
 

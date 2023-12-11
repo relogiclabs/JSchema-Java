@@ -1,11 +1,11 @@
 package com.relogiclabs.json.schema.internal.message;
 
 import com.relogiclabs.json.schema.message.ExpectedDetail;
-import com.relogiclabs.json.schema.types.JDataType;
-import com.relogiclabs.json.schema.types.JFunction;
-import com.relogiclabs.json.schema.types.JNode;
-import com.relogiclabs.json.schema.types.JObject;
-import com.relogiclabs.json.schema.types.JProperty;
+import com.relogiclabs.json.schema.type.JDataType;
+import com.relogiclabs.json.schema.type.JFunction;
+import com.relogiclabs.json.schema.type.JNode;
+import com.relogiclabs.json.schema.type.JObject;
+import com.relogiclabs.json.schema.type.JProperty;
 
 import static com.relogiclabs.json.schema.internal.message.MessageHelper.getTypeName;
 import static com.relogiclabs.json.schema.internal.util.StringHelper.quote;
@@ -17,8 +17,7 @@ public final class ExpectedHelper {
     }
 
     public static ExpectedDetail asArrayElementNotFound(JNode node, int index) {
-        return new ExpectedDetail(node, "element at ", index,
-                " '", node.getOutline(), "'");
+        return new ExpectedDetail(node, "'", node.getOutline(), "' element at ", index);
     }
 
     public static ExpectedDetail asValueMismatch(JNode node) {

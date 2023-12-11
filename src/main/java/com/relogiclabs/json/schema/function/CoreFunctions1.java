@@ -5,11 +5,11 @@ import com.relogiclabs.json.schema.message.ActualDetail;
 import com.relogiclabs.json.schema.message.ErrorDetail;
 import com.relogiclabs.json.schema.message.ExpectedDetail;
 import com.relogiclabs.json.schema.tree.RuntimeContext;
-import com.relogiclabs.json.schema.types.JArray;
-import com.relogiclabs.json.schema.types.JInteger;
-import com.relogiclabs.json.schema.types.JObject;
-import com.relogiclabs.json.schema.types.JString;
-import com.relogiclabs.json.schema.types.JUndefined;
+import com.relogiclabs.json.schema.type.JArray;
+import com.relogiclabs.json.schema.type.JInteger;
+import com.relogiclabs.json.schema.type.JObject;
+import com.relogiclabs.json.schema.type.JString;
+import com.relogiclabs.json.schema.type.JUndefined;
 
 import static com.relogiclabs.json.schema.message.ErrorCode.ALEN01;
 import static com.relogiclabs.json.schema.message.ErrorCode.ALEN02;

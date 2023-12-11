@@ -5,10 +5,10 @@ import com.relogiclabs.json.schema.message.ActualDetail;
 import com.relogiclabs.json.schema.message.ErrorDetail;
 import com.relogiclabs.json.schema.message.ExpectedDetail;
 import com.relogiclabs.json.schema.tree.RuntimeContext;
-import com.relogiclabs.json.schema.types.JArray;
-import com.relogiclabs.json.schema.types.JNode;
-import com.relogiclabs.json.schema.types.JObject;
-import com.relogiclabs.json.schema.types.JString;
+import com.relogiclabs.json.schema.type.JArray;
+import com.relogiclabs.json.schema.type.JNode;
+import com.relogiclabs.json.schema.type.JObject;
+import com.relogiclabs.json.schema.type.JString;
 
 import java.net.URI;
 import java.util.Arrays;

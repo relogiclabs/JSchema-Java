@@ -1,7 +1,7 @@
 package com.relogiclabs.json.schema.message;
 
 import com.relogiclabs.json.schema.tree.Context;
-import com.relogiclabs.json.schema.types.JNode;
+import com.relogiclabs.json.schema.type.JNode;
 
 import static com.relogiclabs.json.schema.internal.util.StringHelper.concat;
 

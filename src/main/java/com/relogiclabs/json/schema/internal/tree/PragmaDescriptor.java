@@ -1,8 +1,8 @@
 package com.relogiclabs.json.schema.internal.tree;
 
-import com.relogiclabs.json.schema.types.JBoolean;
-import com.relogiclabs.json.schema.types.JNumber;
-import com.relogiclabs.json.schema.types.JString;
+import com.relogiclabs.json.schema.type.JBoolean;
+import com.relogiclabs.json.schema.type.JNumber;
+import com.relogiclabs.json.schema.type.JString;
 import lombok.Getter;
 
 import java.util.HashMap;

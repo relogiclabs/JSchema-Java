@@ -5,7 +5,7 @@ import com.relogiclabs.json.schema.internal.antlr.JsonParser;
 import com.relogiclabs.json.schema.internal.tree.JsonTreeVisitor;
 import com.relogiclabs.json.schema.internal.util.LexerErrorListener;
 import com.relogiclabs.json.schema.internal.util.ParserErrorListener;
-import com.relogiclabs.json.schema.types.JRoot;
+import com.relogiclabs.json.schema.type.JRoot;
 import lombok.Getter;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;

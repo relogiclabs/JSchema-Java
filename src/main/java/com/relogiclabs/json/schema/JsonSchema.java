@@ -1,12 +1,13 @@
 package com.relogiclabs.json.schema;
 
-import com.relogiclabs.json.schema.internal.tree.ExceptionRegistry;
 import com.relogiclabs.json.schema.internal.util.DebugUtilities;
-import com.relogiclabs.json.schema.message.MessageFormatter;
+import com.relogiclabs.json.schema.tree.ExceptionRegistry;
 import com.relogiclabs.json.schema.tree.JsonTree;
 import com.relogiclabs.json.schema.tree.RuntimeContext;
 import com.relogiclabs.json.schema.tree.SchemaTree;
 import lombok.Getter;
+
+import static com.relogiclabs.json.schema.message.MessageFormatter.SCHEMA_VALIDATION;
 
 /**
  * {@code JsonSchema} provides Schema validation functionalities for JSON document.
@@ -23,7 +24,7 @@ public class JsonSchema {
      * @param schema A Schema string for validation
      */
     public JsonSchema(String schema) {
-        runtime = new RuntimeContext(MessageFormatter.SCHEMA_VALIDATION, false);
+        runtime = new RuntimeContext(SCHEMA_VALIDATION, false);
         exceptions = runtime.getExceptions();
         schemaTree = new SchemaTree(runtime, schema);
     }
