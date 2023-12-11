@@ -1,7 +1,7 @@
 package com.relogiclabs.json.schema.internal.tree;
 
-import com.relogiclabs.json.schema.types.JFunction;
-import com.relogiclabs.json.schema.types.JNode;
+import com.relogiclabs.json.schema.type.JFunction;
+import com.relogiclabs.json.schema.type.JNode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.Value;
@@ -9,6 +9,8 @@ import lombok.Value;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+
+import static com.relogiclabs.json.schema.internal.util.MiscellaneousHelper.getDerived;
 
 public class FunctionCache implements Iterable<FunctionCache.Entry> {
 
@@ -18,11 +20,11 @@ public class FunctionCache implements Iterable<FunctionCache.Entry> {
         Object[] arguments;
 
         public boolean isTargetMatch(JNode target) {
-            return methodPointer.getParameter(0).getType().isInstance(target.getDerived());
+            return methodPointer.getParameter(0).getType().isInstance(getDerived(target));
         }
 
         public Object invoke(JFunction function, JNode target) {
-            arguments[0] = target.getDerived();
+            arguments[0] = getDerived(target);
             return methodPointer.invoke(function, arguments);
         }
     }

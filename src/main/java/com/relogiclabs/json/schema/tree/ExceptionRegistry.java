@@ -1,4 +1,4 @@
-package com.relogiclabs.json.schema.internal.tree;
+package com.relogiclabs.json.schema.tree;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -11,7 +11,7 @@ import java.util.function.Supplier;
 public class ExceptionRegistry implements Iterable<Exception> {
     private int disableException;
 
-    @Getter private final Queue<Exception> exceptions;
+    private final Queue<Exception> exceptions;
     @Getter @Setter private boolean throwException;
     @Getter @Setter private int cutoffLimit = 200;
 

@@ -2,19 +2,20 @@ package com.relogiclabs.json.schema.internal.tree;
 
 import com.relogiclabs.json.schema.internal.antlr.JsonParser;
 import com.relogiclabs.json.schema.internal.antlr.JsonParserBaseVisitor;
+import com.relogiclabs.json.schema.internal.builder.JArrayBuilder;
+import com.relogiclabs.json.schema.internal.builder.JBooleanBuilder;
+import com.relogiclabs.json.schema.internal.builder.JDoubleBuilder;
+import com.relogiclabs.json.schema.internal.builder.JFloatBuilder;
+import com.relogiclabs.json.schema.internal.builder.JIntegerBuilder;
+import com.relogiclabs.json.schema.internal.builder.JNullBuilder;
+import com.relogiclabs.json.schema.internal.builder.JObjectBuilder;
+import com.relogiclabs.json.schema.internal.builder.JPropertyBuilder;
+import com.relogiclabs.json.schema.internal.builder.JRootBuilder;
+import com.relogiclabs.json.schema.internal.builder.JStringBuilder;
 import com.relogiclabs.json.schema.tree.Context;
 import com.relogiclabs.json.schema.tree.RuntimeContext;
-import com.relogiclabs.json.schema.types.JArray;
-import com.relogiclabs.json.schema.types.JBoolean;
-import com.relogiclabs.json.schema.types.JDouble;
-import com.relogiclabs.json.schema.types.JFloat;
-import com.relogiclabs.json.schema.types.JInteger;
-import com.relogiclabs.json.schema.types.JNode;
-import com.relogiclabs.json.schema.types.JNull;
-import com.relogiclabs.json.schema.types.JObject;
-import com.relogiclabs.json.schema.types.JProperty;
-import com.relogiclabs.json.schema.types.JRoot;
-import com.relogiclabs.json.schema.types.JString;
+import com.relogiclabs.json.schema.type.JNode;
+import com.relogiclabs.json.schema.type.JProperty;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -35,7 +36,7 @@ public final class JsonTreeVisitor extends JsonParserBaseVisitor<JNode> {
 
     @Override
     public JNode visitJson(JsonParser.JsonContext ctx) {
-        return new JRoot.Builder()
+        return new JRootBuilder()
                 .relations(relations)
                 .context(new Context(ctx, runtime))
                 .value(visit(ctx.value()))
@@ -52,7 +53,7 @@ public final class JsonTreeVisitor extends JsonParserBaseVisitor<JNode> {
 
     @Override
     public JNode visitObject(JsonParser.ObjectContext ctx) {
-        return new JObject.Builder()
+        return new JObjectBuilder()
                 .relations(relations)
                 .context(new Context(ctx, runtime))
                 .properties(checkForDuplicate(ctx.property().stream()
@@ -62,7 +63,7 @@ public final class JsonTreeVisitor extends JsonParserBaseVisitor<JNode> {
 
     @Override
     public JNode visitProperty(JsonParser.PropertyContext ctx) {
-        return new JProperty.Builder()
+        return new JPropertyBuilder()
                 .relations(relations)
                 .context(new Context(ctx, runtime))
                 .key(unquote(ctx.STRING().getText()))
@@ -72,7 +73,7 @@ public final class JsonTreeVisitor extends JsonParserBaseVisitor<JNode> {
 
     @Override
     public JNode visitArray(JsonParser.ArrayContext ctx) {
-        return new JArray.Builder()
+        return new JArrayBuilder()
                 .relations(relations)
                 .context(new Context(ctx, runtime))
                 .elements(ctx.value().stream().map(this::visit).toList())
@@ -81,7 +82,7 @@ public final class JsonTreeVisitor extends JsonParserBaseVisitor<JNode> {
 
     @Override
     public JNode visitPrimitiveTrue(JsonParser.PrimitiveTrueContext ctx) {
-        return new JBoolean.Builder()
+        return new JBooleanBuilder()
                 .relations(relations)
                 .context(new Context(ctx, runtime))
                 .value(true).build();
@@ -89,7 +90,7 @@ public final class JsonTreeVisitor extends JsonParserBaseVisitor<JNode> {
 
     @Override
     public JNode visitPrimitiveFalse(JsonParser.PrimitiveFalseContext ctx) {
-        return new JBoolean.Builder()
+        return new JBooleanBuilder()
                 .relations(relations)
                 .context(new Context(ctx, runtime))
                 .value(false).build();
@@ -97,7 +98,7 @@ public final class JsonTreeVisitor extends JsonParserBaseVisitor<JNode> {
 
     @Override
     public JNode visitPrimitiveString(JsonParser.PrimitiveStringContext ctx) {
-        return new JString.Builder()
+        return new JStringBuilder()
                 .relations(relations)
                 .context(new Context(ctx, runtime))
                 .value(toEncoded(ctx.STRING().getText()))
@@ -106,7 +107,7 @@ public final class JsonTreeVisitor extends JsonParserBaseVisitor<JNode> {
 
     @Override
     public JNode visitPrimitiveInteger(JsonParser.PrimitiveIntegerContext ctx) {
-        return new JInteger.Builder()
+        return new JIntegerBuilder()
                 .relations(relations)
                 .context(new Context(ctx, runtime))
                 .value(Long.valueOf(ctx.INTEGER().getText()))
@@ -115,7 +116,7 @@ public final class JsonTreeVisitor extends JsonParserBaseVisitor<JNode> {
 
     @Override
     public JNode visitPrimitiveFloat(JsonParser.PrimitiveFloatContext ctx) {
-        return new JFloat.Builder()
+        return new JFloatBuilder()
                 .relations(relations)
                 .context(new Context(ctx, runtime))
                 .value(Double.valueOf(ctx.FLOAT().getText()))
@@ -124,7 +125,7 @@ public final class JsonTreeVisitor extends JsonParserBaseVisitor<JNode> {
 
     @Override
     public JNode visitPrimitiveDouble(JsonParser.PrimitiveDoubleContext ctx) {
-        return new JDouble.Builder()
+        return new JDoubleBuilder()
                 .relations(relations)
                 .context(new Context(ctx, runtime))
                 .value(Double.valueOf(ctx.DOUBLE().getText()))
@@ -133,7 +134,7 @@ public final class JsonTreeVisitor extends JsonParserBaseVisitor<JNode> {
 
     @Override
     public JNode visitPrimitiveNull(JsonParser.PrimitiveNullContext ctx) {
-        return new JNull.Builder()
+        return new JNullBuilder()
                 .relations(relations)
                 .context(new Context(ctx, runtime))
                 .build();

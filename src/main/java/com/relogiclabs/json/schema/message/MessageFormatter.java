@@ -2,6 +2,7 @@ package com.relogiclabs.json.schema.message;
 
 import com.relogiclabs.json.schema.tree.Context;
 import com.relogiclabs.json.schema.tree.Location;
+import com.relogiclabs.json.schema.type.JNode;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -73,6 +74,10 @@ public abstract class MessageFormatter {
         }
     }
 
+    public static ErrorDetail formatForSchema(String code, String message, JNode node) {
+        return formatForSchema(code, message, node != null? node.getContext().getLocation() : null);
+    }
+
     public static ErrorDetail formatForSchema(String code, String message, Context context) {
         return formatForSchema(code, message, context != null? context.getLocation() : null);
     }
@@ -81,6 +86,10 @@ public abstract class MessageFormatter {
         return location == null
                 ? createDetail(code, SCHEMA_BASE_EXCEPTION, message)
                 : createDetail(code, SCHEMA_PARSE_EXCEPTION, message, location);
+    }
+
+    public static ErrorDetail formatForJson(String code, String message, JNode node) {
+        return formatForJson(code, message, node != null? node.getContext().getLocation() : null);
     }
 
     public static ErrorDetail formatForJson(String code, String message, Context context) {

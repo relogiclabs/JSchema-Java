@@ -1,4 +1,4 @@
-package com.relogiclabs.json.schema.internal.tree;
+package com.relogiclabs.json.schema.tree;
 
 import com.relogiclabs.json.schema.exception.ClassInstantiationException;
 import com.relogiclabs.json.schema.exception.CommonException;
@@ -10,14 +10,14 @@ import com.relogiclabs.json.schema.exception.JsonSchemaException;
 import com.relogiclabs.json.schema.exception.NotFoundClassException;
 import com.relogiclabs.json.schema.function.FunctionBase;
 import com.relogiclabs.json.schema.function.FutureValidator;
+import com.relogiclabs.json.schema.internal.tree.FunctionKey;
+import com.relogiclabs.json.schema.internal.tree.MethodPointer;
 import com.relogiclabs.json.schema.message.ActualDetail;
 import com.relogiclabs.json.schema.message.ErrorDetail;
 import com.relogiclabs.json.schema.message.ExpectedDetail;
-import com.relogiclabs.json.schema.message.MessageFormatter;
-import com.relogiclabs.json.schema.tree.Context;
-import com.relogiclabs.json.schema.tree.RuntimeContext;
-import com.relogiclabs.json.schema.types.JFunction;
-import com.relogiclabs.json.schema.types.JNode;
+import com.relogiclabs.json.schema.type.JFunction;
+import com.relogiclabs.json.schema.type.JInclude;
+import com.relogiclabs.json.schema.type.JNode;
 
 import java.lang.reflect.Array;
 import java.lang.reflect.InvocationTargetException;
@@ -32,6 +32,7 @@ import java.util.Set;
 import static com.relogiclabs.json.schema.internal.message.MessageHelper.getTypeName;
 import static com.relogiclabs.json.schema.internal.tree.MethodPointer.getSignature;
 import static com.relogiclabs.json.schema.internal.util.CollectionHelper.merge;
+import static com.relogiclabs.json.schema.internal.util.MiscellaneousHelper.getDerived;
 import static com.relogiclabs.json.schema.internal.util.StringHelper.concat;
 import static com.relogiclabs.json.schema.message.ErrorCode.CLAS01;
 import static com.relogiclabs.json.schema.message.ErrorCode.CLAS02;
@@ -45,6 +46,7 @@ import static com.relogiclabs.json.schema.message.ErrorCode.FUNC02;
 import static com.relogiclabs.json.schema.message.ErrorCode.FUNC03;
 import static com.relogiclabs.json.schema.message.ErrorCode.FUNC04;
 import static com.relogiclabs.json.schema.message.ErrorCode.FUNC05;
+import static com.relogiclabs.json.schema.message.MessageFormatter.formatForSchema;
 
 public final class FunctionRegistry {
     private final Set<String> includes;
@@ -57,32 +59,35 @@ public final class FunctionRegistry {
         this.functions = new HashMap<>();
     }
 
+    public JInclude addClass(JInclude include) {
+        addClass(include.getClassName(), include.getContext());
+        return include;
+    }
+
     public void addClass(String className, Context context) {
         if(!includes.contains(className)) includes.add(className);
-        else throw new DuplicateIncludeException(MessageFormatter.formatForSchema(
+        else throw new DuplicateIncludeException(formatForSchema(
                 CLAS01, "Class already included " + className, context));
         Class<?> subclass;
         try {
             subclass = Class.forName(className);
         } catch(ClassNotFoundException ex) {
-            throw new NotFoundClassException(
-                    MessageFormatter.formatForSchema(CLAS02, "Not found " + className, context));
+            throw new NotFoundClassException(formatForSchema(CLAS02, "Not found " + className, context));
         }
         var baseclass = FunctionBase.class;
         // if not FunctionBase's subclass
         if(!baseclass.isAssignableFrom(subclass))
-            throw new InvalidIncludeException(MessageFormatter
-                    .formatForSchema(CLAS03, subclass.getName() + " needs to inherit "
+            throw new InvalidIncludeException(formatForSchema(CLAS03, subclass.getName() + " needs to inherit "
                             + baseclass.getName(), context));
         try {
             merge(functions, extractMethods(subclass, createInstance(subclass, context)));
         } catch(InvalidFunctionException ex) {
-            throw new InvalidFunctionException(MessageFormatter
-                .formatForSchema(ex.getCode(), ex.getMessage(), context));
+            throw new InvalidFunctionException(formatForSchema(ex.getCode(), ex.getMessage(), context));
         }
     }
 
-    private Map<FunctionKey, List<MethodPointer>> extractMethods(Class<?> subclass, FunctionBase instance) {
+    private static Map<FunctionKey, List<MethodPointer>> extractMethods(
+            Class<?> subclass, FunctionBase instance) {
         var baseclass = FunctionBase.class;
         Map<FunctionKey, List<MethodPointer>> functions = new HashMap<>();
         for(var m : subclass.getMethods()) {
@@ -103,14 +108,14 @@ public final class FunctionRegistry {
         return functions;
     }
 
-    private boolean isValidReturnType(Class<?> type) {
+    private static boolean isValidReturnType(Class<?> type) {
         if(type == boolean.class) return true;
         if(type == Boolean.class) return true;
         if(type == FutureValidator.class) return true;
         return false;
     }
 
-    private int getParameterCount(Parameter[] parameters) {
+    private static int getParameterCount(Parameter[] parameters) {
         for(var p : parameters) if(p.isVarArgs()) return -1;
         return parameters.length;
     }
@@ -131,11 +136,11 @@ public final class FunctionRegistry {
     }
 
     private static CommonException createException(String code, Exception ex, Class<?> type, Context context) {
-        return new ClassInstantiationException(MessageFormatter.formatForSchema(
+        return new ClassInstantiationException(formatForSchema(
                 code, "Fail to create instance of " + type.getName(), context), ex);
     }
 
-    private boolean handleValidator(Object result) {
+    private boolean handleFuture(Object result) {
         return result instanceof FutureValidator validator
             ? runtime.addValidator(validator)
             : (boolean) result;
@@ -144,7 +149,7 @@ public final class FunctionRegistry {
     public boolean invokeFunction(JFunction function, JNode target) {
         for(var e : function.getCache()) {
             if (e.isTargetMatch(target))
-                return handleValidator(e.invoke(function, target));
+                return handleFuture(e.invoke(function, target));
         }
         var methods = getMethods(function);
         Parameter mismatchParameter = null;
@@ -158,7 +163,7 @@ public final class FunctionRegistry {
                 Object[] allArgs = addTarget(schemaArgs, target).toArray();
                 var result = method.invoke(function, allArgs);
                 function.getCache().add(method, allArgs);
-                return handleValidator(result);
+                return handleFuture(result);
             }
             mismatchParameter = parameters.get(0);
         }
@@ -170,21 +175,19 @@ public final class FunctionRegistry {
                     new ActualDetail(target, "applied to an unsupported data type ",
                             getTypeName(target.getClass()), " of ", target)));
 
-        return failWith(new FunctionNotFoundException(MessageFormatter
-            .formatForSchema(FUNC04, function.getOutline(), function.getContext())));
+        return failWith(new FunctionNotFoundException(formatForSchema(FUNC04, function.getOutline(), function)));
     }
 
     private List<MethodPointer> getMethods(JFunction function) {
         var methodPointers = functions.get(new FunctionKey(function));
         if(methodPointers == null)
             methodPointers = functions.get(new FunctionKey(function.getName(), -1));
-        if(methodPointers == null) throw new FunctionNotFoundException(MessageFormatter
-                .formatForSchema(FUNC05, "Not found " + function.getOutline(), function.getContext()));
+        if(methodPointers == null) throw new FunctionNotFoundException(formatForSchema(FUNC05, "Not found " + function.getOutline(), function));
         return methodPointers;
     }
 
     private static List<Object> addTarget(List<Object> arguments, JNode target) {
-        arguments.add(0, target.getDerived());
+        arguments.add(0, getDerived(target));
         return arguments;
     }
 
@@ -205,12 +208,12 @@ public final class FunctionRegistry {
     }
 
     private static boolean isMatch(Parameter parameter, JNode argument) {
-        return parameter.getType().isInstance(argument.getDerived());
+        return parameter.getType().isInstance(getDerived(argument));
     }
 
     private static Object processVarArgs(Parameter parameter, List<JNode> arguments) {
         var componentType = parameter.getType().getComponentType();
-        if(componentType == null) throw new IllegalStateException();
+        if(componentType == null) throw new IllegalStateException("Invalid function parameter");
         Object result = Array.newInstance(componentType, arguments.size());
         for(var i = 0; i < arguments.size(); i++) {
             var arg = arguments.get(i);

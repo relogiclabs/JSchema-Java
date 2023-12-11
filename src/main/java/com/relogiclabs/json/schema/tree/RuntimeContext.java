@@ -2,23 +2,13 @@ package com.relogiclabs.json.schema.tree;
 
 import com.relogiclabs.json.schema.exception.DuplicateDefinitionException;
 import com.relogiclabs.json.schema.function.FutureValidator;
-import com.relogiclabs.json.schema.internal.tree.ExceptionRegistry;
-import com.relogiclabs.json.schema.internal.tree.FunctionRegistry;
-import com.relogiclabs.json.schema.internal.tree.PragmaRegistry;
 import com.relogiclabs.json.schema.message.MessageFormatter;
-import com.relogiclabs.json.schema.types.JAlias;
-import com.relogiclabs.json.schema.types.JDefinition;
-import com.relogiclabs.json.schema.types.JFunction;
-import com.relogiclabs.json.schema.types.JInclude;
-import com.relogiclabs.json.schema.types.JNode;
-import com.relogiclabs.json.schema.types.JPragma;
-import com.relogiclabs.json.schema.types.JReceiver;
-import com.relogiclabs.json.schema.types.JValidator;
+import com.relogiclabs.json.schema.type.JAlias;
+import com.relogiclabs.json.schema.type.JDefinition;
+import com.relogiclabs.json.schema.type.JValidator;
 import lombok.Getter;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.function.Supplier;
@@ -26,7 +16,7 @@ import java.util.function.Supplier;
 import static com.relogiclabs.json.schema.internal.util.StringHelper.concat;
 import static com.relogiclabs.json.schema.internal.util.StringHelper.quote;
 import static com.relogiclabs.json.schema.message.ErrorCode.DEFI01;
-
+import static com.relogiclabs.json.schema.message.MessageFormatter.formatForSchema;
 
 public final class RuntimeContext {
     @Getter private final FunctionRegistry functions;
@@ -34,7 +24,7 @@ public final class RuntimeContext {
     @Getter private final Map<JAlias, JValidator> definitions;
     @Getter private final ExceptionRegistry exceptions;
     @Getter private final Map<String, FutureValidator> validators;
-    @Getter private final Map<JReceiver, List<JNode>> receivers;
+    @Getter private final ReceiverRegistry receivers;
     @Getter private final Map<String, Object> storage;
     @Getter private final MessageFormatter messageFormatter;
 
@@ -44,37 +34,20 @@ public final class RuntimeContext {
         this.functions = new FunctionRegistry(this);
         this.pragmas = new PragmaRegistry();
         this.exceptions = new ExceptionRegistry(throwException);
-        this.receivers = new HashMap<>();
+        this.receivers = new ReceiverRegistry();
         this.storage = new HashMap<>();
         this.validators = new HashMap<>();
-    }
-
-    public JPragma addPragma(JPragma pragma) {
-        return pragmas.addPragma(pragma);
-    }
-
-    public JInclude addClass(JInclude include) {
-        addClass(include.getClassName(), include.getContext());
-        return include;
-    }
-
-    public void addClass(String className, Context context) {
-        functions.addClass(className, context);
     }
 
     public JDefinition addDefinition(JDefinition definition) {
         var previous = definitions.get(definition.getAlias());
         if(previous != null)
-            throw new DuplicateDefinitionException(MessageFormatter.formatForSchema(
-                DEFI01, concat("Duplicate definition of ", quote(definition.getAlias()),
+            throw new DuplicateDefinitionException(formatForSchema(DEFI01,
+                    concat("Duplicate definition of ", quote(definition.getAlias()),
                             " is found and already defined as ", previous.getOutline()),
                     definition.getContext()));
         definitions.put(definition.getAlias(), definition.getValidator());
         return definition;
-    }
-
-    public boolean invokeFunction(JFunction function, JNode target) {
-        return functions.invokeFunction(function, target);
     }
 
     public boolean areEqual(double value1, double value2) {
@@ -83,18 +56,6 @@ public final class RuntimeContext {
 
     public <T> T tryExecute(Supplier<T> function) {
         return exceptions.tryExecute(function);
-    }
-
-    public void register(List<JReceiver> list) {
-        for(var r : list) receivers.put(r, new ArrayList<>());
-    }
-
-    public void receive(List<JReceiver> list, JNode node) {
-        for(var r : list) receivers.get(r).add(node);
-    }
-
-    public List<JNode> fetch(JReceiver receiver) {
-        return receivers.get(receiver);
     }
 
     public boolean addValidator(FutureValidator validator) {
@@ -116,6 +77,6 @@ public final class RuntimeContext {
     public void clear() {
         exceptions.clear();
         storage.clear();
-        for(var v : receivers.values()) v.clear();
+        receivers.clear();
     }
 }
