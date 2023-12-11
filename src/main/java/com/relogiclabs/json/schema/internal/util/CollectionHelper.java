@@ -1,9 +1,9 @@
 package com.relogiclabs.json.schema.internal.util;
 
 import com.relogiclabs.json.schema.collection.IndexMap;
-import com.relogiclabs.json.schema.types.JNode;
-import com.relogiclabs.json.schema.types.JProperty;
-import com.relogiclabs.json.schema.types.JString;
+import com.relogiclabs.json.schema.type.JNode;
+import com.relogiclabs.json.schema.type.JProperty;
+import com.relogiclabs.json.schema.type.JString;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -26,14 +26,14 @@ public final class CollectionHelper {
 
     public static Set<String> containsKeys(IndexMap<String, JProperty> map, JString... keys) {
         Set<String> set = Arrays.stream(keys).map(JString::getValue).collect(toSet());
-        map.values().stream().forEach(p -> set.remove(p.getKey()));
+        map.values().forEach(p -> set.remove(p.getKey()));
         return set;
     }
 
     public static Set<JNode> containsValues(IndexMap<String, JProperty> map, JNode... values) {
         // Here values should be distinct on parameter
         Set<JNode> set = Arrays.stream(values).collect(toSet());
-        map.values().stream().forEach(p -> set.remove(p.getValue()));
+        map.values().forEach(p -> set.remove(p.getValue()));
         return set;
     }
 

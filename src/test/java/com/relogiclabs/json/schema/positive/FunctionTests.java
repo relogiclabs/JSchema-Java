@@ -8,7 +8,7 @@ public class FunctionTests {
     public void When_ExternalFunctionExecute_ValidTrue() {
         var schema =
             """
-            %include: com.relogiclabs.json.schema.positive.ExternalFunctions
+            %include: com.relogiclabs.json.schema.external.ExternalFunctions
             %schema: @even #integer
             """;
         var json = "10";
@@ -19,7 +19,7 @@ public class FunctionTests {
     public void When_ExternalFunctionExecute2_ValidTrue() {
         var schema =
             """
-            %include: com.relogiclabs.json.schema.positive.ExternalFunctions
+            %include: com.relogiclabs.json.schema.external.ExternalFunctions
             %schema: @canTest("test", true, 1, 2, 3) #integer
             """;
         var json = "10";
@@ -30,7 +30,7 @@ public class FunctionTests {
     public void When_ExternalFunctionWithoutDataType_ValidTrue() {
         var schema =
             """
-            %include: com.relogiclabs.json.schema.positive.ExternalFunctions
+            %include: com.relogiclabs.json.schema.external.ExternalFunctions
             %schema: @even
             """;
         var json = "10";
@@ -41,7 +41,7 @@ public class FunctionTests {
     public void When_ExternalFunctionInObject_ValidTrue() {
         var schema =
             """
-            %include: com.relogiclabs.json.schema.positive.ExternalFunctions
+            %include: com.relogiclabs.json.schema.external.ExternalFunctions
             %schema:
             {
                 "key1": @even #integer,
@@ -62,7 +62,7 @@ public class FunctionTests {
     public void When_ExternalFunctionInArray_ValidTrue() {
         var schema =
             """
-            %include: com.relogiclabs.json.schema.positive.ExternalFunctions
+            %include: com.relogiclabs.json.schema.external.ExternalFunctions
             %schema: [
                 @even #integer,
                 @even #integer

@@ -46,7 +46,7 @@ public class FunctionTests {
     public void When_ExternalIncludeNotInheritBaseClass_ExceptionThrown() {
         var schema =
             """
-            %include: com.relogiclabs.json.schema.negative.function.ExternalFunctions1
+            %include: com.relogiclabs.json.schema.external.ExternalFunctions1
             %schema: @odd #integer
             """;
         var json = "10";
@@ -78,8 +78,8 @@ public class FunctionTests {
     public void When_ExternalIncludeDuplicationOccurred_ExceptionThrown() {
         var schema =
             """
-            %include: com.relogiclabs.json.schema.positive.ExternalFunctions
-            %include: com.relogiclabs.json.schema.positive.ExternalFunctions
+            %include: com.relogiclabs.json.schema.external.ExternalFunctions
+            %include: com.relogiclabs.json.schema.external.ExternalFunctions
             %schema: @odd #integer
             """;
         var json = "10";
@@ -95,7 +95,7 @@ public class FunctionTests {
     public void When_ExternalIncludeInstantiationNotCompleted_ExceptionThrown() {
         var schema =
             """
-            %include: com.relogiclabs.json.schema.negative.function.ExternalFunctions5
+            %include: com.relogiclabs.json.schema.external.ExternalFunctions5
             %schema: @odd #integer
             """;
         var json = "10";
@@ -111,7 +111,7 @@ public class FunctionTests {
     public void When_ExternalFunctionWrongReturnType_ExceptionThrown() {
         var schema =
             """
-            %include: com.relogiclabs.json.schema.negative.function.ExternalFunctions2
+            %include: com.relogiclabs.json.schema.external.ExternalFunctions2
             %schema: @odd #integer
             """;
         var json = "10";
@@ -127,7 +127,7 @@ public class FunctionTests {
     public void When_ExternalFunctionWrongParameterNumber_ExceptionThrown() {
         var schema =
             """
-            %include: com.relogiclabs.json.schema.negative.function.ExternalFunctions3
+            %include: com.relogiclabs.json.schema.external.ExternalFunctions3
             %schema: @odd #integer
             """;
         var json = "10";
@@ -143,7 +143,7 @@ public class FunctionTests {
     public void When_ExternalFunctionNotExists_ExceptionThrown() {
         var schema =
             """
-            %include: com.relogiclabs.json.schema.negative.function.ExternalFunctions4
+            %include: com.relogiclabs.json.schema.external.ExternalFunctions4
             %schema: @odd #integer
             """;
         var json = "10";
@@ -159,7 +159,7 @@ public class FunctionTests {
     public void When_FunctionThrowArbitraryException_ExceptionThrown() {
         var schema =
             """
-            %include: com.relogiclabs.json.schema.negative.function.ExternalFunctions4
+            %include: com.relogiclabs.json.schema.external.ExternalFunctions4
             %schema: @canTest #integer
             """;
         var json = "10";

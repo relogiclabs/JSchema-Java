@@ -1,6 +1,6 @@
 package com.relogiclabs.json.schema.internal.util;
 
-import com.relogiclabs.json.schema.types.JNode;
+import com.relogiclabs.json.schema.type.JNode;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.Collection;

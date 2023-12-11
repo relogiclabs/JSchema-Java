@@ -6,7 +6,7 @@
 
     <groupId>com.relogiclabs.json</groupId>
     <artifactId>relogiclabs-json-schema</artifactId>
-    <version>1.9.0</version>
+    <version>1.10.0</version>
     <name>New Json Schema</name>
     <description>
         The New JSON Schema prioritizes simplicity, conciseness, and readability, making
@@ -56,18 +56,18 @@
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-            <version>1.18.28</version>
+            <version>1.18.30</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
-            <version>3.13.0</version>
+            <version>3.14.0</version>
         </dependency>
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-engine</artifactId>
-            <version>5.10.0</version>
+            <version>5.10.1</version>
             <scope>test</scope>
         </dependency>
     </dependencies>

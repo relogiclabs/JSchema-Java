@@ -9,6 +9,10 @@ import static com.relogiclabs.json.schema.message.ErrorCode.MAXI01;
 import static com.relogiclabs.json.schema.message.ErrorCode.MAXI03;
 import static com.relogiclabs.json.schema.message.ErrorCode.MINI01;
 import static com.relogiclabs.json.schema.message.ErrorCode.MINI03;
+import static com.relogiclabs.json.schema.message.ErrorCode.NEGI01;
+import static com.relogiclabs.json.schema.message.ErrorCode.NEGI02;
+import static com.relogiclabs.json.schema.message.ErrorCode.POSI01;
+import static com.relogiclabs.json.schema.message.ErrorCode.POSI02;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -111,7 +115,7 @@ public class NumberTests {
     }
 
     @Test
-    public void When_NestedMaximumFloatInObject_ValidTrue() {
+    public void When_NestedMaximumWrongFloatInObject_ExceptionThrown() {
         var schema =
             """
             @maximum*(100) #float*
@@ -132,7 +136,7 @@ public class NumberTests {
     }
 
     @Test
-    public void When_NestedMinimumExclusiveFloatInObject_ValidTrue() {
+    public void When_NestedMinimumExclusiveWrongFloatInObject_ExceptionThrown() {
         var schema =
             """
             @minimum*(100, true) #float*
@@ -153,7 +157,7 @@ public class NumberTests {
     }
 
     @Test
-    public void When_NestedMaximumExclusiveFloatInObject_ValidTrue() {
+    public void When_NestedMaximumExclusiveWrongFloatInObject_ExceptionThrown() {
         var schema =
             """
             @maximum*(100, true) #float*
@@ -170,6 +174,74 @@ public class NumberTests {
         var exception = assertThrows(JsonSchemaException.class,
                 () -> JsonAssert.isValid(schema, json));
         assertEquals(MAXI03, exception.getCode());
+        exception.printStackTrace();
+    }
+
+    @Test
+    public void When_NestedPositiveWithWrongNumberInArray_ExceptionThrown() {
+        var schema =
+            """
+            @positive* #number*
+            """;
+        var json =
+            """
+            [1, 100.5, -500]
+            """;
+        JsonSchema.isValid(schema, json);
+        var exception = assertThrows(JsonSchemaException.class,
+                () -> JsonAssert.isValid(schema, json));
+        assertEquals(POSI01, exception.getCode());
+        exception.printStackTrace();
+    }
+
+    @Test
+    public void When_NestedPositiveReferenceWithWrongNumberInArray_ExceptionThrown() {
+        var schema =
+            """
+            @positive*(0) #number*
+            """;
+        var json =
+            """
+            [0, 100, 0.1, -1]
+            """;
+        JsonSchema.isValid(schema, json);
+        var exception = assertThrows(JsonSchemaException.class,
+                () -> JsonAssert.isValid(schema, json));
+        assertEquals(POSI02, exception.getCode());
+        exception.printStackTrace();
+    }
+
+    @Test
+    public void When_NestedNegativeWithWrongNumberInArray_ExceptionThrown() {
+        var schema =
+            """
+            @negative* #number*
+            """;
+        var json =
+            """
+            [-100, -500, -0.1, 0]
+            """;
+        JsonSchema.isValid(schema, json);
+        var exception = assertThrows(JsonSchemaException.class,
+                () -> JsonAssert.isValid(schema, json));
+        assertEquals(NEGI01, exception.getCode());
+        exception.printStackTrace();
+    }
+
+    @Test
+    public void When_NestedNegativeReferenceWithWrongNumberInArray_ExceptionThrown() {
+        var schema =
+            """
+            @negative*(0) #number*
+            """;
+        var json =
+            """
+            [-100, -500, -0.01, 1]
+            """;
+        JsonSchema.isValid(schema, json);
+        var exception = assertThrows(JsonSchemaException.class,
+                () -> JsonAssert.isValid(schema, json));
+        assertEquals(NEGI02, exception.getCode());
         exception.printStackTrace();
     }
 }

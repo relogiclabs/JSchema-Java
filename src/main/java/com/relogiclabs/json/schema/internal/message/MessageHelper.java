@@ -1,8 +1,8 @@
 package com.relogiclabs.json.schema.internal.message;
 
-import com.relogiclabs.json.schema.types.JNode;
-import com.relogiclabs.json.schema.types.JsonTypable;
-import com.relogiclabs.json.schema.types.JsonType;
+import com.relogiclabs.json.schema.type.JNode;
+import com.relogiclabs.json.schema.type.JsonTypable;
+import com.relogiclabs.json.schema.type.JsonType;
 
 public final class MessageHelper {
 

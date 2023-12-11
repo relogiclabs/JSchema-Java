@@ -5,12 +5,12 @@ import com.relogiclabs.json.schema.message.ActualDetail;
 import com.relogiclabs.json.schema.message.ErrorDetail;
 import com.relogiclabs.json.schema.message.ExpectedDetail;
 import com.relogiclabs.json.schema.tree.RuntimeContext;
-import com.relogiclabs.json.schema.types.JArray;
-import com.relogiclabs.json.schema.types.JBoolean;
-import com.relogiclabs.json.schema.types.JNumber;
-import com.relogiclabs.json.schema.types.JObject;
-import com.relogiclabs.json.schema.types.JString;
-import com.relogiclabs.json.schema.types.JUndefined;
+import com.relogiclabs.json.schema.type.JArray;
+import com.relogiclabs.json.schema.type.JBoolean;
+import com.relogiclabs.json.schema.type.JNumber;
+import com.relogiclabs.json.schema.type.JObject;
+import com.relogiclabs.json.schema.type.JString;
+import com.relogiclabs.json.schema.type.JUndefined;
 
 import java.util.Arrays;
 import java.util.function.Supplier;
@@ -25,10 +25,12 @@ import static com.relogiclabs.json.schema.message.ErrorCode.MINI01;
 import static com.relogiclabs.json.schema.message.ErrorCode.MINI02;
 import static com.relogiclabs.json.schema.message.ErrorCode.MINI03;
 import static com.relogiclabs.json.schema.message.ErrorCode.NEGI01;
+import static com.relogiclabs.json.schema.message.ErrorCode.NEGI02;
 import static com.relogiclabs.json.schema.message.ErrorCode.NEMT01;
 import static com.relogiclabs.json.schema.message.ErrorCode.NEMT02;
 import static com.relogiclabs.json.schema.message.ErrorCode.NEMT03;
 import static com.relogiclabs.json.schema.message.ErrorCode.POSI01;
+import static com.relogiclabs.json.schema.message.ErrorCode.POSI02;
 import static com.relogiclabs.json.schema.message.ErrorCode.RANG01;
 import static com.relogiclabs.json.schema.message.ErrorCode.RANG02;
 import static com.relogiclabs.json.schema.message.ErrorCode.RANG03;
@@ -125,6 +127,22 @@ public class CoreFunctions2 extends CoreFunctions1 {
                 new ErrorDetail(NEGI01, "Number is not negative"),
                 new ExpectedDetail(function, "a negative number"),
                 new ActualDetail(target, "number ", target, " is greater than or equal to zero")));
+        return true;
+    }
+
+    public boolean positive(JNumber target, JNumber reference) {
+        if(target.compare(reference) < 0) return failWith(new JsonSchemaException(
+                new ErrorDetail(POSI02, "Number is not positive from reference"),
+                new ExpectedDetail(function, "a positive number from ", reference),
+                new ActualDetail(target, "number ", target, " is less than reference")));
+        return true;
+    }
+
+    public boolean negative(JNumber target, JNumber reference) {
+        if(target.compare(reference) > 0) return failWith(new JsonSchemaException(
+                new ErrorDetail(NEGI02, "Number is not negative from reference"),
+                new ExpectedDetail(function, "a negative number from ", reference),
+                new ActualDetail(target, "number ", target, " is greater than reference")));
         return true;
     }
 

@@ -2,7 +2,7 @@ package com.relogiclabs.json.schema.internal.tree;
 
 import com.relogiclabs.json.schema.exception.TargetInvocationException;
 import com.relogiclabs.json.schema.function.FunctionBase;
-import com.relogiclabs.json.schema.types.JFunction;
+import com.relogiclabs.json.schema.type.JFunction;
 import lombok.Getter;
 
 import java.lang.reflect.InvocationTargetException;

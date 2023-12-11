@@ -1,9 +1,9 @@
 package com.relogiclabs.json.schema.internal.message;
 
 import com.relogiclabs.json.schema.message.ActualDetail;
-import com.relogiclabs.json.schema.types.JArray;
-import com.relogiclabs.json.schema.types.JNode;
-import com.relogiclabs.json.schema.types.JProperty;
+import com.relogiclabs.json.schema.type.JArray;
+import com.relogiclabs.json.schema.type.JNode;
+import com.relogiclabs.json.schema.type.JProperty;
 
 import static com.relogiclabs.json.schema.internal.message.MessageHelper.getTypeName;
 import static com.relogiclabs.json.schema.internal.util.StringHelper.quote;

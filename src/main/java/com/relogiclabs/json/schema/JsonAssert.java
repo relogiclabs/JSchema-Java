@@ -1,7 +1,6 @@
 package com.relogiclabs.json.schema;
 
 import com.relogiclabs.json.schema.internal.util.DebugUtilities;
-import com.relogiclabs.json.schema.message.MessageFormatter;
 import com.relogiclabs.json.schema.tree.DataTree;
 import com.relogiclabs.json.schema.tree.JsonTree;
 import com.relogiclabs.json.schema.tree.RuntimeContext;
@@ -9,6 +8,8 @@ import com.relogiclabs.json.schema.tree.SchemaTree;
 import com.relogiclabs.json.schema.tree.TreeType;
 import lombok.Getter;
 
+import static com.relogiclabs.json.schema.message.MessageFormatter.JSON_ASSERTION;
+import static com.relogiclabs.json.schema.message.MessageFormatter.SCHEMA_ASSERTION;
 import static com.relogiclabs.json.schema.tree.TreeType.JSON_TREE;
 import static com.relogiclabs.json.schema.tree.TreeType.SCHEMA_TREE;
 
@@ -40,10 +41,10 @@ public class JsonAssert {
      */
     public JsonAssert(String expected, TreeType type) {
         if(type == SCHEMA_TREE) {
-            runtime = new RuntimeContext(MessageFormatter.SCHEMA_ASSERTION, true);
+            runtime = new RuntimeContext(SCHEMA_ASSERTION, true);
             expectedTree = new SchemaTree(runtime, expected);
         } else {
-            runtime = new RuntimeContext(MessageFormatter.JSON_ASSERTION, true);
+            runtime = new RuntimeContext(JSON_ASSERTION, true);
             expectedTree = new JsonTree(runtime, expected);
         }
     }
@@ -58,7 +59,7 @@ public class JsonAssert {
         var jsonTree = new JsonTree(runtime, json);
         DebugUtilities.print(expectedTree, jsonTree);
         if(!expectedTree.match(jsonTree))
-            throw new IllegalStateException("Exception not thrown");
+            throw new IllegalStateException("Invalid runtime state");
     }
 
     /**

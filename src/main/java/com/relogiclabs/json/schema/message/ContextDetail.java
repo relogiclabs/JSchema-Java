@@ -2,7 +2,7 @@ package com.relogiclabs.json.schema.message;
 
 import com.relogiclabs.json.schema.tree.Context;
 import com.relogiclabs.json.schema.tree.Location;
-import com.relogiclabs.json.schema.types.JNode;
+import com.relogiclabs.json.schema.type.JNode;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 

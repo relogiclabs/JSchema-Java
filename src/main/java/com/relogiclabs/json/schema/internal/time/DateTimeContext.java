@@ -1,6 +1,9 @@
 package com.relogiclabs.json.schema.internal.time;
 
 import com.relogiclabs.json.schema.exception.InvalidDateTimeException;
+import com.relogiclabs.json.schema.time.DateTimeType;
+import com.relogiclabs.json.schema.time.JsonDateTime;
+import com.relogiclabs.json.schema.time.JsonUtcOffset;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
@@ -9,7 +12,6 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.relogiclabs.json.schema.internal.time.JsonDateTime.UNSET;
 import static com.relogiclabs.json.schema.internal.util.StringHelper.concat;
 import static com.relogiclabs.json.schema.message.ErrorCode.DCNF01;
 import static com.relogiclabs.json.schema.message.ErrorCode.DDAY03;
@@ -28,6 +30,7 @@ import static com.relogiclabs.json.schema.message.ErrorCode.DUTC04;
 import static com.relogiclabs.json.schema.message.ErrorCode.DUTC05;
 import static com.relogiclabs.json.schema.message.ErrorCode.DWKD03;
 import static com.relogiclabs.json.schema.message.ErrorCode.DYAR03;
+import static com.relogiclabs.json.schema.time.JsonDateTime.UNSET;
 import static java.time.DayOfWeek.FRIDAY;
 import static java.time.DayOfWeek.MONDAY;
 import static java.time.DayOfWeek.SATURDAY;
@@ -209,7 +212,7 @@ public class DateTimeContext {
                 throw new InvalidDateTimeException(DHUR05, concat("Invalid ",
                         type, " hour out of range"));
             return new JsonDateTime(type, year, month, day, hour, minute, second,
-                    fraction, utcHour, utcMinute);
+                    fraction, new JsonUtcOffset(utcHour, utcMinute));
         } catch(InvalidDateTimeException e) {
             throw e;
         } catch(Exception e) {

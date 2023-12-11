@@ -9,6 +9,7 @@ public interface ErrorCode {
     String ALEN04 = "ALEN04";
     String ALEN05 = "ALEN05";
     String ARRY01 = "ARRY01";
+    String ARRY02 = "ARRY02";
     String BFOR01 = "BFOR01";
     String BFOR02 = "BFOR02";
     String BOOL01 = "BOOL01";
@@ -115,6 +116,7 @@ public interface ErrorCode {
     String MINI02 = "MINI02";
     String MINI03 = "MINI03";
     String NEGI01 = "NEGI01";
+    String NEGI02 = "NEGI02";
     String NEMT01 = "NEMT01";
     String NEMT02 = "NEMT02";
     String NEMT03 = "NEMT03";
@@ -125,6 +127,7 @@ public interface ErrorCode {
     String OLEN05 = "OLEN05";
     String PHON01 = "PHON01";
     String POSI01 = "POSI01";
+    String POSI02 = "POSI02";
     String PRAG01 = "PRAG01";
     String PRAG02 = "PRAG02";
     String PRAG03 = "PRAG03";

@@ -1,17 +1,17 @@
 package com.relogiclabs.json.schema.function;
 
 import com.relogiclabs.json.schema.exception.JsonSchemaException;
+import com.relogiclabs.json.schema.internal.function.DateTimeAgent;
 import com.relogiclabs.json.schema.internal.time.DateTimeParser;
-import com.relogiclabs.json.schema.internal.time.DateTimeType;
 import com.relogiclabs.json.schema.message.ActualDetail;
 import com.relogiclabs.json.schema.message.ErrorDetail;
 import com.relogiclabs.json.schema.message.ExpectedDetail;
+import com.relogiclabs.json.schema.time.DateTimeType;
 import com.relogiclabs.json.schema.tree.RuntimeContext;
-import com.relogiclabs.json.schema.types.JDateTime;
-import com.relogiclabs.json.schema.types.JString;
-import com.relogiclabs.json.schema.types.JUndefined;
+import com.relogiclabs.json.schema.type.JDateTime;
+import com.relogiclabs.json.schema.type.JString;
+import com.relogiclabs.json.schema.type.JUndefined;
 
-import static com.relogiclabs.json.schema.internal.time.DateTimeType.DATE_TYPE;
 import static com.relogiclabs.json.schema.message.ErrorCode.AFTR01;
 import static com.relogiclabs.json.schema.message.ErrorCode.AFTR02;
 import static com.relogiclabs.json.schema.message.ErrorCode.BFOR01;
@@ -28,6 +28,7 @@ import static com.relogiclabs.json.schema.message.ErrorCode.ENDE01;
 import static com.relogiclabs.json.schema.message.ErrorCode.ENDE02;
 import static com.relogiclabs.json.schema.message.ErrorCode.STRT01;
 import static com.relogiclabs.json.schema.message.ErrorCode.STRT02;
+import static com.relogiclabs.json.schema.time.DateTimeType.DATE_TYPE;
 
 public class CoreFunctions4 extends CoreFunctions3 {
     public CoreFunctions4(RuntimeContext runtime) {
@@ -77,48 +78,47 @@ public class CoreFunctions4 extends CoreFunctions3 {
         if(rStart == null) return false;
         var rEnd = getDateTime(target.getDateTimeParser(), end);
         if(rEnd == null) return false;
-        boolean result = true;
-        result &= isValidStart(target, rStart, DRNG01, DRNG02);
-        result &= isValidEnd(target, rEnd, DRNG03, DRNG04);
-        return result;
+        if(target.getDateTime().compare(rStart.getDateTime()) < 0)
+            return failOnStartDate(target, rStart, getErrorCode(target, DRNG01, DRNG02));
+        if(target.getDateTime().compare(rEnd.getDateTime()) > 0)
+            return failOnEndDate(target, rEnd, getErrorCode(target, DRNG03, DRNG04));
+        return true;
+    }
+
+    private static String getErrorCode(JDateTime target, String date, String time) {
+        return target.getDateTime().getType() == DATE_TYPE ? date : time;
+    }
+
+    private boolean failOnStartDate(JDateTime target, JDateTime start, String code) {
+        var type = target.getDateTime().getType();
+        return failWith(new JsonSchemaException(
+                new ErrorDetail(code, type, " is earlier than start ", type),
+                new ExpectedDetail(start, "a ", type, " from or after ", start),
+                new ActualDetail(target, "found ", target, " which is before start ", type)
+        ));
+    }
+
+    private boolean failOnEndDate(JDateTime target, JDateTime end, String code) {
+        var type = target.getDateTime().getType();
+        return failWith(new JsonSchemaException(
+                new ErrorDetail(code, type, " is later than end ", type),
+                new ExpectedDetail(end, "a ", type, " until or before ", end),
+                new ActualDetail(target, "found ", target, " which is after end ", type)
+        ));
     }
 
     public boolean range(JDateTime target, JUndefined start, JString end) {
         var rEnd = getDateTime(target.getDateTimeParser(), end);
         if(rEnd == null) return false;
-        return isValidEnd(target, rEnd, DRNG05, DRNG06);
+        if (target.getDateTime().compare(rEnd.getDateTime()) <= 0) return true;
+        return failOnEndDate(target, rEnd, getErrorCode(target, DRNG05, DRNG06));
     }
 
     public boolean range(JDateTime target, JString start, JUndefined end) {
         var rStart = getDateTime(target.getDateTimeParser(), start);
         if(rStart == null) return false;
-        return isValidStart(target, rStart, DRNG07, DRNG08);
-    }
-
-    private boolean isValidStart(JDateTime target, JDateTime start, String codeDate, String codeTime) {
-        if(target.getDateTime().compare(start.getDateTime()) < 0) {
-            var type = target.getDateTime().getType();
-            var code = type == DATE_TYPE ? codeDate : codeTime;
-            return failWith(new JsonSchemaException(
-                    new ErrorDetail(code, type, " is earlier than start ", type),
-                    new ExpectedDetail(start, "a ", type, " from or after ", start),
-                    new ActualDetail(target, "found ", target, " which is before start ", type)
-            ));
-        }
-        return true;
-    }
-
-    private boolean isValidEnd(JDateTime target, JDateTime end, String codeDate, String codeTime) {
-        if(target.getDateTime().compare(end.getDateTime()) > 0) {
-            var type = target.getDateTime().getType();
-            var code = type == DATE_TYPE ? codeDate : codeTime;
-            return failWith(new JsonSchemaException(
-                    new ErrorDetail(code, type, " is later than end ", type),
-                    new ExpectedDetail(end, "a ", type, " until or before ", end),
-                    new ActualDetail(target, "found ", target, " which is after end ", type)
-            ));
-        }
-        return true;
+        if (target.getDateTime().compare(rStart.getDateTime()) >= 0) return true;
+        return failOnStartDate(target, rStart, getErrorCode(target, DRNG07, DRNG08));
     }
 
     public boolean start(JDateTime target, JString reference) {
@@ -156,7 +156,7 @@ public class CoreFunctions4 extends CoreFunctions3 {
             && result.getDateTime().getType() == parser.getType()) return result;
         var jDateTime = new DateTimeAgent(parser).parse(function, dateTime);
         if(jDateTime == null) return null;
-        dateTime.setDerived(jDateTime.create(dateTime));
+        dateTime.setDerived(jDateTime.createNode(dateTime));
         return (JDateTime) dateTime.getDerived();
     }
 }

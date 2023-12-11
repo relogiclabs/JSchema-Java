@@ -5,8 +5,8 @@ import com.relogiclabs.json.schema.JsonSchema;
 import com.relogiclabs.json.schema.exception.JsonSchemaException;
 import org.junit.jupiter.api.Test;
 
+import static com.relogiclabs.json.schema.external.ExternalFunctions.ERRACCESS01;
 import static com.relogiclabs.json.schema.message.ErrorCode.DTYP04;
-import static com.relogiclabs.json.schema.positive.ExternalFunctions.ERRACCESS01;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -74,7 +74,7 @@ public class AggregatedTests {
         var schema = """
             %title: "Extended User Profile Dashboard API Response"
             %version: 2.0.0
-            %include: com.relogiclabs.json.schema.positive.ExternalFunctions
+            %include: com.relogiclabs.json.schema.external.ExternalFunctions
             %pragma IgnoreUndefinedProperties: true
             
             %define $post: {

@@ -7,12 +7,12 @@ import com.relogiclabs.json.schema.exception.NoValueReceivedException;
 import com.relogiclabs.json.schema.exception.ReceiverNotFoundException;
 import org.junit.jupiter.api.Test;
 
+import static com.relogiclabs.json.schema.external.ExternalFunctions.CONDFUNC01;
+import static com.relogiclabs.json.schema.external.ExternalFunctions.CONDFUNC02;
+import static com.relogiclabs.json.schema.external.ExternalFunctions.MINMAX01;
+import static com.relogiclabs.json.schema.external.ExternalFunctions.SUMEQUAL01;
 import static com.relogiclabs.json.schema.message.ErrorCode.RECV02;
 import static com.relogiclabs.json.schema.message.ErrorCode.RECV03;
-import static com.relogiclabs.json.schema.positive.ExternalFunctions.CONDFUNC01;
-import static com.relogiclabs.json.schema.positive.ExternalFunctions.CONDFUNC02;
-import static com.relogiclabs.json.schema.positive.ExternalFunctions.MINMAX01;
-import static com.relogiclabs.json.schema.positive.ExternalFunctions.SUMEQUAL01;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -21,7 +21,7 @@ public class ReceiverTests {
     public void When_WrongReceiverNameInObject_ExceptionThrown() {
         var schema =
             """
-            %include: com.relogiclabs.json.schema.positive.ExternalFunctions
+            %include: com.relogiclabs.json.schema.external.ExternalFunctions
             %schema:
             {
                 "key1": #integer &someName,
@@ -46,7 +46,7 @@ public class ReceiverTests {
     public void When_NoValueReceiveInObject_ExceptionThrown() {
         var schema =
             """
-            %include: com.relogiclabs.json.schema.positive.ExternalFunctions
+            %include: com.relogiclabs.json.schema.external.ExternalFunctions
 
             %schema:
             {
@@ -72,7 +72,7 @@ public class ReceiverTests {
     public void When_ConditionFailedInObject_ExceptionThrown() {
         var schema =
             """
-            %include: com.relogiclabs.json.schema.positive.ExternalFunctions
+            %include: com.relogiclabs.json.schema.external.ExternalFunctions
 
             %schema:
             {
@@ -98,7 +98,7 @@ public class ReceiverTests {
     public void When_ConditionAllFailedInObject_ExceptionThrown() {
         var schema =
             """
-            %include: com.relogiclabs.json.schema.positive.ExternalFunctions
+            %include: com.relogiclabs.json.schema.external.ExternalFunctions
 
             %define $numbers: @range(1, 10) #integer &relatedValues
             %schema:
@@ -125,7 +125,7 @@ public class ReceiverTests {
     public void When_ReceiveWrongValuesInObject_ExceptionThrown() {
         var schema =
             """
-            %include: com.relogiclabs.json.schema.positive.ExternalFunctions
+            %include: com.relogiclabs.json.schema.external.ExternalFunctions
             %schema:
             {
                 "key1": #integer &relatedData,
@@ -158,7 +158,7 @@ public class ReceiverTests {
     public void When_MultiReceiverFunctionWrongValuesInObject_ExceptionThrown() {
         var schema =
             """
-            %include: com.relogiclabs.json.schema.positive.ExternalFunctions
+            %include: com.relogiclabs.json.schema.external.ExternalFunctions
 
             %schema:
             {

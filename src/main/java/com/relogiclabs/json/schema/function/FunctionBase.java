@@ -1,7 +1,7 @@
 package com.relogiclabs.json.schema.function;
 
 import com.relogiclabs.json.schema.tree.RuntimeContext;
-import com.relogiclabs.json.schema.types.JFunction;
+import com.relogiclabs.json.schema.type.JFunction;
 import lombok.Getter;
 import lombok.Setter;
 

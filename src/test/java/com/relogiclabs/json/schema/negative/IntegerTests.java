@@ -9,8 +9,6 @@ import static com.relogiclabs.json.schema.message.ErrorCode.DTYP04;
 import static com.relogiclabs.json.schema.message.ErrorCode.DTYP06;
 import static com.relogiclabs.json.schema.message.ErrorCode.FUNC06;
 import static com.relogiclabs.json.schema.message.ErrorCode.INTE01;
-import static com.relogiclabs.json.schema.message.ErrorCode.NEGI01;
-import static com.relogiclabs.json.schema.message.ErrorCode.POSI01;
 import static com.relogiclabs.json.schema.message.ErrorCode.RANG01;
 import static com.relogiclabs.json.schema.message.ErrorCode.RANG03;
 import static com.relogiclabs.json.schema.message.ErrorCode.RANG04;
@@ -212,40 +210,6 @@ public class IntegerTests {
         var exception = assertThrows(JsonSchemaException.class,
                 () -> JsonAssert.isValid(schema, json));
         assertEquals(RANG03, exception.getCode());
-        exception.printStackTrace();
-    }
-
-    @Test
-    public void When_NestedPositiveWithWrongIntegerInArray_ExceptionThrown() {
-        var schema =
-            """
-            @positive* #integer*
-            """;
-        var json =
-            """
-            [100, -500, 900]
-            """;
-        JsonSchema.isValid(schema, json);
-        var exception = assertThrows(JsonSchemaException.class,
-                () -> JsonAssert.isValid(schema, json));
-        assertEquals(POSI01, exception.getCode());
-        exception.printStackTrace();
-    }
-
-    @Test
-    public void When_NestedNegativeWithWrongIntegerInArray_ExceptionThrown() {
-        var schema =
-            """
-            @negative* #integer*
-            """;
-        var json =
-            """
-            [-100, -500, 900]
-            """;
-        JsonSchema.isValid(schema, json);
-        var exception = assertThrows(JsonSchemaException.class,
-                () -> JsonAssert.isValid(schema, json));
-        assertEquals(NEGI01, exception.getCode());
         exception.printStackTrace();
     }
 }
