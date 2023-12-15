@@ -64,6 +64,10 @@
         </li>
         
         <li class="section-item ">
+            <a href="/JsonSchema-Java/articles/components/">Components</a>
+        </li>
+        
+        <li class="section-item ">
             <a href="/JsonSchema-Java/articles/sourcebuild/">Source Build</a>
         </li>
         
@@ -283,12 +287,10 @@ table th:first-of-type { min-width: 140px; }
 </tr>
 </tbody>
 </table>
-<h3 id="string-enum">String Enum</h3>
+<h3 id="enum-string-and-number">Enum String and Number</h3>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-stylus" data-lang="stylus"><span class="line"><span class="cl"><span class="err">#string</span> <span class="err">target</span> <span class="o">-</span> <span class="kp">@enum</span><span class="p">(</span><span class="err">#string</span><span class="o">...</span> <span class="err">items</span><span class="p">)</span>
-</span></span></code></pre></div><p>Validates that the <code>target</code> string is equal to one of the strings specified by the <code>items</code> parameter. If not, a validation error will generate.</p>
-<h3 id="number-enum">Number Enum</h3>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-stylus" data-lang="stylus"><span class="line"><span class="cl"><span class="err">#number</span> <span class="err">target</span> <span class="o">-</span> <span class="kp">@enum</span><span class="p">(</span><span class="err">#number</span><span class="o">...</span> <span class="err">items</span><span class="p">)</span>
-</span></span></code></pre></div><p>Validates that the <code>target</code> number is equal to one of the numbers specified by the <code>items</code> parameter. If not, a validation error will generate.</p>
+</span></span><span class="line"><span class="cl"><span class="err">#number</span> <span class="err">target</span> <span class="o">-</span> <span class="kp">@enum</span><span class="p">(</span><span class="err">#number</span><span class="o">...</span> <span class="err">items</span><span class="p">)</span>
+</span></span></code></pre></div><p>Validates that the <code>target</code> string or number is equal to one of the strings or numbers respectively, specified by the <code>items</code> parameter. If not, a validation error will generate.</p>
 <h3 id="array-elements">Array Elements</h3>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-stylus" data-lang="stylus"><span class="line"><span class="cl"><span class="err">#array</span> <span class="err">target</span> <span class="o">-</span> <span class="kp">@elements</span><span class="p">(</span><span class="err">#any</span><span class="o">...</span> <span class="err">items</span><span class="p">)</span>
 </span></span></code></pre></div><p>Validates that the <code>target</code> array contains every JSON value specified by the <code>items</code> parameter. If not, it generates a validation error.</p>

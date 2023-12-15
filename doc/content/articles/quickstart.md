@@ -147,15 +147,14 @@ com.relogiclabs.json.schema.exception.JsonSchemaException: DTYP04: Data type mis
 Expected (Schema Line: 6:31): data type #integer
 Actual (Json Line: 3:14): found #string inferred by "not number"
 
-	at com.relogiclabs.json.schema.type.JDataType.matchForReport(JDataType.java:90)
-	at com.relogiclabs.json.schema.type.JDataType.matchForReport(JDataType.java:72)
-	at com.relogiclabs.json.schema.type.JValidator.lambda$matchDataType$4(JValidator.java:74)
-	at com.relogiclabs.json.schema.type.JValidator.matchDataType(JValidator.java:74)
-	at com.relogiclabs.json.schema.type.JValidator.match(JValidator.java:64)
+	at com.relogiclabs.json.schema.tree.ExceptionRegistry.failWith(ExceptionRegistry.java:31)
+	at com.relogiclabs.json.schema.type.JNode.failWith(JNode.java:75)
+	at com.relogiclabs.json.schema.type.JValidator.matchDataType(JValidator.java:89)
+	at com.relogiclabs.json.schema.type.JValidator.match(JValidator.java:78)
 	at com.relogiclabs.json.schema.type.JObject.match(JObject.java:57)
-	at com.relogiclabs.json.schema.type.JValidator.match(JValidator.java:59)
+	at com.relogiclabs.json.schema.type.JValidator.match(JValidator.java:73)
 	at com.relogiclabs.json.schema.type.JObject.match(JObject.java:57)
-	at com.relogiclabs.json.schema.type.JValidator.match(JValidator.java:59)
+	at com.relogiclabs.json.schema.type.JValidator.match(JValidator.java:73)
 	at com.relogiclabs.json.schema.type.JRoot.match(JRoot.java:50)
 	at com.relogiclabs.json.schema.tree.SchemaTree.match(SchemaTree.java:33)
 	at com.relogiclabs.json.schema.JsonAssert.isValid(JsonAssert.java:61)

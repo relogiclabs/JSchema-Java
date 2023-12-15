@@ -15,6 +15,7 @@ JSON, short for JavaScript Object Notation, is one of the most widely used data 
  * <font size="4">[Data Types & Validation](/JsonSchema-Java/articles/datatypes)</font>
  * <font size="4">[Functions & Validation](/JsonSchema-Java/articles/functions)</font>
  * <font size="4">[Date & Time Patterns](/JsonSchema-Java/articles/datetime)</font>
+ * <font size="4">[Reusable Components of Validation](/JsonSchema-Java/articles/components)</font>
  * <font size="4">[Build from Source Code](/JsonSchema-Java/articles/sourcebuild)</font>
  * <font size="4">[API Reference Documentation](/JsonSchema-Java/api/index.html)</font>
 
