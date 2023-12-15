@@ -5,19 +5,28 @@ import com.relogiclabs.json.schema.internal.builder.JValidatorBuilder;
 import com.relogiclabs.json.schema.internal.message.ActualHelper;
 import com.relogiclabs.json.schema.internal.message.ExpectedHelper;
 import com.relogiclabs.json.schema.message.ErrorDetail;
+import com.relogiclabs.json.schema.message.ExpectedDetail;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Queue;
 
+import static com.relogiclabs.json.schema.internal.message.MessageHelper.InvalidNonCompositeType;
 import static com.relogiclabs.json.schema.internal.message.MessageHelper.ValidationFailed;
 import static com.relogiclabs.json.schema.internal.util.CollectionHelper.addToList;
+import static com.relogiclabs.json.schema.internal.util.CollectionHelper.getLast;
 import static com.relogiclabs.json.schema.internal.util.StreamHelper.allTrue;
 import static com.relogiclabs.json.schema.internal.util.StreamHelper.anyTrue;
+import static com.relogiclabs.json.schema.internal.util.StringHelper.concat;
 import static com.relogiclabs.json.schema.internal.util.StringHelper.join;
+import static com.relogiclabs.json.schema.message.ErrorCode.DTYP03;
 import static com.relogiclabs.json.schema.message.ErrorCode.VALD01;
+import static com.relogiclabs.json.schema.type.JDataType.DATA_TYPE_NAME;
 import static java.util.Collections.unmodifiableCollection;
+import static lombok.AccessLevel.NONE;
 
 @Getter
 @EqualsAndHashCode
@@ -30,6 +39,10 @@ public final class JValidator extends JBranch {
     private final List<JReceiver> receivers;
     private final boolean optional;
 
+    @Getter(NONE)
+    @EqualsAndHashCode.Exclude
+    private final Queue<Exception> exceptions;
+
     private JValidator(JValidatorBuilder builder) {
         super(builder);
         value = builder.value();
@@ -37,6 +50,7 @@ public final class JValidator extends JBranch {
         dataTypes = builder.dataTypes();
         receivers = builder.receivers();
         optional = builder.optional();
+        exceptions = new LinkedList<>();
         getRuntime().getReceivers().register(receivers);
         var nodes = new ArrayList<JNode>();
         addToList(nodes, value);
@@ -70,19 +84,74 @@ public final class JValidator extends JBranch {
     }
 
     private boolean matchDataType(JNode node) {
-        if(getRuntime().tryExecute(() -> checkDataType(node))) return true;
-        dataTypes.stream().filter(d -> !d.getNested()).forEach(d -> d.matchForReport(node));
-        dataTypes.stream().filter(d -> d.getNested()).forEach(d -> d.matchForReport(node));
+        if(getRuntime().getExceptions().tryExecute(() -> checkDataType(node))) return true;
+        saveTryBuffer();
+        for(var e : exceptions) failWith((RuntimeException) e);
         return false;
     }
 
+    private static List<Exception> processTryBuffer(Queue<Exception> buffer) {
+        var list = new ArrayList<Exception>(buffer.size());
+        for(var e : buffer) {
+            var result = mergeException(getLast(list), e);
+            if(result != null) list.set(list.size() - 1, result);
+            else list.add(e);
+        }
+        return list;
+    }
+
+    private static JsonSchemaException mergeException(Exception ex1, Exception ex2) {
+        if(!(ex1 instanceof JsonSchemaException e1)) return null;
+        if(!(ex2 instanceof JsonSchemaException e2)) return null;
+        if(!e1.getCode().equals(e2.getCode())) return null;
+        var a1 = e1.getAttribute(DATA_TYPE_NAME);
+        var a2 = e2.getAttribute(DATA_TYPE_NAME);
+        if(a1 == null || a2 == null) return null;
+        var result = new JsonSchemaException(e1.getError(), mergeExpected(e1, e2), e2.getActual());
+        result.setAttribute(DATA_TYPE_NAME, a1 + a2);
+        return result;
+    }
+
+    private static ExpectedDetail mergeExpected(JsonSchemaException ex1,
+                                                JsonSchemaException ex2) {
+        var typeName = ex2.getAttribute(DATA_TYPE_NAME);
+        ExpectedDetail detail = ex1.getExpected();
+        return new ExpectedDetail(detail.getContext(),
+                concat(detail.getMessage(), " or ", typeName));
+    }
+
     private boolean checkDataType(JNode node) {
-        var list1 = dataTypes.stream().filter(d -> !d.getNested()).map(d -> d.match(node)).toList();
-        var result1 = list1.stream().anyMatch(anyTrue());
-        var list2 = dataTypes.stream().filter(d -> d.getNested() && (d.isApplicable(node) || !result1))
-                .map(d -> d.match(node)).toList();
-        var result2 = list2.stream().anyMatch(anyTrue()) || list2.size() == 0;
-        return (result1 || list1.size() == 0) && result2;
+        var list1 = dataTypes.stream().filter(d -> !d.getNested()).toList();
+        var result1 = anyMatch(list1, node);
+        var list2 = dataTypes.stream().filter(d -> d.getNested()
+                && (d.isApplicable(node) || !result1)).toList();
+        if(list2.isEmpty()) return result1 || list1.isEmpty();
+        if(!(node instanceof JComposite composite))
+            return failWith(new JsonSchemaException(
+                    new ErrorDetail(DTYP03, InvalidNonCompositeType),
+                    ExpectedHelper.asInvalidNonCompositeType(list2.get(0)),
+                    ActualHelper.asInvalidNonCompositeType(node)));
+        saveTryBuffer();
+        var result2 = composite.components().stream().allMatch(n -> anyMatch(list2, n));
+        return (result1 || list1.isEmpty()) && result2;
+    }
+
+    private boolean anyMatch(List<JDataType> list, JNode node) {
+        getTryBuffer().clear();
+        for(var d : list) if(d.match(node)) return true;
+        saveTryBuffer();
+        return false;
+    }
+
+    private Queue<Exception> getTryBuffer() {
+        return getRuntime().getExceptions().getTryBuffer();
+    }
+
+    private void saveTryBuffer() {
+        Queue<Exception> tryBuffer = getTryBuffer();
+        if(tryBuffer.isEmpty()) return;
+        exceptions.addAll(processTryBuffer(tryBuffer));
+        tryBuffer.clear();
     }
 
     @Override
