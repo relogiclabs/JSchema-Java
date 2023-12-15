@@ -16,7 +16,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class DataTypeTests {
     @Test
-    public void When_JsonWithWrongMainDataType_ExceptionThrown() {
+    public void When_WrongJsonWithDirectDataType_ExceptionThrown() {
         var schema =
                 """
                 #string* #array
@@ -33,7 +33,7 @@ public class DataTypeTests {
     }
 
     @Test
-    public void When_JsonWithWrongNestedDataType_ExceptionThrown() {
+    public void When_WrongJsonWithNestedDataType_ExceptionThrown() {
         var schema =
                 """
                 #string* #array
@@ -131,6 +131,60 @@ public class DataTypeTests {
                 """
                 [{"k1": 10}]
                 """;
+        JsonSchema.isValid(schema, json);
+        var exception = assertThrows(JsonSchemaException.class,
+                () -> JsonAssert.isValid(schema, json));
+        assertEquals(DTYP04, exception.getCode());
+        exception.printStackTrace();
+    }
+
+    @Test
+    public void When_MultipleNestedDataTypeWithWrongValueInObject_ExceptionThrown() {
+        var schema =
+            """
+            {
+                "key1": #date* #time* #null* #array,
+                "key2": #string* #null* #array,
+                "key3": #integer* #float* #array
+            }
+            """;
+        var json =
+            """
+            {
+                "key1": ["2021-08-01", "2021-08-01T15:50:30.300Z", "test"],
+                "key2": ["test", null, "text", 10],
+                "key3": [10, 100, 200.5, "text"]
+            }
+            """;
+        JsonSchema.isValid(schema, json);
+        var exception = assertThrows(JsonSchemaException.class,
+                () -> JsonAssert.isValid(schema, json));
+        assertEquals(DTYP06, exception.getCode());
+        exception.printStackTrace();
+    }
+
+    @Test
+    public void When_MultipleDataTypeWithWrongValueInObject_ExceptionThrown() {
+        var schema =
+            """
+            {
+                "key1": #date #time #null,
+                "key2": #array #object #null,
+                "key3": #integer #float,
+                "key4": #string #null,
+                "key5": #number #string
+            }
+            """;
+        var json =
+            """
+            {
+                "key1": "2021-08-01",
+                "key2": null,
+                "key3": 100,
+                "key4": "test",
+                "key5": false
+            }
+            """;
         JsonSchema.isValid(schema, json);
         var exception = assertThrows(JsonSchemaException.class,
                 () -> JsonAssert.isValid(schema, json));
