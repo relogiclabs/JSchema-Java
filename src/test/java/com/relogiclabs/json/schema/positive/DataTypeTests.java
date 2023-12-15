@@ -1,6 +1,7 @@
 package com.relogiclabs.json.schema.positive;
 
 import com.relogiclabs.json.schema.JsonAssert;
+import com.relogiclabs.json.schema.JsonSchema;
 import org.junit.jupiter.api.Test;
 
 public class DataTypeTests {
@@ -12,24 +13,63 @@ public class DataTypeTests {
     }
 
     @Test
-    public void When_DataTypeMultipleInObject_ValidTrue() {
+    public void When_MultipleNestedDataTypeInObject_ValidTrue() {
         var schema =
             """
             {
-                "key1": #string #null,
-                "key2": #string #boolean,
-                "key3": #string #number
+                "key1": #date* #time* #array,
+                "key2": #string* #integer* #null* #array,
+                "key3": #integer* #float* #array
             }
             """;
         var json =
             """
             {
-                "key1": null,
-                "key2": false,
-                "key3": 500000
+                "key1": ["2021-08-01", "2021-08-01T15:50:30.300Z"],
+                "key2": ["test", null, 10],
+                "key3": [10, 100, 200.5]
             }
             """;
+        JsonSchema.isValid(schema, json);
         JsonAssert.isValid(schema, json);
+    }
+
+    @Test
+    public void When_MultipleDirectDataTypeInObject_ValidTrue() {
+        var schema =
+            """
+            {
+                "key1": #date #time,
+                "key2": #array #null,
+                "key3": #integer #float,
+                "key4": #string #null,
+                "key5": #number #string
+            }
+            """;
+        var json1 =
+            """
+            {
+                "key1": "2021-08-01",
+                "key2": [10, 20, 30],
+                "key3": 100,
+                "key4": "test",
+                "key5": 10.10
+            }
+            """;
+        var json2 =
+            """
+            {
+                "key1": "2021-08-01T15:50:30.300Z",
+                "key2": null,
+                "key3": 200.5,
+                "key4": null,
+                "key5": "10.10"
+            }
+            """;
+        JsonSchema.isValid(schema, json1);
+        JsonSchema.isValid(schema, json2);
+        JsonAssert.isValid(schema, json1);
+        JsonAssert.isValid(schema, json2);
     }
 
     @Test

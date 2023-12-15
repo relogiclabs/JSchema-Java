@@ -28,8 +28,8 @@ public final class ExpectedHelper {
         return new ExpectedDetail(dataType, "data type ", dataType.toString(true));
     }
 
-    public static ExpectedDetail asInvalidNestedDataType(JDataType dataType) {
-        return new ExpectedDetail(dataType, "composite data type");
+    public static ExpectedDetail asInvalidNonCompositeType(JDataType dataType) {
+        return new ExpectedDetail(dataType, "a composite value");
     }
 
     public static ExpectedDetail asDataTypeArgumentFailed(JDataType dataType) {

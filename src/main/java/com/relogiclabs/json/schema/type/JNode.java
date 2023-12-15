@@ -1,6 +1,5 @@
 package com.relogiclabs.json.schema.type;
 
-import com.relogiclabs.json.schema.exception.CommonException;
 import com.relogiclabs.json.schema.exception.JsonSchemaException;
 import com.relogiclabs.json.schema.internal.builder.JNodeBuilder;
 import com.relogiclabs.json.schema.internal.message.ActualHelper;
@@ -72,7 +71,7 @@ public abstract class JNode {
                 .getMessageFormatter().getOutlineLength());
     }
 
-    boolean failWith(CommonException exception) {
-        return getRuntime().failWith(exception);
+    boolean failWith(RuntimeException exception) {
+        return getRuntime().getExceptions().failWith(exception);
     }
 }

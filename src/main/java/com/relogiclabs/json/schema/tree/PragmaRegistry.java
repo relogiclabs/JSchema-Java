@@ -24,7 +24,7 @@ public final class PragmaRegistry implements Iterable<Map.Entry<String, JPragma>
     private static final String DATE_DATA_TYPE_FORMAT = "DateDataTypeFormat";
     private static final String TIME_DATA_TYPE_FORMAT = "TimeDataTypeFormat";
 
-    public final Map<String, JPragma> pragmas;
+    private final Map<String, JPragma> pragmas;
 
     private boolean ignoreUndefinedProperties = PragmaDescriptor
             .IGNORE_UNDEFINED_PROPERTIES.getDefaultValue();
@@ -32,9 +32,9 @@ public final class PragmaRegistry implements Iterable<Map.Entry<String, JPragma>
             .FLOATING_POINT_TOLERANCE.getDefaultValue();
     private boolean ignoreObjectPropertyOrder = PragmaDescriptor
             .IGNORE_OBJECT_PROPERTY_ORDER.getDefaultValue();
-    public String dateDataTypeFormat = PragmaDescriptor
+    private String dateDataTypeFormat = PragmaDescriptor
             .DATE_DATA_TYPE_FORMAT.getDefaultValue();
-    public String timeDataTypeFormat = PragmaDescriptor
+    private String timeDataTypeFormat = PragmaDescriptor
             .TIME_DATA_TYPE_FORMAT.getDefaultValue();
 
     private DateTimeParser dateTypeParser;

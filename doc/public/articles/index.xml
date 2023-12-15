@@ -86,6 +86,16 @@ Date and time formats are defined using date and time pattern strings. Within th
     </item>
     
     <item>
+      <title>Components</title>
+      <link>https://relogiclabs.github.io/JsonSchema-Java/articles/components/</link>
+      <pubDate>Fri, 15 Dec 2023 09:38:53 +0600</pubDate>
+      
+      <guid>https://relogiclabs.github.io/JsonSchema-Java/articles/components/</guid>
+      <description>Reusable Components A schema component, also known as a reusable schema fragment or sub-schema, plays a vital role in improving readability, reducing redundancy, and organizing the structure of a Schema document. In JSON validation, a schema component or fragment defines a validation rule that can be recursively composed of multiple nested validation rules, collectively specifying the expected and valid format of a JSON structure.
+These schema components are utilized as extensions of data type validation, as basic data types have a very limited ability to validate the internal structure of a composite JSON value or construct.</description>
+    </item>
+    
+    <item>
       <title>Source Build</title>
       <link>https://relogiclabs.github.io/JsonSchema-Java/articles/sourcebuild/</link>
       <pubDate>Mon, 04 Dec 2023 09:38:53 +0600</pubDate>

@@ -53,4 +53,8 @@ public final class CollectionHelper {
     public static <T> void addToList(Collection<T> source, Collection<? extends T>... collections) {
         for(var c : collections) if(c != null) source.addAll(c);
     }
+
+    public static <T> T getLast(List<T> list) {
+        return list != null && !list.isEmpty() ? list.get(list.size() - 1) : null;
+    }
 }

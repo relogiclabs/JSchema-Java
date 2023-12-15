@@ -121,17 +121,12 @@ Validates that the `target` number is less than or equal to the `maximum` number
 | `@maximum(10.5)`    | `10.50`; `10.49`; `-1000.1`  | `10.51`; `11.0`; `1000.1` |
 | `@maximum(0, true)` | `-0.001`; `-1.01`; `-1000.1` | `0`; `0.01`; `100.1`      |
 
-### String Enum
+### Enum String and Number 
 ```stylus
 #string target - @enum(#string... items)
-```
-Validates that the `target` string is equal to one of the strings specified by the `items` parameter. If not, a validation error will generate.
-
-### Number Enum
-```stylus
 #number target - @enum(#number... items)
 ```
-Validates that the `target` number is equal to one of the numbers specified by the `items` parameter. If not, a validation error will generate.
+Validates that the `target` string or number is equal to one of the strings or numbers respectively, specified by the `items` parameter. If not, a validation error will generate.
 
 ### Array Elements
 ```stylus

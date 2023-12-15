@@ -9,7 +9,6 @@ import com.relogiclabs.json.schema.message.ErrorDetail;
 import com.relogiclabs.json.schema.message.ExpectedDetail;
 import com.relogiclabs.json.schema.time.DateTimeType;
 import com.relogiclabs.json.schema.time.JsonDateTime;
-import com.relogiclabs.json.schema.tree.RuntimeContext;
 import com.relogiclabs.json.schema.type.JFunction;
 import com.relogiclabs.json.schema.type.JString;
 
@@ -30,18 +29,18 @@ public class DateTimeAgent {
     }
 
     public JsonDateTime parse(JFunction function, JString dateTime) {
-        RuntimeContext runtime = function.getRuntime();
+        var exceptions = function.getRuntime().getExceptions();
         try {
             if(parser == null) parser = new DateTimeParser(pattern, type);
             return parser.parse(dateTime.getValue());
         } catch(DateTimeLexerException ex) {
-            runtime.failWith(new JsonSchemaException(
+            exceptions.failWith(new JsonSchemaException(
                     new ErrorDetail(ex.getCode(), ex.getMessage()),
                     new ExpectedDetail(function, "a valid ", type, " pattern"),
                     new ActualDetail(dateTime, "found ", pattern, " that is invalid"),
                     ex));
         } catch(InvalidDateTimeException ex) {
-            runtime.failWith(new JsonSchemaException(
+            exceptions.failWith(new JsonSchemaException(
                     new ErrorDetail(ex.getCode(), ex.getMessage()),
                     new ExpectedDetail(function, "a valid ", type, " formatted as ", pattern),
                     new ActualDetail(dateTime, "found ", dateTime, " that is invalid or malformatted"),

@@ -6,7 +6,7 @@
 
     <groupId>com.relogiclabs.json</groupId>
     <artifactId>relogiclabs-json-schema</artifactId>
-    <version>1.10.0</version>
+    <version>1.11.0</version>
     <name>New Json Schema</name>
     <description>
         The New JSON Schema prioritizes simplicity, conciseness, and readability, making
@@ -126,6 +126,7 @@
                             <sourcepath>target/generated-sources/delombok</sourcepath>
                             <show>public</show>
                             <excludePackageNames>com.relogiclabs.json.schema.internal.*</excludePackageNames>
+                            <noqualifier>all</noqualifier>
                         </configuration>
                         <executions>
                             <execution>
