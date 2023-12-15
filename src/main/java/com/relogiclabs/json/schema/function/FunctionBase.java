@@ -15,6 +15,6 @@ public abstract class FunctionBase {
     }
 
     protected boolean failWith(RuntimeException exception) {
-        return runtime.failWith(exception);
+        return runtime.getExceptions().failWith(exception);
     }
 }

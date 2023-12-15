@@ -11,7 +11,6 @@ import lombok.Getter;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
-import java.util.function.Supplier;
 
 import static com.relogiclabs.json.schema.internal.util.StringHelper.concat;
 import static com.relogiclabs.json.schema.internal.util.StringHelper.quote;
@@ -54,10 +53,6 @@ public final class RuntimeContext {
         return Math.abs(value1 - value2) < pragmas.getFloatingPointTolerance();
     }
 
-    public <T> T tryExecute(Supplier<T> function) {
-        return exceptions.tryExecute(function);
-    }
-
     public boolean addValidator(FutureValidator validator) {
         return validators.put(UUID.randomUUID().toString(), validator) == null;
     }
@@ -66,12 +61,6 @@ public final class RuntimeContext {
         var result = true;
         for(var v : validators.values()) result &= v.validate();
         return result;
-    }
-
-    public boolean failWith(RuntimeException exception) {
-        exceptions.tryThrow(exception);
-        exceptions.tryAdd(exception);
-        return false;
     }
 
     public void clear() {

@@ -10,19 +10,18 @@ import static com.relogiclabs.json.schema.internal.util.MiscellaneousHelper.nonN
 
 @Getter
 public class JsonSchemaException extends CommonException {
-
+    private final ErrorDetail error;
     private final ExpectedDetail expected;
     private final ActualDetail actual;
 
     public JsonSchemaException(ErrorDetail error, ExpectedDetail expected, ActualDetail actual) {
-        super(error.getCode(), format(error, expected, actual));
-        this.expected = expected;
-        this.actual = actual;
+        this(error, expected, actual, null);
     }
 
-    public JsonSchemaException(ErrorDetail error, ExpectedDetail expected, ActualDetail actual,
-                               Throwable cause) {
+    public JsonSchemaException(ErrorDetail error, ExpectedDetail expected,
+                               ActualDetail actual, Throwable cause) {
         super(error.getCode(), format(error, expected, actual), cause);
+        this.error = error;
         this.expected = expected;
         this.actual = actual;
     }

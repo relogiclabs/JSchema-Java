@@ -9,7 +9,7 @@ public final class MessageHelper {
     public static final String ValidationFailed = "Validation failed";
     public static final String ValueMismatch = "Value mismatch";
     public static final String DataTypeMismatch = "Data type mismatch";
-    public static final String InvalidNestedDataType = "Invalid nested data type";
+    public static final String InvalidNonCompositeType = "Invalid non-composite value type";
     public static final String DataTypeArgumentFailed = "Data type argument failed";
     public static final String InvalidNestedFunction = "Invalid nested function operation";
     public static final String PropertyNotFound = "Mandatory property not found";
