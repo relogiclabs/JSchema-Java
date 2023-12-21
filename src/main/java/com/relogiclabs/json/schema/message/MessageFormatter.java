@@ -7,6 +7,8 @@ import lombok.Getter;
 import lombok.Setter;
 
 import static org.apache.commons.lang3.StringUtils.capitalize;
+import static org.apache.commons.lang3.StringUtils.left;
+import static org.apache.commons.lang3.StringUtils.right;
 
 @Getter
 public abstract class MessageFormatter {
@@ -46,6 +48,13 @@ public abstract class MessageFormatter {
     }
 
     public abstract String format(ErrorDetail error, ExpectedDetail expected, ActualDetail actual);
+
+    public String createOutline(String target) {
+        int front = 2 * outlineLength / 3;
+        int back = 1 * outlineLength / 3;
+        if(front + back >= target.length()) return target;
+        return left(target, front) + "..." + right(target, back);
+    }
 
     private static final class ValidationFormatter extends MessageFormatter {
         private ValidationFormatter(String summary, String expected, String actual) {

@@ -153,10 +153,37 @@ public class DataTypeTests {
             {
                 "key1": ["2021-08-01", "2021-08-01T15:50:30.300Z", "test"],
                 "key2": ["test", null, "text", 10],
-                "key3": [10, 100, 200.5, "text"]
+                "key3": [false, true, null, "text"]
             }
             """;
         JsonSchema.isValid(schema, json);
+        var exception = assertThrows(JsonSchemaException.class,
+                () -> JsonAssert.isValid(schema, json));
+        assertEquals(DTYP06, exception.getCode());
+        exception.printStackTrace();
+    }
+
+    @Test
+    public void When_DataTypeExceptionCountInObject_ExceptionThrown() {
+        var schema =
+            """
+            {
+                "key1": #boolean* #integer #string #array,
+                "key2": #boolean* #integer #string,
+                "key3": #boolean* #integer #string #array
+            }
+            """;
+        var json =
+            """
+            {
+                "key1": [10, "test", "2021-08-01"],
+                "key2": [10, "test", "2021-08-01"],
+                "key3": []
+            }
+            """;
+        var jsonSchema = new JsonSchema(schema);
+        if(!jsonSchema.isValid(json)) jsonSchema.writeError();
+        assertEquals(8, jsonSchema.getExceptions().getCount());
         var exception = assertThrows(JsonSchemaException.class,
                 () -> JsonAssert.isValid(schema, json));
         assertEquals(DTYP06, exception.getCode());

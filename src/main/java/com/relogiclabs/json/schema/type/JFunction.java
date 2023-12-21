@@ -14,7 +14,7 @@ import java.util.List;
 
 import static com.relogiclabs.json.schema.internal.message.MessageHelper.InvalidNestedFunction;
 import static com.relogiclabs.json.schema.internal.util.MiscellaneousHelper.nonNull;
-import static com.relogiclabs.json.schema.internal.util.StreamHelper.allTrue;
+import static com.relogiclabs.json.schema.internal.util.StreamHelper.forEachTrue;
 import static com.relogiclabs.json.schema.internal.util.StringHelper.join;
 import static com.relogiclabs.json.schema.message.ErrorCode.FUNC06;
 import static java.util.Objects.requireNonNull;
@@ -49,7 +49,7 @@ public final class JFunction extends JBranch implements NestedMode {
                     new ErrorDetail(FUNC06, InvalidNestedFunction),
                     ExpectedHelper.asInvalidFunction(this),
                     ActualHelper.asInvalidFunction(node)));
-        return allTrue(composite.components().stream().map(this::invokeFunction));
+        return forEachTrue(composite.components().stream().map(this::invokeFunction));
     }
 
     private boolean invokeFunction(JNode node) {

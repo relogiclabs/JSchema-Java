@@ -12,6 +12,7 @@ import java.util.Arrays;
 
 import static com.relogiclabs.json.schema.time.DateTimeType.DATE_TYPE;
 import static com.relogiclabs.json.schema.time.DateTimeType.TIME_TYPE;
+import static com.relogiclabs.json.schema.time.JsonUtcOffset.DEFAULT_UTC_OFFSET;
 import static lombok.AccessLevel.PACKAGE;
 import static org.apache.commons.lang3.StringUtils.removeEnd;
 
@@ -45,7 +46,7 @@ public class JsonDateTime {
     public JsonDateTime(DateTimeType type, int year, int month,
                         int day, int hour, int minute, int second,
                         int fraction, JsonUtcOffset utcOffset) {
-        if(utcOffset == null) utcOffset = new JsonUtcOffset();
+        if(utcOffset == null) utcOffset = DEFAULT_UTC_OFFSET;
         this.type = type;
         this.year = year;
         this.month = month;

@@ -111,13 +111,14 @@ public class AggregatedTests {
                 "key13" : [ "Microsoft", "https://www.microsoft.com/en-us/" ],
                 "key14" : [ 10, 20, 30, 40 ]
             },
-            "key8" : [ "ABC", "EFG", "XYZ" ],
             "key7" : true,
+            "key8" : [ "ABC", "EFG", "XYZ" ],
             "key9" : null
         }
         """;
         var actual = """
         {
+            "key7": true,
             "key3": [5, 10, 15, 20],
             "key1": 10, "key2": "val2",
             "key4": 0.5, "key5": 10E-10,
@@ -126,7 +127,7 @@ public class AggregatedTests {
                 "key13": ["Microsoft", "https://www.microsoft.com/en-us/"],
                 "key11": "test", "key14": [10, 20, 30, 40]
             },
-            "key8": ["ABC", "EFG", "XYZ"], "key7": true, "key9": null
+            "key8": ["ABC", "EFG", "XYZ"], "key9": null
         }
         """;
         JsonAssert.areEqual(expected, actual);

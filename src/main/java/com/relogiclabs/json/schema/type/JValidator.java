@@ -12,14 +12,12 @@ import lombok.Getter;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Queue;
 
 import static com.relogiclabs.json.schema.internal.message.MessageHelper.InvalidNonCompositeType;
 import static com.relogiclabs.json.schema.internal.message.MessageHelper.ValidationFailed;
 import static com.relogiclabs.json.schema.internal.util.CollectionHelper.addToList;
-import static com.relogiclabs.json.schema.internal.util.CollectionHelper.getLast;
-import static com.relogiclabs.json.schema.internal.util.StreamHelper.allTrue;
-import static com.relogiclabs.json.schema.internal.util.StreamHelper.anyTrue;
+import static com.relogiclabs.json.schema.internal.util.CollectionHelper.tryGetLast;
+import static com.relogiclabs.json.schema.internal.util.StreamHelper.forEachTrue;
 import static com.relogiclabs.json.schema.internal.util.StringHelper.concat;
 import static com.relogiclabs.json.schema.internal.util.StringHelper.join;
 import static com.relogiclabs.json.schema.message.ErrorCode.DTYP03;
@@ -41,7 +39,7 @@ public final class JValidator extends JBranch {
 
     @Getter(NONE)
     @EqualsAndHashCode.Exclude
-    private final Queue<Exception> exceptions;
+    private final List<Exception> exceptions;
 
     private JValidator(JValidatorBuilder builder) {
         super(builder);
@@ -69,15 +67,15 @@ public final class JValidator extends JBranch {
         if(other == null) return false;
         getRuntime().getReceivers().receive(receivers, node);
         if(node instanceof JNull && dataTypes.stream()
-                .map(JDataType::isMatchNull).anyMatch(anyTrue())) return true;
+                .anyMatch(JDataType::isMatchNull)) return true;
         if(value != null) rValue &= value.match(other.getNode());
         if(!rValue) return failWith(new JsonSchemaException(
                 new ErrorDetail(VALD01, ValidationFailed),
-                ExpectedHelper.asValueMismatch(value),
-                ActualHelper.asValueMismatch(node)));
+                ExpectedHelper.asGeneralValueMismatch(value),
+                ActualHelper.asGeneralValueMismatch(node)));
         var rDataType = matchDataType(node);
         var fDataType = rDataType && dataTypes.size() != 0;
-        boolean rFunction = allTrue(functions.stream()
+        boolean rFunction = forEachTrue(functions.stream()
                 .filter(f -> f.isApplicable(node) || !fDataType)
                 .map(f -> f.match(node)));
         return rValue & rDataType & rFunction;
@@ -90,10 +88,10 @@ public final class JValidator extends JBranch {
         return false;
     }
 
-    private static List<Exception> processTryBuffer(Queue<Exception> buffer) {
+    private static List<Exception> processTryBuffer(List<Exception> buffer) {
         var list = new ArrayList<Exception>(buffer.size());
         for(var e : buffer) {
-            var result = mergeException(getLast(list), e);
+            var result = mergeException(tryGetLast(list), e);
             if(result != null) list.set(list.size() - 1, result);
             else list.add(e);
         }
@@ -114,15 +112,16 @@ public final class JValidator extends JBranch {
 
     private static ExpectedDetail mergeExpected(JsonSchemaException ex1,
                                                 JsonSchemaException ex2) {
-        var typeName = ex2.getAttribute(DATA_TYPE_NAME);
-        ExpectedDetail detail = ex1.getExpected();
-        return new ExpectedDetail(detail.getContext(),
-                concat(detail.getMessage(), " or ", typeName));
+        var typeName2 = ex2.getAttribute(DATA_TYPE_NAME);
+        var expected1 = ex1.getExpected();
+        return new ExpectedDetail(expected1.getContext(),
+                concat(expected1.getMessage(), " or ", typeName2));
     }
 
     private boolean checkDataType(JNode node) {
         var list1 = dataTypes.stream().filter(d -> !d.getNested()).toList();
         var result1 = anyMatch(list1, node);
+        if(result1) getTryBuffer().clear();
         var list2 = dataTypes.stream().filter(d -> d.getNested()
                 && (d.isApplicable(node) || !result1)).toList();
         if(list2.isEmpty()) return result1 || list1.isEmpty();
@@ -132,7 +131,8 @@ public final class JValidator extends JBranch {
                     ExpectedHelper.asInvalidNonCompositeType(list2.get(0)),
                     ActualHelper.asInvalidNonCompositeType(node)));
         saveTryBuffer();
-        var result2 = composite.components().stream().allMatch(n -> anyMatch(list2, n));
+        var result2 = forEachTrue(composite.components().stream()
+                .map(n -> anyMatch(list2, n)));
         return (result1 || list1.isEmpty()) && result2;
     }
 
@@ -143,12 +143,12 @@ public final class JValidator extends JBranch {
         return false;
     }
 
-    private Queue<Exception> getTryBuffer() {
+    private List<Exception> getTryBuffer() {
         return getRuntime().getExceptions().getTryBuffer();
     }
 
     private void saveTryBuffer() {
-        Queue<Exception> tryBuffer = getTryBuffer();
+        List<Exception> tryBuffer = getTryBuffer();
         if(tryBuffer.isEmpty()) return;
         exceptions.addAll(processTryBuffer(tryBuffer));
         tryBuffer.clear();

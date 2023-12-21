@@ -46,7 +46,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.relogiclabs.json.schema.internal.tree.TreeHelper.checkForDuplicate;
+import static com.relogiclabs.json.schema.internal.tree.TreeHelper.requireUniqueness;
 import static com.relogiclabs.json.schema.internal.util.StringHelper.toEncoded;
 import static com.relogiclabs.json.schema.internal.util.StringHelper.unquote;
 import static com.relogiclabs.json.schema.message.ErrorCode.PROP04;
@@ -187,7 +187,7 @@ public final class SchemaTreeVisitor extends SchemaParserBaseVisitor<JNode> {
         return new JObjectBuilder()
                 .relations(relations)
                 .context(new Context(ctx, runtime))
-                .properties(checkForDuplicate(ctx.property().stream()
+                .properties(requireUniqueness(ctx.property().stream()
                         .map(c -> (JProperty) visit(c)).toList(), PROP04))
                 .build();
     }

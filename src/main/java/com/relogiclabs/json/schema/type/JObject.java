@@ -17,7 +17,7 @@ import static com.relogiclabs.json.schema.internal.message.MessageHelper.Propert
 import static com.relogiclabs.json.schema.internal.message.MessageHelper.PropertyOrderMismatch;
 import static com.relogiclabs.json.schema.internal.message.MessageHelper.UndefinedPropertyFound;
 import static com.relogiclabs.json.schema.internal.util.MiscellaneousHelper.nonNull;
-import static com.relogiclabs.json.schema.internal.util.StringHelper.join;
+import static com.relogiclabs.json.schema.internal.util.StringHelper.joinWith;
 import static com.relogiclabs.json.schema.message.ErrorCode.PROP05;
 import static com.relogiclabs.json.schema.message.ErrorCode.PROP06;
 import static com.relogiclabs.json.schema.message.ErrorCode.PROP07;
@@ -104,7 +104,7 @@ public final class JObject extends JComposite {
 
     @Override
     public String toString() {
-        return "{" + join(properties.values(), ", ") + "}";
+        return joinWith(properties.values(), ", ", "{", "}");
     }
 
     @Override

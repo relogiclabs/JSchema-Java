@@ -24,6 +24,10 @@ public final class ExpectedHelper {
         return new ExpectedDetail(node, "value ", node.getOutline());
     }
 
+    public static ExpectedDetail asGeneralValueMismatch(JNode node) {
+        return new ExpectedDetail(node, "a valid value of ", node.getOutline());
+    }
+
     public static ExpectedDetail asDataTypeMismatch(JDataType dataType) {
         return new ExpectedDetail(dataType, "data type ", dataType.toString(true));
     }

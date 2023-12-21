@@ -124,8 +124,8 @@ Here is the error as displayed in the console. More specific errors will be list
 Schema (Line: 6:31) Json (Line: 3:14) [DTYP04]: Data type mismatch. Data type #integer is expected but found #string inferred by "not number".
 Schema (Line: 6:14) Json (Line: 3:14) [FUNC03]: Function @range(1, 10000) is incompatible with the target data type. Applying to a supported data type such as #number is expected but applied to an unsupported data type #string of "not number".
 Schema (Line: 8:20) Json (Line: 4:20) [REGX01]: Regex pattern does not match. String of pattern "[a-z_]{3,30}" is expected but found "john doe" that mismatches with pattern.
-Schema (Line: 5:12) Json (Line: 2:12) [VALD01]: Validation failed. Value {"id": @range(1, 10000) #integer, "username": @regex("[a-z_]{3,30}") #string, "role": "user" #string, "isActive": #boolean, "register...ing, "country": @regex("[A-Za-z ]{3,50}") #string} #object #null}} is expected but found {"id": "not number", "username": "john doe", "role": "user", "isActive": true, "registeredAt": "2023-09-06T15:10:30.639Z", "profile":...: "123 Some St", "city": "Some town", "country": "Some Country"}}}.
-Schema (Line: 4:0) Json (Line: 1:0) [VALD01]: Validation failed. Value {"user": {"id": @range(1, 10000) #integer, "username": @regex("[a-z_]{3,30}") #string, "role": "user" #string, "isActive": #boolean, ...ng, "country": @regex("[A-Za-z ]{3,50}") #string} #object #null}}} is expected but found {"user": {"id": "not number", "username": "john doe", "role": "user", "isActive": true, "registeredAt": "2023-09-06T15:10:30.639Z", "... "123 Some St", "city": "Some town", "country": "Some Country"}}}}.
+Schema (Line: 5:12) Json (Line: 2:12) [VALD01]: Validation failed. A valid value of {"id": @range(1, 10000) #integer, "username": @regex("[a-z_]{3,30}") #string, "role": "user" #string, "isActive": #boolean, "register...ing, "country": @regex("[A-Za-z ]{3,50}") #string} #object #null}} is expected but found {"id": "not number", "username": "john doe", "role": "user", "isActive": true, "registeredAt": "2023-09-06T15:10:30.639Z", "profile":...: "123 Some St", "city": "Some town", "country": "Some Country"}}}.
+Schema (Line: 4:0) Json (Line: 1:0) [VALD01]: Validation failed. A valid value of {"user": {"id": @range(1, 10000) #integer, "username": @regex("[a-z_]{3,30}") #string, "role": "user" #string, "isActive": #boolean, ...ng, "country": @regex("[A-Za-z ]{3,50}") #string} #object #null}}} is expected but found {"user": {"id": "not number", "username": "john doe", "role": "user", "isActive": true, "registeredAt": "2023-09-06T15:10:30.639Z", "... "123 Some St", "city": "Some town", "country": "Some Country"}}}}.
 ```
 
 ## Assertion for Validation
@@ -148,13 +148,13 @@ Expected (Schema Line: 6:31): data type #integer
 Actual (Json Line: 3:14): found #string inferred by "not number"
 
 	at com.relogiclabs.json.schema.tree.ExceptionRegistry.failWith(ExceptionRegistry.java:31)
-	at com.relogiclabs.json.schema.type.JNode.failWith(JNode.java:75)
-	at com.relogiclabs.json.schema.type.JValidator.matchDataType(JValidator.java:89)
-	at com.relogiclabs.json.schema.type.JValidator.match(JValidator.java:78)
+	at com.relogiclabs.json.schema.type.JNode.failWith(JNode.java:73)
+	at com.relogiclabs.json.schema.type.JValidator.matchDataType(JValidator.java:87)
+	at com.relogiclabs.json.schema.type.JValidator.match(JValidator.java:76)
 	at com.relogiclabs.json.schema.type.JObject.match(JObject.java:57)
-	at com.relogiclabs.json.schema.type.JValidator.match(JValidator.java:73)
+	at com.relogiclabs.json.schema.type.JValidator.match(JValidator.java:71)
 	at com.relogiclabs.json.schema.type.JObject.match(JObject.java:57)
-	at com.relogiclabs.json.schema.type.JValidator.match(JValidator.java:73)
+	at com.relogiclabs.json.schema.type.JValidator.match(JValidator.java:71)
 	at com.relogiclabs.json.schema.type.JRoot.match(JRoot.java:50)
 	at com.relogiclabs.json.schema.tree.SchemaTree.match(SchemaTree.java:33)
 	at com.relogiclabs.json.schema.JsonAssert.isValid(JsonAssert.java:61)

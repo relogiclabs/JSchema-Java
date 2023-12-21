@@ -47,9 +47,9 @@ public final class JReceiver extends JLeaf {
         var list = getRuntime().getReceivers().fetch(this);
         if(list == null) throw new ReceiverNotFoundException(
                 formatForSchema(RECV02, concat("Receiver '", name, "' not found"), this));
-        if(list.size() == 0) throw new NoValueReceivedException(
+        if(list.isEmpty()) throw new NoValueReceivedException(
                 formatForSchema(RECV03, concat("No value received for '", name, "'"), this));
-        if(list.size() > 1) throw new UnsupportedOperationException("Multiple values found");
+        if(list.size() > 1) throw new UnsupportedOperationException("Multiple values exist");
         return (T) list.get(0);
     }
 

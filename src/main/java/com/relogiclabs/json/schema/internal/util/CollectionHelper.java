@@ -54,7 +54,7 @@ public final class CollectionHelper {
         for(var c : collections) if(c != null) source.addAll(c);
     }
 
-    public static <T> T getLast(List<T> list) {
-        return list != null && !list.isEmpty() ? list.get(list.size() - 1) : null;
+    public static <T> T tryGetLast(List<T> list) {
+        return list.isEmpty() ? null : list.get(list.size() - 1);
     }
 }

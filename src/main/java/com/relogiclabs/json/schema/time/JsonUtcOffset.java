@@ -11,6 +11,7 @@ import static org.apache.commons.lang3.StringUtils.removeEnd;
 
 
 public class JsonUtcOffset {
+    static final JsonUtcOffset DEFAULT_UTC_OFFSET = new JsonUtcOffset();
     private static final int DEFAULT_UTC_OFFSET_HOUR = 0;
     private static final int DEFAULT_UTC_OFFSET_MINUTE = 0;
 
