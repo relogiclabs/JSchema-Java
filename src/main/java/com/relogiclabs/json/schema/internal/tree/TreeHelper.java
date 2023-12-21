@@ -13,7 +13,7 @@ import static com.relogiclabs.json.schema.message.MessageFormatter.formatForJson
 import static java.util.stream.Collectors.toMap;
 
 public final class TreeHelper {
-    public static List<JProperty> checkForDuplicate(List<JProperty> list, String errorCode) {
+    public static List<JProperty> requireUniqueness(List<JProperty> list, String errorCode) {
         list.stream().collect(toMap(JProperty::getKey, Function.identity(),
                 (p1, p2) -> halt(new DuplicatePropertyKeyException(formatForJson(errorCode,
                         concat("Multiple key with name ", quote(p2.getKey()), " found"), p2)))

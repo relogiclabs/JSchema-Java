@@ -15,7 +15,7 @@ import com.relogiclabs.json.schema.type.JUndefined;
 import java.util.Arrays;
 import java.util.function.Supplier;
 
-import static com.relogiclabs.json.schema.internal.util.StringHelper.join;
+import static com.relogiclabs.json.schema.internal.util.StringHelper.joinWith;
 import static com.relogiclabs.json.schema.message.ErrorCode.ENUM01;
 import static com.relogiclabs.json.schema.message.ErrorCode.ENUM02;
 import static com.relogiclabs.json.schema.message.ErrorCode.MAXI01;
@@ -46,7 +46,7 @@ public class CoreFunctions2 extends CoreFunctions1 {
         var list = Arrays.asList(items);
         if(!list.contains(target)) return failWith(new JsonSchemaException(
                 new ErrorDetail(ENUM01, "String is not in enum list"),
-                new ExpectedDetail(function, "string in list ", join(list, ", ", "[", "]")),
+                new ExpectedDetail(function, "string in list ", joinWith(list, ", ", "[", "]")),
                 new ActualDetail(target, "string ", target, " is not found in list")));
         return true;
     }
@@ -55,7 +55,7 @@ public class CoreFunctions2 extends CoreFunctions1 {
         var list = Arrays.asList(items);
         if(!list.contains(target)) return failWith(new JsonSchemaException(
                 new ErrorDetail(ENUM02, "Number is not in enum list"),
-                new ExpectedDetail(function, "number in list ", join(list, ", ", "[", "]")),
+                new ExpectedDetail(function, "number in list ", joinWith(list, ", ", "[", "]")),
                 new ActualDetail(target, "number ", target, " is not found in list")));
         return true;
     }

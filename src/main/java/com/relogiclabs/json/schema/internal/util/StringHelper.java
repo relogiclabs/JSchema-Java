@@ -6,19 +6,10 @@ import org.apache.commons.lang3.StringUtils;
 import java.util.Collection;
 
 import static java.util.stream.Collectors.joining;
-import static org.apache.commons.lang3.StringUtils.left;
-import static org.apache.commons.lang3.StringUtils.right;
 
 public final class StringHelper {
     private StringHelper() {
         throw new UnsupportedOperationException();
-    }
-
-    public static String createOutline(String target, int length) {
-        int front = 2 * length / 3;
-        int back = 1 * length / 3;
-        if(front + back >= target.length()) return target;
-        return left(target, front) + "..." + right(target, back);
     }
 
     public static String toEncoded(String target)
@@ -63,6 +54,12 @@ public final class StringHelper {
         String result = list.stream().map(JNode::toString).collect(joining(delimiter));
         if(!result.isEmpty()) return prefix + result + suffix;
         return result;
+    }
+
+    public static String joinWith(Collection<? extends JNode> list, String delimiter,
+                              String prefix, String suffix) {
+        String result = list.stream().map(JNode::toString).collect(joining(delimiter));
+        return prefix + result + suffix;
     }
 
     public static String join(Collection<? extends JNode> list, String delimiter, String prefix) {

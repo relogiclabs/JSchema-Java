@@ -22,6 +22,10 @@ public final class ActualHelper {
         return new ActualDetail(node, "found ", node.getOutline());
     }
 
+    public static ActualDetail asGeneralValueMismatch(JNode node) {
+        return new ActualDetail(node, "found ", node.getOutline());
+    }
+
     public static ActualDetail asInvalidNonCompositeType(JNode node) {
         return new ActualDetail(node, "found non-composite ", getTypeName(node),
                 " value ", node.getOutline());

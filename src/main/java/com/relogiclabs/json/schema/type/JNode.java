@@ -13,7 +13,6 @@ import java.util.Collection;
 import java.util.Map;
 
 import static com.relogiclabs.json.schema.internal.message.MessageHelper.DataTypeMismatch;
-import static com.relogiclabs.json.schema.internal.util.StringHelper.createOutline;
 import static com.relogiclabs.json.schema.message.ErrorCode.DTYP02;
 import static java.util.Collections.emptyList;
 import static java.util.Objects.requireNonNull;
@@ -67,8 +66,7 @@ public abstract class JNode {
     public abstract String toString();
 
     public String getOutline() {
-        return createOutline(toString(), getRuntime()
-                .getMessageFormatter().getOutlineLength());
+        return getRuntime().getMessageFormatter().createOutline(toString());
     }
 
     boolean failWith(RuntimeException exception) {

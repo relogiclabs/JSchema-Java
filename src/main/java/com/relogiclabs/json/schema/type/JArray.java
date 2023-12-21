@@ -13,7 +13,7 @@ import java.util.Collection;
 import java.util.List;
 
 import static com.relogiclabs.json.schema.internal.message.MessageHelper.ArrayElementNotFound;
-import static com.relogiclabs.json.schema.internal.util.StringHelper.join;
+import static com.relogiclabs.json.schema.internal.util.StringHelper.joinWith;
 import static com.relogiclabs.json.schema.message.ErrorCode.ARRY01;
 import static com.relogiclabs.json.schema.message.ErrorCode.ARRY02;
 import static com.relogiclabs.json.schema.message.MessageFormatter.formatForSchema;
@@ -51,11 +51,10 @@ public final class JArray extends JComposite {
         boolean result = true, restOptional = false;
         for(var i = 0; i < elements.size(); i++) {
             var optional = isOptional(elements.get(i));
-            if((restOptional |= optional) != optional) {
+            if((restOptional |= optional) != optional)
                 return failWith(new MisplacedOptionalException(formatForSchema(ARRY02,
                         "Mandatory array element cannot appear after optional element",
                         elements.get(i))));
-            }
             if(i >= other.elements.size() && !optional)
                 return failWith(new JsonSchemaException(
                         new ErrorDetail(ARRY01, ArrayElementNotFound),
@@ -75,6 +74,6 @@ public final class JArray extends JComposite {
 
     @Override
     public String toString() {
-        return "[" + join(elements, ", ") + "]";
+        return joinWith(elements, ", ", "[", "]");
     }
 }

@@ -5,14 +5,14 @@ import lombok.Setter;
 
 import java.util.Iterator;
 import java.util.LinkedList;
-import java.util.Queue;
+import java.util.List;
 import java.util.function.Supplier;
 
 public class ExceptionRegistry implements Iterable<Exception> {
     private int disableException;
 
-    private final Queue<Exception> exceptions;
-    @Getter private final Queue<Exception> tryBuffer;
+    private final List<Exception> exceptions;
+    @Getter private final List<Exception> tryBuffer;
     @Getter @Setter private boolean throwException;
     @Getter @Setter private int cutoffLimit = 500;
 
@@ -22,8 +22,8 @@ public class ExceptionRegistry implements Iterable<Exception> {
         this.tryBuffer = new LinkedList<>();
     }
 
-    private boolean addException(Queue<Exception> queue, Exception exception) {
-        if(queue.size() <= cutoffLimit) queue.add(exception);
+    private boolean addException(List<Exception> list, Exception exception) {
+        if(list.size() <= cutoffLimit) list.add(exception);
         return false;
     }
 
@@ -44,6 +44,10 @@ public class ExceptionRegistry implements Iterable<Exception> {
         }
     }
 
+    public int getCount() {
+        return exceptions.size();
+    }
+
     @Override
     public Iterator<Exception> iterator() {
         return exceptions.iterator();
@@ -51,5 +55,6 @@ public class ExceptionRegistry implements Iterable<Exception> {
 
     public void clear() {
         exceptions.clear();
+        tryBuffer.clear();
     }
 }
