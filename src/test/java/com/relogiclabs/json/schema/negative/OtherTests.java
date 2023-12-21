@@ -133,7 +133,7 @@ public class OtherTests {
     }
 
     @Test
-    public void When_OptionalValueMisplacedInArray_ExceptionThrown() {
+    public void When_OptionalValidatorMisplacedInArray_ExceptionThrown() {
         var schema = "[#number, #number?, #number]";
         var json = "[10, 20]";
         JsonSchema.isValid(schema, json);
