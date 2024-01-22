@@ -162,4 +162,4 @@ Actual (Json Line: 3:14): found #string inferred by "not number"
 	at org.example.SampleSchema.checkIsValid(SampleSchema.java:64)
 	at org.example.Main.main(Main.java:5)
 ```
-For more information about the schema syntax format and library functionalities, please refer to the reference documentation [here](/JsonSchema-Java/api/index.html).
+For more information about the schema syntax format and library functionalities, please refer to the reference documentation [here](/JSchema-Java/api/index.html).

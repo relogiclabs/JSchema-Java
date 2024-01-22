@@ -10,9 +10,9 @@ This comprehensive guide illustrates the procedures for retrieving source code f
 ## Build the Library
 To get started, clone the project from the following URL using your preferred Git client (command line or GUI). You can open a terminal and enter the following Git clone command as shown below:
 ```shell
-git clone https://github.com/relogiclabs/JsonSchema-Java.git
+git clone https://github.com/relogiclabs/JSchema-Java.git
 ```
-Next, navigate to the project root directory of the `JsonSchema-Java` that you just cloned. Inside the directory, you should find a `pom.xml` file. This file contains the project configuration and dependencies required to build the library. Use the `cd` command to enter the project root directory and execute the following Maven command to build the Json Schema library:
+Next, navigate to the project root directory of the `JSchema-Java` that you just cloned. Inside the directory, you should find a `pom.xml` file. This file contains the project configuration and dependencies required to build the library. Use the `cd` command to enter the project root directory and execute the following Maven command to build the Json Schema library:
 
 ```shell
 mvn clean install
@@ -173,4 +173,4 @@ Actual (Json Line: 3:14): found #string inferred by "not number"
 	at org.example.SampleSchema.checkIsValid(SampleSchema.java:64)
 	at org.example.Main.main(Main.java:5)
 ```
-For more information about the schema syntax format and library functionalities, please refer to the reference documentation [here](/JsonSchema-Java/api/index.html).
+For more information about the schema syntax format and library functionalities, please refer to the reference documentation [here](/JSchema-Java/api/index.html).

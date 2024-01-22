@@ -35,9 +35,9 @@
         </license>
     </licenses>
     <scm>
-        <connection>scm:git:git@github.com:relogiclabs/JsonSchema-Java.git</connection>
-        <developerConnection>scm:git:git@github.com:relogiclabs/JsonSchema-Java.git</developerConnection>
-        <url>https://github.com/relogiclabs/JsonSchema-Java.git</url>
+        <connection>scm:git:git@github.com:relogiclabs/JSchema-Java.git</connection>
+        <developerConnection>scm:git:git@github.com:relogiclabs/JSchema-Java.git</developerConnection>
+        <url>https://github.com/relogiclabs/JSchema-Java.git</url>
     </scm>
 
     <properties>

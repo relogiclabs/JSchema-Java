@@ -2,44 +2,44 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
-    <loc>https://relogiclabs.github.io/JsonSchema-Java/articles/intro/</loc>
+    <loc>https://relogiclabs.github.io/JSchema-Java/articles/intro/</loc>
     <lastmod>2023-10-08T09:38:53+06:00</lastmod>
   </url><url>
-    <loc>https://relogiclabs.github.io/JsonSchema-Java/articles/quickstart/</loc>
+    <loc>https://relogiclabs.github.io/JSchema-Java/articles/quickstart/</loc>
     <lastmod>2023-11-03T09:38:53+06:00</lastmod>
   </url><url>
-    <loc>https://relogiclabs.github.io/JsonSchema-Java/articles/validation/</loc>
+    <loc>https://relogiclabs.github.io/JSchema-Java/articles/validation/</loc>
     <lastmod>2023-12-04T09:38:53+06:00</lastmod>
   </url><url>
-    <loc>https://relogiclabs.github.io/JsonSchema-Java/articles/directives/</loc>
+    <loc>https://relogiclabs.github.io/JSchema-Java/articles/directives/</loc>
     <lastmod>2023-12-04T09:38:53+06:00</lastmod>
   </url><url>
-    <loc>https://relogiclabs.github.io/JsonSchema-Java/articles/specification/</loc>
+    <loc>https://relogiclabs.github.io/JSchema-Java/articles/specification/</loc>
     <lastmod>2023-10-08T09:38:53+06:00</lastmod>
   </url><url>
-    <loc>https://relogiclabs.github.io/JsonSchema-Java/articles/datatypes/</loc>
+    <loc>https://relogiclabs.github.io/JSchema-Java/articles/datatypes/</loc>
     <lastmod>2023-12-04T09:38:53+06:00</lastmod>
   </url><url>
-    <loc>https://relogiclabs.github.io/JsonSchema-Java/articles/functions/</loc>
+    <loc>https://relogiclabs.github.io/JSchema-Java/articles/functions/</loc>
     <lastmod>2023-12-04T09:38:53+06:00</lastmod>
   </url><url>
-    <loc>https://relogiclabs.github.io/JsonSchema-Java/articles/datetime/</loc>
+    <loc>https://relogiclabs.github.io/JSchema-Java/articles/datetime/</loc>
     <lastmod>2023-10-08T09:38:53+06:00</lastmod>
   </url><url>
-    <loc>https://relogiclabs.github.io/JsonSchema-Java/articles/components/</loc>
+    <loc>https://relogiclabs.github.io/JSchema-Java/articles/components/</loc>
     <lastmod>2023-12-15T09:38:53+06:00</lastmod>
   </url><url>
-    <loc>https://relogiclabs.github.io/JsonSchema-Java/articles/sourcebuild/</loc>
+    <loc>https://relogiclabs.github.io/JSchema-Java/articles/sourcebuild/</loc>
     <lastmod>2023-12-04T09:38:53+06:00</lastmod>
   </url><url>
-    <loc>https://relogiclabs.github.io/JsonSchema-Java/articles/</loc>
+    <loc>https://relogiclabs.github.io/JSchema-Java/articles/</loc>
     <lastmod>2023-10-08T09:38:53+06:00</lastmod>
   </url><url>
-    <loc>https://relogiclabs.github.io/JsonSchema-Java/</loc>
+    <loc>https://relogiclabs.github.io/JSchema-Java/</loc>
     <lastmod>2023-10-08T09:38:53+06:00</lastmod>
   </url><url>
-    <loc>https://relogiclabs.github.io/JsonSchema-Java/categories/</loc>
+    <loc>https://relogiclabs.github.io/JSchema-Java/categories/</loc>
   </url><url>
-    <loc>https://relogiclabs.github.io/JsonSchema-Java/tags/</loc>
+    <loc>https://relogiclabs.github.io/JSchema-Java/tags/</loc>
   </url>
 </urlset>

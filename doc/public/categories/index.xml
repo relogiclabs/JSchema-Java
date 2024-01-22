@@ -2,9 +2,9 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Categories on New Json Schema</title>
-    <link>https://relogiclabs.github.io/JsonSchema-Java/categories/</link>
+    <link>https://relogiclabs.github.io/JSchema-Java/categories/</link>
     <description>Recent content in Categories on New Json Schema</description>
     <generator>Hugo -- gohugo.io</generator>
-    <language>en-us</language><atom:link href="https://relogiclabs.github.io/JsonSchema-Java/categories/index.xml" rel="self" type="application/rss+xml" />
+    <language>en-us</language><atom:link href="https://relogiclabs.github.io/JSchema-Java/categories/index.xml" rel="self" type="application/rss+xml" />
   </channel>
 </rss>
