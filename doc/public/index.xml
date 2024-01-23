@@ -1,19 +1,20 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>New Json Schema</title>
+    <title>Introduction on New Json Schema</title>
     <link>https://relogiclabs.github.io/JSchema-Java/</link>
-    <description>Recent content on New Json Schema</description>
+    <description>Recent content in Introduction on New Json Schema</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <lastBuildDate>Sun, 08 Oct 2023 09:38:53 +0600</lastBuildDate><atom:link href="https://relogiclabs.github.io/JSchema-Java/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Introduction</title>
-      <link>https://relogiclabs.github.io/JSchema-Java/articles/intro/</link>
+      <link>https://relogiclabs.github.io/JSchema-Java/articles/introduction/</link>
       <pubDate>Sun, 08 Oct 2023 09:38:53 +0600</pubDate>
       
-      <guid>https://relogiclabs.github.io/JSchema-Java/articles/intro/</guid>
-      <description>Introduction JSON, short for JavaScript Object Notation, is one of the most widely used data exchange formats that are both user-friendly and machine-readable. New JSON Schema is a practical tool for defining and validating the structure of JSON documents. It allows you to specify the expected format, data types, and constraints of JSON data. The following guides offer comprehensive details about the New JSON Schema. This document provides a list of links, each corresponding to a specific detail document available in this project.</description>
+      <guid>https://relogiclabs.github.io/JSchema-Java/articles/introduction/</guid>
+      <description>Introduction The New JSON Schema prioritizes simplicity, conciseness, and readability, making it intuitive and accessible without the need for extensive prior knowledge. It offers efficient read-write facilities, precise JSON document definition through various data types and functions, and extensibility to meet modern web service diverse requirements.
+JSON, short for JavaScript Object Notation, is one of the most widely used data exchange formats that are both user-friendly and machine-readable. New JSON Schema is a practical tool for defining and validating the structure of JSON documents.</description>
     </item>
     
     <item>
@@ -91,8 +92,8 @@ Date and time formats are defined using date and time pattern strings. Within th
       <pubDate>Fri, 15 Dec 2023 09:38:53 +0600</pubDate>
       
       <guid>https://relogiclabs.github.io/JSchema-Java/articles/components/</guid>
-      <description>Reusable Components A schema component, also known as a reusable schema fragment or sub-schema, plays a vital role in improving readability, reducing redundancy, and organizing the structure of a Schema document. In JSON validation, a schema component or fragment defines a validation rule that can be recursively composed of multiple nested validation rules, collectively specifying the expected and valid format of a JSON structure.
-These schema components are utilized as extensions of data type validation, as basic data types have a very limited ability to validate the internal structure of a composite JSON value or construct.</description>
+      <description>Schema Components A schema component, also known as a reusable schema fragment or sub-schema, plays a vital role in improving readability, reducing redundancy, and organizing the structure of a Schema document. In JSON validation, a schema component or fragment defines a validation rule that can be recursively composed of multiple nested validation rules, collectively specifying the expected and valid format of a JSON construct.
+These schema components are used as an extension of data type validation, as core data types have limited features to validate the internal structure of a composite JSON value or construct.</description>
     </item>
     
     <item>
@@ -101,7 +102,7 @@ These schema components are utilized as extensions of data type validation, as b
       <pubDate>Mon, 04 Dec 2023 09:38:53 +0600</pubDate>
       
       <guid>https://relogiclabs.github.io/JSchema-Java/articles/sourcebuild/</guid>
-      <description>Build from Source Code This comprehensive guide illustrates the procedures for retrieving source code from a GitHub repository, compiling the project source code into a library, and seamlessly integrating the compiled library into your project. It is important to have a foundational understanding of the Java language, as well as a modest level of familiarity with the Java SDK and command-line interface. You also need a basic knowledge of how to work with Maven packages.</description>
+      <description>Build from Source Code This comprehensive guide illustrates the procedures for retrieving source code from a GitHub repository, compiling the project source code into a library, and seamlessly integrating the compiled library into your project. It is essential to have a foundational understanding of the Java language, as well as a modest level of familiarity with the Java SDK and command-line interface. Some basic knowledge of how to work with Maven packages would be helpful.</description>
     </item>
     
   </channel>

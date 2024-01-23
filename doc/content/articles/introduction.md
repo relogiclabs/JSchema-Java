@@ -1,6 +1,7 @@
 +++
 title = 'Introduction'
 date = 2023-10-08T09:38:53+06:00
+weight = 1
 +++
 
 # Introduction

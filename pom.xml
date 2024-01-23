@@ -6,7 +6,7 @@
 
     <groupId>com.relogiclabs.json</groupId>
     <artifactId>relogiclabs-json-schema</artifactId>
-    <version>1.12.0</version>
+    <version>1.12.1</version>
     <name>New Json Schema</name>
     <description>
         The New JSON Schema prioritizes simplicity, conciseness, and readability, making
