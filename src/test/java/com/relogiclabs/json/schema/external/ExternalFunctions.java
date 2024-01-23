@@ -34,7 +34,7 @@ public class ExternalFunctions extends FunctionBase {
         boolean result = (target.toDouble() % 2 == 0);
         if(!result) return failWith(new JsonSchemaException(
                 new ErrorDetail(EVENFUNC01, "Number is not even"),
-                new ExpectedDetail(target, "even number"),
+                new ExpectedDetail(function, "even number"),
                 new ActualDetail(target, "number ", target, " is odd")));
         return true;
     }
@@ -50,8 +50,8 @@ public class ExternalFunctions extends FunctionBase {
     public boolean checkAccess(JInteger target, JReceiver userRole) {
         String role = userRole.<JString>getValueNode().getValue();
         if(role.equals("user") && target.getValue() > 5) return failWith(new JsonSchemaException(
-                new ErrorDetail(ERRACCESS01, "Data access incompatible with 'use' role"),
-                new ExpectedDetail(target, "an access at most 5 for 'user' role"),
+                new ErrorDetail(ERRACCESS01, "Data access incompatible with 'user' role"),
+                new ExpectedDetail(function, "an access at most 5 for 'user' role"),
                 new ActualDetail(target, "found access ", target, " which is greater than 5")));
         return true;
     }
@@ -62,7 +62,7 @@ public class ExternalFunctions extends FunctionBase {
         boolean result = threshold < target.getValue();
         if(!result) return failWith(new JsonSchemaException(
                 new ErrorDetail(CONDFUNC01, "Number does not satisfy the condition"),
-                new ExpectedDetail(target, "a number > ", threshold, " of '", receiver.getName(), "'"),
+                new ExpectedDetail(function, "a number > ", threshold, " of '", receiver.getName(), "'"),
                 new ActualDetail(target, "found number ", target, " <= ", threshold)));
         return result;
     }
@@ -75,12 +75,14 @@ public class ExternalFunctions extends FunctionBase {
         boolean result = list.stream().allMatch(i -> i.getValue() < target.getValue());
         if(!result) return failWith(new JsonSchemaException(
                 new ErrorDetail(CONDFUNC02, "Number does not satisfy the condition"),
-                new ExpectedDetail(target, "a number > any of ", values, " of '", receiver.getName(), "'"),
+                new ExpectedDetail(function, "a number > any of ", values, " of '", receiver.getName(), "'"),
                 new ActualDetail(target, "found number ", target, " <= some of ", values)));
         return true;
     }
 
     public FutureValidator sumEqual(JInteger target, JReceiver receiver) {
+        // Capture the current value of the function for future lambda
+        var caller = function;
         return () -> {
             var values = receiver.<JInteger>getValueNodes();
             var expression = join(values, "+");
@@ -90,13 +92,15 @@ public class ExternalFunctions extends FunctionBase {
             if(result != target.getValue())
                 return failWith(new JsonSchemaException(
                         new ErrorDetail(SUMEQUAL01, "Number != sum of ", expression, " = ", result),
-                        new ExpectedDetail(target, "a number = sum of numbers ", result),
+                        new ExpectedDetail(caller, "a number = sum of numbers ", result),
                         new ActualDetail(target, "found number ", target, " != ", result)));
             return true;
         };
     }
 
     public FutureValidator minmax(JInteger target, JReceiver min, JReceiver max) {
+        // Capture the current value of the function for future lambda
+        var caller = function;
         return () -> {
             var intMin = min.<JInteger>getValueNode().getValue();
             var intMax = max.<JInteger>getValueNode().getValue();
@@ -105,7 +109,7 @@ public class ExternalFunctions extends FunctionBase {
             boolean result = target.getValue() >= intMin && target.getValue() <= intMax;
             if(!result) return failWith(new JsonSchemaException(
                     new ErrorDetail(MINMAX01, "Number is outside of range"),
-                    new ExpectedDetail(target, "a number in range [", intMin, ", ", intMax, "]"),
+                    new ExpectedDetail(caller, "a number in range [", intMin, ", ", intMax, "]"),
                     new ActualDetail(target, "found number ", target, " not in range")));
             return true;
         };

@@ -5,7 +5,7 @@ weight = 10
 +++
 
 # Build from Source Code
-This comprehensive guide illustrates the procedures for retrieving source code from a GitHub repository, compiling the project source code into a library, and seamlessly integrating the compiled library into your project. It is important to have a foundational understanding of the Java language, as well as a modest level of familiarity with the Java SDK and command-line interface. You also need a basic knowledge of how to work with Maven packages.
+This comprehensive guide illustrates the procedures for retrieving source code from a GitHub repository, compiling the project source code into a library, and seamlessly integrating the compiled library into your project. It is essential to have a foundational understanding of the Java language, as well as a modest level of familiarity with the Java SDK and command-line interface. Some basic knowledge of how to work with Maven packages would be helpful.
 
 ## Build the Library
 To get started, clone the project from the following URL using your preferred Git client (command line or GUI). You can open a terminal and enter the following Git clone command as shown below:
