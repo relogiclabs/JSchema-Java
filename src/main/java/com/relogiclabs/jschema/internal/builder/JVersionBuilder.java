@@ -1,13 +1,13 @@
-package com.relogiclabs.json.schema.internal.builder;
+package com.relogiclabs.jschema.internal.builder;
 
-import com.relogiclabs.json.schema.type.JVersion;
+import com.relogiclabs.jschema.node.JVersion;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
 @Getter @Setter
 @Accessors(fluent = true)
-public class JVersionBuilder extends JNodeBuilder<JVersionBuilder> {
+public final class JVersionBuilder extends JNodeBuilder<JVersionBuilder> {
     private String version;
 
     @Override

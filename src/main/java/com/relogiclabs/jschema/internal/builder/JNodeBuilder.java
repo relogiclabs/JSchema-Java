@@ -1,7 +1,7 @@
-package com.relogiclabs.json.schema.internal.builder;
+package com.relogiclabs.jschema.internal.builder;
 
-import com.relogiclabs.json.schema.tree.Context;
-import com.relogiclabs.json.schema.type.JNode;
+import com.relogiclabs.jschema.node.JNode;
+import com.relogiclabs.jschema.tree.Context;
 import lombok.Getter;
 import lombok.experimental.Accessors;
 

@@ -1,7 +1,7 @@
-package com.relogiclabs.json.schema.internal.builder;
+package com.relogiclabs.jschema.internal.builder;
 
-import com.relogiclabs.json.schema.type.JFunction;
-import com.relogiclabs.json.schema.type.JNode;
+import com.relogiclabs.jschema.node.JFunction;
+import com.relogiclabs.jschema.node.JNode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
@@ -10,7 +10,7 @@ import java.util.List;
 
 @Getter @Setter
 @Accessors(fluent = true)
-public class JFunctionBuilder extends JNodeBuilder<JFunctionBuilder> {
+public final class JFunctionBuilder extends JNodeBuilder<JFunctionBuilder> {
     private String name;
     private Boolean nested;
     private List<JNode> arguments;

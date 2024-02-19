@@ -1,13 +1,13 @@
-package com.relogiclabs.json.schema.internal.builder;
+package com.relogiclabs.jschema.internal.builder;
 
-import com.relogiclabs.json.schema.type.JTitle;
+import com.relogiclabs.jschema.node.JTitle;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
 @Getter @Setter
 @Accessors(fluent = true)
-public class JTitleBuilder extends JNodeBuilder<JTitleBuilder> {
+public final class JTitleBuilder extends JNodeBuilder<JTitleBuilder> {
     private String title;
 
     @Override

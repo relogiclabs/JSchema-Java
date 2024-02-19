@@ -1,4 +1,4 @@
-package com.relogiclabs.json.schema.internal.builder;
+package com.relogiclabs.jschema.internal.builder;
 
 import lombok.Getter;
 import lombok.Setter;

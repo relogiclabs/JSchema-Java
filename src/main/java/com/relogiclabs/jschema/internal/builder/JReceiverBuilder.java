@@ -1,13 +1,13 @@
-package com.relogiclabs.json.schema.internal.builder;
+package com.relogiclabs.jschema.internal.builder;
 
-import com.relogiclabs.json.schema.type.JReceiver;
+import com.relogiclabs.jschema.node.JReceiver;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
 @Getter @Setter
 @Accessors(fluent = true)
-public class JReceiverBuilder extends JNodeBuilder<JReceiverBuilder> {
+public final class JReceiverBuilder extends JNodeBuilder<JReceiverBuilder> {
     private String name;
 
     @Override

@@ -1,13 +1,13 @@
-package com.relogiclabs.json.schema.internal.builder;
+package com.relogiclabs.jschema.internal.builder;
 
-import com.relogiclabs.json.schema.type.JAlias;
+import com.relogiclabs.jschema.node.JAlias;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
 @Getter @Setter
 @Accessors(fluent = true)
-public class JAliasBuilder extends JNodeBuilder<JAliasBuilder> {
+public final class JAliasBuilder extends JNodeBuilder<JAliasBuilder> {
     private String name;
 
     @Override
