@@ -1,4 +1,4 @@
-package com.relogiclabs.json.schema.exception;
+package com.relogiclabs.jschema.exception;
 
 public class JsonParserException extends CommonException {
     public JsonParserException(String code, String message, Throwable cause) {

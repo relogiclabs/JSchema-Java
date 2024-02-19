@@ -1,6 +1,6 @@
-package com.relogiclabs.json.schema.exception;
+package com.relogiclabs.jschema.exception;
 
-import com.relogiclabs.json.schema.message.ErrorDetail;
+import com.relogiclabs.jschema.message.ErrorDetail;
 
 public class InvalidFunctionException extends CommonException {
     public InvalidFunctionException(String code, String message) {

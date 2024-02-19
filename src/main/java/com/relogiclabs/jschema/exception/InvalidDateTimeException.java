@@ -1,4 +1,4 @@
-package com.relogiclabs.json.schema.exception;
+package com.relogiclabs.jschema.exception;
 
 public class InvalidDateTimeException extends CommonException {
     public InvalidDateTimeException(String code, String message) {

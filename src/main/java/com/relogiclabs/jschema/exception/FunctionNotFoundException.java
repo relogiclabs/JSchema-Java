@@ -1,6 +1,6 @@
-package com.relogiclabs.json.schema.exception;
+package com.relogiclabs.jschema.exception;
 
-import com.relogiclabs.json.schema.message.ErrorDetail;
+import com.relogiclabs.jschema.message.ErrorDetail;
 
 public class FunctionNotFoundException extends CommonException {
     public FunctionNotFoundException(ErrorDetail detail) {
