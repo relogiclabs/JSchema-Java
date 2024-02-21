@@ -8,7 +8,7 @@ import lombok.Setter;
 @Getter
 public abstract class FunctionProvider {
     protected final RuntimeContext runtime;
-    @Setter protected JFunction function;
+    @Setter protected JFunction caller;
 
     public FunctionProvider(RuntimeContext runtime) {
         this.runtime = runtime;

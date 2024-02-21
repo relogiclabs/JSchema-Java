@@ -10,17 +10,19 @@ import java.util.Arrays;
 import java.util.List;
 
 import static com.relogiclabs.jschema.internal.engine.ScriptTreeHelper.areCompatible;
-import static com.relogiclabs.jschema.internal.util.CollectionHelper.getLast;
+import static com.relogiclabs.jschema.internal.script.RFunction.hasVariadic;
 import static com.relogiclabs.jschema.message.ErrorCode.FUNS06;
 
 @Getter
 public class NFunction implements RFunction {
     private final NHandler handler;
     private final GParameter[] parameters;
+    private final boolean variadic;
 
     public NFunction(NHandler handler, String... parameters) {
         this.handler = handler;
         this.parameters = toParameters(parameters);
+        this.variadic = hasVariadic(this.parameters);
     }
 
     private static GParameter[] toParameters(String... names) {
@@ -36,11 +38,5 @@ public class NFunction implements RFunction {
     public ScopeContext bind(ScopeContext parentScope, List<EValue> arguments) {
         areCompatible(parameters, arguments, FUNS06);
         return parentScope;
-    }
-
-    @Override
-    public boolean isVariadic() {
-        if(parameters.length == 0) return false;
-        return getLast(parameters).isVariadic();
     }
 }

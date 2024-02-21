@@ -29,7 +29,8 @@ import java.util.stream.Collectors;
 import static com.relogiclabs.jschema.internal.engine.ScriptErrorHelper.failOnDuplicateParameterName;
 import static com.relogiclabs.jschema.internal.engine.ScriptErrorHelper.failOnFixedArgument;
 import static com.relogiclabs.jschema.internal.engine.ScriptErrorHelper.failOnVariadicArgument;
-import static com.relogiclabs.jschema.internal.script.GFunction.CONSTRAINT_MARKER;
+import static com.relogiclabs.jschema.internal.script.GFunction.CONSTRAINT_PREFIX;
+import static com.relogiclabs.jschema.internal.script.RFunction.hasVariadic;
 import static com.relogiclabs.jschema.internal.util.StreamHelper.halt;
 import static java.util.stream.Collectors.toMap;
 
@@ -41,11 +42,11 @@ public final class ScriptTreeHelper {
         throw new UnsupportedOperationException();
     }
 
-    public static boolean areEqual(EValue v1, EValue v2, RuntimeContext rc) {
+    public static boolean areEqual(EValue v1, EValue v2, RuntimeContext runtime) {
         v1 = dereference(v1);
         v2 = dereference(v2);
         if(v1 instanceof ENumber n1 && v2 instanceof ENumber n2)
-            return rc.areEqual(n1.toDouble(), n2.toDouble());
+            return runtime.areEqual(n1.toDouble(), n2.toDouble());
         if(v1 instanceof EBoolean b1 && v2 instanceof EBoolean b2)
             return b1.getValue() == b2.getValue();
         if(v1 instanceof EString s1 && v2 instanceof EString s2)
@@ -55,13 +56,13 @@ public final class ScriptTreeHelper {
         if(v1 instanceof EArray a1 && v2 instanceof EArray a2) {
             if(a1.size() != a2.size()) return false;
             for(int i = 0; i < a1.size(); i++)
-                if(!areEqual(a1.get(i), a2.get(i), rc)) return false;
+                if(!areEqual(a1.get(i), a2.get(i), runtime)) return false;
             return true;
         }
         if(v1 instanceof EObject o1 && v2 instanceof EObject o2) {
             if(o1.size() != o2.size()) return false;
             for(var k : o1.keySet())
-                if(!areEqual(o1.get(k), o2.get(k), rc)) return false;
+                if(!areEqual(o1.get(k), o2.get(k), runtime)) return false;
             return true;
         }
         if(v1 instanceof GRange r1 && v2 instanceof GRange r2)
@@ -105,7 +106,7 @@ public final class ScriptTreeHelper {
     }
 
     static String toConstraintName(String functionName) {
-        return CONSTRAINT_MARKER.concat(functionName);
+        return CONSTRAINT_PREFIX.concat(functionName);
     }
 
     static GParameter[] toParameters(List<TerminalNode> identifiers,
@@ -140,10 +141,5 @@ public final class ScriptTreeHelper {
     private static void updateLast(List<String> list, String suffix) {
         var last = list.size() - 1;
         list.set(last, list.get(last).concat(suffix));
-    }
-
-    private static boolean hasVariadic(GParameter[] parameters) {
-        if(parameters.length == 0) return false;
-        return parameters[parameters.length - 1].isVariadic();
     }
 }

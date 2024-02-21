@@ -3,6 +3,7 @@ package com.relogiclabs.jschema.internal.library;
 import com.relogiclabs.jschema.exception.JsonSchemaException;
 import com.relogiclabs.jschema.exception.ScriptArgumentException;
 import com.relogiclabs.jschema.exception.ScriptInitiatedException;
+import com.relogiclabs.jschema.internal.engine.ScopeContext;
 import com.relogiclabs.jschema.internal.engine.ScriptTreeHelper;
 import com.relogiclabs.jschema.internal.script.GArray;
 import com.relogiclabs.jschema.internal.script.GDouble;
@@ -103,8 +104,8 @@ import static com.relogiclabs.jschema.message.ErrorCode.MODU02;
 import static com.relogiclabs.jschema.message.ErrorCode.POWR01;
 import static com.relogiclabs.jschema.message.ErrorCode.POWR02;
 import static com.relogiclabs.jschema.message.ErrorCode.SIZE01;
-import static com.relogiclabs.jschema.message.MessageFormatter.createOutline;
-import static com.relogiclabs.jschema.message.MessageFormatter.formatOfSchema;
+import static com.relogiclabs.jschema.message.MessageFormatter.formatForSchema;
+import static com.relogiclabs.jschema.message.OutlineFormatter.createOutline;
 import static com.relogiclabs.jschema.type.EValue.VOID;
 
 public class ScriptLibrary {
@@ -143,7 +144,7 @@ public class ScriptLibrary {
     }
 
     private void scriptPrintFunction() {
-        var handler = (NHandler) (scope, arguments) -> {
+        NHandler handler = (scope, arguments) -> {
             System.out.println(arguments.stream().map(ScriptTreeHelper::stringify)
                     .collect(Collectors.joining(" ")));
             return VOID;
@@ -153,14 +154,14 @@ public class ScriptLibrary {
     }
 
     private void scriptTypeFunction() {
-        var handler = (NHandler) (scope, arguments)
+        NHandler handler = (scope, arguments)
                 -> GString.of(arguments.get(0).getType().getName());
         var function = new NFunction(handler, VALUE_ID);
         symbols.put(TYPE_FN1, function);
     }
 
     private void scriptSizeFunction() {
-        var handler = (NHandler) (scope, arguments) -> {
+        NHandler handler = (scope, arguments) -> {
             var value = arguments.get(0);
             if(value instanceof EArray a) return GInteger.of(a.size());
             if(value instanceof EObject o) return GInteger.of(o.size());
@@ -172,20 +173,20 @@ public class ScriptLibrary {
     }
 
     private void scriptStringifyFunction() {
-        var handler = (NHandler) (scope, arguments)
+        NHandler handler = (scope, arguments)
                 -> GString.of(stringify(arguments.get(0)));
         var function = new NFunction(handler, VALUE_ID);
         symbols.put(STRINGIFY_FN1, function);
     }
 
     private void scriptFindFunction1() {
-        var handler = (NHandler) (scope, arguments) -> {
+        NHandler handler = (scope, arguments) -> {
             var group = arguments.get(0);
             var item = arguments.get(1);
-            var rc = scope.getRuntime();
+            var rt = scope.getRuntime();
             if(group instanceof EArray g) {
                 var s  = g.size();
-                for(int i = 0; i < s; i++) if(areEqual(g.get(i), item, rc)) return GInteger.of(i);
+                for(int i = 0; i < s; i++) if(areEqual(g.get(i), item, rt)) return GInteger.of(i);
                 return GInteger.of(-1);
             } else if(group instanceof EString g) {
                 return GInteger.of(g.getValue().indexOf(getString(item, ITEM_ID, FIND01)));
@@ -196,15 +197,15 @@ public class ScriptLibrary {
     }
 
     private void scriptFindFunction2() {
-        var handler = (NHandler) (scope, arguments) -> {
+        NHandler handler = (scope, arguments) -> {
             var group = arguments.get(0);
             var item = arguments.get(1);
             var from = arguments.get(2);
-            var rc = scope.getRuntime();
+            var rt = scope.getRuntime();
             if(group instanceof EArray g) {
                 var s  = g.size();
                 for(int i = (int) getInteger(from, FROM_ID, FIND03); i < s; i++)
-                    if(areEqual(g.get(i), item, rc)) return GInteger.of(i);
+                    if(areEqual(g.get(i), item, rt)) return GInteger.of(i);
                 return GInteger.of(-1);
             } else if(group instanceof EString g) {
                 return GInteger.of(g.getValue().indexOf(getString(item, ITEM_ID, FIND04),
@@ -216,7 +217,7 @@ public class ScriptLibrary {
     }
 
     private void scriptRegularFunction() {
-        var handler = (NHandler) (scope, arguments) -> {
+        NHandler handler = (scope, arguments) -> {
             var value = arguments.get(0);
             if(value instanceof ENull) return FALSE;
             if(value instanceof EUndefined) return FALSE;
@@ -228,13 +229,11 @@ public class ScriptLibrary {
     }
 
     private void scriptFailFunction1() {
-        var handler = (NHandler) (scope, arguments) -> {
-            var runtime = scope.getRuntime();
+        NHandler handler = (scope, arguments) -> {
             var caller = scope.resolve(CALLER_HVAR);
             if(caller == VOID) caller = null;
-            runtime.getExceptions().fail(new ScriptInitiatedException(FAIL01,
-                    formatOfSchema(FAIL01, getString(arguments.get(0), MESSAGE_ID, FAIL02),
-                            (JNode) caller)));
+            fail(scope, new ScriptInitiatedException(formatForSchema(FAIL01,
+                    getString(arguments.get(0), MESSAGE_ID, FAIL02), (JNode) caller)));
             return FALSE;
         };
         var function = new NFunction(handler, MESSAGE_ID);
@@ -242,14 +241,12 @@ public class ScriptLibrary {
     }
 
     private void scriptFailFunction2() {
-        var handler = (NHandler) (scope, arguments) -> {
-            var runtime = scope.getRuntime();
+        NHandler handler = (scope, arguments) -> {
             var caller = scope.resolve(CALLER_HVAR);
             if(caller == VOID) caller = null;
             var code = getString(arguments.get(0), CODE_ID, FAIL03);
-            runtime.getExceptions().fail(new ScriptInitiatedException(code,
-                    formatOfSchema(code, getString(arguments.get(1), MESSAGE_ID, FAIL04),
-                            (JNode) caller)));
+            fail(scope, new ScriptInitiatedException(formatForSchema(code,
+                    getString(arguments.get(1), MESSAGE_ID, FAIL04), (JNode) caller)));
             return FALSE;
         };
         var function = new NFunction(handler, CODE_ID, MESSAGE_ID);
@@ -257,15 +254,12 @@ public class ScriptLibrary {
     }
 
     private void scriptFailFunction3() {
-        var handler = (NHandler) (scope, arguments) -> {
+        NHandler handler = (scope, arguments) -> {
             var code = getString(arguments.get(0), CODE_ID, FAIL05);
             var message = getString(arguments.get(1), MESSAGE_ID, FAIL06);
             var expected = castObject(arguments.get(2), EXPECTED_ID, FAIL07);
             var actual = castObject(arguments.get(3), ACTUAL_ID, FAIL08);
-            var runtime = scope.getRuntime();
-
-            runtime.getExceptions().fail(new JsonSchemaException(
-                    new ErrorDetail(code, message),
+            fail(scope, new JsonSchemaException(new ErrorDetail(code, message),
                     new ExpectedDetail(getNode(expected, NODE_ID, EXPECTED_ID, FAIL09),
                             getString(expected, MESSAGE_ID, EXPECTED_ID, FAIL10)),
                     new ActualDetail(getNode(actual, NODE_ID, ACTUAL_ID, FAIL11),
@@ -291,7 +285,7 @@ public class ScriptLibrary {
     }
 
     private void scriptExpectedFunction1() {
-        var handler = (NHandler) (scope, arguments) -> {
+        NHandler handler = (scope, arguments) -> {
             var object = new GObject(2);
             object.set(NODE_ID, scope.resolve(CALLER_HVAR));
             object.set(MESSAGE_ID, castString(arguments.get(0), MESSAGE_ID, EXPC01));
@@ -302,7 +296,7 @@ public class ScriptLibrary {
     }
 
     private void scriptExpectedFunction2() {
-        var handler = (NHandler) (scope, arguments) -> {
+        NHandler handler = (scope, arguments) -> {
             var object = new GObject(2);
             object.set(NODE_ID, getNode(arguments.get(0), NODE_ID, EXPC02));
             object.set(MESSAGE_ID, castString(arguments.get(1), MESSAGE_ID, EXPC03));
@@ -313,7 +307,7 @@ public class ScriptLibrary {
     }
 
     private void scriptActualFunction1() {
-        var handler = (NHandler) (scope, arguments) -> {
+        NHandler handler = (scope, arguments) -> {
             var object = new GObject(2);
             object.set(NODE_ID, scope.resolve(TARGET_HVAR));
             object.set(MESSAGE_ID, castString(arguments.get(0), MESSAGE_ID, ACTL01));
@@ -324,7 +318,7 @@ public class ScriptLibrary {
     }
 
     private void scriptActualFunction2() {
-        var handler = (NHandler) (scope, arguments) -> {
+        NHandler handler = (scope, arguments) -> {
             var object = new GObject(2);
             object.set(NODE_ID, getNode(arguments.get(0), NODE_ID, ACTL02));
             object.set(MESSAGE_ID, castString(arguments.get(1), MESSAGE_ID, ACTL03));
@@ -335,7 +329,7 @@ public class ScriptLibrary {
     }
 
     private void scriptCopyFunction() {
-        var handler = (NHandler) (scope, arguments) -> {
+        NHandler handler = (scope, arguments) -> {
             var value = arguments.get(0);
             if(value instanceof EArray a) return new GArray(a.elements());
             if(value instanceof EObject o) return new GObject(o);
@@ -349,28 +343,28 @@ public class ScriptLibrary {
     }
 
     private void scriptFillFunction() {
-        var handler = (NHandler) (scope, arguments) -> GArray.filledFrom(
+        NHandler handler = (scope, arguments) -> GArray.filledFrom(
                 arguments.get(0), (int) getInteger(arguments.get(1), SIZE_ID, FILL01));
         var function = new NFunction(handler, VALUE_ID, SIZE_ID);
         symbols.put(FILL_FN2, function);
     }
 
     private void scriptCeilFunction() {
-        var handler = (NHandler) (scope, arguments) -> GInteger.of((long) Math.ceil(
+        NHandler handler = (scope, arguments) -> GInteger.of((long) Math.ceil(
                 getNumber(arguments.get(0), VALUE_ID, CEIL01)));
         var function = new NFunction(handler, VALUE_ID);
         symbols.put(CEIL_FN1, function);
     }
 
     private void scriptFloorFunction() {
-        var handler = (NHandler) (scope, arguments) -> GInteger.of((long) Math.floor(
+        NHandler handler = (scope, arguments) -> GInteger.of((long) Math.floor(
                 getNumber(arguments.get(0), VALUE_ID, FLOR01)));
         var function = new NFunction(handler, VALUE_ID);
         symbols.put(FLOOR_FN1, function);
     }
 
     private void scriptModFunction() {
-        var handler = (NHandler) (scope, arguments) -> {
+        NHandler handler = (scope, arguments) -> {
             var val1 = arguments.get(0);
             var val2 = arguments.get(1);
             var num1 = getNumber(val1, VALUE1_ID, MODU01);
@@ -384,7 +378,7 @@ public class ScriptLibrary {
     }
 
     private void scriptPowFunction() {
-        var handler = (NHandler) (scope, arguments) -> GDouble.of(Math.pow(
+        NHandler handler = (scope, arguments) -> GDouble.of(Math.pow(
                 getNumber(arguments.get(0), VALUE1_ID, POWR01),
                 getNumber(arguments.get(1), VALUE2_ID, POWR02)
         ));
@@ -393,16 +387,14 @@ public class ScriptLibrary {
     }
 
     private void scriptLogFunction() {
-        var handler = (NHandler) (scope, arguments) -> {
-            var value = getNumber(arguments.get(0), VALUE_ID, LOGA01);
-            return GDouble.of(Math.log(value));
-        };
+        NHandler handler = (scope, arguments) -> GDouble.of(Math.log(
+                getNumber(arguments.get(0), VALUE_ID, LOGA01)));
         var function = new NFunction(handler, VALUE_ID);
         symbols.put(LOG_FN1, function);
     }
 
     private void scriptTicksFunction() {
-        var handler = (NHandler) (scope, arguments) -> GInteger.of(System.nanoTime());
+        NHandler handler = (scope, arguments) -> GInteger.of(System.nanoTime());
         var function = new NFunction(handler);
         symbols.put(TICKS_FN0, function);
     }
@@ -448,5 +440,9 @@ public class ScriptLibrary {
         return new ScriptArgumentException(code, concat("Invalid argument value ",
                 createOutline(value), " for parameter '", parameter,
                 "' of function '%s'"));
+    }
+
+    private static void fail(ScopeContext scope, RuntimeException exception) {
+        scope.getRuntime().getExceptions().fail(exception);
     }
 }

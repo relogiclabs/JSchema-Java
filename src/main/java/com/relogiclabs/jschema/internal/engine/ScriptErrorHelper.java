@@ -33,8 +33,8 @@ import static com.relogiclabs.jschema.message.ErrorCode.RNGS08;
 import static com.relogiclabs.jschema.message.ErrorCode.RNGS09;
 import static com.relogiclabs.jschema.message.ErrorCode.TRGT01;
 import static com.relogiclabs.jschema.message.ErrorCode.VARD02;
-import static com.relogiclabs.jschema.message.MessageFormatter.createOutline;
 import static com.relogiclabs.jschema.message.MessageFormatter.formatForSchema;
+import static com.relogiclabs.jschema.message.OutlineFormatter.createOutline;
 
 
 public final class ScriptErrorHelper {

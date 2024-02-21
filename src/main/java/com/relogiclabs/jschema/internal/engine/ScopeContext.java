@@ -12,7 +12,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static com.relogiclabs.jschema.internal.library.ScriptLibrary.resolveStatic;
-import static com.relogiclabs.jschema.internal.script.GFunction.CONSTRAINT_MARKER;
+import static com.relogiclabs.jschema.internal.script.GFunction.CONSTRAINT_PREFIX;
 import static com.relogiclabs.jschema.internal.util.StringHelper.concat;
 import static com.relogiclabs.jschema.message.ErrorCode.FUNS02;
 import static com.relogiclabs.jschema.message.ErrorCode.FUNS03;
@@ -38,7 +38,7 @@ public class ScopeContext {
 
     public void addFunction(String name, GFunction function) {
         if(symbols.containsKey(name)) {
-            if(name.startsWith(CONSTRAINT_MARKER))
+            if(name.startsWith(CONSTRAINT_PREFIX))
                 throw failOnDuplicateDefinition(FUNS02, "Constraint", name);
             else throw failOnDuplicateDefinition(FUNS03, "Subroutine", name);
         }

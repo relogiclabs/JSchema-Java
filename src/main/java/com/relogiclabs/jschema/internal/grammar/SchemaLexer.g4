@@ -140,7 +140,7 @@ G_OR : '||';
 // Next Sections
 DEFINE1 : '%define' -> type(DEFINE), popMode;
 SCHEMA1 : '%schema' -> type(SCHEMA), popMode;
-SCRIPT1 : '%script' -> type(SCRIPT), popMode;
+SCRIPT1 : '%script' -> type(SCRIPT);
 
 // Hidden Tokens
 WHITE_SPACE1 : WHITE_SPACE -> channel(HIDDEN);

@@ -27,9 +27,8 @@ public final class GReference implements EValue {
 
     @Override
     public boolean equals(Object o) {
-        if(this == o) return true;
-        if(!(o instanceof EValue)) return false;
-        return Objects.equals(value, o);
+        if(!(o instanceof EValue v)) return false;
+        return Objects.equals(value, dereference(v));
     }
 
     @Override

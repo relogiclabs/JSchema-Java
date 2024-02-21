@@ -15,7 +15,7 @@ import java.util.Map;
 
 import static com.relogiclabs.jschema.internal.message.MessageHelper.DataTypeMismatch;
 import static com.relogiclabs.jschema.message.ErrorCode.DTYP02;
-import static com.relogiclabs.jschema.message.MessageFormatter.createOutline;
+import static com.relogiclabs.jschema.message.OutlineFormatter.createOutline;
 import static java.util.Collections.emptyList;
 import static java.util.Objects.requireNonNull;
 

@@ -48,9 +48,9 @@ public final class GArray implements EArray {
         if(index > MAX_LIMIT) throw new ScriptCommonException(INDX01,
                 concat("Array index ", index, " exceeds maximum size limit"));
         if(index > size) throw new ArrayIndexOutOfBoundsException(index);
-        var element = new GReference(VOID);
-        elements.add(element);
-        return element;
+        var reference = new GReference(VOID);
+        elements.add(reference);
+        return reference;
     }
 
     @Override

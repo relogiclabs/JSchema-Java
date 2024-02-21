@@ -19,7 +19,7 @@ import static java.util.Objects.requireNonNull;
 @EqualsAndHashCode
 public class JString extends JPrimitive implements EString, Derivable, PragmaValue<String> {
     private final String value;
-    @Getter @Setter private JNode derived;
+    @Setter private JNode derived;
 
     private JString(JStringBuilder builder) {
         super(builder);

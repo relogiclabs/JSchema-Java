@@ -10,4 +10,9 @@ public interface RFunction extends EValue {
     EValue invoke(ScopeContext functionScope, List<EValue> arguments);
     GParameter[] getParameters();
     boolean isVariadic();
+
+    static boolean hasVariadic(GParameter[] parameters) {
+        if(parameters.length == 0) return false;
+        return parameters[parameters.length - 1].isVariadic();
+    }
 }

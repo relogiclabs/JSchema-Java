@@ -147,7 +147,7 @@ whileStatement
     ;
 
 forStatement
-    : G_FOR G_LPAREN ( varStatement | initialization=expressionList G_SEMI )?
+    : G_FOR G_LPAREN ( varStatement | initialization=expressionList G_SEMI | G_SEMI )
             condition=expression? G_SEMI updation=expressionList?
             G_RPAREN statement
     ;

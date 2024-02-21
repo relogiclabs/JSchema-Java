@@ -9,7 +9,7 @@ import lombok.RequiredArgsConstructor;
 import java.util.List;
 
 import static com.relogiclabs.jschema.internal.engine.ScriptTreeHelper.areCompatible;
-import static com.relogiclabs.jschema.internal.util.CollectionHelper.getLast;
+import static com.relogiclabs.jschema.internal.script.RFunction.hasVariadic;
 import static com.relogiclabs.jschema.internal.util.CollectionHelper.subList;
 import static com.relogiclabs.jschema.internal.util.MiscellaneousHelper.hasFlag;
 import static com.relogiclabs.jschema.message.ErrorCode.FUNS05;
@@ -17,7 +17,7 @@ import static com.relogiclabs.jschema.message.ErrorCode.FUNS05;
 @Getter
 @RequiredArgsConstructor
 public final class GFunction implements RFunction {
-    public static final String CONSTRAINT_MARKER = "@";
+    public static final String CONSTRAINT_PREFIX = "@";
     public static final int CONSTRAINT_MODE = 1;
     public static final int FUTURE_MODE = 3;
     public static final int SUBROUTINE_MODE = 4;
@@ -31,7 +31,7 @@ public final class GFunction implements RFunction {
         this.parameters = parameters;
         this.body = body;
         this.mode = mode;
-        this.variadic = parameters.length != 0 && getLast(parameters).isVariadic();
+        this.variadic = hasVariadic(parameters);
     }
 
     @Override
@@ -40,8 +40,8 @@ public final class GFunction implements RFunction {
     }
 
     public EValue invoke(ScopeContext functionScope) {
-        var v1 = getBody().evaluate(functionScope);
-        if(v1 instanceof GControl ctrl) return ctrl.getValue();
+        var result = getBody().evaluate(functionScope);
+        if(result instanceof GControl ctrl) return ctrl.getValue();
         return VOID;
     }
 

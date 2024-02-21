@@ -44,7 +44,7 @@ public class CoreFunctions4 extends CoreFunctions3 {
     }
 
     private boolean dateTime(JString target, JString pattern, DateTimeType type) {
-        return new DateTimeAgent(pattern.getValue(), type).parse(function, target) != null;
+        return new DateTimeAgent(pattern.getValue(), type).parse(caller, target) != null;
     }
 
     public boolean before(JDateTime target, JString reference) {
@@ -154,7 +154,7 @@ public class CoreFunctions4 extends CoreFunctions3 {
     private JDateTime getDateTime(DateTimeParser parser, JString dateTime) {
         if(dateTime.getDerived() instanceof JDateTime result
             && result.getDateTime().getType() == parser.getType()) return result;
-        var jDateTime = new DateTimeAgent(parser).parse(function, dateTime);
+        var jDateTime = new DateTimeAgent(parser).parse(caller, dateTime);
         if(jDateTime == null) return null;
         dateTime.setDerived(jDateTime.createNode(dateTime));
         return (JDateTime) dateTime.getDerived();

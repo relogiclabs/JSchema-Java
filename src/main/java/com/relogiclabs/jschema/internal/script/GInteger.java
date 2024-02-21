@@ -11,12 +11,14 @@ import static lombok.AccessLevel.PRIVATE;
 @EqualsAndHashCode
 @RequiredArgsConstructor(access = PRIVATE)
 public final class GInteger implements EInteger {
-    private static final int CACHE_SIZE = 256;
-    private static final GInteger[] CACHE = createCache(CACHE_SIZE);
+    private static final int CACHE_START = -1;
+    private static final int CACHE_END = 256;
+    private static final GInteger[] CACHE = createCache();
     private final long value;
 
     public static GInteger of(long value) {
-        if(value >= 0 && value < CACHE_SIZE) return CACHE[(int) value];
+        if(value >= CACHE_START && value <= CACHE_END)
+            return CACHE[(int) value - CACHE_START];
         return new GInteger(value);
     }
 
@@ -25,9 +27,11 @@ public final class GInteger implements EInteger {
         return String.valueOf(value);
     }
 
-    private static GInteger[] createCache(int size) {
+    private static GInteger[] createCache() {
+        var size = CACHE_END - CACHE_START + 1;
         GInteger[] cache = new GInteger[size];
-        for(int i = 0; i < size; i++) cache[i] = new GInteger(i);
+        var value = CACHE_START;
+        for(int i = 0; i < size; i++) cache[i] = new GInteger(value++);
         return cache;
     }
 }

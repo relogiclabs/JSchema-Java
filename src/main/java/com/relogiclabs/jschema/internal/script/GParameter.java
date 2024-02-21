@@ -8,17 +8,17 @@ import static org.apache.commons.lang3.StringUtils.removeEnd;
 @Getter
 @EqualsAndHashCode
 public final class GParameter {
-    private static final String VARIADIC_MARKER = "...";
+    private static final String VARIADIC_SUFFIX = "...";
     private final String name;
     private final boolean variadic;
 
     public GParameter(String name) {
-        this.variadic = name.endsWith(VARIADIC_MARKER);
-        this.name = removeEnd(name, VARIADIC_MARKER);
+        this.variadic = name.endsWith(VARIADIC_SUFFIX);
+        this.name = removeEnd(name, VARIADIC_SUFFIX);
     }
 
     @Override
     public String toString() {
-        return variadic ? name + VARIADIC_MARKER : name;
+        return variadic ? name.concat(VARIADIC_SUFFIX) : name;
     }
 }

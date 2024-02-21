@@ -4,6 +4,7 @@ import com.relogiclabs.jschema.exception.InvalidDataTypeException;
 import com.relogiclabs.jschema.tree.Location;
 import com.relogiclabs.jschema.type.EType;
 import com.relogiclabs.jschema.util.Reference;
+import lombok.RequiredArgsConstructor;
 import org.antlr.v4.runtime.tree.TerminalNode;
 
 import java.util.HashMap;
@@ -27,13 +28,13 @@ import static com.relogiclabs.jschema.type.EType.PRIMITIVE;
 import static com.relogiclabs.jschema.type.EType.STRING;
 import static com.relogiclabs.jschema.type.EType.TIME;
 
+@RequiredArgsConstructor
 public final class JsonType {
     private static final Map<String, EType> stringTypeMap = new HashMap<>();
     private static final Map<EType, Class<?>> typeClassMap = new HashMap<>();
     private static final Map<Class<?>, EType> classTypeMap = new HashMap<>();
 
     private final EType type;
-    private final Class<?> nodeClass;
 
     static {
         mapType(BOOLEAN, JBoolean.class);
@@ -52,11 +53,6 @@ public final class JsonType {
         mapType(ANY, JsonTypable.class);
     }
 
-    public JsonType(EType type) {
-        this.type = type;
-        this.nodeClass = typeClassMap.get(type);
-    }
-
     private static void mapType(EType type, Class<?> typeClass) {
         stringTypeMap.put(type.getName(), type);
         classTypeMap.putIfAbsent(typeClass, type);
@@ -67,10 +63,6 @@ public final class JsonType {
         return from(node.getText(), Location.from(node.getSymbol()));
     }
 
-    public static EType from(Class<?> type) {
-        return classTypeMap.get(type);
-    }
-
     private static JsonType from(String name, Location location) {
         var type = stringTypeMap.get(name);
         if(type == null) throw new InvalidDataTypeException(formatForSchema(DTYP01,
@@ -79,7 +71,7 @@ public final class JsonType {
     }
 
     public boolean match(JNode node, Reference<String> error) {
-        if(!nodeClass.isInstance(node)) return false;
+        if(!typeClassMap.get(type).isInstance(node)) return false;
         if(type == DATE) {
             var date = (JString) node;
             var dateTime = node.getRuntime().getPragmas().getDateTypeParser()
@@ -98,6 +90,10 @@ public final class JsonType {
 
     boolean isNullType() {
         return type == NULL;
+    }
+
+    public static EType getType(Class<?> type) {
+        return classTypeMap.get(type);
     }
 
     @Override

@@ -28,24 +28,27 @@ public class DateTimeAgent {
         this.parser = parser;
     }
 
-    public JsonDateTime parse(JFunction function, JString dateTime) {
-        var exceptions = function.getRuntime().getExceptions();
+    public JsonDateTime parse(JFunction caller, JString dateTime) {
         try {
             if(parser == null) parser = new DateTimeParser(pattern, type);
             return parser.parse(dateTime.getValue());
         } catch(DateTimeLexerException ex) {
-            exceptions.fail(new JsonSchemaException(
+            fail(caller, new JsonSchemaException(
                     new ErrorDetail(ex.getCode(), ex.getMessage()),
-                    new ExpectedDetail(function, "a valid ", type, " pattern"),
+                    new ExpectedDetail(caller, "a valid ", type, " pattern"),
                     new ActualDetail(dateTime, "found ", pattern, " that is invalid"),
                     ex));
         } catch(InvalidDateTimeException ex) {
-            exceptions.fail(new JsonSchemaException(
+            fail(caller, new JsonSchemaException(
                     new ErrorDetail(ex.getCode(), ex.getMessage()),
-                    new ExpectedDetail(function, "a valid ", type, " formatted as ", pattern),
+                    new ExpectedDetail(caller, "a valid ", type, " formatted as ", pattern),
                     new ActualDetail(dateTime, "found ", dateTime, " that is invalid or malformatted"),
                     ex));
         }
         return null;
+    }
+
+    private static void fail(JFunction caller, RuntimeException exception) {
+        caller.getRuntime().getExceptions().fail(exception);
     }
 }
