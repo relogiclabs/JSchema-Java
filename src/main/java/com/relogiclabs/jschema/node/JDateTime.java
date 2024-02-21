@@ -1,7 +1,8 @@
-package com.relogiclabs.json.schema.type;
+package com.relogiclabs.jschema.node;
 
-import com.relogiclabs.json.schema.internal.time.DateTimeParser;
-import com.relogiclabs.json.schema.time.JsonDateTime;
+import com.relogiclabs.jschema.internal.time.DateTimeParser;
+import com.relogiclabs.jschema.time.JsonDateTime;
+import com.relogiclabs.jschema.type.EType;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
@@ -16,8 +17,8 @@ public abstract class JDateTime extends JString {
     }
 
     public DateTimeParser getDateTimeParser() {
-        if(getType() == JsonType.DATE) return getRuntime().getPragmas().getDateTypeParser();
-        if(getType() == JsonType.TIME) return getRuntime().getPragmas().getTimeTypeParser();
+        if(getType() == EType.DATE) return getRuntime().getPragmas().getDateTypeParser();
+        if(getType() == EType.TIME) return getRuntime().getPragmas().getTimeTypeParser();
         throw new IllegalStateException("Invalid date time type");
     }
 }

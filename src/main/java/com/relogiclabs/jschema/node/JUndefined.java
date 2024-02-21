@@ -1,10 +1,11 @@
-package com.relogiclabs.json.schema.type;
+package com.relogiclabs.jschema.node;
 
-import com.relogiclabs.json.schema.internal.builder.JUndefinedBuilder;
+import com.relogiclabs.jschema.internal.builder.JUndefinedBuilder;
+import com.relogiclabs.jschema.type.EUndefined;
 import lombok.EqualsAndHashCode;
 
 @EqualsAndHashCode
-public final class JUndefined extends JLeaf {
+public final class JUndefined extends JLeaf implements EUndefined {
     static final String UNDEFINED_MARKER = "!";
 
     private JUndefined(JUndefinedBuilder builder) {

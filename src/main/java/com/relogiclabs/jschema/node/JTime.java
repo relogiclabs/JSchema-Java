@@ -1,6 +1,7 @@
-package com.relogiclabs.json.schema.type;
+package com.relogiclabs.jschema.node;
 
-import com.relogiclabs.json.schema.time.JsonDateTime;
+import com.relogiclabs.jschema.time.JsonDateTime;
+import com.relogiclabs.jschema.type.EType;
 
 public final class JTime extends JDateTime {
     private JTime(JString node, JsonDateTime dateTime) {
@@ -11,7 +12,7 @@ public final class JTime extends JDateTime {
         return new JTime(node, dateTime);
     }
 
-    public JsonType getType() {
-        return JsonType.TIME;
+    public EType getType() {
+        return EType.TIME;
     }
 }

@@ -1,6 +1,6 @@
-package com.relogiclabs.json.schema.type;
+package com.relogiclabs.jschema.node;
 
-import com.relogiclabs.json.schema.internal.builder.JNodeBuilder;
+import com.relogiclabs.jschema.internal.builder.JNodeBuilder;
 
 public abstract class JDirective extends JNode {
     JDirective(JNodeBuilder<?> builder) {

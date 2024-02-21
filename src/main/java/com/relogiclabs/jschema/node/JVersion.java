@@ -1,6 +1,6 @@
-package com.relogiclabs.json.schema.type;
+package com.relogiclabs.jschema.node;
 
-import com.relogiclabs.json.schema.internal.builder.JVersionBuilder;
+import com.relogiclabs.jschema.internal.builder.JVersionBuilder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 

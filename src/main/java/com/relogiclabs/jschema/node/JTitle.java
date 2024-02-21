@@ -1,10 +1,10 @@
-package com.relogiclabs.json.schema.type;
+package com.relogiclabs.jschema.node;
 
-import com.relogiclabs.json.schema.internal.builder.JTitleBuilder;
+import com.relogiclabs.jschema.internal.builder.JTitleBuilder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
-import static com.relogiclabs.json.schema.internal.util.StringHelper.concat;
+import static com.relogiclabs.jschema.internal.util.StringHelper.concat;
 import static java.util.Objects.requireNonNull;
 
 @Getter

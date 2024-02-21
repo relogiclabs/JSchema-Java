@@ -1,13 +1,12 @@
-package com.relogiclabs.json.schema.type;
+package com.relogiclabs.jschema.node;
 
-import com.relogiclabs.json.schema.internal.builder.JPrimitiveBuilder;
+import com.relogiclabs.jschema.internal.builder.JPrimitiveBuilder;
+import com.relogiclabs.jschema.type.ENumber;
 
-public abstract class JNumber extends JPrimitive {
+public abstract class JNumber extends JPrimitive implements ENumber {
     JNumber(JPrimitiveBuilder<?> builder) {
         super(builder);
     }
-
-    public abstract double toDouble();
 
     public double compare(JNumber number) {
         return compare(number.toDouble());
@@ -21,10 +20,5 @@ public abstract class JNumber extends JPrimitive {
 
     boolean areEqual(double value1, double value2) {
         return getRuntime().areEqual(value1, value2);
-    }
-
-    @Override
-    public JsonType getType() {
-        return JsonType.NUMBER;
     }
 }

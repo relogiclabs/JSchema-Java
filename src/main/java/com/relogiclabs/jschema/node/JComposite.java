@@ -1,6 +1,6 @@
-package com.relogiclabs.json.schema.type;
+package com.relogiclabs.jschema.node;
 
-import com.relogiclabs.json.schema.internal.builder.JNodeBuilder;
+import com.relogiclabs.jschema.internal.builder.JNodeBuilder;
 
 import java.util.Collection;
 
@@ -10,11 +10,6 @@ public abstract class JComposite extends JBranch implements JsonTypable {
     }
 
     public abstract Collection<? extends JNode> components();
-
-    @Override
-    public JsonType getType() {
-        return JsonType.COMPOSITE;
-    }
 
     @Override
     public JNode getNode() {
