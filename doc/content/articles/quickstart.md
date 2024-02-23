@@ -5,15 +5,15 @@ weight = 2
 +++
 
 # Getting Started
-This guide will walk you through the essential steps to quickly get up and running with the new JSON Schema library. It is also assumed a modest familiarity with the Java language, Java SDK, and Java command-line interface, including basic familiarity with Maven packages.
+This guide will walk you through the essential steps to quickly get up and running with the JSchema library. It is also assumed a modest familiarity with the Java language, Java SDK, and Java command-line interface, including basic familiarity with Maven packages.
 
 ## Maven Library Package
-To get started, launch your preferred IDE (such as IntelliJ IDEA, NetBeans IDE, Eclipse IDE, or VS Code) and open the Java project where you intend to include this library package. If you are using a build tool like Maven or Gradle, adding the library to your project is straightforward. For example in Maven project, navigate to the Maven `pom.xml` file and locate the section named `<dependencies>` and add the following XML snippet within the section of the file, replacing `1.x.x` with either the latest version or your preferred version:
+To get started, launch your preferred IDE (such as IntelliJ IDEA, NetBeans IDE, Eclipse IDE, or VS Code) and open the Java project where you intend to include this library package. If you are using a build tool like Maven or Gradle, adding the library to your project is straightforward. For example in Maven project, navigate to the Maven `pom.xml` file and locate the section named `<dependencies>` and add the following XML snippet within the section of the file, replacing `2.x.x` with either the latest version or your preferred version:
 ```xml
 <dependency>
     <groupId>com.relogiclabs.json</groupId>
-    <artifactId>relogiclabs-json-schema</artifactId>
-    <version>1.x.x</version>
+    <artifactId>relogiclabs-jschema</artifactId>
+    <version>2.x.x</version>
 </dependency>
 ```
 For additional information regarding this library package, you can visit the Maven repository page of this library [here](https://central.sonatype.com/artifact/com.relogiclabs.json/relogiclabs-json-schema), and files are also available [here](https://repo1.maven.org/maven2/com/relogiclabs/json/relogiclabs-json-schema/).
@@ -21,14 +21,14 @@ For additional information regarding this library package, you can visit the Mav
 ## Write a Sample to Test
 With all the necessary components in place, you are now ready to create a sample schema and validate a corresponding JSON against the schema. The subsequent example presents a Java class featuring a method designed for validating a sample JSON based on a provided schema. If you are working with Java 17 or above, you can enhance the code further by utilizing new language features.
 ```java
-import com.relogiclabs.json.schema.JsonSchema;
+import com.relogiclabs.jschema.JsonSchema;
 
 public class SampleSchema {
     public boolean checkIsValid() {
         var schema =
             """
             %title: "User Profile Response"
-            %version: 1.0.0
+            %version: "1.0.0-basic"
             %schema:
             {
                 "user": {
@@ -143,23 +143,21 @@ try {
 ```
 The following presents the printed stack trace for the preceding example. It's important to note that when using `JsonAssert`, it throws an exception upon encountering the first error, thus preventing the continuation of processing the rest of the schema:
 ```json
-com.relogiclabs.json.schema.exception.JsonSchemaException: DTYP04: Data type mismatch
+com.relogiclabs.jschema.exception.JsonSchemaException: DTYP04: Data type mismatch
 Expected (Schema Line: 6:31): data type #integer
 Actual (Json Line: 3:14): found #string inferred by "not number"
 
-	at com.relogiclabs.json.schema.tree.ExceptionRegistry.failWith(ExceptionRegistry.java:31)
-	at com.relogiclabs.json.schema.type.JNode.failWith(JNode.java:73)
-	at com.relogiclabs.json.schema.type.JValidator.matchDataType(JValidator.java:87)
-	at com.relogiclabs.json.schema.type.JValidator.match(JValidator.java:76)
-	at com.relogiclabs.json.schema.type.JObject.match(JObject.java:57)
-	at com.relogiclabs.json.schema.type.JValidator.match(JValidator.java:71)
-	at com.relogiclabs.json.schema.type.JObject.match(JObject.java:57)
-	at com.relogiclabs.json.schema.type.JValidator.match(JValidator.java:71)
-	at com.relogiclabs.json.schema.type.JRoot.match(JRoot.java:50)
-	at com.relogiclabs.json.schema.tree.SchemaTree.match(SchemaTree.java:33)
-	at com.relogiclabs.json.schema.JsonAssert.isValid(JsonAssert.java:61)
-	at com.relogiclabs.json.schema.JsonAssert.isValid(JsonAssert.java:72)
-	at org.example.SampleSchema.checkIsValid(SampleSchema.java:64)
-	at org.example.Main.main(Main.java:5)
+	at com.relogiclabs.jschema.node.JValidator.matchDataType(JValidator.java:87)
+	at com.relogiclabs.jschema.node.JValidator.match(JValidator.java:76)
+	at com.relogiclabs.jschema.node.JObject.match(JObject.java:56)
+	at com.relogiclabs.jschema.node.JValidator.match(JValidator.java:71)
+	at com.relogiclabs.jschema.node.JObject.match(JObject.java:56)
+	at com.relogiclabs.jschema.node.JValidator.match(JValidator.java:71)
+	at com.relogiclabs.jschema.node.JRoot.match(JRoot.java:52)
+	at com.relogiclabs.jschema.tree.SchemaTree.match(SchemaTree.java:38)
+	at com.relogiclabs.jschema.JsonAssert.isValid(JsonAssert.java:61)
+	at com.relogiclabs.jschema.JsonAssert.isValid(JsonAssert.java:72)
+	at com.example.SampleSchema.checkIsValid(SampleSchema.java:68)
+	at com.example.Main.main(Main.java:5)
 ```
 For more information about the schema syntax format and library functionalities, please refer to the reference documentation [here](/JSchema-Java/api/index.html).

@@ -1,18 +1,18 @@
 +++
 title = 'Source Build'
 date = 2023-12-04T09:38:53+06:00
-weight = 10
+weight = 11
 +++
 
 # Build from Source Code
-This comprehensive guide illustrates the procedures for retrieving source code from a GitHub repository, compiling the project source code into a library, and seamlessly integrating the compiled library into your project. It is essential to have a foundational understanding of the Java language, as well as a modest level of familiarity with the Java SDK and command-line interface. Some basic knowledge of how to work with Maven packages would be helpful.
+This comprehensive guide illustrates the procedures for retrieving source code from a GitHub repository, compiling the project source code into a library, and seamlessly integrating the compiled library into your project. It is essential to have a foundational understanding of the Java language, as well as a modest level of familiarity with the Java SDK and command-line interface. Furthermore, some basic knowledge of how to work with Maven packages would be helpful.
 
 ## Build the Library
 To get started, clone the project from the following URL using your preferred Git client (command line or GUI). You can open a terminal and enter the following Git clone command as shown below:
 ```shell
 git clone https://github.com/relogiclabs/JSchema-Java.git
 ```
-Next, navigate to the project root directory of the `JSchema-Java` that you just cloned. Inside the directory, you should find a `pom.xml` file. This file contains the project configuration and dependencies required to build the library. Use the `cd` command to enter the project root directory and execute the following Maven command to build the Json Schema library:
+Next, navigate to the project root directory of the `JSchema-Java` that you just cloned. Inside the directory, you should find a `pom.xml` file. This file contains the project configuration and dependencies required to build the library. Use the `cd` command to enter the project root directory and execute the following Maven command to build the JSchema library:
 
 ```shell
 mvn clean install
@@ -20,26 +20,26 @@ mvn clean install
 Maven will resolve the library's dependencies, compile the code, and create a jar file which will be installed in the local Maven repository.
 
 ## Add the Library to Your Project
-To integrate the library into your project, open it in your preferred IDE (such as IntelliJ IDEA, NetBeans IDE, Eclipse IDE, or VS Code). If you are using a build tool like Maven or Gradle, adding the library to your project is straightforward. For example in a Maven project, navigate to the Maven `pom.xml` file and locate the section named `<dependencies>` and add the following XML snippet within the section of the file, replacing `1.x.x` with the version you have built:
+To integrate the library into your project, open it in your preferred IDE (such as IntelliJ IDEA, NetBeans IDE, Eclipse IDE, or VS Code). If you are using a build tool like Maven or Gradle, adding the library to your project is straightforward. For example in a Maven project, navigate to the Maven `pom.xml` file and locate the section named `<dependencies>` and add the following XML snippet within the section of the file, replacing `2.x.x` with the version you have built:
 ```xml
 <dependency>
     <groupId>com.relogiclabs.json</groupId>
-    <artifactId>relogiclabs-json-schema</artifactId>
-    <version>1.x.x</version>
+    <artifactId>relogiclabs-jschema</artifactId>
+    <version>2.x.x</version>
 </dependency>
 ```
 
 ## Write a Sample to Test
 With all the necessary components in place, you are now ready to create a sample schema and validate a corresponding JSON against the schema. The subsequent example presents a Java class featuring a method designed for validating a sample JSON based on a provided schema. If you are working with Java 17 or above, you can enhance the code further by utilizing new language features.
 ```java
-import com.relogiclabs.json.schema.JsonSchema;
+import com.relogiclabs.jschema.JsonSchema;
 
 public class SampleSchema {
     public boolean checkIsValid() {
         var schema =
             """
             %title: "User Profile Response"
-            %version: 1.0.0
+            %version: "1.0.0-basic"
             %schema:
             {
                 "user": {
@@ -154,23 +154,21 @@ try {
 ```
 The following presents the printed stack trace for the preceding example. It's important to note that when using `JsonAssert`, it throws an exception upon encountering the first error, thus preventing the continuation of processing the rest of the schema:
 ```json
-com.relogiclabs.json.schema.exception.JsonSchemaException: DTYP04: Data type mismatch
+com.relogiclabs.jschema.exception.JsonSchemaException: DTYP04: Data type mismatch
 Expected (Schema Line: 6:31): data type #integer
 Actual (Json Line: 3:14): found #string inferred by "not number"
 
-	at com.relogiclabs.json.schema.tree.ExceptionRegistry.failWith(ExceptionRegistry.java:31)
-	at com.relogiclabs.json.schema.type.JNode.failWith(JNode.java:73)
-	at com.relogiclabs.json.schema.type.JValidator.matchDataType(JValidator.java:87)
-	at com.relogiclabs.json.schema.type.JValidator.match(JValidator.java:76)
-	at com.relogiclabs.json.schema.type.JObject.match(JObject.java:57)
-	at com.relogiclabs.json.schema.type.JValidator.match(JValidator.java:71)
-	at com.relogiclabs.json.schema.type.JObject.match(JObject.java:57)
-	at com.relogiclabs.json.schema.type.JValidator.match(JValidator.java:71)
-	at com.relogiclabs.json.schema.type.JRoot.match(JRoot.java:50)
-	at com.relogiclabs.json.schema.tree.SchemaTree.match(SchemaTree.java:33)
-	at com.relogiclabs.json.schema.JsonAssert.isValid(JsonAssert.java:61)
-	at com.relogiclabs.json.schema.JsonAssert.isValid(JsonAssert.java:72)
-	at org.example.SampleSchema.checkIsValid(SampleSchema.java:64)
-	at org.example.Main.main(Main.java:5)
+	at com.relogiclabs.jschema.node.JValidator.matchDataType(JValidator.java:87)
+	at com.relogiclabs.jschema.node.JValidator.match(JValidator.java:76)
+	at com.relogiclabs.jschema.node.JObject.match(JObject.java:56)
+	at com.relogiclabs.jschema.node.JValidator.match(JValidator.java:71)
+	at com.relogiclabs.jschema.node.JObject.match(JObject.java:56)
+	at com.relogiclabs.jschema.node.JValidator.match(JValidator.java:71)
+	at com.relogiclabs.jschema.node.JRoot.match(JRoot.java:52)
+	at com.relogiclabs.jschema.tree.SchemaTree.match(SchemaTree.java:38)
+	at com.relogiclabs.jschema.JsonAssert.isValid(JsonAssert.java:61)
+	at com.relogiclabs.jschema.JsonAssert.isValid(JsonAssert.java:72)
+	at com.example.SampleSchema.checkIsValid(SampleSchema.java:68)
+	at com.example.Main.main(Main.java:5)
 ```
 For more information about the schema syntax format and library functionalities, please refer to the reference documentation [here](/JSchema-Java/api/index.html).
