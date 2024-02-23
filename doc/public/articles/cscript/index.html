@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en-us"><link rel="stylesheet" href="/JSchema-Java/css/style.css" type="text/css" media="all" />
+<link rel="stylesheet" href="/JSchema-Java/css/syntax.css" type="text/css" media="all" />
+<link rel="icon" href="/JSchema-Java/images/favicon.ico">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script src="/JSchema-Java/js/script.js"></script><body><header>
+    <nav class="header" role="navigation">
+        <div class="header-left">
+            <label for="menu-checkbox">
+                <input id="menu-checkbox" type="checkbox" class="menu-checkbox"/>
+                <div class="menu-button">
+                    <span class="menu-icon icon-bar1"></span>
+                    <span class="menu-icon icon-bar2"></span>
+                    <span class="menu-icon icon-bar3"></span>
+                </div>
+            </label>
+            <a href="https://www.relogiclabs.com"><img src="/JSchema-Java/images/logo.svg" alt="Relogic Labs"></a>
+        </div>
+        <div class="header-right">
+            <a href="/JSchema-Java">Home</a>
+            <a href="/JSchema-Java/api/index.html">API Reference</a>
+            <a href="https://github.com/relogiclabs/JSchema-Java">GitHub</a>
+        </div>
+    </nav>
+</header>
+<div class="overlay"></div>
+<div class="sidebar">
+    <ul>
+        
+        <li class="section-header ">
+            <a href="/JSchema-Java/articles/">Articles</a>
+        </li>
+        
+        <li class="section-item ">
+            <a href="/JSchema-Java/articles/introduction/">Introduction</a>
+        </li>
+        
+        <li class="section-item ">
+            <a href="/JSchema-Java/articles/quickstart/">Quick Start</a>
+        </li>
+        
+        <li class="section-item ">
+            <a href="/JSchema-Java/articles/validation/">Validation Syntax</a>
+        </li>
+        
+        <li class="section-item ">
+            <a href="/JSchema-Java/articles/directives/">Directives</a>
+        </li>
+        
+        <li class="section-item ">
+            <a href="/JSchema-Java/articles/specification/">Specification</a>
+        </li>
+        
+        <li class="section-item ">
+            <a href="/JSchema-Java/articles/datatypes/">Data Types</a>
+        </li>
+        
+        <li class="section-item ">
+            <a href="/JSchema-Java/articles/functions/">Functions</a>
+        </li>
+        
+        <li class="section-item active">
+            <a href="/JSchema-Java/articles/cscript/">CScript DSL</a>
+        </li>
+        
+        <li class="section-item ">
+            <a href="/JSchema-Java/articles/datetime/">Date and Time</a>
+        </li>
+        
+        <li class="section-item ">
+            <a href="/JSchema-Java/articles/components/">Components</a>
+        </li>
+        
+        <li class="section-item ">
+            <a href="/JSchema-Java/articles/sourcebuild/">Source Build</a>
+        </li>
+        
+        
+    </ul>
+</div><main>
+<div class="content">
+    <h1 id="cscript-domain-specific-language">CScript Domain-Specific Language</h1>
+<p>CScript, a domain-specific scripting language, designed specifically for JSchema document. This lightweight, interpreted, and dynamically typed C-style language seamlessly integrates with the foundational principles of the existing JSchema architecture. With the use of dynamic typing and programming constructs similar to both JSON and JavaScript, streamlines the process of writing concise, user-friendly, and flexible logic for constraint or validation functions.</p>
+<p>Although CScript is similar to JavaScript in many aspects, the CScript interpreter is designed to quickly halt (fail-fast) and report errors instead of trying to continue with potentially corrupted or unexpected data. This ensures a seamless alignment with the validation requirements of modern web services, significantly enhancing readability and productivity in both documentation and implementation, as well as reducing the potential for bugs.</p>
+<h2 id="keywords--reserved-words">Keywords &amp; Reserved Words</h2>
+<p>Here is a list of keywords (reserved words) in the CScript language. You cannot use any of the following words as identifiers in your scripts. Some keywords are reserved for future extensions and are not currently in use.</p>
+<table>
+<thead>
+<tr>
+<th>Description</th>
+<th>Current Keyword (Reserved Word)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Variable Declaration</td>
+<td><code>var</code>; (<code>const</code>)</td>
+</tr>
+<tr>
+<td>Conditional Flow Control</td>
+<td><code>if</code>; <code>else</code>; (<code>switch</code>; <code>case</code>; <code>default</code>)</td>
+</tr>
+<tr>
+<td>Iterative Flow Control</td>
+<td><code>for</code>; <code>foreach</code>; <code>while</code>; (<code>do</code>)</td>
+</tr>
+<tr>
+<td>Jump Control</td>
+<td><code>break</code>; (<code>continue</code>)</td>
+</tr>
+<tr>
+<td>Membership Management</td>
+<td><code>in</code></td>
+</tr>
+<tr>
+<td>Function Declaration</td>
+<td><code>function</code>; <code>constraint</code>; <code>future</code>; <code>subroutine</code></td>
+</tr>
+<tr>
+<td>Function Data &amp; Control</td>
+<td><code>return</code>; <code>target</code>; <code>caller</code></td>
+</tr>
+<tr>
+<td>Literals Value</td>
+<td><code>true</code>; <code>false</code>; <code>null</code>; <code>undefined</code></td>
+</tr>
+<tr>
+<td>Exception Management</td>
+<td><code>tryof</code>; <code>throw</code></td>
+</tr>
+<tr>
+<td>Class &amp; Object Management</td>
+<td>(<code>class</code>; <code>new</code>; <code>super</code>; <code>this</code>)</td>
+</tr>
+<tr>
+<td>Script Modularization</td>
+<td>(<code>import</code>)</td>
+</tr>
+</tbody>
+</table>
+<h2 id="data-types">Data Types</h2>
+<p>Data types play a pivotal role in specifying the fundamental structure of values that serve as the foundational components for data manipulation within CScript. In the dynamically typed CScript language, data types are classified into two main categories: primitive immutable value types and composite reference types.</p>
+<p>Composite types include <code>#array</code> and <code>#object</code>, while the remaining types fall under the category of primitive types. Both primitive values and composite references of schema accessible from CScript are readonly and unmodifiable nodes. The following table lists CScript data types:</p>
+<table>
+<thead>
+<tr>
+<th>SN</th>
+<th>Type Name</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td><code>#array</code></td>
+<td><code>[1, 2, 3]</code>; <code>[&quot;item1&quot;, [2.5, 5.8]]</code>; <code>[]</code></td>
+</tr>
+<tr>
+<td>2</td>
+<td><code>#boolean</code></td>
+<td><code>true</code>; <code>false</code></td>
+</tr>
+<tr>
+<td>3</td>
+<td><code>#double</code></td>
+<td><code>10.5</code>; <code>20E-5</code>; <code>5E+5</code></td>
+</tr>
+<tr>
+<td>4</td>
+<td><code>#integer</code></td>
+<td><code>10</code>; <code>20</code>; <code>100</code>; <code>500</code></td>
+</tr>
+<tr>
+<td>5</td>
+<td><code>#null</code></td>
+<td><code>null</code></td>
+</tr>
+<tr>
+<td>6</td>
+<td><code>#object</code></td>
+<td><code>{ k1: &quot;text&quot;, k2: { &quot;k11&quot; : 10 } }</code>; <code>{}</code></td>
+</tr>
+<tr>
+<td>7</td>
+<td><code>#range</code></td>
+<td><code>1..10</code>; <code>-10..-5</code>; <code>-10..</code>; <code>..100</code></td>
+</tr>
+<tr>
+<td>8</td>
+<td><code>#string</code></td>
+<td><code>&quot;any text&quot;</code>; <code>&quot;&quot;</code></td>
+</tr>
+<tr>
+<td>9</td>
+<td><code>#undefined</code></td>
+<td><code>undefined</code></td>
+</tr>
+<tr>
+<td>10</td>
+<td><code>#void</code></td>
+<td>Used only for internal purposes</td>
+</tr>
+</tbody>
+</table>
+<p>The <code>#void</code> type is reserved for internal operations, including initializing unassigned l-values (variables, properties, and array elements) to the default state, among other cases. To explicitly represent the absence of a value in your script, use the <code>undefined</code> or <code>null</code> literal.</p>
+<h2 id="operators--precedences">Operators &amp; Precedences</h2>
+<p>CScript operators are symbols that are used to perform operations on variables and values. The direct operation of any operator that requires a modifiable l-value including <code>++</code>, <code>--</code> or <code>=</code> will raise an exception for the readonly schema nodes. The following table lists the operators according to their precedences from the highest to the lowest:</p>
+<table>
+<thead>
+<tr>
+<th>SN</th>
+<th>Category</th>
+<th>Operator</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>Property Access &amp; Parentheses</td>
+<td><code>.</code>; <code>[]</code>; <code>()</code></td>
+</tr>
+<tr>
+<td>2</td>
+<td>Unary Minus &amp; Logical Not</td>
+<td><code>-</code>; <code>!</code></td>
+</tr>
+<tr>
+<td>3</td>
+<td>Postfix Increment/Decrement</td>
+<td><code>i++</code>; <code>i--</code></td>
+</tr>
+<tr>
+<td>4</td>
+<td>Prefix Increment/Decrement</td>
+<td><code>++i</code>; <code>--i</code></td>
+</tr>
+<tr>
+<td>5</td>
+<td>Arithmetic Multiplicative</td>
+<td><code>*</code>; <code>/</code></td>
+</tr>
+<tr>
+<td>6</td>
+<td>Arithmetic Additive</td>
+<td><code>+</code>; <code>-</code></td>
+</tr>
+<tr>
+<td>7</td>
+<td>Sequence Range</td>
+<td><code>..</code></td>
+</tr>
+<tr>
+<td>8</td>
+<td>Relational Comparison</td>
+<td><code>&gt;</code>; <code>&lt;</code>; <code>&gt;=</code>; <code>&lt;=</code></td>
+</tr>
+<tr>
+<td>9</td>
+<td>Equality Comparison</td>
+<td><code>==</code>; <code>!=</code></td>
+</tr>
+<tr>
+<td>10</td>
+<td>Logical And (Short-Circuit)</td>
+<td><code>&amp;&amp;</code></td>
+</tr>
+<tr>
+<td>11</td>
+<td>Logical Or (Short-Circuit)</td>
+<td><code>||</code></td>
+</tr>
+<tr>
+<td>12</td>
+<td>Assignment</td>
+<td><code>=</code></td>
+</tr>
+</tbody>
+</table>
+<h2 id="function-types">Function Types</h2>
+<p>Function types are essential for specifying the executable units that serve as the building-blocks of validation process within CScript. All function types can also accept variable number of arguments, specified by an ellipsis <code>...</code> after the last parameter name which is then bound to an array containing the remaining arguments.</p>
+<p>Additionally, all types of functions can be overloaded with varying numbers of fixed parameters, along with one that includes a variable argument parameter. A function name can be overloaded with only one variable argument definition, regardless of the number of required arguments preceding it. Fixed argument functions always take precedence or priority over variable argument functions when arguments match both definitions. Below are the various kinds of functions, each with distinct purposes, used in the CScript language:</p>
+<h3 id="constraint-function">Constraint Function</h3>
+<p>The constraint function defines conditions for the target JSON value. They assess whether the target JSON value satisfies the conditions specified by the functions. The function should return true if the conditions are met; otherwise, it should return false. Even if the function exits without returning any value, it is assumed that all conditions are met since any early return from the function usually implies that the conditions are not satisfied.</p>
+<p>Within the scope including nested scopes of a constraint function, the <code>target</code> keyword refers to the JSON value or node to which the constraint function is applied, and the <code>caller</code> keyword refers to the schema node that invokes this constraint function. The subsequent example illustrates various alternative forms of the definition of a constraint function named <code>example</code> with the main keyword <code>constraint</code>:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-js" data-lang="js"><span class="line"><span class="cl"><span class="nx">constraint</span> <span class="nx">example</span><span class="p">(</span><span class="nx">param1</span><span class="p">,</span> <span class="nx">param2</span><span class="p">,</span> <span class="nx">param3</span><span class="p">)</span> <span class="p">{</span>  <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="nx">constraint</span> <span class="kd">function</span> <span class="nx">example</span><span class="p">(</span><span class="nx">param1</span><span class="p">,</span> <span class="nx">param2</span><span class="p">,</span> <span class="nx">params</span><span class="p">...)</span> <span class="p">{</span>  <span class="p">}</span>
+</span></span></code></pre></div><h3 id="future-constraint-function">Future Constraint Function</h3>
+<p>The future constraint function extends the utility of the constraint function by also considering receiver values. They ensure that the validations are deferred until the receivers of the schema have received their anticipated values, thus evaluating the specified conditions imposed by the functions at a delayed phase. The subsequent example illustrates various alternative forms of the definition of a future constraint function named <code>example</code> with the main keyword <code>future</code>:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-js" data-lang="js"><span class="line"><span class="cl"><span class="nx">future</span> <span class="nx">example</span><span class="p">(</span><span class="nx">param1</span><span class="p">,</span> <span class="nx">param2</span><span class="p">,</span> <span class="nx">param3</span><span class="p">)</span> <span class="p">{</span>  <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="nx">future</span> <span class="nx">constraint</span> <span class="nx">example</span><span class="p">(</span><span class="nx">param1</span><span class="p">,</span> <span class="nx">param2</span><span class="p">,</span> <span class="nx">param3</span><span class="p">)</span> <span class="p">{</span>  <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="nx">future</span> <span class="kd">function</span> <span class="nx">example</span><span class="p">(</span><span class="nx">param1</span><span class="p">,</span> <span class="nx">param2</span><span class="p">,</span> <span class="nx">param3</span><span class="p">)</span> <span class="p">{</span>  <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="nx">future</span> <span class="nx">constraint</span> <span class="kd">function</span> <span class="nx">example</span><span class="p">(</span><span class="nx">param1</span><span class="p">,</span> <span class="nx">param2</span><span class="p">,</span> <span class="nx">params</span><span class="p">...)</span> <span class="p">{</span>  <span class="p">}</span>
+</span></span></code></pre></div><h3 id="subroutine-function">Subroutine Function</h3>
+<p>The subroutine function supports the constraint function by promoting code reusability, readability, and modularization. These functions serve as auxiliary units, enhancing the organization and maintainability of validation in CScript, and are not available in the schema context for invocation. Conversely, the constraint function, as well as the future function, are special functions available in the schema context, and are not invocable from the script context without the <code>target</code> and <code>caller</code> information, thereby preventing any potential overloading conflicts between subroutine and constraint functions. The subsequent example illustrates various alternative forms of the definition of a subroutine function named <code>example</code> with the main keyword <code>subroutine</code>:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-js" data-lang="js"><span class="line"><span class="cl"><span class="nx">subroutine</span> <span class="nx">example</span><span class="p">(</span><span class="nx">param1</span><span class="p">,</span> <span class="nx">param2</span><span class="p">,</span> <span class="nx">param3</span><span class="p">)</span> <span class="p">{</span>  <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="nx">subroutine</span> <span class="kd">function</span> <span class="nx">example</span><span class="p">(</span><span class="nx">param1</span><span class="p">,</span> <span class="nx">param2</span><span class="p">,</span> <span class="nx">params</span><span class="p">...)</span> <span class="p">{</span>  <span class="p">}</span>
+</span></span></code></pre></div><p>The CScript language provides a wide range of functions, data types, and programming constructs that can be used to implement diverse validation logic. This allows for the handling of complex validation requirements, both at the level of individual JSON values and groups of values received across different parts of the JSON document, ultimately ensuring the structural integrity of the entire JSON document.</p>
+
+</div>
+
+    </main><div class="footer">
+    <div class="footer-right">
+      © Relogic Labs. All rights reserved.
+    </div>
+</div></body>
+
+</html>
