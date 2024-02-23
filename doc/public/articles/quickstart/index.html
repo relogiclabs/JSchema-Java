@@ -60,6 +60,10 @@
         </li>
         
         <li class="section-item ">
+            <a href="/JSchema-Java/articles/cscript/">CScript DSL</a>
+        </li>
+        
+        <li class="section-item ">
             <a href="/JSchema-Java/articles/datetime/">Date and Time</a>
         </li>
         
@@ -76,25 +80,25 @@
 </div><main>
 <div class="content">
     <h1 id="getting-started">Getting Started</h1>
-<p>This guide will walk you through the essential steps to quickly get up and running with the new JSON Schema library. It is also assumed a modest familiarity with the Java language, Java SDK, and Java command-line interface, including basic familiarity with Maven packages.</p>
+<p>This guide will walk you through the essential steps to quickly get up and running with the JSchema library. It is also assumed a modest familiarity with the Java language, Java SDK, and Java command-line interface, including basic familiarity with Maven packages.</p>
 <h2 id="maven-library-package">Maven Library Package</h2>
-<p>To get started, launch your preferred IDE (such as IntelliJ IDEA, NetBeans IDE, Eclipse IDE, or VS Code) and open the Java project where you intend to include this library package. If you are using a build tool like Maven or Gradle, adding the library to your project is straightforward. For example in Maven project, navigate to the Maven <code>pom.xml</code> file and locate the section named <code>&lt;dependencies&gt;</code> and add the following XML snippet within the section of the file, replacing <code>1.x.x</code> with either the latest version or your preferred version:</p>
+<p>To get started, launch your preferred IDE (such as IntelliJ IDEA, NetBeans IDE, Eclipse IDE, or VS Code) and open the Java project where you intend to include this library package. If you are using a build tool like Maven or Gradle, adding the library to your project is straightforward. For example in Maven project, navigate to the Maven <code>pom.xml</code> file and locate the section named <code>&lt;dependencies&gt;</code> and add the following XML snippet within the section of the file, replacing <code>2.x.x</code> with either the latest version or your preferred version:</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-xml" data-lang="xml"><span class="line"><span class="cl"><span class="nt">&lt;dependency&gt;</span>
 </span></span><span class="line"><span class="cl">    <span class="nt">&lt;groupId&gt;</span>com.relogiclabs.json<span class="nt">&lt;/groupId&gt;</span>
-</span></span><span class="line"><span class="cl">    <span class="nt">&lt;artifactId&gt;</span>relogiclabs-json-schema<span class="nt">&lt;/artifactId&gt;</span>
-</span></span><span class="line"><span class="cl">    <span class="nt">&lt;version&gt;</span>1.x.x<span class="nt">&lt;/version&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&lt;artifactId&gt;</span>relogiclabs-jschema<span class="nt">&lt;/artifactId&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&lt;version&gt;</span>2.x.x<span class="nt">&lt;/version&gt;</span>
 </span></span><span class="line"><span class="cl"><span class="nt">&lt;/dependency&gt;</span>
 </span></span></code></pre></div><p>For additional information regarding this library package, you can visit the Maven repository page of this library <a href="https://central.sonatype.com/artifact/com.relogiclabs.json/relogiclabs-json-schema">here</a>, and files are also available <a href="https://repo1.maven.org/maven2/com/relogiclabs/json/relogiclabs-json-schema/">here</a>.</p>
 <h2 id="write-a-sample-to-test">Write a Sample to Test</h2>
 <p>With all the necessary components in place, you are now ready to create a sample schema and validate a corresponding JSON against the schema. The subsequent example presents a Java class featuring a method designed for validating a sample JSON based on a provided schema. If you are working with Java 17 or above, you can enhance the code further by utilizing new language features.</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">com.relogiclabs.json.schema.JsonSchema</span><span class="o">;</span>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">com.relogiclabs.jschema.JsonSchema</span><span class="o">;</span>
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl"><span class="kd">public</span> <span class="kd">class</span> <span class="nc">SampleSchema</span> <span class="o">{</span>
 </span></span><span class="line"><span class="cl">    <span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">checkIsValid</span><span class="o">()</span> <span class="o">{</span>
 </span></span><span class="line"><span class="cl">        <span class="n">var</span> <span class="n">schema</span> <span class="o">=</span>
 </span></span><span class="line"><span class="cl">            <span class="s">&#34;&#34;&#34;
 </span></span></span><span class="line"><span class="cl"><span class="s">            %title: &#34;</span><span class="n">User</span> <span class="n">Profile</span> <span class="n">Response</span><span class="s">&#34;
-</span></span></span><span class="line"><span class="cl"><span class="s">            %version: 1.0.0
+</span></span></span><span class="line"><span class="cl"><span class="s">            %version: &#34;</span><span class="mi">1</span><span class="o">.</span><span class="na">0</span><span class="o">.</span><span class="na">0</span><span class="o">-</span><span class="n">basic</span><span class="s">&#34;
 </span></span></span><span class="line"><span class="cl"><span class="s">            %schema:
 </span></span></span><span class="line"><span class="cl"><span class="s">            {
 </span></span></span><span class="line"><span class="cl"><span class="s">                &#34;</span><span class="n">user</span><span class="s">&#34;: {
@@ -197,24 +201,22 @@
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl"><span class="o">...</span>
 </span></span></code></pre></div><p>The following presents the printed stack trace for the preceding example. It&rsquo;s important to note that when using <code>JsonAssert</code>, it throws an exception upon encountering the first error, thus preventing the continuation of processing the rest of the schema:</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-json" data-lang="json"><span class="line"><span class="cl"><span class="err">com.relogiclabs.json.schema.exception.JsonSchemaException:</span> <span class="err">DTYP</span><span class="mi">04</span><span class="err">:</span> <span class="err">Data</span> <span class="err">type</span> <span class="err">mismatch</span>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-json" data-lang="json"><span class="line"><span class="cl"><span class="err">com.relogiclabs.jschema.exception.JsonSchemaException:</span> <span class="err">DTYP</span><span class="mi">04</span><span class="err">:</span> <span class="err">Data</span> <span class="err">type</span> <span class="err">mismatch</span>
 </span></span><span class="line"><span class="cl"><span class="err">Expected</span> <span class="err">(Schema</span> <span class="err">Line:</span> <span class="mi">6</span><span class="err">:</span><span class="mi">31</span><span class="err">):</span> <span class="err">data</span> <span class="err">type</span> <span class="err">#integer</span>
 </span></span><span class="line"><span class="cl"><span class="err">Actual</span> <span class="err">(Json</span> <span class="err">Line:</span> <span class="mi">3</span><span class="err">:</span><span class="mi">14</span><span class="err">):</span> <span class="err">found</span> <span class="err">#string</span> <span class="err">inferred</span> <span class="err">by</span> <span class="s2">&#34;not number&#34;</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">	<span class="err">at</span> <span class="err">com.relogiclabs.json.schema.tree.ExceptionRegistry.failWith(ExceptionRegistry.java:</span><span class="mi">31</span><span class="err">)</span>
-</span></span><span class="line"><span class="cl">	<span class="err">at</span> <span class="err">com.relogiclabs.json.schema.type.JNode.failWith(JNode.java:</span><span class="mi">73</span><span class="err">)</span>
-</span></span><span class="line"><span class="cl">	<span class="err">at</span> <span class="err">com.relogiclabs.json.schema.type.JValidator.matchDataType(JValidator.java:</span><span class="mi">87</span><span class="err">)</span>
-</span></span><span class="line"><span class="cl">	<span class="err">at</span> <span class="err">com.relogiclabs.json.schema.type.JValidator.match(JValidator.java:</span><span class="mi">76</span><span class="err">)</span>
-</span></span><span class="line"><span class="cl">	<span class="err">at</span> <span class="err">com.relogiclabs.json.schema.type.JObject.match(JObject.java:</span><span class="mi">57</span><span class="err">)</span>
-</span></span><span class="line"><span class="cl">	<span class="err">at</span> <span class="err">com.relogiclabs.json.schema.type.JValidator.match(JValidator.java:</span><span class="mi">71</span><span class="err">)</span>
-</span></span><span class="line"><span class="cl">	<span class="err">at</span> <span class="err">com.relogiclabs.json.schema.type.JObject.match(JObject.java:</span><span class="mi">57</span><span class="err">)</span>
-</span></span><span class="line"><span class="cl">	<span class="err">at</span> <span class="err">com.relogiclabs.json.schema.type.JValidator.match(JValidator.java:</span><span class="mi">71</span><span class="err">)</span>
-</span></span><span class="line"><span class="cl">	<span class="err">at</span> <span class="err">com.relogiclabs.json.schema.type.JRoot.match(JRoot.java:</span><span class="mi">50</span><span class="err">)</span>
-</span></span><span class="line"><span class="cl">	<span class="err">at</span> <span class="err">com.relogiclabs.json.schema.tree.SchemaTree.match(SchemaTree.java:</span><span class="mi">33</span><span class="err">)</span>
-</span></span><span class="line"><span class="cl">	<span class="err">at</span> <span class="err">com.relogiclabs.json.schema.JsonAssert.isValid(JsonAssert.java:</span><span class="mi">61</span><span class="err">)</span>
-</span></span><span class="line"><span class="cl">	<span class="err">at</span> <span class="err">com.relogiclabs.json.schema.JsonAssert.isValid(JsonAssert.java:</span><span class="mi">72</span><span class="err">)</span>
-</span></span><span class="line"><span class="cl">	<span class="err">at</span> <span class="err">org.example.SampleSchema.checkIsValid(SampleSchema.java:</span><span class="mi">64</span><span class="err">)</span>
-</span></span><span class="line"><span class="cl">	<span class="err">at</span> <span class="err">org.example.Main.main(Main.java:</span><span class="mi">5</span><span class="err">)</span>
+</span></span><span class="line"><span class="cl">	<span class="err">at</span> <span class="err">com.relogiclabs.jschema.node.JValidator.matchDataType(JValidator.java:</span><span class="mi">87</span><span class="err">)</span>
+</span></span><span class="line"><span class="cl">	<span class="err">at</span> <span class="err">com.relogiclabs.jschema.node.JValidator.match(JValidator.java:</span><span class="mi">76</span><span class="err">)</span>
+</span></span><span class="line"><span class="cl">	<span class="err">at</span> <span class="err">com.relogiclabs.jschema.node.JObject.match(JObject.java:</span><span class="mi">56</span><span class="err">)</span>
+</span></span><span class="line"><span class="cl">	<span class="err">at</span> <span class="err">com.relogiclabs.jschema.node.JValidator.match(JValidator.java:</span><span class="mi">71</span><span class="err">)</span>
+</span></span><span class="line"><span class="cl">	<span class="err">at</span> <span class="err">com.relogiclabs.jschema.node.JObject.match(JObject.java:</span><span class="mi">56</span><span class="err">)</span>
+</span></span><span class="line"><span class="cl">	<span class="err">at</span> <span class="err">com.relogiclabs.jschema.node.JValidator.match(JValidator.java:</span><span class="mi">71</span><span class="err">)</span>
+</span></span><span class="line"><span class="cl">	<span class="err">at</span> <span class="err">com.relogiclabs.jschema.node.JRoot.match(JRoot.java:</span><span class="mi">52</span><span class="err">)</span>
+</span></span><span class="line"><span class="cl">	<span class="err">at</span> <span class="err">com.relogiclabs.jschema.tree.SchemaTree.match(SchemaTree.java:</span><span class="mi">38</span><span class="err">)</span>
+</span></span><span class="line"><span class="cl">	<span class="err">at</span> <span class="err">com.relogiclabs.jschema.JsonAssert.isValid(JsonAssert.java:</span><span class="mi">61</span><span class="err">)</span>
+</span></span><span class="line"><span class="cl">	<span class="err">at</span> <span class="err">com.relogiclabs.jschema.JsonAssert.isValid(JsonAssert.java:</span><span class="mi">72</span><span class="err">)</span>
+</span></span><span class="line"><span class="cl">	<span class="err">at</span> <span class="err">com.example.SampleSchema.checkIsValid(SampleSchema.java:</span><span class="mi">68</span><span class="err">)</span>
+</span></span><span class="line"><span class="cl">	<span class="err">at</span> <span class="err">com.example.Main.main(Main.java:</span><span class="mi">5</span><span class="err">)</span>
 </span></span></code></pre></div><p>For more information about the schema syntax format and library functionalities, please refer to the reference documentation <a href="/JSchema-Java/api/index.html">here</a>.</p>
 
 </div>

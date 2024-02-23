@@ -1,6 +1,6 @@
 baseURL = "https://relogiclabs.github.io/JSchema-Java"
 languageCode = "en-us"
-title = "New Json Schema"
+title = "JSchema"
 
 pygmentsCodeFences = true
 pygmentsCodefencesGuessSyntax = true
