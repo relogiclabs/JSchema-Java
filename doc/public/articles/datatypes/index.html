@@ -60,6 +60,10 @@
         </li>
         
         <li class="section-item ">
+            <a href="/JSchema-Java/articles/cscript/">CScript DSL</a>
+        </li>
+        
+        <li class="section-item ">
             <a href="/JSchema-Java/articles/datetime/">Date and Time</a>
         </li>
         
@@ -145,7 +149,7 @@ pre code { font-size: 1.1em; }
 <p>The boolean data type is a binary or switch-based data type that only accepts two values, namely <code>true</code> and <code>false</code>. It is particularly useful in situations where toggling and switching are necessary. To specify the boolean type in the schema, use the following syntax:</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-html" data-lang="html"><span class="line"><span class="cl">#boolean
 </span></span></code></pre></div><h3 id="the-null-data-type">The Null Data Type</h3>
-<p>The null data type serves as a special constraint within JSON schemas, facilitating the controlled use of <code>null</code> in place of other JSON elements or values. Typically, it is combined with other data types to permit the use of <code>null</code> for specific JSON elements or values. This can set constraints for scenarios in which an array without any elements and an object without any properties can either have <code>null</code> or only be allowed to be empty.</p>
+<p>The null data type serves as a special constraint within JSchema documents, facilitating the controlled use of <code>null</code> in place of other JSON elements or values. Typically, it is combined with other data types to permit the use of <code>null</code> for specific JSON elements or values. This can set constraints for scenarios in which an array without any elements and an object without any properties can either have <code>null</code> or only be allowed to be empty.</p>
 <p>Additionally, the <code>@nonempty</code> constraint functions can be employed to further control the use of empty values within a JSON document. To specify the null type in the schema, use the following syntax:</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-html" data-lang="html"><span class="line"><span class="cl">#null
 </span></span></code></pre></div>

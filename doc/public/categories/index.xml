@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Categories on New Json Schema</title>
+    <title>Categories on JSchema</title>
     <link>https://relogiclabs.github.io/JSchema-Java/categories/</link>
-    <description>Recent content in Categories on New Json Schema</description>
+    <description>Recent content in Categories on JSchema</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language><atom:link href="https://relogiclabs.github.io/JSchema-Java/categories/index.xml" rel="self" type="application/rss+xml" />
   </channel>

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Articles on New Json Schema</title>
+    <title>Articles on JSchema</title>
     <link>https://relogiclabs.github.io/JSchema-Java/articles/</link>
-    <description>Recent content in Articles on New Json Schema</description>
+    <description>Recent content in Articles on JSchema</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <lastBuildDate>Sun, 08 Oct 2023 09:38:53 +0600</lastBuildDate><atom:link href="https://relogiclabs.github.io/JSchema-Java/articles/index.xml" rel="self" type="application/rss+xml" />
@@ -13,8 +13,8 @@
       <pubDate>Sun, 08 Oct 2023 09:38:53 +0600</pubDate>
       
       <guid>https://relogiclabs.github.io/JSchema-Java/articles/introduction/</guid>
-      <description>Introduction The New JSON Schema prioritizes simplicity, conciseness, and readability, making it intuitive and accessible without the need for extensive prior knowledge. It offers efficient read-write facilities, precise JSON document definition through various data types and functions, and extensibility to meet modern web service diverse requirements.
-JSON, short for JavaScript Object Notation, is one of the most widely used data exchange formats that are both user-friendly and machine-readable. New JSON Schema is a practical tool for defining and validating the structure of JSON documents.</description>
+      <description>Introduction JSchema, a new JSON Schema, prioritizes simplicity, conciseness, and readability, making it intuitive and accessible without the need for extensive prior knowledge. It offers efficient read-write facilities, precise JSON document definition through various data types and functions, and extensibility to meet modern web service diverse requirements.
+JSON, short for JavaScript Object Notation, is one of the most widely used data exchange formats that are both user-friendly and machine-readable. JSchema is a practical tool for defining and validating the structure of JSON documents.</description>
     </item>
     
     <item>
@@ -23,7 +23,7 @@ JSON, short for JavaScript Object Notation, is one of the most widely used data 
       <pubDate>Fri, 03 Nov 2023 09:38:53 +0600</pubDate>
       
       <guid>https://relogiclabs.github.io/JSchema-Java/articles/quickstart/</guid>
-      <description>Getting Started This guide will walk you through the essential steps to quickly get up and running with the new JSON Schema library. It is also assumed a modest familiarity with the Java language, Java SDK, and Java command-line interface, including basic familiarity with Maven packages.
+      <description>Getting Started This guide will walk you through the essential steps to quickly get up and running with the JSchema library. It is also assumed a modest familiarity with the Java language, Java SDK, and Java command-line interface, including basic familiarity with Maven packages.
 Maven Library Package To get started, launch your preferred IDE (such as IntelliJ IDEA, NetBeans IDE, Eclipse IDE, or VS Code) and open the Java project where you intend to include this library package.</description>
     </item>
     
@@ -43,7 +43,7 @@ Composite values in a JSON document act as containers. They can hold zero or mor
       <pubDate>Mon, 04 Dec 2023 09:38:53 +0600</pubDate>
       
       <guid>https://relogiclabs.github.io/JSchema-Java/articles/directives/</guid>
-      <description>Validation Directives Directives serve as special instructions or commands for the Schema and JSON parsers, interpreters, and validators. They are used to control various aspects of the validation process or to provide metadata for documentation. Additionally, they offer crucial information about Schema and JSON and provide custom validation functions to meet specific Schema validation requirements.
+      <description>Validation Directives Directives serve as special instructions or commands for the JSchema parsers, interpreters, and validators. They are used to control various aspects of the validation process or to provide metadata for documentation. Additionally, they offer crucial information about schema and JSON, as well as essential customization of the validation procedure to meet specific requirements.
 Title Directive Within a schema, the title directive is used to provide a name, label, or a brief intent of the schema for which it is written.</description>
     </item>
     
@@ -53,8 +53,8 @@ Title Directive Within a schema, the title directive is used to provide a name, 
       <pubDate>Sun, 08 Oct 2023 09:38:53 +0600</pubDate>
       
       <guid>https://relogiclabs.github.io/JSchema-Java/articles/specification/</guid>
-      <description>Specification New JSON Schema is a vocabulary that allows you to describe the structure and constraints of JSON documents. It provides a way to define rules for validating the data in a JSON document. With JSON Schema, you can ensure that your JSON data follows a specific format and adheres to certain rules.
-Grammar The New JSON Schema grammar is introduced through a notation similar to what is known as the McKeeman form grammar notation, which is a simplified version of the Backus-Naur form and Extended Backus–Naur form.</description>
+      <description>Specification JSchema is a vocabulary that allows you to describe the structure and constraints of JSON documents. It provides a way to define rules for validating the data in a JSON document. With JSchema, you can ensure that your JSON data follows a specific format and adheres to certain rules.
+Grammar JSchema grammar is introduced through a notation similar to what is known as the McKeeman form grammar notation, which is a simplified version of the Backus-Naur form and Extended Backus–Naur form.</description>
     </item>
     
     <item>
@@ -74,6 +74,16 @@ In the schema document, data types are denoted by the # prefix.</description>
       
       <guid>https://relogiclabs.github.io/JSchema-Java/articles/functions/</guid>
       <description>Constraint Functions This document serves as a brief overview, providing key insights into the built-in constraint functions that are part of the core schema. These functions significantly extend the scope of data and structural validation, going beyond the limits of basic data type restrictions. These functions are designed to enhance the effectiveness of schema validation, ensuring the accuracy, consistency, integrity, and compliance of the JSON data to the schema.</description>
+    </item>
+    
+    <item>
+      <title>CScript DSL</title>
+      <link>https://relogiclabs.github.io/JSchema-Java/articles/cscript/</link>
+      <pubDate>Thu, 25 Jan 2024 09:38:53 +0600</pubDate>
+      
+      <guid>https://relogiclabs.github.io/JSchema-Java/articles/cscript/</guid>
+      <description>CScript Domain-Specific Language CScript, a domain-specific scripting language, designed specifically for JSchema document. This lightweight, interpreted, and dynamically typed C-style language seamlessly integrates with the foundational principles of the existing JSchema architecture. With the use of dynamic typing and programming constructs similar to both JSON and JavaScript, streamlines the process of writing concise, user-friendly, and flexible logic for constraint or validation functions.
+Although CScript is similar to JavaScript in many aspects, the CScript interpreter is designed to quickly halt (fail-fast) and report errors instead of trying to continue with potentially corrupted or unexpected data.</description>
     </item>
     
     <item>
@@ -102,7 +112,7 @@ These schema components are used as an extension of data type validation, as cor
       <pubDate>Mon, 04 Dec 2023 09:38:53 +0600</pubDate>
       
       <guid>https://relogiclabs.github.io/JSchema-Java/articles/sourcebuild/</guid>
-      <description>Build from Source Code This comprehensive guide illustrates the procedures for retrieving source code from a GitHub repository, compiling the project source code into a library, and seamlessly integrating the compiled library into your project. It is essential to have a foundational understanding of the Java language, as well as a modest level of familiarity with the Java SDK and command-line interface. Some basic knowledge of how to work with Maven packages would be helpful.</description>
+      <description>Build from Source Code This comprehensive guide illustrates the procedures for retrieving source code from a GitHub repository, compiling the project source code into a library, and seamlessly integrating the compiled library into your project. It is essential to have a foundational understanding of the Java language, as well as a modest level of familiarity with the Java SDK and command-line interface. Furthermore, some basic knowledge of how to work with Maven packages would be helpful.</description>
     </item>
     
   </channel>
