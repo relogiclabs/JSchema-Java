@@ -40,52 +40,52 @@ public interface JsonParserVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitArrayNode(JsonParser.ArrayNodeContext ctx);
 	/**
-	 * Visit a parse tree produced by the {@code PrimitiveTrue}
+	 * Visit a parse tree produced by the {@code TrueNode}
 	 * labeled alternative in {@link JsonParser#primitiveNode}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitPrimitiveTrue(JsonParser.PrimitiveTrueContext ctx);
+	T visitTrueNode(JsonParser.TrueNodeContext ctx);
 	/**
-	 * Visit a parse tree produced by the {@code PrimitiveFalse}
+	 * Visit a parse tree produced by the {@code FalseNode}
 	 * labeled alternative in {@link JsonParser#primitiveNode}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitPrimitiveFalse(JsonParser.PrimitiveFalseContext ctx);
+	T visitFalseNode(JsonParser.FalseNodeContext ctx);
 	/**
-	 * Visit a parse tree produced by the {@code PrimitiveString}
+	 * Visit a parse tree produced by the {@code StringNode}
 	 * labeled alternative in {@link JsonParser#primitiveNode}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitPrimitiveString(JsonParser.PrimitiveStringContext ctx);
+	T visitStringNode(JsonParser.StringNodeContext ctx);
 	/**
-	 * Visit a parse tree produced by the {@code PrimitiveInteger}
+	 * Visit a parse tree produced by the {@code IntegerNode}
 	 * labeled alternative in {@link JsonParser#primitiveNode}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitPrimitiveInteger(JsonParser.PrimitiveIntegerContext ctx);
+	T visitIntegerNode(JsonParser.IntegerNodeContext ctx);
 	/**
-	 * Visit a parse tree produced by the {@code PrimitiveFloat}
+	 * Visit a parse tree produced by the {@code FloatNode}
 	 * labeled alternative in {@link JsonParser#primitiveNode}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitPrimitiveFloat(JsonParser.PrimitiveFloatContext ctx);
+	T visitFloatNode(JsonParser.FloatNodeContext ctx);
 	/**
-	 * Visit a parse tree produced by the {@code PrimitiveDouble}
+	 * Visit a parse tree produced by the {@code DoubleNode}
 	 * labeled alternative in {@link JsonParser#primitiveNode}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitPrimitiveDouble(JsonParser.PrimitiveDoubleContext ctx);
+	T visitDoubleNode(JsonParser.DoubleNodeContext ctx);
 	/**
-	 * Visit a parse tree produced by the {@code PrimitiveNull}
+	 * Visit a parse tree produced by the {@code NullNode}
 	 * labeled alternative in {@link JsonParser#primitiveNode}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitPrimitiveNull(JsonParser.PrimitiveNullContext ctx);
+	T visitNullNode(JsonParser.NullNodeContext ctx);
 }
