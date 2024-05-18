@@ -25,11 +25,11 @@ arrayNode
     ;
 
 primitiveNode
-    : TRUE          # PrimitiveTrue
-    | FALSE         # PrimitiveFalse
-    | STRING        # PrimitiveString
-    | INTEGER       # PrimitiveInteger
-    | FLOAT         # PrimitiveFloat
-    | DOUBLE        # PrimitiveDouble
-    | NULL          # PrimitiveNull
+    : TRUE              # TrueNode
+    | FALSE             # FalseNode
+    | STRING            # StringNode
+    | INTEGER           # IntegerNode
+    | FLOAT             # FloatNode
+    | DOUBLE            # DoubleNode
+    | NULL              # NullNode
     ;
