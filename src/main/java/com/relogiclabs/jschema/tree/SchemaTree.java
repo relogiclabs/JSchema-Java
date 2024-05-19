@@ -30,7 +30,7 @@ public final class SchemaTree implements DataTree {
         var scriptVisitor = new ScriptTreeVisitor3(runtime);
         var evaluator = scriptVisitor.visit(schemaParseTree);
         root = (JRoot) new SchemaTreeVisitor(scriptVisitor).visit(schemaParseTree);
-        evaluator.evaluate(runtime.getScriptContext());
+        evaluator.evaluate(runtime.getScriptGlobalScope());
     }
 
     @Override

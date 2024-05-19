@@ -2,7 +2,7 @@ package com.relogiclabs.jschema.tree;
 
 import com.relogiclabs.jschema.exception.DuplicateDefinitionException;
 import com.relogiclabs.jschema.function.FutureFunction;
-import com.relogiclabs.jschema.internal.engine.ScriptContext;
+import com.relogiclabs.jschema.internal.engine.ScriptGlobalScope;
 import com.relogiclabs.jschema.message.MessageFormatter;
 import com.relogiclabs.jschema.node.JAlias;
 import com.relogiclabs.jschema.node.JDefinition;
@@ -13,7 +13,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-import static com.relogiclabs.jschema.internal.util.StringHelper.concat;
 import static com.relogiclabs.jschema.message.ErrorCode.DEFI01;
 import static com.relogiclabs.jschema.message.MessageFormatter.formatForSchema;
 
@@ -27,7 +26,7 @@ public final class RuntimeContext {
     private final ReceiverRegistry receivers;
     private final Map<String, Object> storage;
     private final MessageFormatter messageFormatter;
-    private final ScriptContext scriptContext;
+    private final ScriptGlobalScope scriptGlobalScope;
 
     public RuntimeContext(MessageFormatter messageFormatter, boolean throwException) {
         this.messageFormatter = messageFormatter;
@@ -38,15 +37,14 @@ public final class RuntimeContext {
         this.receivers = new ReceiverRegistry();
         this.storage = new HashMap<>();
         this.futures = new HashMap<>();
-        this.scriptContext = new ScriptContext(this);
+        this.scriptGlobalScope = new ScriptGlobalScope(this);
     }
 
     public JDefinition addDefinition(JDefinition definition) {
         var previous = definitions.get(definition.getAlias());
         if(previous != null) throw new DuplicateDefinitionException(formatForSchema(DEFI01,
-                concat("Duplicate definition of '", definition.getAlias(),
-                        "' is found and already defined as ", previous.getOutline()),
-                definition.getContext()));
+            "Duplicate definition of '" + definition.getAlias() + "' is found and already defined as "
+                + previous.getOutline(), definition.getContext()));
         definitions.put(definition.getAlias(), definition.getValidator());
         return definition;
     }

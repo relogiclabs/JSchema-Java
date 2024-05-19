@@ -5,7 +5,6 @@ import com.relogiclabs.jschema.exception.JsonSchemaException;
 import com.relogiclabs.jschema.exception.ScriptCommonException;
 import com.relogiclabs.jschema.exception.ScriptInitiatedException;
 import com.relogiclabs.jschema.function.FutureFunction;
-import com.relogiclabs.jschema.internal.engine.ScopeContext;
 import com.relogiclabs.jschema.internal.script.GArray;
 import com.relogiclabs.jschema.internal.script.GFunction;
 import com.relogiclabs.jschema.node.JFunction;
@@ -16,50 +15,66 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
-import static com.relogiclabs.jschema.internal.library.ScriptConstant.CALLER_HVAR;
-import static com.relogiclabs.jschema.internal.library.ScriptConstant.TARGET_HVAR;
 import static com.relogiclabs.jschema.internal.util.CollectionHelper.subList;
-import static com.relogiclabs.jschema.internal.util.StringHelper.concat;
-import static com.relogiclabs.jschema.message.ErrorCode.FUNC10;
+import static com.relogiclabs.jschema.internal.util.StringHelper.joinWith;
+import static com.relogiclabs.jschema.message.ErrorCode.FUNC08;
 import static com.relogiclabs.jschema.type.EValue.VOID;
 
 @Getter
 @RequiredArgsConstructor
 public final class ScriptFunction implements EFunction {
+    public static final String CALLER_HVAR = "+caller";
+    public static final String TARGET_HVAR = "+target";
+
     private final String name;
     private final GFunction function;
+    private final int arity;
+    private final Class<?> targetType;
 
-    @Override
-    public int getArity() {
-        return function.isVariadic() ? -1 : function.getParameters().length + 1;
+    public ScriptFunction(String name, GFunction function) {
+        this.name = name;
+        this.function = function;
+        this.arity = function.isVariadic() ? VARIADIC_ARITY
+            : function.getParameters().length + 1;
+        this.targetType = JNode.class;
     }
 
     @Override
-    public Class<?> getTargetType() {
-        return JNode.class;
+    public List<Object> prebind(List<? extends EValue> arguments) {
+        var parameters = function.getParameters();
+        var length = parameters.length;
+        if(arity == VARIADIC_ARITY && arguments.size() < length - 1) return null;
+        var result = new ArrayList<>(length + 1);
+        for(int i = 0; i < length; i++) {
+            if(parameters[i].isVariadic()) result.add(new GArray(subList(arguments, i)));
+            else result.add(arguments.get(i));
+        }
+        return result;
     }
 
     @Override
     public Object invoke(JFunction caller, Object[] arguments) {
         var parameters = function.getParameters();
-        var scope = new ScopeContext(caller.getRuntime().getScriptContext());
+        var scope = new ConstraintScope(caller.getRuntime().getScriptGlobalScope());
         scope.update(CALLER_HVAR, caller);
         scope.update(TARGET_HVAR, (EValue) arguments[0]);
         int i = 1;
         for(var p : parameters) scope.addVariable(p.getName(), (EValue) arguments[i++]);
         return function.isFuture()
-                ? (FutureFunction) () -> invoke(function, scope)
-                : invoke(function, scope);
+                ? (FutureFunction) () -> invoke(scope)
+                : invoke(scope);
     }
 
-    private boolean invoke(GFunction function, ScopeContext scope) {
+    private boolean invoke(ConstraintScope scope) {
         try {
+            scope.unpackReceivers();
             var result = function.invoke(scope);
             if(result == VOID) return true;
-            if(!(result instanceof EBoolean b)) throw new InvalidFunctionException(FUNC10,
-                    concat("Function '", name, "' must return a boolean value"));
+            if(!(result instanceof EBoolean b)) throw new InvalidFunctionException(FUNC08,
+                "Function '" + name + "' must return a boolean value");
             return b.getValue();
         } catch(JsonSchemaException | ScriptInitiatedException e) {
             throw e;
@@ -69,16 +84,17 @@ public final class ScriptFunction implements EFunction {
         }
     }
 
+    public String getSignature() {
+        var builder = new StringBuilder();
+        if(function.isFuture()) builder.append("future constraint function ");
+        else if(function.isConstraint()) builder.append("constraint function ");
+        else if(function.isSubroutine()) builder.append("subroutine function ");
+        builder.append(name).append(joinWith(Arrays.stream(function.getParameters()), ", ", "(", ")"));
+        return builder.toString();
+    }
+
     @Override
-    public List<Object> prebind(List<? extends EValue> arguments) {
-        var parameters = function.getParameters();
-        var minArgSize = function.isVariadic() ? parameters.length - 1 : parameters.length;
-        if(arguments.size() < minArgSize) return null;
-        var result = new ArrayList<>(parameters.length + 1);
-        for(int i = 0; i < parameters.length; i++) {
-            if(parameters[i].isVariadic()) result.add(new GArray(subList(arguments, i)));
-            else result.add(arguments.get(i));
-        }
-        return result;
+    public String toString() {
+        return getSignature();
     }
 }

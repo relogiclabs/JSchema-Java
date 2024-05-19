@@ -10,7 +10,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-import static com.relogiclabs.jschema.internal.util.StringHelper.concat;
 import static com.relogiclabs.jschema.message.ErrorCode.PRAG03;
 import static com.relogiclabs.jschema.message.MessageFormatter.formatForSchema;
 import static com.relogiclabs.jschema.time.DateTimeType.DATE_TYPE;
@@ -49,7 +48,7 @@ public final class PragmaRegistry implements Iterable<Map.Entry<String, JPragma>
 
     public JPragma addPragma(JPragma pragma) {
         if(pragmas.containsKey(pragma.getName())) throw new DuplicatePragmaException(formatForSchema(
-                PRAG03, concat("Duplication found for ", pragma.getOutline()), pragma));
+            PRAG03, "Duplication found for " + pragma.getOutline(), pragma));
         pragmas.put(pragma.getName(), pragma);
         setPragmaValue(pragma.getName(), pragma.getValue().toNativeValue());
         return pragma;
@@ -75,8 +74,8 @@ public final class PragmaRegistry implements Iterable<Map.Entry<String, JPragma>
         var entry = PragmaDescriptor.<T>from(name);
         var pragma = pragmas.get(entry.getName());
         return pragma == null
-                ? entry.getDefaultValue()
-                : pragma.<T>getValue().toNativeValue();
+            ? entry.getDefaultValue()
+            : pragma.<T>getValue().toNativeValue();
     }
 
     public JPragma getPragma(String name) {

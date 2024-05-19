@@ -4,5 +4,5 @@ import com.relogiclabs.jschema.type.EValue;
 
 @FunctionalInterface
 public interface Evaluator {
-    EValue evaluate(ScopeContext scope);
+    EValue evaluate(ScriptScope scope);
 }

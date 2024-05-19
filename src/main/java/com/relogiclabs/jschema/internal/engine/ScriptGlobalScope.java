@@ -4,10 +4,10 @@ import com.relogiclabs.jschema.tree.RuntimeContext;
 import lombok.Getter;
 
 @Getter
-public class ScriptContext extends ScopeContext {
+public class ScriptGlobalScope extends ScriptScope {
     private final RuntimeContext runtime;
 
-    public ScriptContext(RuntimeContext runtime) {
+    public ScriptGlobalScope(RuntimeContext runtime) {
         super(null);
         this.runtime = runtime;
     }

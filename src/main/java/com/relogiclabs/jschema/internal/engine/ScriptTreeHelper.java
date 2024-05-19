@@ -1,13 +1,12 @@
 package com.relogiclabs.jschema.internal.engine;
 
-import com.relogiclabs.jschema.internal.antlr.SchemaLexer;
+import com.relogiclabs.jschema.internal.antlr.SchemaParser;
 import com.relogiclabs.jschema.internal.script.GDouble;
-import com.relogiclabs.jschema.internal.script.GFunction;
 import com.relogiclabs.jschema.internal.script.GInteger;
+import com.relogiclabs.jschema.internal.script.GLeftValue;
 import com.relogiclabs.jschema.internal.script.GObject;
 import com.relogiclabs.jschema.internal.script.GParameter;
 import com.relogiclabs.jschema.internal.script.GRange;
-import com.relogiclabs.jschema.internal.script.GReference;
 import com.relogiclabs.jschema.tree.RuntimeContext;
 import com.relogiclabs.jschema.type.EArray;
 import com.relogiclabs.jschema.type.EBoolean;
@@ -27,10 +26,13 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import static com.relogiclabs.jschema.internal.engine.ScriptErrorHelper.failOnDuplicateParameterName;
-import static com.relogiclabs.jschema.internal.engine.ScriptErrorHelper.failOnFixedArgument;
-import static com.relogiclabs.jschema.internal.engine.ScriptErrorHelper.failOnVariadicArgument;
-import static com.relogiclabs.jschema.internal.script.GFunction.CONSTRAINT_PREFIX;
+import static com.relogiclabs.jschema.internal.engine.ScriptErrorHelper.failOnFixedArity;
+import static com.relogiclabs.jschema.internal.engine.ScriptErrorHelper.failOnVariadicArity;
+import static com.relogiclabs.jschema.internal.script.GFunction.CONSTRAINT_MODE;
+import static com.relogiclabs.jschema.internal.script.GFunction.FUTURE_MODE;
+import static com.relogiclabs.jschema.internal.script.GFunction.SUBROUTINE_MODE;
 import static com.relogiclabs.jschema.internal.script.RFunction.hasVariadic;
+import static com.relogiclabs.jschema.internal.util.CommonHelper.hasFlag;
 import static com.relogiclabs.jschema.internal.util.StreamHelper.halt;
 import static java.util.stream.Collectors.toMap;
 
@@ -39,7 +41,7 @@ public final class ScriptTreeHelper {
     private static final String TRYOF_ERROR = "error";
 
     private ScriptTreeHelper() {
-        throw new UnsupportedOperationException();
+        throw new UnsupportedOperationException("This class is not intended for instantiation");
     }
 
     public static boolean areEqual(EValue v1, EValue v2, RuntimeContext runtime) {
@@ -55,7 +57,7 @@ public final class ScriptTreeHelper {
         if(v1 instanceof EUndefined && v2 instanceof EUndefined) return true;
         if(v1 instanceof EArray a1 && v2 instanceof EArray a2) {
             if(a1.size() != a2.size()) return false;
-            for(int i = 0; i < a1.size(); i++)
+            for(var i = 0; i < a1.size(); i++)
                 if(!areEqual(a1.get(i), a2.get(i), runtime)) return false;
             return true;
         }
@@ -71,46 +73,44 @@ public final class ScriptTreeHelper {
     }
 
     public static EValue dereference(EValue value) {
-        while(value instanceof GReference reference)
-            value = reference.getValue();
+        while(value instanceof GLeftValue lvalue)
+            value = lvalue.getValue();
         return value;
     }
 
-    static int getFunctionMode(TerminalNode constraint, TerminalNode future, TerminalNode subroutine) {
-        return getFunctionMode(constraint) | getFunctionMode(future) | getFunctionMode(subroutine);
+    static int getFunctionMode(TerminalNode constraint, TerminalNode future,
+                TerminalNode subroutine) {
+        return getFunctionMode(constraint)
+            | getFunctionMode(future)
+            | getFunctionMode(subroutine);
     }
 
     private static int getFunctionMode(TerminalNode node) {
         if(node == null) return 0;
         return switch(node.getSymbol().getType()) {
-            case SchemaLexer.G_CONSTRAINT -> GFunction.CONSTRAINT_MODE;
-            case SchemaLexer.G_FUTURE -> GFunction.FUTURE_MODE;
-            case SchemaLexer.G_SUBROUTINE -> GFunction.SUBROUTINE_MODE;
+            case SchemaParser.G_CONSTRAINT -> CONSTRAINT_MODE;
+            case SchemaParser.G_FUTURE -> FUTURE_MODE;
+            case SchemaParser.G_SUBROUTINE -> SUBROUTINE_MODE;
             default -> 0;
         };
     }
 
+    public static boolean isConstraint(int mode) {
+        return hasFlag(mode, CONSTRAINT_MODE);
+    }
+
     static ENumber increment(ENumber number) {
-        if(number instanceof EInteger i) return GInteger.of(i.getValue() + 1);
-        return GDouble.of(number.toDouble() + 1);
+        if(number instanceof EInteger i) return GInteger.from(i.getValue() + 1);
+        return GDouble.from(number.toDouble() + 1);
     }
 
     static ENumber decrement(ENumber number) {
-        if(number instanceof EInteger i) return GInteger.of(i.getValue() - 1);
-        return GDouble.of(number.toDouble() - 1);
-    }
-
-    static String formatFunctionName(String baseName, GParameter[] parameters) {
-        if(hasVariadic(parameters)) return baseName + "#...";
-        return baseName + "#" + parameters.length;
-    }
-
-    static String toConstraintName(String functionName) {
-        return CONSTRAINT_PREFIX.concat(functionName);
+        if(number instanceof EInteger i) return GInteger.from(i.getValue() - 1);
+        return GDouble.from(number.toDouble() - 1);
     }
 
     static GParameter[] toParameters(List<TerminalNode> identifiers,
-            TerminalNode ellipsis) {
+                TerminalNode ellipsis) {
         identifiers.stream().collect(toMap(ParseTree::getText, Function.identity(),
                 (i1, i2) -> halt(failOnDuplicateParameterName(i2))
         ));
@@ -122,8 +122,10 @@ public final class ScriptTreeHelper {
 
     public static void areCompatible(GParameter[] parameters, List<EValue> arguments, String code) {
         if(hasVariadic(parameters)) {
-            if(arguments.size() < parameters.length - 1) throw failOnVariadicArgument(code);
-        } else if(arguments.size() != parameters.length) throw failOnFixedArgument(code);
+            if(arguments.size() < parameters.length - 1) throw failOnVariadicArity(code);
+            return;
+        }
+        if(arguments.size() != parameters.length) throw failOnFixedArity(code);
     }
 
     public static String stringify(Object object) {
@@ -132,9 +134,9 @@ public final class ScriptTreeHelper {
     }
 
     static GObject createTryofMonad(EValue value, EValue error) {
-        GObject object = new GObject(2);
-        object.set(TRYOF_VALUE, value);
-        object.set(TRYOF_ERROR, error);
+        var object = new GObject(2);
+        object.put(TRYOF_VALUE, value);
+        object.put(TRYOF_ERROR, error);
         return object;
     }
 
