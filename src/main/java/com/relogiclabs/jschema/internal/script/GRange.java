@@ -16,7 +16,7 @@ public final class GRange implements EValue {
     private final int start;
     private final int end;
 
-    public static GRange of(EInteger start, EInteger end) {
+    public static GRange from(EInteger start, EInteger end) {
         var vStart = start == null ? Integer.MIN_VALUE : (int) start.getValue();
         var vEnd = end == null ? Integer.MIN_VALUE : (int) end.getValue();
         return new GRange(vStart, vEnd);
@@ -39,8 +39,10 @@ public final class GRange implements EValue {
 
     @Override
     public String toString() {
-        var sStart = start != Integer.MIN_VALUE ? start : EMPTY;
-        var sEnd = end != Integer.MIN_VALUE ? end : EMPTY;
-        return sStart + RANGE_OPERATOR + sEnd;
+        return toString(start) + RANGE_OPERATOR + toString(end);
+    }
+
+    private static String toString(int value) {
+        return value != Integer.MIN_VALUE ? String.valueOf(value) : EMPTY;
     }
 }

@@ -14,12 +14,13 @@ public final class GBoolean implements EBoolean {
 
     private final boolean value;
 
-    public static GBoolean of(boolean value) {
-        return value? TRUE : FALSE;
-    }
-
     @Override
     public boolean getValue() {
         return value;
+    }
+
+    @Override
+    public String toString() {
+        return String.valueOf(value);
     }
 }

@@ -6,8 +6,6 @@ import lombok.EqualsAndHashCode;
 
 @EqualsAndHashCode
 public final class JUndefined extends JLeaf implements EUndefined {
-    static final String UNDEFINED_MARKER = "!";
-
     private JUndefined(JUndefinedBuilder builder) {
         super(builder);
     }
@@ -23,6 +21,6 @@ public final class JUndefined extends JLeaf implements EUndefined {
 
     @Override
     public String toString() {
-        return UNDEFINED_MARKER;
+        return MARKER;
     }
 }
