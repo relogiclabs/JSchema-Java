@@ -10,18 +10,13 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import static java.util.stream.Collectors.toSet;
 
 public final class CollectionHelper {
-    public static <K, V> void merge(Map<K, List<V>> target, Map<K, List<V>> source) {
-        source.forEach((sk, sv) -> {
-            var tv = target.get(sk);
-            if(tv != null) tv.addAll(sv);
-            else target.put(sk, sv);
-        });
+    private CollectionHelper() {
+        throw new UnsupportedOperationException("This class is not intended for instantiation");
     }
 
     public static Set<String> containsKeys(IndexMap<String, JProperty> map, JString... keys) {
@@ -31,7 +26,6 @@ public final class CollectionHelper {
     }
 
     public static Set<JNode> containsValues(IndexMap<String, JProperty> map, JNode... values) {
-        // Here values should be distinct on parameter
         Set<JNode> set = Arrays.stream(values).collect(toSet());
         map.values().forEach(p -> set.remove(p.getValue()));
         return set;
@@ -52,6 +46,10 @@ public final class CollectionHelper {
     @SafeVarargs
     public static <T> void addToList(Collection<T> source, Collection<? extends T>... collections) {
         for(var c : collections) if(c != null) source.addAll(c);
+    }
+
+    public static <T> T getLast(List<T> list) {
+        return list.get(list.size() - 1);
     }
 
     public static <T> T tryGetLast(List<T> list) {

@@ -10,6 +10,7 @@ import org.antlr.v4.runtime.Recognizer;
 
 import static com.relogiclabs.jschema.message.ErrorCode.JPRS01;
 import static com.relogiclabs.jschema.message.ErrorCode.SPRS01;
+import static com.relogiclabs.jschema.message.MessageFormatter.ERROR_POINTER;
 
 public abstract class ParserErrorListener extends BaseErrorListener {
     public static final ParserErrorListener SCHEMA = new SchemaErrorListener();
@@ -47,9 +48,9 @@ public abstract class ParserErrorListener extends BaseErrorListener {
                             int charPositionInLine, String msg, RecognitionException e) {
         LogHelper.debug(recognizer);
         var errorLine = new StringBuilder(((CommonTokenStream) recognizer.getInputStream())
-                .getTokenSource().getInputStream().toString().split("\\r?\\n")[line - 1])
-                .insert(charPositionInLine, "<|>").toString().trim();
+            .getTokenSource().getInputStream().toString().split("\\r?\\n")[line - 1])
+            .insert(charPositionInLine, ERROR_POINTER).toString().trim();
         throw failOnSyntaxError(getMessageFormat().formatted(line, charPositionInLine,
-                msg, errorLine), e);
+            msg, errorLine), e);
     }
 }
