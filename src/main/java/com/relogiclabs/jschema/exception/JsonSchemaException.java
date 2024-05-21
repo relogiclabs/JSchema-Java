@@ -6,7 +6,7 @@ import com.relogiclabs.jschema.message.ExpectedDetail;
 import com.relogiclabs.jschema.tree.Context;
 import lombok.Getter;
 
-import static com.relogiclabs.jschema.internal.util.MiscellaneousHelper.nonNullFrom;
+import static com.relogiclabs.jschema.internal.util.CommonHelper.nonNullFrom;
 
 @Getter
 public class JsonSchemaException extends ScriptRuntimeException {
@@ -20,13 +20,14 @@ public class JsonSchemaException extends ScriptRuntimeException {
 
     public JsonSchemaException(ErrorDetail error, ExpectedDetail expected,
                                ActualDetail actual, Throwable cause) {
-        super(error.getCode(), format(error, expected, actual), cause);
+        super(error.getCode(), formatMessage(error, expected, actual), cause);
         this.error = error;
         this.expected = expected;
         this.actual = actual;
     }
 
-    private static String format(ErrorDetail error, ExpectedDetail expected, ActualDetail actual) {
+    private static String formatMessage(ErrorDetail error, ExpectedDetail expected,
+                                        ActualDetail actual) {
         Context context = nonNullFrom(expected.getContext(), actual.getContext());
         return context.getRuntime().getMessageFormatter().format(error, expected, actual);
     }

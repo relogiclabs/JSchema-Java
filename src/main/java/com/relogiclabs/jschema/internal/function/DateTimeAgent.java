@@ -35,14 +35,14 @@ public class DateTimeAgent {
         } catch(DateTimeLexerException ex) {
             fail(caller, new JsonSchemaException(
                     new ErrorDetail(ex.getCode(), ex.getMessage()),
-                    new ExpectedDetail(caller, "a valid ", type, " pattern"),
-                    new ActualDetail(dateTime, "found ", pattern, " that is invalid"),
+                    new ExpectedDetail(caller, "a valid " + type + " pattern"),
+                    new ActualDetail(dateTime, "found " + pattern + " that is invalid"),
                     ex));
         } catch(InvalidDateTimeException ex) {
             fail(caller, new JsonSchemaException(
                     new ErrorDetail(ex.getCode(), ex.getMessage()),
-                    new ExpectedDetail(caller, "a valid ", type, " formatted as ", pattern),
-                    new ActualDetail(dateTime, "found ", dateTime, " that is invalid or malformatted"),
+                    new ExpectedDetail(caller, "a valid " + type + " formatted as " + pattern),
+                    new ActualDetail(dateTime, "found " + dateTime + " that is invalid or malformatted"),
                     ex));
         }
         return null;

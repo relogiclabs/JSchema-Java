@@ -9,7 +9,7 @@ import static java.util.stream.Collectors.joining;
 
 public final class StringHelper {
     private StringHelper() {
-        throw new UnsupportedOperationException();
+        throw new UnsupportedOperationException("This class is not intended for instantiation");
     }
 
     public static String toEncoded(String value)
@@ -74,49 +74,5 @@ public final class StringHelper {
 
     public static String join(Collection<?> list, String delimiter) {
         return join(list, delimiter, "", "");
-    }
-
-    public static String concat(Object s1, Object s2) {
-        return s1.toString().concat(s2.toString());
-    }
-
-    public static String concat(Object s1, Object s2, Object s3) {
-        var builder = new StringBuilder();
-        return builder.append(s1).append(s2).append(s3).toString();
-    }
-
-    public static String concat(Object s1, Object s2, Object s3, Object s4) {
-        var builder = new StringBuilder();
-        return builder.append(s1).append(s2).append(s3).append(s4).toString();
-    }
-
-    public static String concat(Object s1, Object s2, Object s3, Object s4, Object s5) {
-        var builder = new StringBuilder();
-        return builder.append(s1).append(s2).append(s3).append(s4).append(s5).toString();
-    }
-
-    public static String concat(Object s1, Object s2, Object s3, Object s4, Object s5, Object s6) {
-        var builder = new StringBuilder();
-        return builder.append(s1).append(s2).append(s3).append(s4).append(s5).append(s6).toString();
-    }
-
-    public static String concat(Object s1, Object s2, Object s3, Object s4,
-                                Object s5, Object s6, Object s7) {
-        var builder = new StringBuilder();
-        return builder.append(s1).append(s2).append(s3).append(s4)
-                .append(s5).append(s6).append(s7).toString();
-    }
-
-    public static String concat(Object s1, Object s2, Object s3, Object s4,
-                                Object s5, Object s6, Object s7, Object s8) {
-        var builder = new StringBuilder();
-        return builder.append(s1).append(s2).append(s3).append(s4)
-                .append(s5).append(s6).append(s7).append(s8).toString();
-    }
-
-    public static String concat(Object... objects) {
-        var builder = new StringBuilder();
-        for(Object o : objects) builder.append(o);
-        return builder.toString();
     }
 }

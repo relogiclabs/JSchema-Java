@@ -4,6 +4,8 @@ import com.relogiclabs.jschema.internal.builder.JVersionBuilder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
+import static com.relogiclabs.jschema.internal.util.StringHelper.quote;
+
 @Getter
 @EqualsAndHashCode
 public final class JVersion extends JDirective {
@@ -21,6 +23,6 @@ public final class JVersion extends JDirective {
 
     @Override
     public String toString() {
-        return VERSION_MARKER + ": " + version;
+        return VERSION_MARKER + ": " + quote(version);
     }
 }

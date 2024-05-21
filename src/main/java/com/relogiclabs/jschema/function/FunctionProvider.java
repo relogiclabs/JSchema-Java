@@ -5,14 +5,10 @@ import com.relogiclabs.jschema.tree.RuntimeContext;
 import lombok.Getter;
 import lombok.Setter;
 
-@Getter
+@Getter @Setter
 public abstract class FunctionProvider {
-    protected final RuntimeContext runtime;
-    @Setter protected JFunction caller;
-
-    public FunctionProvider(RuntimeContext runtime) {
-        this.runtime = runtime;
-    }
+    protected RuntimeContext runtime;
+    protected JFunction caller;
 
     protected boolean fail(RuntimeException exception) {
         return runtime.getExceptions().fail(exception);

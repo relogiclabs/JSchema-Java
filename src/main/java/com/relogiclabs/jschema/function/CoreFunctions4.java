@@ -10,7 +10,6 @@ import com.relogiclabs.jschema.node.JDateTime;
 import com.relogiclabs.jschema.node.JString;
 import com.relogiclabs.jschema.node.JUndefined;
 import com.relogiclabs.jschema.time.DateTimeType;
-import com.relogiclabs.jschema.tree.RuntimeContext;
 
 import static com.relogiclabs.jschema.message.ErrorCode.AFTR01;
 import static com.relogiclabs.jschema.message.ErrorCode.AFTR02;
@@ -30,11 +29,7 @@ import static com.relogiclabs.jschema.message.ErrorCode.STRT01;
 import static com.relogiclabs.jschema.message.ErrorCode.STRT02;
 import static com.relogiclabs.jschema.time.DateTimeType.DATE_TYPE;
 
-public class CoreFunctions4 extends CoreFunctions3 {
-    public CoreFunctions4(RuntimeContext runtime) {
-        super(runtime);
-    }
-
+public final class CoreFunctions4 extends CoreFunctions3 {
     public boolean date(JString target, JString pattern) {
         return dateTime(target, pattern, DATE_TYPE);
     }
@@ -48,28 +43,28 @@ public class CoreFunctions4 extends CoreFunctions3 {
     }
 
     public boolean before(JDateTime target, JString reference) {
-        var dateTime = getDateTime(target.getDateTimeParser(), reference);
-        if(dateTime == null) return false;
-        if(target.getDateTime().compare(dateTime.getDateTime()) < 0) return true;
-        var type = target.getDateTime().getType();
-        var code = type == DATE_TYPE ? BFOR01 : BFOR02;
+        var dateTimeNode = getDateTime(target.getDateTimeParser(), reference);
+        if(dateTimeNode == null) return false;
+        if(target.getDateTime().compare(dateTimeNode.getDateTime()) < 0) return true;
+        var dateTime = target.getDateTime().getType();
+        var code = dateTime == DATE_TYPE ? BFOR01 : BFOR02;
         return fail(new JsonSchemaException(
-                new ErrorDetail(code, type, " is not earlier than specified"),
-                new ExpectedDetail(reference, "a ", type, " before ", reference),
-                new ActualDetail(target, "found ", target, " which is not inside limit")
+            new ErrorDetail(code, dateTime + " is not earlier than specified"),
+            new ExpectedDetail(caller, "a " + dateTime + " before " + reference),
+            new ActualDetail(target, "found " + target + " which is not inside limit")
         ));
     }
 
     public boolean after(JDateTime target, JString reference) {
-        var dateTime = getDateTime(target.getDateTimeParser(), reference);
-        if(dateTime == null) return false;
-        if(target.getDateTime().compare(dateTime.getDateTime()) > 0) return true;
-        var type = target.getDateTime().getType();
-        var code = type == DATE_TYPE ? AFTR01 : AFTR02;
+        var dateTimeNode = getDateTime(target.getDateTimeParser(), reference);
+        if(dateTimeNode == null) return false;
+        if(target.getDateTime().compare(dateTimeNode.getDateTime()) > 0) return true;
+        var dateTime = target.getDateTime().getType();
+        var code = dateTime == DATE_TYPE ? AFTR01 : AFTR02;
         return fail(new JsonSchemaException(
-                new ErrorDetail(code, type, " is not later than specified"),
-                new ExpectedDetail(reference, "a ", type, " after ", reference),
-                new ActualDetail(target, "found ", target, " which is not inside limit")
+            new ErrorDetail(code, dateTime + " is not later than specified"),
+            new ExpectedDetail(caller, "a " + dateTime + " after " + reference),
+            new ActualDetail(target, "found " + target + " which is not inside limit")
         ));
     }
 
@@ -90,20 +85,20 @@ public class CoreFunctions4 extends CoreFunctions3 {
     }
 
     private boolean failOnStartDate(JDateTime target, JDateTime start, String code) {
-        var type = target.getDateTime().getType();
+        var dateTime = target.getDateTime().getType();
         return fail(new JsonSchemaException(
-                new ErrorDetail(code, type, " is earlier than start ", type),
-                new ExpectedDetail(start, "a ", type, " from or after ", start),
-                new ActualDetail(target, "found ", target, " which is before start ", type)
+            new ErrorDetail(code, dateTime + " is earlier than start " + dateTime),
+            new ExpectedDetail(caller, "a " + dateTime + " from or after " + start),
+            new ActualDetail(target, "found " + target + " which is before start " + dateTime)
         ));
     }
 
     private boolean failOnEndDate(JDateTime target, JDateTime end, String code) {
-        var type = target.getDateTime().getType();
+        var dateTime = target.getDateTime().getType();
         return fail(new JsonSchemaException(
-                new ErrorDetail(code, type, " is later than end ", type),
-                new ExpectedDetail(end, "a ", type, " until or before ", end),
-                new ActualDetail(target, "found ", target, " which is after end ", type)
+            new ErrorDetail(code, dateTime + " is later than end " + dateTime),
+            new ExpectedDetail(caller, "a " + dateTime + " until or before " + end),
+            new ActualDetail(target, "found " + target + " which is after end " + dateTime)
         ));
     }
 
@@ -122,30 +117,30 @@ public class CoreFunctions4 extends CoreFunctions3 {
     }
 
     public boolean start(JDateTime target, JString reference) {
-        var dateTime = getDateTime(target.getDateTimeParser(), reference);
-        if(dateTime == null) return false;
-        if(target.getDateTime().compare(dateTime.getDateTime()) < 0) {
-            var type = target.getDateTime().getType();
-            var code = type == DATE_TYPE ? STRT01 : STRT02;
+        var dateTimeNode = getDateTime(target.getDateTimeParser(), reference);
+        if(dateTimeNode == null) return false;
+        if(target.getDateTime().compare(dateTimeNode.getDateTime()) < 0) {
+            var dateTime = target.getDateTime().getType();
+            var code = dateTime == DATE_TYPE ? STRT01 : STRT02;
             return fail(new JsonSchemaException(
-                    new ErrorDetail(code, type, " is earlier than specified"),
-                    new ExpectedDetail(dateTime, "a ", type, " from or after ", dateTime),
-                    new ActualDetail(target, "found ", target, " which is before limit")
+                new ErrorDetail(code, dateTime + " is earlier than specified"),
+                new ExpectedDetail(caller, "a " + dateTime + " from or after " + dateTimeNode),
+                new ActualDetail(target, "found " + target + " which is before limit")
             ));
         }
         return true;
     }
 
     public boolean end(JDateTime target, JString reference) {
-        var dateTime = getDateTime(target.getDateTimeParser(), reference);
-        if(dateTime == null) return false;
-        if(target.getDateTime().compare(dateTime.getDateTime()) > 0) {
-            var type = target.getDateTime().getType();
-            var code = type == DATE_TYPE ? ENDE01 : ENDE02;
+        var dateTimeNode = getDateTime(target.getDateTimeParser(), reference);
+        if(dateTimeNode == null) return false;
+        if(target.getDateTime().compare(dateTimeNode.getDateTime()) > 0) {
+            var dateTime = target.getDateTime().getType();
+            var code = dateTime == DATE_TYPE ? ENDE01 : ENDE02;
             return fail(new JsonSchemaException(
-                    new ErrorDetail(code, type, " is later than specified"),
-                    new ExpectedDetail(dateTime, "a ", type, " until or before ", dateTime),
-                    new ActualDetail(target, "found ", target, " which is after limit")
+                new ErrorDetail(code, dateTime + " is later than specified"),
+                new ExpectedDetail(caller, "a " + dateTime + " until or before " + dateTimeNode),
+                new ActualDetail(target, "found " + target + " which is after limit")
             ));
         }
         return true;

@@ -13,7 +13,6 @@ import lombok.Getter;
 import static com.relogiclabs.jschema.internal.message.MessageHelper.DataTypeArgumentFailed;
 import static com.relogiclabs.jschema.internal.message.MessageHelper.DataTypeMismatch;
 import static com.relogiclabs.jschema.internal.util.CollectionHelper.asList;
-import static com.relogiclabs.jschema.internal.util.StringHelper.concat;
 import static com.relogiclabs.jschema.message.ErrorCode.DEFI03;
 import static com.relogiclabs.jschema.message.ErrorCode.DEFI04;
 import static com.relogiclabs.jschema.message.ErrorCode.DTYP04;
@@ -50,18 +49,18 @@ public final class JDataType extends JBranch implements NestedMode {
     public boolean match(JNode node) {
         Reference<String> error = new Reference<>();
         if(!jsonType.match(node, error)) return failTypeWith(new JsonSchemaException(
-                new ErrorDetail(nested ? DTYP06 : DTYP04,
-                        formatMessage(DataTypeMismatch, error.getValue())),
-                ExpectedHelper.asDataTypeMismatch(this),
-                ActualHelper.asDataTypeMismatch(node)));
+            new ErrorDetail(nested ? DTYP06 : DTYP04,
+                formatMessage(DataTypeMismatch, error.getValue())),
+            ExpectedHelper.asDataTypeMismatch(this),
+            ActualHelper.asDataTypeMismatch(node)));
         if(alias == null) return true;
         var validator = getRuntime().getDefinitions().get(alias);
         if(validator == null) return fail(new DefinitionNotFoundException(formatForSchema(
-                nested ? DEFI04 : DEFI03, concat("No definition found for '", alias, "'"), this)));
+            nested ? DEFI04 : DEFI03, "No definition found for '" + alias + "'", this)));
         if(!validator.match(node)) return fail(new JsonSchemaException(
-                new ErrorDetail(nested ? DTYP07 : DTYP05, DataTypeArgumentFailed),
-                ExpectedHelper.asDataTypeArgumentFailed(this),
-                ActualHelper.asDataTypeArgumentFailed(node)));
+            new ErrorDetail(nested ? DTYP07 : DTYP05, DataTypeArgumentFailed),
+            ExpectedHelper.asDataTypeArgumentFailed(this),
+            ActualHelper.asDataTypeArgumentFailed(node)));
         return true;
     }
 
@@ -71,7 +70,7 @@ public final class JDataType extends JBranch implements NestedMode {
     }
 
     private static String formatMessage(String main, String optional) {
-        return isEmpty(optional) ? main : concat(main, " (", uncapitalize(optional), ")");
+        return isEmpty(optional) ? main : main + " (" + uncapitalize(optional) + ")";
     }
 
     boolean isApplicable(JNode node) {

@@ -13,12 +13,12 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
+import static com.relogiclabs.jschema.internal.message.MessageHelper.DataTypeMismatch;
 import static com.relogiclabs.jschema.internal.message.MessageHelper.InvalidNonCompositeType;
 import static com.relogiclabs.jschema.internal.message.MessageHelper.ValidationFailed;
 import static com.relogiclabs.jschema.internal.util.CollectionHelper.addToList;
 import static com.relogiclabs.jschema.internal.util.CollectionHelper.tryGetLast;
 import static com.relogiclabs.jschema.internal.util.StreamHelper.forEachTrue;
-import static com.relogiclabs.jschema.internal.util.StringHelper.concat;
 import static com.relogiclabs.jschema.internal.util.StringHelper.join;
 import static com.relogiclabs.jschema.message.ErrorCode.DTYP03;
 import static com.relogiclabs.jschema.message.ErrorCode.VALD01;
@@ -74,7 +74,7 @@ public final class JValidator extends JBranch {
                 ExpectedHelper.asGeneralValueMismatch(value),
                 ActualHelper.asGeneralValueMismatch(node)));
         var rDataType = matchDataType(node);
-        var fDataType = rDataType && dataTypes.size() != 0;
+        var fDataType = rDataType && !dataTypes.isEmpty();
         boolean rFunction = forEachTrue(functions.stream()
                 .filter(f -> f.isApplicable(node) || !fDataType)
                 .map(f -> f.match(node)));
@@ -105,7 +105,10 @@ public final class JValidator extends JBranch {
         var a1 = e1.getAttribute(DATA_TYPE_NAME);
         var a2 = e2.getAttribute(DATA_TYPE_NAME);
         if(a1 == null || a2 == null) return null;
-        var result = new JsonSchemaException(e1.getError(), mergeExpected(e1, e2), e2.getActual());
+        var cause = ex1.getCause() != null ? ex1.getCause() : ex1;
+        cause.addSuppressed(ex2);
+        var result = new JsonSchemaException(new ErrorDetail(e1.getCode(), DataTypeMismatch),
+            mergeExpected(e1, e2), e2.getActual(), cause);
         result.setAttribute(DATA_TYPE_NAME, a1 + a2);
         return result;
     }
@@ -115,7 +118,7 @@ public final class JValidator extends JBranch {
         var typeName2 = ex2.getAttribute(DATA_TYPE_NAME);
         var expected1 = ex1.getExpected();
         return new ExpectedDetail(expected1.getContext(),
-                concat(expected1.getMessage(), " or ", typeName2));
+            expected1.getMessage() + " or " + typeName2);
     }
 
     private boolean checkDataType(JNode node) {

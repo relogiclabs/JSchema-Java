@@ -6,7 +6,6 @@ import org.antlr.v4.runtime.Token;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static com.relogiclabs.jschema.internal.util.StringHelper.concat;
 import static com.relogiclabs.jschema.message.ErrorCode.DDAY01;
 import static com.relogiclabs.jschema.message.ErrorCode.DDAY02;
 import static com.relogiclabs.jschema.message.ErrorCode.DERA01;
@@ -131,7 +130,7 @@ abstract class SegmentProcessor {
         public String process(String input, Token token, DateTimeContext context) {
             var text = replaceChars(substring(token.getText(), 1, -1), "''", "'");
             if(!input.startsWith(text)) throw failOnInvalidDateTime(context, DTXT01,
-                    " text mismatch or input format");
+                    "text mismatch or input format");
             return input.substring(text.length());
         }
     }
@@ -140,7 +139,7 @@ abstract class SegmentProcessor {
         @Override
         public String process(String input, Token token, DateTimeContext context) {
             if(!input.startsWith(token.getText())) throw failOnInvalidDateTime(context, DSYM01,
-                    " symbol mismatch or input format");
+                    "symbol mismatch or input format");
             return input.substring(token.getText().length());
         }
     }
@@ -149,7 +148,7 @@ abstract class SegmentProcessor {
         @Override
         public String process(String input, Token token, DateTimeContext context) {
             if(!input.startsWith(token.getText())) throw failOnInvalidDateTime(context, DWTS01,
-                    " whitespace mismatch or input format");
+                    "whitespace mismatch or input format");
             return input.substring(token.getText().length());
         }
     }
@@ -180,7 +179,7 @@ abstract class SegmentProcessor {
 
         @Override
         protected void process(Matcher matcher, DateTimeContext context) {
-            if(!matcher.lookingAt()) throw failOnInvalidDateTime(context, code, " era input");
+            if(!matcher.lookingAt()) throw failOnInvalidDateTime(context, code, "era input");
             context.setEra(matcher.group(1));
         }
     }
@@ -192,7 +191,7 @@ abstract class SegmentProcessor {
 
         @Override
         protected void process(Matcher matcher, DateTimeContext context) {
-            if(!matcher.lookingAt()) throw failOnInvalidDateTime(context, code, " year input");
+            if(!matcher.lookingAt()) throw failOnInvalidDateTime(context, code, "year input");
             var year = matcher.group(1);
             context.setYear(Integer.parseInt(year), year.length());
         }
@@ -206,7 +205,7 @@ abstract class SegmentProcessor {
         @Override
         protected void process(Matcher matcher, DateTimeContext context) {
             if(!matcher.lookingAt()) throw failOnInvalidDateTime(context, code,
-                    " month name input");
+                    "month name input");
             context.setMonth(matcher.group(1));
         }
     }
@@ -219,7 +218,7 @@ abstract class SegmentProcessor {
         @Override
         protected void process(Matcher matcher, DateTimeContext context) {
             if(!matcher.lookingAt()) throw failOnInvalidDateTime(context, code,
-                    " month number input");
+                    "month number input");
             context.setMonth(Integer.parseInt(matcher.group(1)));
         }
     }
@@ -231,7 +230,7 @@ abstract class SegmentProcessor {
 
         @Override
         protected void process(Matcher matcher, DateTimeContext context) {
-            if(!matcher.lookingAt()) throw failOnInvalidDateTime(context, code, " weekday input");
+            if(!matcher.lookingAt()) throw failOnInvalidDateTime(context, code, "weekday input");
             context.setWeekday(matcher.group(1));
         }
     }
@@ -243,7 +242,7 @@ abstract class SegmentProcessor {
 
         @Override
         protected void process(Matcher matcher, DateTimeContext context) {
-            if(!matcher.lookingAt()) throw failOnInvalidDateTime(context, code, " day input");
+            if(!matcher.lookingAt()) throw failOnInvalidDateTime(context, code, "day input");
             context.setDay(Integer.parseInt(matcher.group(1)));
         }
     }
@@ -255,7 +254,7 @@ abstract class SegmentProcessor {
 
         @Override
         protected void process(Matcher matcher, DateTimeContext context) {
-            if(!matcher.lookingAt()) throw failOnInvalidDateTime(context, code, " AM/PM input");
+            if(!matcher.lookingAt()) throw failOnInvalidDateTime(context, code, "AM/PM input");
             context.setAmPm(matcher.group(1));
         }
     }
@@ -267,7 +266,7 @@ abstract class SegmentProcessor {
 
         @Override
         protected void process(Matcher matcher, DateTimeContext context) {
-            if(!matcher.lookingAt()) throw failOnInvalidDateTime(context, code, " hour input");
+            if(!matcher.lookingAt()) throw failOnInvalidDateTime(context, code, "hour input");
             context.setHour(Integer.parseInt(matcher.group(1)));
         }
     }
@@ -279,7 +278,7 @@ abstract class SegmentProcessor {
 
         @Override
         protected void process(Matcher matcher, DateTimeContext context) {
-            if(!matcher.lookingAt()) throw failOnInvalidDateTime(context, code, " minute input");
+            if(!matcher.lookingAt()) throw failOnInvalidDateTime(context, code, "minute input");
             context.setMinute(Integer.parseInt(matcher.group(1)));
         }
     }
@@ -291,7 +290,7 @@ abstract class SegmentProcessor {
 
         @Override
         protected void process(Matcher matcher, DateTimeContext context) {
-            if(!matcher.lookingAt()) throw failOnInvalidDateTime(context, code, " second input");
+            if(!matcher.lookingAt()) throw failOnInvalidDateTime(context, code, "second input");
             context.setSecond(Integer.parseInt(matcher.group(1)));
         }
     }
@@ -304,7 +303,7 @@ abstract class SegmentProcessor {
         @Override
         protected void process(Matcher matcher, DateTimeContext context) {
             if(!matcher.lookingAt()) throw failOnInvalidDateTime(context, code,
-                    " second faction input");
+                    "second fraction input");
             context.setFraction(Integer.parseInt(matcher.group(1)));
         }
     }
@@ -317,7 +316,7 @@ abstract class SegmentProcessor {
         @Override
         protected void process(Matcher matcher, DateTimeContext context) {
             if(!matcher.lookingAt()) throw failOnInvalidDateTime(context, code,
-                    " UTC offset hour input");
+                    "UTC offset hour input");
             context.setUtcOffset("Z".equals(matcher.group())
                     ? 0 : Integer.parseInt(matcher.group(1)), 0);
         }
@@ -331,7 +330,7 @@ abstract class SegmentProcessor {
         @Override
         protected void process(Matcher matcher, DateTimeContext context) {
             if(!matcher.lookingAt()) throw failOnInvalidDateTime(context, code,
-                    " UTC offset input");
+                    "UTC offset input");
             if("Z".equals(matcher.group())) context.setUtcOffset(0, 0);
             else context.setUtcOffset(Integer.parseInt(matcher.group(1)),
                     Integer.parseInt(matcher.group(2)));
@@ -340,7 +339,6 @@ abstract class SegmentProcessor {
 
     private static InvalidDateTimeException failOnInvalidDateTime(DateTimeContext context,
                 String code, String message) {
-        return new InvalidDateTimeException(code, concat("Invalid ",
-                context.getType(), message));
+        return new InvalidDateTimeException(code, "Invalid " + context.getType() + " " + message);
     }
 }
