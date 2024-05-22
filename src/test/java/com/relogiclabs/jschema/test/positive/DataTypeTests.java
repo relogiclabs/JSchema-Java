@@ -7,8 +7,8 @@ import org.junit.jupiter.api.Test;
 public class DataTypeTests {
     @Test
     public void When_DataTypeMultiple_ValidTrue() {
-        var schema = "#string #integer #null ";
-        var json = "10";
+        var schema = " #string #integer #null ";
+        var json = " 10 ";
         JsonAssert.isValid(schema, json);
     }
 
@@ -30,7 +30,24 @@ public class DataTypeTests {
                 "key3": [10, 100, 200.5]
             }
             """;
-        JsonSchema.isValid(schema, json);
+        JsonAssert.isValid(schema, json);
+    }
+
+    @Test
+    public void When_CheckMultiLevelNestedDataTypeInArray_ValidTrue() {
+        var schema =
+            """
+            %define $inner: @range*(0, 100) #float*
+            %schema: @length*(3) @length(3) #array*($inner) #array
+            """;
+        var json =
+            """
+            [
+                [0.1, 1.2, 2.3],
+                [10.5, 11.6, 12.7],
+                [80.7, 90.8, 99.9]
+            ]
+            """;
         JsonAssert.isValid(schema, json);
     }
 

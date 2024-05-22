@@ -23,7 +23,7 @@ public class IntegerTests {
 
         JsonSchema.isValid(schema, json);
         var exception = assertThrows(JsonSchemaException.class,
-                () -> JsonAssert.isValid(schema, json));
+            () -> JsonAssert.isValid(schema, json));
         assertEquals(DTYP04, exception.getCode());
         exception.printStackTrace();
     }
@@ -35,7 +35,7 @@ public class IntegerTests {
 
         JsonSchema.isValid(schema, json);
         var exception = assertThrows(JsonSchemaException.class,
-                () -> JsonAssert.isValid(schema, json));
+            () -> JsonAssert.isValid(schema, json));
         assertEquals(INTE01, exception.getCode());
         exception.printStackTrace();
     }
@@ -60,7 +60,7 @@ public class IntegerTests {
             """;
         JsonSchema.isValid(schema, json);
         var exception = assertThrows(JsonSchemaException.class,
-                () -> JsonAssert.isValid(schema, json));
+            () -> JsonAssert.isValid(schema, json));
         assertEquals(DTYP04, exception.getCode());
         exception.printStackTrace();
     }
@@ -77,7 +77,7 @@ public class IntegerTests {
             """;
         JsonSchema.isValid(schema, json);
         var exception = assertThrows(JsonSchemaException.class,
-                () -> JsonAssert.isValid(schema, json));
+            () -> JsonAssert.isValid(schema, json));
         assertEquals(DTYP04, exception.getCode());
         exception.printStackTrace();
     }
@@ -94,7 +94,7 @@ public class IntegerTests {
             """;
         JsonSchema.isValid(schema, json);
         var exception = assertThrows(JsonSchemaException.class,
-                () -> JsonAssert.isValid(schema, json));
+            () -> JsonAssert.isValid(schema, json));
         assertEquals(DTYP06, exception.getCode());
         exception.printStackTrace();
     }
@@ -115,7 +115,7 @@ public class IntegerTests {
             """;
         JsonSchema.isValid(schema, json);
         var exception = assertThrows(JsonSchemaException.class,
-                () -> JsonAssert.isValid(schema, json));
+            () -> JsonAssert.isValid(schema, json));
         assertEquals(DTYP06, exception.getCode());
         exception.printStackTrace();
     }
@@ -136,7 +136,7 @@ public class IntegerTests {
             """;
         JsonSchema.isValid(schema, json);
         var exception = assertThrows(JsonSchemaException.class,
-                () -> JsonAssert.isValid(schema, json));
+            () -> JsonAssert.isValid(schema, json));
         assertEquals(DTYP06, exception.getCode());
         exception.printStackTrace();
     }
@@ -153,7 +153,7 @@ public class IntegerTests {
             """;
         JsonSchema.isValid(schema, json);
         var exception = assertThrows(JsonSchemaException.class,
-                () -> JsonAssert.isValid(schema, json));
+            () -> JsonAssert.isValid(schema, json));
         assertEquals(FUNC06, exception.getCode());
         exception.printStackTrace();
     }
@@ -174,7 +174,7 @@ public class IntegerTests {
             """;
         JsonSchema.isValid(schema, json);
         var exception = assertThrows(JsonSchemaException.class,
-                () -> JsonAssert.isValid(schema, json));
+            () -> JsonAssert.isValid(schema, json));
         assertEquals(RANG01, exception.getCode());
         exception.printStackTrace();
     }
@@ -191,7 +191,7 @@ public class IntegerTests {
             """;
         JsonSchema.isValid(schema, json);
         var exception = assertThrows(JsonSchemaException.class,
-                () -> JsonAssert.isValid(schema, json));
+            () -> JsonAssert.isValid(schema, json));
         assertEquals(RANG04, exception.getCode());
         exception.printStackTrace();
     }
@@ -208,7 +208,7 @@ public class IntegerTests {
             """;
         JsonSchema.isValid(schema, json);
         var exception = assertThrows(JsonSchemaException.class,
-                () -> JsonAssert.isValid(schema, json));
+            () -> JsonAssert.isValid(schema, json));
         assertEquals(RANG03, exception.getCode());
         exception.printStackTrace();
     }

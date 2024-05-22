@@ -16,15 +16,15 @@ public class ScriptSearchTests {
             }
             %script: {
                 future searchTest(query) {
-                    var index = search(target, query[0]);
-                    print("Received query: " + query[0]);
+                    var index = search(target, query);
+                    print("Received query: " + query);
                     print("Found at: " + index);
-                    if(index != 28) return fail("Invalid: " + index);
+                    if(index != 28) return fail("Invalid: " + target);
                 }
                 
                 subroutine search(text, query) {
-                    var n = size(text);
-                    var m = size(query);
+                    var n = text.length();
+                    var m = query.length();
                     
                     for(var i = 0; i <= n - m; i++) {
                         var match = true;
@@ -61,15 +61,15 @@ public class ScriptSearchTests {
             }
             %script: {
                 future searchTest(searchKey) {
-                    var index = binarySearch(target, searchKey[0]);
-                    print("Received key: " + searchKey[0]);
+                    var index = binarySearch(target, searchKey);
+                    print("Received key: " + searchKey);
                     print("Found at: " + index);
-                    if(index != 97) return fail("Invalid: " + index);
+                    if(index != 97) return fail("Invalid: " + target);
                 }
                 
                 subroutine binarySearch(array, key) {
                     var low = 0;
-                    var high = size(array) - 1;
+                    var high = array.length() - 1;
                 
                     while(low <= high) {
                         var mid = low + (high - low) / 2;
@@ -124,16 +124,15 @@ public class ScriptSearchTests {
                         [0, 10, 18], [2, 6], [1, 14], [0, 11], [10, 15], [0, 13], [4, 12], [4], 
                         [9, 16], [11, 19], [15], [5, 19], [7]];
                     if(graph != target) return fail("Different graph: " + target);
-                    var visited = fill(false, size(graph));
+                    var visited = [].fill(false, graph.length());
                     dfs(graph, 0, visited);
                     visitedOrder = visitedOrder[2..];
-                    if(visitedOrder != order[0]) return fail("Invalid: " + visitedOrder);
-                    print(visitedOrder);
+                    if(visitedOrder != order) return fail("Invalid: " + order);
                 }
                 
                 subroutine dfs(graph, start, visited) {
                     visited[start] = true;
-                    visitedOrder = visitedOrder + ", " + start;
+                    visitedOrder += ", " + start;
                     foreach(var neighbor in graph[start]) {
                         if(!visited[neighbor]) {
                             dfs(graph, neighbor, visited);
@@ -171,25 +170,24 @@ public class ScriptSearchTests {
                         [0, 10, 18], [2, 6], [1, 14], [0, 11], [10, 15], [0, 13], [4, 12], [4], 
                         [9, 16], [11, 19], [15], [5, 19], [7]];
                     if(graph != target) return fail("Different graph: " + target);
-                    var visited = fill(false, size(graph));
                     bfs(graph, 0);
                     visitedOrder = visitedOrder[..-2];
-                    if(visitedOrder != order[0]) return fail("Invalid: " + visitedOrder);
+                    if(visitedOrder != order) return fail("Invalid: " + order);
                 }
                 
                 subroutine bfs(graph, start) {
-                    var visited = fill(false, size(graph));
+                    var visited = [].fill(false, graph.length());
                     var front = 0, rear = 0;
                     var queue = [];
                     queue[rear++] = start;
                     visited[start] = true;
                 
-                    while (front != rear) {
+                    while(front != rear) {
                         var current = queue[front++];
-                        visitedOrder = visitedOrder + current + ", ";
+                        visitedOrder += current + ", ";
                 
                         foreach(var neighbor in graph[current]) {
-                            if (!visited[neighbor]) {
+                            if(!visited[neighbor]) {
                                 queue[rear++] = neighbor;
                                 visited[neighbor] = true;
                             }

@@ -19,7 +19,7 @@ public class BooleanTests {
 
         JsonSchema.isValid(schema, json);
         var exception = assertThrows(JsonSchemaException.class,
-                () -> JsonAssert.isValid(schema, json));
+            () -> JsonAssert.isValid(schema, json));
         assertEquals(DTYP04, exception.getCode());
         exception.printStackTrace();
     }
@@ -31,7 +31,7 @@ public class BooleanTests {
 
         JsonSchema.isValid(schema, json);
         var exception = assertThrows(JsonSchemaException.class,
-                () -> JsonAssert.isValid(schema, json));
+            () -> JsonAssert.isValid(schema, json));
         assertEquals(BOOL01, exception.getCode());
         exception.printStackTrace();
     }
@@ -56,7 +56,7 @@ public class BooleanTests {
             """;
         JsonSchema.isValid(schema, json);
         var exception = assertThrows(JsonSchemaException.class,
-                () -> JsonAssert.isValid(schema, json));
+            () -> JsonAssert.isValid(schema, json));
         assertEquals(DTYP04, exception.getCode());
         exception.printStackTrace();
     }
@@ -73,7 +73,7 @@ public class BooleanTests {
             """;
         JsonSchema.isValid(schema, json);
         var exception = assertThrows(JsonSchemaException.class,
-                () -> JsonAssert.isValid(schema, json));
+            () -> JsonAssert.isValid(schema, json));
         assertEquals(DTYP04, exception.getCode());
         exception.printStackTrace();
     }
@@ -90,7 +90,7 @@ public class BooleanTests {
             """;
         JsonSchema.isValid(schema, json);
         var exception = assertThrows(JsonSchemaException.class,
-                () -> JsonAssert.isValid(schema, json));
+            () -> JsonAssert.isValid(schema, json));
         assertEquals(DTYP06, exception.getCode());
         exception.printStackTrace();
     }
@@ -111,7 +111,7 @@ public class BooleanTests {
             """;
         JsonSchema.isValid(schema, json);
         var exception = assertThrows(JsonSchemaException.class,
-                () -> JsonAssert.isValid(schema, json));
+            () -> JsonAssert.isValid(schema, json));
         assertEquals(DTYP06, exception.getCode());
         exception.printStackTrace();
     }

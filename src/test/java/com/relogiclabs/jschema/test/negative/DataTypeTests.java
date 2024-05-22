@@ -18,16 +18,16 @@ public class DataTypeTests {
     @Test
     public void When_WrongJsonWithDirectDataType_ExceptionThrown() {
         var schema =
-                """
-                #string* #array
-                """;
+            """
+            #string* #array
+            """;
         var json =
-                """
-                10
-                """;
+            """
+            10
+            """;
         JsonSchema.isValid(schema, json);
         var exception = assertThrows(JsonSchemaException.class,
-                () -> JsonAssert.isValid(schema, json));
+            () -> JsonAssert.isValid(schema, json));
         assertEquals(DTYP04, exception.getCode());
         exception.printStackTrace();
     }
@@ -35,16 +35,16 @@ public class DataTypeTests {
     @Test
     public void When_WrongJsonWithNestedDataType_ExceptionThrown() {
         var schema =
-                """
-                #string* #array
-                """;
+            """
+            #string* #array
+            """;
         var json =
-                """
-                [10, 20]
-                """;
+            """
+            [10, 20]
+            """;
         JsonSchema.isValid(schema, json);
         var exception = assertThrows(JsonSchemaException.class,
-                () -> JsonAssert.isValid(schema, json));
+            () -> JsonAssert.isValid(schema, json));
         assertEquals(DTYP06, exception.getCode());
         exception.printStackTrace();
     }
@@ -52,16 +52,16 @@ public class DataTypeTests {
     @Test
     public void When_NestedTypeWithNonCompositeJson_ExceptionThrown() {
         var schema =
-                """
-                #string*
-                """;
+            """
+            #string*
+            """;
         var json =
-                """
-                10
-                """;
+            """
+            10
+            """;
         JsonSchema.isValid(schema, json);
         var exception = assertThrows(JsonSchemaException.class,
-                () -> JsonAssert.isValid(schema, json));
+            () -> JsonAssert.isValid(schema, json));
         assertEquals(DTYP03, exception.getCode());
         exception.printStackTrace();
     }
@@ -69,16 +69,16 @@ public class DataTypeTests {
     @Test
     public void When_UndefinedDataTypeArgument_ExceptionThrown() {
         var schema =
-                """
-                #array($undefined)
-                """;
+            """
+            #array($undefined)
+            """;
         var json =
-                """
-                [10, 20]
-                """;
+            """
+            [10, 20]
+            """;
         JsonSchema.isValid(schema, json);
         var exception = assertThrows(DefinitionNotFoundException.class,
-                () -> JsonAssert.isValid(schema, json));
+            () -> JsonAssert.isValid(schema, json));
         assertEquals(DEFI03, exception.getCode());
         exception.printStackTrace();
     }
@@ -86,54 +86,52 @@ public class DataTypeTests {
     @Test
     public void When_UndefinedNestedDataTypeArgument_ExceptionThrown() {
         var schema =
-                """
-                #integer*($undefined) #array
-                """;
+            """
+            #integer*($undefined) #array
+            """;
         var json =
-                """
-                [10, 20]
-                """;
+            """
+            [10, 20]
+            """;
         JsonSchema.isValid(schema, json);
         var exception = assertThrows(DefinitionNotFoundException.class,
-                () -> JsonAssert.isValid(schema, json));
+            () -> JsonAssert.isValid(schema, json));
         assertEquals(DEFI04, exception.getCode());
         exception.printStackTrace();
     }
 
     @Test
-    public void When_DataTypeArgumentWithValidationFailed_ExceptionThrown()
-    {
+    public void When_DataTypeArgumentWithValidationFailed_ExceptionThrown() {
         var schema =
-                """
-                %define $test: {"k1": #string}
-                %schema: #object($test)
-                """;
+            """
+            %define $test: {"k1": #string}
+            %schema: #object($test)
+            """;
         var json =
-                """
-                {"k1": 10}
-                """;
+            """
+            {"k1": 10}
+            """;
         JsonSchema.isValid(schema, json);
         var exception = assertThrows(JsonSchemaException.class,
-                () -> JsonAssert.isValid(schema, json));
+            () -> JsonAssert.isValid(schema, json));
         assertEquals(DTYP04, exception.getCode());
         exception.printStackTrace();
     }
 
     @Test
-    public void When_NestedDataTypeArgumentWithValidationFailed_ExceptionThrown()
-    {
+    public void When_NestedDataTypeArgumentWithValidationFailed_ExceptionThrown() {
         var schema =
-                """
-                %define $test: {"k1": #string}
-                %schema: #object*($test) #array
-                """;
+            """
+            %define $test: {"k1": #string}
+            %schema: #object*($test) #array
+            """;
         var json =
-                """
-                [{"k1": 10}]
-                """;
+            """
+            [{"k1": 10}]
+            """;
         JsonSchema.isValid(schema, json);
         var exception = assertThrows(JsonSchemaException.class,
-                () -> JsonAssert.isValid(schema, json));
+            () -> JsonAssert.isValid(schema, json));
         assertEquals(DTYP04, exception.getCode());
         exception.printStackTrace();
     }
@@ -158,7 +156,7 @@ public class DataTypeTests {
             """;
         JsonSchema.isValid(schema, json);
         var exception = assertThrows(JsonSchemaException.class,
-                () -> JsonAssert.isValid(schema, json));
+            () -> JsonAssert.isValid(schema, json));
         assertEquals(DTYP06, exception.getCode());
         exception.printStackTrace();
     }
@@ -185,7 +183,7 @@ public class DataTypeTests {
         if(!jsonSchema.isValid(json)) jsonSchema.writeError();
         assertEquals(8, jsonSchema.getExceptions().getCount());
         var exception = assertThrows(JsonSchemaException.class,
-                () -> JsonAssert.isValid(schema, json));
+            () -> JsonAssert.isValid(schema, json));
         assertEquals(DTYP06, exception.getCode());
         exception.printStackTrace();
     }
@@ -198,8 +196,8 @@ public class DataTypeTests {
                 "key1": #date #time #null,
                 "key2": #array #object #null,
                 "key3": #integer #float,
-                "key4": #string #null,
-                "key5": #number #string
+                "key4": #integer #date #null,
+                "key5": #number #string #null
             }
             """;
         var json =
@@ -214,7 +212,7 @@ public class DataTypeTests {
             """;
         JsonSchema.isValid(schema, json);
         var exception = assertThrows(JsonSchemaException.class,
-                () -> JsonAssert.isValid(schema, json));
+            () -> JsonAssert.isValid(schema, json));
         assertEquals(DTYP04, exception.getCode());
         exception.printStackTrace();
     }

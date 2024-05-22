@@ -25,7 +25,7 @@ public class OtherTests {
 
         //JsonSchema.isValid(schema, json);
         var exception = assertThrows(InvalidDataTypeException.class,
-                () -> JsonAssert.isValid(schema, json));
+            () -> JsonAssert.isValid(schema, json));
         assertEquals(DTYP01, exception.getCode());
         exception.printStackTrace();
     }
@@ -37,7 +37,7 @@ public class OtherTests {
 
         JsonSchema.isValid(schema, json);
         var exception = assertThrows(JsonSchemaException.class,
-                () -> JsonAssert.isValid(schema, json));
+            () -> JsonAssert.isValid(schema, json));
         assertEquals(DTYP04, exception.getCode());
         exception.printStackTrace();
     }
@@ -49,7 +49,7 @@ public class OtherTests {
 
         JsonSchema.isValid(schema, json);
         var exception = assertThrows(JsonSchemaException.class,
-                () -> JsonAssert.isValid(schema, json));
+            () -> JsonAssert.isValid(schema, json));
         assertEquals(DTYP04, exception.getCode());
         exception.printStackTrace();
     }
@@ -61,7 +61,7 @@ public class OtherTests {
 
         JsonSchema.isValid(schema, json);
         var exception = assertThrows(JsonSchemaException.class,
-                () -> JsonAssert.isValid(schema, json));
+            () -> JsonAssert.isValid(schema, json));
         assertEquals(DTYP04, exception.getCode());
         exception.printStackTrace();
     }
@@ -73,7 +73,7 @@ public class OtherTests {
 
         JsonSchema.isValid(schema, json);
         var exception = assertThrows(JsonSchemaException.class,
-                () -> JsonAssert.isValid(schema, json));
+            () -> JsonAssert.isValid(schema, json));
         assertEquals(FLOT01, exception.getCode());
         exception.printStackTrace();
     }
@@ -85,7 +85,7 @@ public class OtherTests {
 
         JsonSchema.isValid(schema, json);
         var exception = assertThrows(JsonSchemaException.class,
-                () -> JsonAssert.isValid(schema, json));
+            () -> JsonAssert.isValid(schema, json));
         assertEquals(DUBL01, exception.getCode());
         exception.printStackTrace();
     }
@@ -93,30 +93,30 @@ public class OtherTests {
     @Test
     public void When_NonStaticValidMethodWithWrongJson_ExceptionThrown() {
         var schema =
-                """
-                {
-                    "key1": #array,
-                    "key2": #array
-                }
-                """;
+            """
+            {
+                "key1": #array,
+                "key2": #array
+            }
+            """;
         var json1 =
-                """
-                {
-                    "key1": [1, 10, 100],
-                    "key2": [100, 1000, [10, 10000]]
-                }
-                """;
+            """
+            {
+                "key1": [1, 10, 100],
+                "key2": [100, 1000, [10, 10000]]
+            }
+            """;
         var json2 =
-                """
-                {
-                    "key1": [1, 10, 100],
-                    "key2": "string"
-                }
-                """;
+            """
+            {
+                "key1": [1, 10, 100],
+                "key2": "string"
+            }
+            """;
         var jsonAssert = new JsonAssert(schema);
         jsonAssert.isValid(json1);
         var exception = assertThrows(JsonSchemaException.class,
-                () -> jsonAssert.isValid(json2));
+            () -> jsonAssert.isValid(json2));
         assertEquals(DTYP04, exception.getCode());
         exception.printStackTrace();
     }
@@ -127,7 +127,7 @@ public class OtherTests {
         var json = "[]";
         JsonSchema.isValid(schema, json);
         var exception = assertThrows(JsonSchemaException.class,
-                () -> JsonAssert.isValid(schema, json));
+            () -> JsonAssert.isValid(schema, json));
         assertEquals(ARRY01, exception.getCode());
         exception.printStackTrace();
     }
@@ -138,7 +138,7 @@ public class OtherTests {
         var json = "[10, 20]";
         JsonSchema.isValid(schema, json);
         var exception = assertThrows(MisplacedOptionalException.class,
-                () -> JsonAssert.isValid(schema, json));
+            () -> JsonAssert.isValid(schema, json));
         assertEquals(ARRY02, exception.getCode());
         exception.printStackTrace();
     }
@@ -160,7 +160,7 @@ public class OtherTests {
             """;
         JsonSchema.isValid(schema, json);
         var exception = assertThrows(JsonSchemaException.class,
-                () -> JsonAssert.isValid(schema, json));
+            () -> JsonAssert.isValid(schema, json));
         assertEquals(PROP05, exception.getCode());
         exception.printStackTrace();
     }

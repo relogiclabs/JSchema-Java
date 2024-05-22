@@ -29,7 +29,7 @@ public class ComponentTests {
             """;
         //JsonSchema.isValid(schema, json);
         var exception = assertThrows(DefinitionNotFoundException.class,
-                () -> JsonAssert.isValid(schema, json));
+            () -> JsonAssert.isValid(schema, json));
         assertEquals(DEFI02, exception.getCode());
         exception.printStackTrace();
     }
@@ -54,7 +54,7 @@ public class ComponentTests {
             """;
         //JsonSchema.isValid(schema, json);
         var exception = assertThrows(DuplicateDefinitionException.class,
-                () -> JsonAssert.isValid(schema, json));
+            () -> JsonAssert.isValid(schema, json));
         assertEquals(DEFI01, exception.getCode());
         exception.printStackTrace();
     }

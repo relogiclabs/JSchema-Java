@@ -53,7 +53,7 @@ public class PragmaTests {
             """;
         JsonSchema.isValid(schema, json);
         var exception = assertThrows(JsonSchemaException.class,
-                () -> JsonAssert.isValid(schema, json));
+            () -> JsonAssert.isValid(schema, json));
         assertEquals(PROP06, exception.getCode());
         exception.printStackTrace();
     }
@@ -77,7 +77,7 @@ public class PragmaTests {
             """;
         //JsonSchema.isValid(schema, json);
         var exception = assertThrows(SchemaParserException.class,
-                () -> JsonAssert.isValid(schema, json));
+            () -> JsonAssert.isValid(schema, json));
         assertEquals(SPRS01, exception.getCode());
         exception.printStackTrace();
     }
@@ -101,7 +101,7 @@ public class PragmaTests {
             """;
         //JsonSchema.isValid(schema, json);
         var exception = assertThrows(PragmaNotFoundException.class,
-                () -> JsonAssert.isValid(schema, json));
+            () -> JsonAssert.isValid(schema, json));
         assertEquals(PRAG01, exception.getCode());
         exception.printStackTrace();
     }
@@ -125,7 +125,7 @@ public class PragmaTests {
             """;
         //JsonSchema.isValid(schema, json);
         var exception = assertThrows(InvalidPragmaValueException.class,
-                () -> JsonAssert.isValid(schema, json));
+            () -> JsonAssert.isValid(schema, json));
         assertEquals(PRAG02, exception.getCode());
         exception.printStackTrace();
     }
@@ -152,7 +152,7 @@ public class PragmaTests {
             """;
         JsonSchema.isValid(schema, json);
         var exception = assertThrows(JsonSchemaException.class,
-                () -> JsonAssert.isValid(schema, json));
+            () -> JsonAssert.isValid(schema, json));
         assertEquals(PROP07, exception.getCode());
         exception.printStackTrace();
     }
@@ -177,7 +177,7 @@ public class PragmaTests {
             """;
         JsonSchema.isValid(schema, json);
         var exception = assertThrows(JsonSchemaException.class,
-                () -> JsonAssert.isValid(schema, json));
+            () -> JsonAssert.isValid(schema, json));
         assertEquals(FLOT01, exception.getCode());
         exception.printStackTrace();
     }
@@ -203,7 +203,7 @@ public class PragmaTests {
             """;
         //JsonSchema.isValid(schema, json);
         var exception = assertThrows(DuplicatePragmaException.class,
-                () -> JsonAssert.isValid(schema, json));
+            () -> JsonAssert.isValid(schema, json));
         assertEquals(PRAG03, exception.getCode());
         exception.printStackTrace();
     }
@@ -228,7 +228,7 @@ public class PragmaTests {
             """;
         //JsonSchema.isValid(schema, json);
         var exception = assertThrows(DateTimeLexerException.class,
-                () -> JsonAssert.isValid(schema, json));
+            () -> JsonAssert.isValid(schema, json));
         assertEquals(DLEX01, exception.getCode());
         exception.printStackTrace();
     }
@@ -253,7 +253,7 @@ public class PragmaTests {
             """;
         JsonSchema.isValid(schema, json);
         var exception = assertThrows(JsonSchemaException.class,
-                () -> JsonAssert.isValid(schema, json));
+            () -> JsonAssert.isValid(schema, json));
         assertEquals(DTYP04, exception.getCode());
         exception.printStackTrace();
     }
@@ -278,7 +278,7 @@ public class PragmaTests {
             """;
         JsonSchema.isValid(schema, json);
         var exception = assertThrows(JsonSchemaException.class,
-                () -> JsonAssert.isValid(schema, json));
+            () -> JsonAssert.isValid(schema, json));
         assertEquals(DTYP04, exception.getCode());
         exception.printStackTrace();
     }
@@ -302,7 +302,7 @@ public class PragmaTests {
             """;
         JsonSchema.isValid(schema, json);
         var exception = assertThrows(JsonSchemaException.class,
-                () -> JsonAssert.isValid(schema, json));
+            () -> JsonAssert.isValid(schema, json));
         assertEquals(BFOR01, exception.getCode());
         exception.printStackTrace();
     }
@@ -326,7 +326,7 @@ public class PragmaTests {
             """;
         JsonSchema.isValid(schema, json);
         var exception = assertThrows(JsonSchemaException.class,
-                () -> JsonAssert.isValid(schema, json));
+            () -> JsonAssert.isValid(schema, json));
         assertEquals(AFTR01, exception.getCode());
         exception.printStackTrace();
     }
@@ -350,7 +350,7 @@ public class PragmaTests {
             """;
         JsonSchema.isValid(schema, json);
         var exception = assertThrows(JsonSchemaException.class,
-                () -> JsonAssert.isValid(schema, json));
+            () -> JsonAssert.isValid(schema, json));
         assertEquals(BFOR02, exception.getCode());
         exception.printStackTrace();
     }
@@ -374,7 +374,7 @@ public class PragmaTests {
             """;
         JsonSchema.isValid(schema, json);
         var exception = assertThrows(JsonSchemaException.class,
-                () -> JsonAssert.isValid(schema, json));
+            () -> JsonAssert.isValid(schema, json));
         assertEquals(AFTR02, exception.getCode());
         exception.printStackTrace();
     }
@@ -399,7 +399,7 @@ public class PragmaTests {
             """;
         JsonSchema.isValid(schema, json);
         var exception = assertThrows(JsonSchemaException.class,
-                () -> JsonAssert.isValid(schema, json));
+            () -> JsonAssert.isValid(schema, json));
         assertEquals(DRNG01, exception.getCode());
         exception.printStackTrace();
     }
@@ -424,7 +424,7 @@ public class PragmaTests {
             """;
         JsonSchema.isValid(schema, json);
         var exception = assertThrows(JsonSchemaException.class,
-                () -> JsonAssert.isValid(schema, json));
+            () -> JsonAssert.isValid(schema, json));
         assertEquals(DRNG07, exception.getCode());
         exception.printStackTrace();
     }
@@ -449,7 +449,7 @@ public class PragmaTests {
             """;
         JsonSchema.isValid(schema, json);
         var exception = assertThrows(JsonSchemaException.class,
-                () -> JsonAssert.isValid(schema, json));
+            () -> JsonAssert.isValid(schema, json));
         assertEquals(DRNG05, exception.getCode());
         exception.printStackTrace();
     }
@@ -474,7 +474,7 @@ public class PragmaTests {
             """;
         JsonSchema.isValid(schema, json);
         var exception = assertThrows(JsonSchemaException.class,
-                () -> JsonAssert.isValid(schema, json));
+            () -> JsonAssert.isValid(schema, json));
         assertEquals(DRNG02, exception.getCode());
         exception.printStackTrace();
     }
@@ -498,7 +498,7 @@ public class PragmaTests {
             """;
         JsonSchema.isValid(schema, json);
         var exception = assertThrows(JsonSchemaException.class,
-                () -> JsonAssert.isValid(schema, json));
+            () -> JsonAssert.isValid(schema, json));
         assertEquals(DRNG08, exception.getCode());
         exception.printStackTrace();
     }
@@ -523,7 +523,7 @@ public class PragmaTests {
             """;
         JsonSchema.isValid(schema, json);
         var exception = assertThrows(JsonSchemaException.class,
-                () -> JsonAssert.isValid(schema, json));
+            () -> JsonAssert.isValid(schema, json));
         assertEquals(DRNG06, exception.getCode());
         exception.printStackTrace();
     }
@@ -546,7 +546,7 @@ public class PragmaTests {
             """;
         JsonSchema.isValid(schema, json);
         var exception = assertThrows(JsonSchemaException.class,
-                () -> JsonAssert.isValid(schema, json));
+            () -> JsonAssert.isValid(schema, json));
         assertEquals(DSYM01, exception.getCode());
         exception.printStackTrace();
     }
@@ -569,7 +569,7 @@ public class PragmaTests {
             """;
         JsonSchema.isValid(schema, json);
         var exception = assertThrows(JsonSchemaException.class,
-                () -> JsonAssert.isValid(schema, json));
+            () -> JsonAssert.isValid(schema, json));
         assertEquals(DSYM01, exception.getCode());
         exception.printStackTrace();
     }

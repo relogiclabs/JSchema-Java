@@ -19,22 +19,22 @@ public class ScriptFunctionTests {
                 // Fixed parameter functions always take precedence over
                 // variable parameter functions when arguments match both
                 constraint funcTest(params...) {
-                    if(!(target == 10 || target == 40)) return fail("Invalid: " + caller);
-                    var n = size(params);
-                    print("Params size: " + n);
-                    if(!(n == 0 || n == 4)) return fail("Invalid: " + n);
+                    if(!(target == 10 || target == 40)) return fail("Invalid: " + target);
+                    var n = params.length();
+                    print("Params length: " + n);
+                    if(!(n == 0 || n == 4)) return fail("Invalid: " + target);
                     foreach(var p in params) print("Received param: " + p);
                     return true;
                 }
                 
                 constraint funcTest(param1) {
-                    if(target != 20 || param1 != 1) return fail("Invalid: " + caller);
+                    if(target != 20 || param1 != 1) return fail("Invalid: " + target);
                     return true;
                 }
                 
                 constraint funcTest(param1, param2) {
                     if(target != 30 || param1 != 3 || param2 != 5)
-                        return fail("Invalid: " + caller);
+                        return fail("Invalid: " + target);
                     return true;
                 }
             }
@@ -52,7 +52,7 @@ public class ScriptFunctionTests {
     }
 
     @Test
-    public void When_SameConstraintWithSubroutineNoConflict_ExceptionThrown() {
+    public void When_SimilarConstraintAndSubroutineNoConflict_ValidTrue() {
         var schema =
             """
             %schema:
@@ -66,10 +66,10 @@ public class ScriptFunctionTests {
                 
                 // Constraint functions are special functions and are not callable
                 // from script thereby preventing any conflicts with subroutines
-                // 'target' and 'caller' are available due to call initiated from schema
+                // target and caller are available from the call stack of schema
                 subroutine funcTest() {
-                    if(target != 10) return fail("Target not found");
-                    if(stringify(caller) != "@funcTest") return fail("Caller not found");
+                    if(target != 10) return fail("Invalid: " + target);
+                    if(caller.string() != "@funcTest") return fail("Invalid: " + caller);
                     return true;
                 }
             }
@@ -95,17 +95,17 @@ public class ScriptFunctionTests {
             }
             %script: {
                 constraint funcTest() {
-                    if(target != 10) fail("Invalid: " + target);
+                    if(target != 10) return fail("Invalid: " + target);
                     return true;
                 }
                 
                 constraint funcTest(param1) {
-                    if(target != 20) fail("Invalid: " + target);
+                    if(target != 20) return fail("Invalid: " + target);
                     return true;
                 }
                 
                 constraint funcTest(param1, param2, param3) {
-                    if(target != 30) fail("Invalid: " + target);
+                    if(target != 30) return fail("Invalid: " + target);
                     return true;
                 }
             }
@@ -122,7 +122,7 @@ public class ScriptFunctionTests {
     }
 
     @Test
-    public void When_SubroutineVariadicCallWithVariableParameters_ValidTrue() {
+    public void When_SubroutineVariadicCallWithVaryingParameters_ValidTrue() {
         var schema =
             """
             %schema:
@@ -133,13 +133,13 @@ public class ScriptFunctionTests {
             %script: {
                 constraint funcTest() {
                     var r1 = funcVar();
-                    if(r1 != 0) fail("Invalid: " + r1);
+                    if(r1 != 0) return fail("Invalid: " + r1);
                     var r2 = funcVar(1, 2, 3, 4);
-                    if(r2 != 4) fail("Invalid: " + r2);
+                    if(r2 != 4) return fail("Invalid: " + r2);
                 }
                 
                 subroutine funcVar(params...) {
-                    return size(params);
+                    return params.length();
                 }
             }
             """;
@@ -168,42 +168,42 @@ public class ScriptFunctionTests {
             
             %script: {
                 constraint funcTest1() {
-                    print("funcTest1");
+                    if(target != 10) return fail("Invalid: " + target);
                     return funcTest7();
                 }
                 
                 constraint function funcTest2() {
-                    print("funcTest2");
+                    if(target != 20) return fail("Invalid: " + target);
                     return funcTest8();
                 }
                 
                 future funcTest3() {
-                    print("funcTest3");
+                    if(target != 30) return fail("Invalid: " + target);
                     return true;
                 }
                 
                 future constraint funcTest4() {
-                    print("funcTest4");
+                    if(target != 40) return fail("Invalid: " + target);
                     return true;
                 }
                 
                 future function funcTest5() {
-                    print("funcTest5");
+                    if(target != 50) return fail("Invalid: " + target);
                     return true;
                 }
                 
                 future constraint function funcTest6() {
-                    print("funcTest6");
+                    if(target != 60) return fail("Invalid: " + target);
                     return true;
                 }
                 
                 subroutine funcTest7() {
-                    print("funcTest7");
+                    if(target != 10) return fail("Invalid: " + target);
                     return true;
                 }
                 
                 subroutine function funcTest8() {
-                    print("funcTest8");
+                    if(target != 20) return fail("Invalid: " + target);
                     return true;
                 }
             }
@@ -228,19 +228,19 @@ public class ScriptFunctionTests {
             """
             %schema:
             {
-                "funcTest1": @funcTest1 #integer,
-                "funcTest2": @funcTest2 #integer
+                "stateTest1": @stateTest1 #integer,
+                "stateTest2": @stateTest2 #integer
             }
             
             %script: {
                 var test = 10, test2 = 5;
-                constraint funcTest1() {
+                constraint stateTest1() {
                     test = target;
                     test2 = 10;
                 }
                 
-                constraint funcTest2() {
-                    if(test != target - 10) return fail("Invalid: " + test);
+                constraint stateTest2() {
+                    if(test != target - 10) return fail("Invalid: " + target);
                     if(test2 != 10) return fail("Invalid: " + test2);
                 }
             }
@@ -248,8 +248,8 @@ public class ScriptFunctionTests {
         var json =
             """
             {
-                "funcTest1": 20,
-                "funcTest2": 30
+                "stateTest1": 20,
+                "stateTest2": 30
             }
             """;
         JsonAssert.isValid(schema, json);
