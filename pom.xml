@@ -6,14 +6,14 @@
 
     <groupId>com.relogiclabs.json</groupId>
     <artifactId>relogiclabs-jschema</artifactId>
-    <version>2.0.0</version>
-    <name>JSchema - New JSON Schema</name>
+    <version>2.1.0</version>
+    <name>JSchema</name>
     <description>
-        JSchema, a new JSON Schema, prioritizes simplicity, conciseness, and readability, ensuring
-        user-friendliness and accessibility without requiring extensive prior knowledge. It offers
-        efficient read-write capabilities, precise JSON document definition through various data
-        types and functions, and extensibility to address the diverse requirements of modern web
-        services.
+        JSchema, a customizable JSON Schema, prioritizes simplicity, conciseness, and readability,
+        ensuring user-friendliness and accessibility without requiring extensive prior knowledge.
+        It offers efficient read-write capabilities, precise JSON document definition through various
+        data types and functions, and extensibility to address the diverse requirements of modern
+        web services.
     </description>
     <url>https://www.relogiclabs.com/p/jschema.html</url>
     <organization>
@@ -56,7 +56,7 @@
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-            <version>1.18.30</version>
+            <version>1.18.32</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -67,7 +67,7 @@
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-engine</artifactId>
-            <version>5.10.1</version>
+            <version>5.10.2</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
@@ -108,7 +108,7 @@
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-source-plugin</artifactId>
-                        <version>3.3.0</version>
+                        <version>3.3.1</version>
                         <executions>
                             <execution>
                                 <id>attach-sources</id>
@@ -121,7 +121,7 @@
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-javadoc-plugin</artifactId>
-                        <version>3.6.0</version>
+                        <version>3.6.3</version>
                         <configuration>
                             <sourcepath>target/generated-sources/delombok</sourcepath>
                             <show>public</show>
@@ -140,7 +140,7 @@
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-gpg-plugin</artifactId>
-                        <version>3.1.0</version>
+                        <version>3.2.4</version>
                         <executions>
                             <execution>
                                 <id>sign-artifacts</id>
@@ -150,7 +150,6 @@
                                 </goals>
                                 <configuration>
                                     <keyname>${gpg.keyname}</keyname>
-                                    <passphraseServerId>${gpg.keyname}</passphraseServerId>
                                 </configuration>
                             </execution>
                         </executions>

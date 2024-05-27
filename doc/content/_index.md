@@ -4,7 +4,7 @@ date = 2023-10-08T09:38:53+06:00
 +++
 
 # Introduction
-JSchema, a new JSON Schema, prioritizes simplicity, conciseness, and readability, making it intuitive and accessible without the need for extensive prior knowledge. It offers efficient read-write facilities, precise JSON document definition through various data types and functions, and extensibility to meet modern web service diverse requirements.
+JSchema, a customizable JSON Schema, prioritizes simplicity, conciseness, and readability, making it intuitive and accessible without the need for extensive prior knowledge. It offers efficient read-write facilities, precise JSON document definition through various data types and functions, and extensibility to meet modern web service diverse requirements.
 
 JSON, short for JavaScript Object Notation, is one of the most widely used data exchange formats that are both user-friendly and machine-readable. JSchema is a practical tool for defining and validating the structure of JSON documents. The following guides provide comprehensive details about the JSchema.
 <br/>
