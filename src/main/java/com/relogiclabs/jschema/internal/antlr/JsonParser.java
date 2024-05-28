@@ -419,72 +419,72 @@ public class JsonParser extends Parser {
 		}
 	}
 	@SuppressWarnings("CheckReturnValue")
-	public static class PrimitiveDoubleContext extends PrimitiveNodeContext {
-		public TerminalNode DOUBLE() { return getToken(JsonParser.DOUBLE, 0); }
-		public PrimitiveDoubleContext(PrimitiveNodeContext ctx) { copyFrom(ctx); }
-		@Override
-		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof JsonParserVisitor ) return ((JsonParserVisitor<? extends T>)visitor).visitPrimitiveDouble(this);
-			else return visitor.visitChildren(this);
-		}
-	}
-	@SuppressWarnings("CheckReturnValue")
-	public static class PrimitiveFloatContext extends PrimitiveNodeContext {
-		public TerminalNode FLOAT() { return getToken(JsonParser.FLOAT, 0); }
-		public PrimitiveFloatContext(PrimitiveNodeContext ctx) { copyFrom(ctx); }
-		@Override
-		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof JsonParserVisitor ) return ((JsonParserVisitor<? extends T>)visitor).visitPrimitiveFloat(this);
-			else return visitor.visitChildren(this);
-		}
-	}
-	@SuppressWarnings("CheckReturnValue")
-	public static class PrimitiveNullContext extends PrimitiveNodeContext {
-		public TerminalNode NULL() { return getToken(JsonParser.NULL, 0); }
-		public PrimitiveNullContext(PrimitiveNodeContext ctx) { copyFrom(ctx); }
-		@Override
-		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof JsonParserVisitor ) return ((JsonParserVisitor<? extends T>)visitor).visitPrimitiveNull(this);
-			else return visitor.visitChildren(this);
-		}
-	}
-	@SuppressWarnings("CheckReturnValue")
-	public static class PrimitiveTrueContext extends PrimitiveNodeContext {
+	public static class TrueNodeContext extends PrimitiveNodeContext {
 		public TerminalNode TRUE() { return getToken(JsonParser.TRUE, 0); }
-		public PrimitiveTrueContext(PrimitiveNodeContext ctx) { copyFrom(ctx); }
+		public TrueNodeContext(PrimitiveNodeContext ctx) { copyFrom(ctx); }
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof JsonParserVisitor ) return ((JsonParserVisitor<? extends T>)visitor).visitPrimitiveTrue(this);
+			if ( visitor instanceof JsonParserVisitor ) return ((JsonParserVisitor<? extends T>)visitor).visitTrueNode(this);
 			else return visitor.visitChildren(this);
 		}
 	}
 	@SuppressWarnings("CheckReturnValue")
-	public static class PrimitiveFalseContext extends PrimitiveNodeContext {
-		public TerminalNode FALSE() { return getToken(JsonParser.FALSE, 0); }
-		public PrimitiveFalseContext(PrimitiveNodeContext ctx) { copyFrom(ctx); }
-		@Override
-		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof JsonParserVisitor ) return ((JsonParserVisitor<? extends T>)visitor).visitPrimitiveFalse(this);
-			else return visitor.visitChildren(this);
-		}
-	}
-	@SuppressWarnings("CheckReturnValue")
-	public static class PrimitiveStringContext extends PrimitiveNodeContext {
-		public TerminalNode STRING() { return getToken(JsonParser.STRING, 0); }
-		public PrimitiveStringContext(PrimitiveNodeContext ctx) { copyFrom(ctx); }
-		@Override
-		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof JsonParserVisitor ) return ((JsonParserVisitor<? extends T>)visitor).visitPrimitiveString(this);
-			else return visitor.visitChildren(this);
-		}
-	}
-	@SuppressWarnings("CheckReturnValue")
-	public static class PrimitiveIntegerContext extends PrimitiveNodeContext {
+	public static class IntegerNodeContext extends PrimitiveNodeContext {
 		public TerminalNode INTEGER() { return getToken(JsonParser.INTEGER, 0); }
-		public PrimitiveIntegerContext(PrimitiveNodeContext ctx) { copyFrom(ctx); }
+		public IntegerNodeContext(PrimitiveNodeContext ctx) { copyFrom(ctx); }
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof JsonParserVisitor ) return ((JsonParserVisitor<? extends T>)visitor).visitPrimitiveInteger(this);
+			if ( visitor instanceof JsonParserVisitor ) return ((JsonParserVisitor<? extends T>)visitor).visitIntegerNode(this);
+			else return visitor.visitChildren(this);
+		}
+	}
+	@SuppressWarnings("CheckReturnValue")
+	public static class StringNodeContext extends PrimitiveNodeContext {
+		public TerminalNode STRING() { return getToken(JsonParser.STRING, 0); }
+		public StringNodeContext(PrimitiveNodeContext ctx) { copyFrom(ctx); }
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof JsonParserVisitor ) return ((JsonParserVisitor<? extends T>)visitor).visitStringNode(this);
+			else return visitor.visitChildren(this);
+		}
+	}
+	@SuppressWarnings("CheckReturnValue")
+	public static class FloatNodeContext extends PrimitiveNodeContext {
+		public TerminalNode FLOAT() { return getToken(JsonParser.FLOAT, 0); }
+		public FloatNodeContext(PrimitiveNodeContext ctx) { copyFrom(ctx); }
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof JsonParserVisitor ) return ((JsonParserVisitor<? extends T>)visitor).visitFloatNode(this);
+			else return visitor.visitChildren(this);
+		}
+	}
+	@SuppressWarnings("CheckReturnValue")
+	public static class DoubleNodeContext extends PrimitiveNodeContext {
+		public TerminalNode DOUBLE() { return getToken(JsonParser.DOUBLE, 0); }
+		public DoubleNodeContext(PrimitiveNodeContext ctx) { copyFrom(ctx); }
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof JsonParserVisitor ) return ((JsonParserVisitor<? extends T>)visitor).visitDoubleNode(this);
+			else return visitor.visitChildren(this);
+		}
+	}
+	@SuppressWarnings("CheckReturnValue")
+	public static class FalseNodeContext extends PrimitiveNodeContext {
+		public TerminalNode FALSE() { return getToken(JsonParser.FALSE, 0); }
+		public FalseNodeContext(PrimitiveNodeContext ctx) { copyFrom(ctx); }
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof JsonParserVisitor ) return ((JsonParserVisitor<? extends T>)visitor).visitFalseNode(this);
+			else return visitor.visitChildren(this);
+		}
+	}
+	@SuppressWarnings("CheckReturnValue")
+	public static class NullNodeContext extends PrimitiveNodeContext {
+		public TerminalNode NULL() { return getToken(JsonParser.NULL, 0); }
+		public NullNodeContext(PrimitiveNodeContext ctx) { copyFrom(ctx); }
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof JsonParserVisitor ) return ((JsonParserVisitor<? extends T>)visitor).visitNullNode(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -497,7 +497,7 @@ public class JsonParser extends Parser {
 			_errHandler.sync(this);
 			switch (_input.LA(1)) {
 			case TRUE:
-				_localctx = new PrimitiveTrueContext(_localctx);
+				_localctx = new TrueNodeContext(_localctx);
 				enterOuterAlt(_localctx, 1);
 				{
 				setState(50);
@@ -505,7 +505,7 @@ public class JsonParser extends Parser {
 				}
 				break;
 			case FALSE:
-				_localctx = new PrimitiveFalseContext(_localctx);
+				_localctx = new FalseNodeContext(_localctx);
 				enterOuterAlt(_localctx, 2);
 				{
 				setState(51);
@@ -513,7 +513,7 @@ public class JsonParser extends Parser {
 				}
 				break;
 			case STRING:
-				_localctx = new PrimitiveStringContext(_localctx);
+				_localctx = new StringNodeContext(_localctx);
 				enterOuterAlt(_localctx, 3);
 				{
 				setState(52);
@@ -521,7 +521,7 @@ public class JsonParser extends Parser {
 				}
 				break;
 			case INTEGER:
-				_localctx = new PrimitiveIntegerContext(_localctx);
+				_localctx = new IntegerNodeContext(_localctx);
 				enterOuterAlt(_localctx, 4);
 				{
 				setState(53);
@@ -529,7 +529,7 @@ public class JsonParser extends Parser {
 				}
 				break;
 			case FLOAT:
-				_localctx = new PrimitiveFloatContext(_localctx);
+				_localctx = new FloatNodeContext(_localctx);
 				enterOuterAlt(_localctx, 5);
 				{
 				setState(54);
@@ -537,7 +537,7 @@ public class JsonParser extends Parser {
 				}
 				break;
 			case DOUBLE:
-				_localctx = new PrimitiveDoubleContext(_localctx);
+				_localctx = new DoubleNodeContext(_localctx);
 				enterOuterAlt(_localctx, 6);
 				{
 				setState(55);
@@ -545,7 +545,7 @@ public class JsonParser extends Parser {
 				}
 				break;
 			case NULL:
-				_localctx = new PrimitiveNullContext(_localctx);
+				_localctx = new NullNodeContext(_localctx);
 				enterOuterAlt(_localctx, 7);
 				{
 				setState(56);

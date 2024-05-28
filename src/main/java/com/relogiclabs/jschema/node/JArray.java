@@ -2,6 +2,7 @@ package com.relogiclabs.jschema.node;
 
 import com.relogiclabs.jschema.exception.JsonSchemaException;
 import com.relogiclabs.jschema.exception.MisplacedOptionalException;
+import com.relogiclabs.jschema.exception.UpdateNotSupportedException;
 import com.relogiclabs.jschema.internal.builder.JArrayBuilder;
 import com.relogiclabs.jschema.internal.message.ActualHelper;
 import com.relogiclabs.jschema.internal.message.ExpectedHelper;
@@ -19,6 +20,7 @@ import static com.relogiclabs.jschema.internal.message.MessageHelper.ArrayElemen
 import static com.relogiclabs.jschema.internal.util.StringHelper.joinWith;
 import static com.relogiclabs.jschema.message.ErrorCode.ARRY01;
 import static com.relogiclabs.jschema.message.ErrorCode.ARRY02;
+import static com.relogiclabs.jschema.message.ErrorCode.AUPD01;
 import static com.relogiclabs.jschema.message.MessageFormatter.formatForSchema;
 import static java.util.Objects.requireNonNull;
 
@@ -73,6 +75,11 @@ public final class JArray extends JComposite implements EArray, Iterable<JNode> 
     @Override
     public EValue get(int index) {
         return elements.get(index);
+    }
+
+    @Override
+    public void set(int index, EValue value) {
+        throw new UpdateNotSupportedException(AUPD01, "Readonly array cannot be updated");
     }
 
     @Override

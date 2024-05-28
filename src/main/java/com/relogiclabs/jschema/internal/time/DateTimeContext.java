@@ -12,7 +12,6 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.relogiclabs.jschema.internal.util.StringHelper.concat;
 import static com.relogiclabs.jschema.message.ErrorCode.DCNF01;
 import static com.relogiclabs.jschema.message.ErrorCode.DDAY03;
 import static com.relogiclabs.jschema.message.ErrorCode.DDAY04;
@@ -101,14 +100,14 @@ public class DateTimeContext {
             case "BC" -> 1;
             case "AD" -> 2;
             default -> throw new InvalidDateTimeException(DERA02,
-                    concat("Invalid ", type, " era input"));
+                "Invalid " + type + " era input");
         };
         this.era = checkField(this.era, eraNum);
     }
 
     public void setYear(int year, int digitNum) {
         if(year < 1 || year > 9999) throw new InvalidDateTimeException(DYAR03,
-                concat("Invalid ", type, " year out of range"));
+            "Invalid " + type + " year out of range");
         year = digitNum <= 2 ? toFourDigitYear(year) : year;
         this.year = checkField(this.year, year);
     }
@@ -120,7 +119,7 @@ public class DateTimeContext {
 
     public void setMonth(int month) {
         if(month < 1 || month > 12) throw new InvalidDateTimeException(DMON05,
-                concat("Invalid ", type, " month out of range"));
+            "Invalid " + type + " month out of range");
         this.month = checkField(this.month, month);
     }
 
@@ -131,7 +130,7 @@ public class DateTimeContext {
 
     public void setDay(int day) {
         if(day < 1 || day > 31) throw new InvalidDateTimeException(DDAY04,
-                concat("Invalid ", type, " day out of range"));
+            "Invalid " + type + " day out of range");
         this.day = checkField(this.day, day);
     }
 
@@ -140,33 +139,33 @@ public class DateTimeContext {
             case "am" -> 1;
             case "pm" -> 2;
             default -> throw new InvalidDateTimeException(DTAP02,
-                    concat("Invalid ", type, " hour AM/PM input"));
+                "Invalid " + type + " hour AM/PM input");
         };
         if(hour != UNSET && (hour < 1 || hour > 12))
             throw new InvalidDateTimeException(DHUR03,
-                    concat("Invalid ", type, " hour AM/PM out of range"));
+                "Invalid " + type + " hour AM/PM out of range");
         this.amPm = checkField(this.amPm, amPmNum);
     }
 
     public void setHour(int hour) {
         if(amPm != UNSET && (this.hour < 1 || this.hour > 12))
             throw new InvalidDateTimeException(DHUR04,
-                    concat("Invalid ", type, " hour AM/PM out of range"));
+                "Invalid " + type + " hour AM/PM out of range");
         if(hour < 0 || hour > 23)
             throw new InvalidDateTimeException(DHUR06,
-                    concat("Invalid ", type, " hour out of range"));
+                "Invalid " + type + " hour out of range");
         this.hour = checkField(this.hour, hour);
     }
 
     public void setMinute(int minute) {
         if(minute < 0 || minute > 59) throw new InvalidDateTimeException(DMIN03,
-                concat("Invalid ", type, " minute out of range"));
+            "Invalid " + type + " minute out of range");
         this.minute = checkField(this.minute, minute);
     }
 
     public void setSecond(int second) {
         if(second < 0 || second > 59) throw new InvalidDateTimeException(DSEC03,
-                concat("Invalid ", type, " second out of range"));
+            "Invalid " + type + " second out of range");
         this.second = checkField(this.second, second);
     }
 
@@ -176,17 +175,16 @@ public class DateTimeContext {
 
     public void setUtcOffset(int hour, int minute) {
         if(hour < -12 || hour > 12) throw new InvalidDateTimeException(DUTC04,
-                concat("Invalid ", type, " UTC offset hour out of range"));
+            "Invalid " + type + " UTC offset hour out of range");
         if(minute < 0 || minute > 59) throw new InvalidDateTimeException(DUTC05,
-                concat("Invalid ", type, " UTC offset minute out of range"));
+            "Invalid " + type + " UTC offset minute out of range");
         utcHour = checkField(utcHour, hour);
         utcMinute = checkField(utcMinute, minute);
     }
 
     private int checkField(int current, int newValue) {
         if(current != UNSET && current != newValue)
-            throw new InvalidDateTimeException(DCNF01,
-                    concat("Conflicting ", type, " segments input"));
+            throw new InvalidDateTimeException(DCNF01, "Conflicting " + type + " segments input");
         return newValue;
     }
 
@@ -201,23 +199,23 @@ public class DateTimeContext {
                 DAYS_IN_MONTH[2] = isLeapYear(year)? 29 : 28;
                 if(day < 1 || day > DAYS_IN_MONTH[month])
                     throw new InvalidDateTimeException(DDAY03,
-                            concat("Invalid ", type, " day out of range"));
+                        "Invalid " + type + " day out of range");
                 dateTime = new JsonDateTime(type, year, month, day);
                 if(weekday != UNSET && dateTime.getDayOfWeek().getValue() != weekday)
-                    throw new InvalidDateTimeException(DWKD03, concat("Invalid ",
-                            type, " weekday input"));
+                    throw new InvalidDateTimeException(DWKD03,
+                        "Invalid " + type + " weekday input");
             }
             if(isAllSet(hour, amPm)) convertTo24Hour();
             if(hour != UNSET && (hour < 0 || hour > 23))
-                throw new InvalidDateTimeException(DHUR05, concat("Invalid ",
-                        type, " hour out of range"));
+                throw new InvalidDateTimeException(DHUR05,
+                    "Invalid " + type + " hour out of range");
             return new JsonDateTime(type, year, month, day, hour, minute, second,
                     fraction, new JsonUtcOffset(utcHour, utcMinute));
         } catch(InvalidDateTimeException e) {
             throw e;
         } catch(Exception e) {
             throw new InvalidDateTimeException(DINV01,
-                    concat("Invalid ", type, " year, month or day out of range", e));
+                "Invalid " + type + " year, month or day out of range", e);
         }
     }
 

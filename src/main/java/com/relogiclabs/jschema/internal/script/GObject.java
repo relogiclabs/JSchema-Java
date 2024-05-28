@@ -1,5 +1,6 @@
 package com.relogiclabs.jschema.internal.script;
 
+import com.relogiclabs.jschema.exception.UpdateNotSupportedException;
 import com.relogiclabs.jschema.type.EObject;
 import com.relogiclabs.jschema.type.EValue;
 import lombok.EqualsAndHashCode;
@@ -12,6 +13,7 @@ import java.util.Set;
 
 import static com.relogiclabs.jschema.internal.util.StringHelper.joinWith;
 import static com.relogiclabs.jschema.internal.util.StringHelper.quote;
+import static com.relogiclabs.jschema.message.ErrorCode.OUPD02;
 
 @Getter
 @EqualsAndHashCode
@@ -24,23 +26,33 @@ public final class GObject implements EObject {
 
     public GObject(EObject value) {
         this(value.size());
-        for(var e : value.keySet()) properties.put(e, new GReference(value.get(e)));
+        for(var k : value.keySet()) properties.put(k, new GLeftValue(value.get(k)));
     }
 
     public GObject(List<String> keys, List<EValue> values) {
         this(keys.size());
         for(int i = 0; i < keys.size(); i++)
-            properties.put(keys.get(i), new GReference(values.get(i)));
+            properties.put(keys.get(i), new GLeftValue(values.get(i)));
     }
 
     @Override
     public EValue get(String key) {
-        var value = properties.get(key);
-        if(value == null) properties.put(key, value = new GReference(VOID));
-        return value;
+        return properties.get(key);
     }
 
+    @Override
     public void set(String key, EValue value) {
+        var oldValue = properties.get(key);
+        if(oldValue == null) {
+            properties.put(key, new GLeftValue(value));
+            return;
+        }
+        if(!(oldValue instanceof GLeftValue l)) throw new UpdateNotSupportedException(OUPD02,
+            "Readonly object property '" + key + "' cannot be updated");
+        l.setValue(value);
+    }
+
+    public void put(String key, EValue value) {
         properties.put(key, value);
     }
 

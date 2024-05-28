@@ -21,6 +21,6 @@ public final class JNull extends JPrimitive implements ENull {
 
     @Override
     public String toString() {
-        return ENull.STRING;
+        return LITERAL;
     }
 }

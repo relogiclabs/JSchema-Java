@@ -8,6 +8,7 @@ import static java.util.Objects.requireNonNull;
 
 @EqualsAndHashCode
 public final class JScript extends JDirective {
+    // static final String SCRIPT_MARKER = "%script";
     private final Evaluator evaluator;
     private final String source;
 

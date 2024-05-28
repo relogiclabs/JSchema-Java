@@ -16,7 +16,7 @@ public final class GInteger implements EInteger {
     private static final GInteger[] CACHE = createCache();
     private final long value;
 
-    public static GInteger of(long value) {
+    public static GInteger from(long value) {
         if(value >= CACHE_START && value <= CACHE_END)
             return CACHE[(int) value - CACHE_START];
         return new GInteger(value);

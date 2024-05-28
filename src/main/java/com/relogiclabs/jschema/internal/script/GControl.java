@@ -31,7 +31,8 @@ public final class GControl implements EValue {
         return flag == BREAK_FLAG ? VOID : this;
     }
 
-    public EValue toFunction() {
-        return value;
+    @Override
+    public String toString() {
+        return value.toString();
     }
 }

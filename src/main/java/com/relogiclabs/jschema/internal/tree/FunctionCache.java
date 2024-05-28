@@ -5,11 +5,11 @@ import com.relogiclabs.jschema.node.JNode;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 
-import static com.relogiclabs.jschema.internal.util.MiscellaneousHelper.getDerived;
+import static com.relogiclabs.jschema.internal.util.CommonHelper.getDerived;
 
 public class FunctionCache implements Iterable<FunctionCache.Entry> {
     public record Entry(EFunction function, Object[] arguments) {
@@ -28,7 +28,7 @@ public class FunctionCache implements Iterable<FunctionCache.Entry> {
     private final List<Entry> cache;
 
     public FunctionCache() {
-        this.cache = new ArrayList<>(sizeLimit);
+        this.cache = new LinkedList<>();
     }
 
     public void add(EFunction function, Object[] arguments) {

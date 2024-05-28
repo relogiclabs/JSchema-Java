@@ -12,7 +12,7 @@ import lombok.Setter;
 
 import static com.relogiclabs.jschema.internal.message.MessageHelper.ValueMismatch;
 import static com.relogiclabs.jschema.internal.util.StringHelper.quote;
-import static com.relogiclabs.jschema.message.ErrorCode.STRN01;
+import static com.relogiclabs.jschema.message.ErrorCode.STRV01;
 import static java.util.Objects.requireNonNull;
 
 @Getter
@@ -41,7 +41,7 @@ public class JString extends JPrimitive implements EString, Derivable, PragmaVal
         if(other == null) return false;
         if(value.equals(other.value)) return true;
         return fail(new JsonSchemaException(
-                new ErrorDetail(STRN01, ValueMismatch),
+                new ErrorDetail(STRV01, ValueMismatch),
                 ExpectedHelper.asValueMismatch(this),
                 ActualHelper.asValueMismatch(other)));
     }

@@ -1,6 +1,16 @@
 package com.relogiclabs.jschema.internal.tree;
 
-import com.relogiclabs.jschema.internal.antlr.JsonParser;
+import com.relogiclabs.jschema.internal.antlr.JsonParser.ArrayNodeContext;
+import com.relogiclabs.jschema.internal.antlr.JsonParser.DoubleNodeContext;
+import com.relogiclabs.jschema.internal.antlr.JsonParser.FalseNodeContext;
+import com.relogiclabs.jschema.internal.antlr.JsonParser.FloatNodeContext;
+import com.relogiclabs.jschema.internal.antlr.JsonParser.IntegerNodeContext;
+import com.relogiclabs.jschema.internal.antlr.JsonParser.JsonContext;
+import com.relogiclabs.jschema.internal.antlr.JsonParser.NullNodeContext;
+import com.relogiclabs.jschema.internal.antlr.JsonParser.ObjectNodeContext;
+import com.relogiclabs.jschema.internal.antlr.JsonParser.PropertyNodeContext;
+import com.relogiclabs.jschema.internal.antlr.JsonParser.StringNodeContext;
+import com.relogiclabs.jschema.internal.antlr.JsonParser.TrueNodeContext;
 import com.relogiclabs.jschema.internal.antlr.JsonParserBaseVisitor;
 import com.relogiclabs.jschema.internal.builder.JArrayBuilder;
 import com.relogiclabs.jschema.internal.builder.JBooleanBuilder;
@@ -35,100 +45,100 @@ public final class JsonTreeVisitor extends JsonParserBaseVisitor<JNode> {
     }
 
     @Override
-    public JNode visitJson(JsonParser.JsonContext ctx) {
+    public JNode visitJson(JsonContext ctx) {
         return new JRootBuilder()
-                .relations(relations)
-                .context(new Context(ctx, runtime))
-                .value(visit(ctx.valueNode()))
-                .build();
+            .relations(relations)
+            .context(new Context(ctx, runtime))
+            .value(visit(ctx.valueNode()))
+            .build();
     }
 
     @Override
-    public JNode visitObjectNode(JsonParser.ObjectNodeContext ctx) {
+    public JNode visitObjectNode(ObjectNodeContext ctx) {
         return new JObjectBuilder()
-                .relations(relations)
-                .context(new Context(ctx, runtime))
-                .properties(requireUniqueness(ctx.propertyNode().stream()
-                        .map(p -> (JProperty) visit(p)).toList(), JSON_TREE))
-                .build();
+            .relations(relations)
+            .context(new Context(ctx, runtime))
+            .properties(requireUniqueness(ctx.propertyNode().stream()
+                .map(p -> (JProperty) visit(p)).toList(), JSON_TREE))
+            .build();
     }
 
     @Override
-    public JNode visitPropertyNode(JsonParser.PropertyNodeContext ctx) {
+    public JNode visitPropertyNode(PropertyNodeContext ctx) {
         return new JPropertyBuilder()
-                .relations(relations)
-                .context(new Context(ctx, runtime))
-                .key(unquote(ctx.STRING().getText()))
-                .value(visit(ctx.valueNode()))
-                .build();
+            .relations(relations)
+            .context(new Context(ctx, runtime))
+            .key(unquote(ctx.STRING().getText()))
+            .value(visit(ctx.valueNode()))
+            .build();
     }
 
     @Override
-    public JNode visitArrayNode(JsonParser.ArrayNodeContext ctx) {
+    public JNode visitArrayNode(ArrayNodeContext ctx) {
         return new JArrayBuilder()
-                .relations(relations)
-                .context(new Context(ctx, runtime))
-                .elements(ctx.valueNode().stream().map(this::visit).toList())
-                .build();
+            .relations(relations)
+            .context(new Context(ctx, runtime))
+            .elements(ctx.valueNode().stream().map(this::visit).toList())
+            .build();
     }
 
     @Override
-    public JNode visitPrimitiveTrue(JsonParser.PrimitiveTrueContext ctx) {
+    public JNode visitTrueNode(TrueNodeContext ctx) {
         return new JBooleanBuilder()
-                .relations(relations)
-                .context(new Context(ctx, runtime))
-                .value(true).build();
+            .relations(relations)
+            .context(new Context(ctx, runtime))
+            .value(true).build();
     }
 
     @Override
-    public JNode visitPrimitiveFalse(JsonParser.PrimitiveFalseContext ctx) {
+    public JNode visitFalseNode(FalseNodeContext ctx) {
         return new JBooleanBuilder()
-                .relations(relations)
-                .context(new Context(ctx, runtime))
-                .value(false).build();
+            .relations(relations)
+            .context(new Context(ctx, runtime))
+            .value(false).build();
     }
 
     @Override
-    public JNode visitPrimitiveString(JsonParser.PrimitiveStringContext ctx) {
+    public JNode visitStringNode(StringNodeContext ctx) {
         return new JStringBuilder()
-                .relations(relations)
-                .context(new Context(ctx, runtime))
-                .value(toEncoded(ctx.STRING().getText()))
-                .build();
+            .relations(relations)
+            .context(new Context(ctx, runtime))
+            .value(toEncoded(ctx.STRING().getText()))
+            .build();
     }
 
     @Override
-    public JNode visitPrimitiveInteger(JsonParser.PrimitiveIntegerContext ctx) {
+    public JNode visitIntegerNode(IntegerNodeContext ctx) {
         return new JIntegerBuilder()
-                .relations(relations)
-                .context(new Context(ctx, runtime))
-                .value(Long.valueOf(ctx.INTEGER().getText()))
-                .build();
+            .relations(relations)
+            .context(new Context(ctx, runtime))
+            .value(Long.valueOf(ctx.INTEGER().getText()))
+            .build();
     }
 
     @Override
-    public JNode visitPrimitiveFloat(JsonParser.PrimitiveFloatContext ctx) {
+    public JNode visitFloatNode(FloatNodeContext ctx) {
         return new JFloatBuilder()
-                .relations(relations)
-                .context(new Context(ctx, runtime))
-                .value(Double.valueOf(ctx.FLOAT().getText()))
-                .build();
+            .relations(relations)
+            .context(new Context(ctx, runtime))
+            .value(Double.valueOf(ctx.FLOAT().getText()))
+            .build();
     }
 
     @Override
-    public JNode visitPrimitiveDouble(JsonParser.PrimitiveDoubleContext ctx) {
+    public JNode visitDoubleNode(DoubleNodeContext ctx) {
         return new JDoubleBuilder()
-                .relations(relations)
-                .context(new Context(ctx, runtime))
-                .value(Double.valueOf(ctx.DOUBLE().getText()))
-                .build();
+            .relations(relations)
+            .context(new Context(ctx, runtime))
+            .value(Double.valueOf(ctx.DOUBLE().getText()))
+            .build();
     }
 
     @Override
-    public JNode visitPrimitiveNull(JsonParser.PrimitiveNullContext ctx) {
+    public JNode visitNullNode(NullNodeContext ctx) {
         return new JNullBuilder()
-                .relations(relations)
-                .context(new Context(ctx, runtime))
-                .build();
+            .relations(relations)
+            .context(new Context(ctx, runtime))
+            .build();
     }
 }

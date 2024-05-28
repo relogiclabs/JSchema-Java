@@ -24,11 +24,11 @@ public interface SchemaParserVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitShortSchema(SchemaParser.ShortSchemaContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link SchemaParser#schemaMain}.
+	 * Visit a parse tree produced by {@link SchemaParser#schemaCoreNode}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitSchemaMain(SchemaParser.SchemaMainContext ctx);
+	T visitSchemaCoreNode(SchemaParser.SchemaCoreNodeContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link SchemaParser#titleNode}.
 	 * @param ctx the parse tree
@@ -60,23 +60,23 @@ public interface SchemaParserVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitDefineNode(SchemaParser.DefineNodeContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link SchemaParser#aliasNode}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitAliasNode(SchemaParser.AliasNodeContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link SchemaParser#validatorMain}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitValidatorMain(SchemaParser.ValidatorMainContext ctx);
-	/**
 	 * Visit a parse tree produced by {@link SchemaParser#validatorNode}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
 	T visitValidatorNode(SchemaParser.ValidatorNodeContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link SchemaParser#validatorMainNode}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitValidatorMainNode(SchemaParser.ValidatorMainNodeContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link SchemaParser#aliasNode}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitAliasNode(SchemaParser.AliasNodeContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link SchemaParser#valueNode}.
 	 * @param ctx the parse tree
@@ -126,61 +126,61 @@ public interface SchemaParserVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitArgumentNode(SchemaParser.ArgumentNodeContext ctx);
 	/**
-	 * Visit a parse tree produced by the {@code PrimitiveTrue}
+	 * Visit a parse tree produced by the {@code TrueNode}
 	 * labeled alternative in {@link SchemaParser#primitiveNode}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitPrimitiveTrue(SchemaParser.PrimitiveTrueContext ctx);
+	T visitTrueNode(SchemaParser.TrueNodeContext ctx);
 	/**
-	 * Visit a parse tree produced by the {@code PrimitiveFalse}
+	 * Visit a parse tree produced by the {@code FalseNode}
 	 * labeled alternative in {@link SchemaParser#primitiveNode}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitPrimitiveFalse(SchemaParser.PrimitiveFalseContext ctx);
+	T visitFalseNode(SchemaParser.FalseNodeContext ctx);
 	/**
-	 * Visit a parse tree produced by the {@code PrimitiveString}
+	 * Visit a parse tree produced by the {@code StringNode}
 	 * labeled alternative in {@link SchemaParser#primitiveNode}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitPrimitiveString(SchemaParser.PrimitiveStringContext ctx);
+	T visitStringNode(SchemaParser.StringNodeContext ctx);
 	/**
-	 * Visit a parse tree produced by the {@code PrimitiveInteger}
+	 * Visit a parse tree produced by the {@code IntegerNode}
 	 * labeled alternative in {@link SchemaParser#primitiveNode}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitPrimitiveInteger(SchemaParser.PrimitiveIntegerContext ctx);
+	T visitIntegerNode(SchemaParser.IntegerNodeContext ctx);
 	/**
-	 * Visit a parse tree produced by the {@code PrimitiveFloat}
+	 * Visit a parse tree produced by the {@code FloatNode}
 	 * labeled alternative in {@link SchemaParser#primitiveNode}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitPrimitiveFloat(SchemaParser.PrimitiveFloatContext ctx);
+	T visitFloatNode(SchemaParser.FloatNodeContext ctx);
 	/**
-	 * Visit a parse tree produced by the {@code PrimitiveDouble}
+	 * Visit a parse tree produced by the {@code DoubleNode}
 	 * labeled alternative in {@link SchemaParser#primitiveNode}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitPrimitiveDouble(SchemaParser.PrimitiveDoubleContext ctx);
+	T visitDoubleNode(SchemaParser.DoubleNodeContext ctx);
 	/**
-	 * Visit a parse tree produced by the {@code PrimitiveNull}
+	 * Visit a parse tree produced by the {@code NullNode}
 	 * labeled alternative in {@link SchemaParser#primitiveNode}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitPrimitiveNull(SchemaParser.PrimitiveNullContext ctx);
+	T visitNullNode(SchemaParser.NullNodeContext ctx);
 	/**
-	 * Visit a parse tree produced by the {@code PrimitiveUndefined}
+	 * Visit a parse tree produced by the {@code UndefinedNode}
 	 * labeled alternative in {@link SchemaParser#primitiveNode}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitPrimitiveUndefined(SchemaParser.PrimitiveUndefinedContext ctx);
+	T visitUndefinedNode(SchemaParser.UndefinedNodeContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link SchemaParser#scriptNode}.
 	 * @param ctx the parse tree
@@ -212,11 +212,11 @@ public interface SchemaParserVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitVarStatement(SchemaParser.VarStatementContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link SchemaParser#varInitialization}.
+	 * Visit a parse tree produced by {@link SchemaParser#varDeclaration}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitVarInitialization(SchemaParser.VarInitializationContext ctx);
+	T visitVarDeclaration(SchemaParser.VarDeclarationContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link SchemaParser#expressionStatement}.
 	 * @param ctx the parse tree
@@ -272,40 +272,12 @@ public interface SchemaParserVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitBlockStatement(SchemaParser.BlockStatementContext ctx);
 	/**
-	 * Visit a parse tree produced by the {@code RangeEndExpression}
+	 * Visit a parse tree produced by the {@code CallerExpression}
 	 * labeled alternative in {@link SchemaParser#expression}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitRangeEndExpression(SchemaParser.RangeEndExpressionContext ctx);
-	/**
-	 * Visit a parse tree produced by the {@code ParenthesizedExpression}
-	 * labeled alternative in {@link SchemaParser#expression}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitParenthesizedExpression(SchemaParser.ParenthesizedExpressionContext ctx);
-	/**
-	 * Visit a parse tree produced by the {@code PostIncrementExpression}
-	 * labeled alternative in {@link SchemaParser#expression}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitPostIncrementExpression(SchemaParser.PostIncrementExpressionContext ctx);
-	/**
-	 * Visit a parse tree produced by the {@code AdditiveExpression}
-	 * labeled alternative in {@link SchemaParser#expression}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitAdditiveExpression(SchemaParser.AdditiveExpressionContext ctx);
-	/**
-	 * Visit a parse tree produced by the {@code RelationalExpression}
-	 * labeled alternative in {@link SchemaParser#expression}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitRelationalExpression(SchemaParser.RelationalExpressionContext ctx);
+	T visitCallerExpression(SchemaParser.CallerExpressionContext ctx);
 	/**
 	 * Visit a parse tree produced by the {@code LogicalAndExpression}
 	 * labeled alternative in {@link SchemaParser#expression}.
@@ -314,26 +286,12 @@ public interface SchemaParserVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitLogicalAndExpression(SchemaParser.LogicalAndExpressionContext ctx);
 	/**
-	 * Visit a parse tree produced by the {@code PreDecrementExpression}
+	 * Visit a parse tree produced by the {@code AssignmentBracketExpression}
 	 * labeled alternative in {@link SchemaParser#expression}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitPreDecrementExpression(SchemaParser.PreDecrementExpressionContext ctx);
-	/**
-	 * Visit a parse tree produced by the {@code PreIncrementExpression}
-	 * labeled alternative in {@link SchemaParser#expression}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitPreIncrementExpression(SchemaParser.PreIncrementExpressionContext ctx);
-	/**
-	 * Visit a parse tree produced by the {@code LiteralExpression}
-	 * labeled alternative in {@link SchemaParser#expression}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitLiteralExpression(SchemaParser.LiteralExpressionContext ctx);
+	T visitAssignmentBracketExpression(SchemaParser.AssignmentBracketExpressionContext ctx);
 	/**
 	 * Visit a parse tree produced by the {@code LogicalOrExpression}
 	 * labeled alternative in {@link SchemaParser#expression}.
@@ -342,33 +300,19 @@ public interface SchemaParserVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitLogicalOrExpression(SchemaParser.LogicalOrExpressionContext ctx);
 	/**
-	 * Visit a parse tree produced by the {@code LogicalNotExpression}
-	 * labeled alternative in {@link SchemaParser#expression}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitLogicalNotExpression(SchemaParser.LogicalNotExpressionContext ctx);
-	/**
-	 * Visit a parse tree produced by the {@code ThrowExpression}
-	 * labeled alternative in {@link SchemaParser#expression}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitThrowExpression(SchemaParser.ThrowExpressionContext ctx);
-	/**
-	 * Visit a parse tree produced by the {@code AllRefExpression}
-	 * labeled alternative in {@link SchemaParser#expression}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitAllRefExpression(SchemaParser.AllRefExpressionContext ctx);
-	/**
 	 * Visit a parse tree produced by the {@code TryofExpression}
 	 * labeled alternative in {@link SchemaParser#expression}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
 	T visitTryofExpression(SchemaParser.TryofExpressionContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code AssignmentAugExpression}
+	 * labeled alternative in {@link SchemaParser#expression}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitAssignmentAugExpression(SchemaParser.AssignmentAugExpressionContext ctx);
 	/**
 	 * Visit a parse tree produced by the {@code UnaryMinusExpression}
 	 * labeled alternative in {@link SchemaParser#expression}.
@@ -377,19 +321,12 @@ public interface SchemaParserVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitUnaryMinusExpression(SchemaParser.UnaryMinusExpressionContext ctx);
 	/**
-	 * Visit a parse tree produced by the {@code AssignmentExpression}
+	 * Visit a parse tree produced by the {@code UnaryPlusExpression}
 	 * labeled alternative in {@link SchemaParser#expression}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitAssignmentExpression(SchemaParser.AssignmentExpressionContext ctx);
-	/**
-	 * Visit a parse tree produced by the {@code PostDecrementExpression}
-	 * labeled alternative in {@link SchemaParser#expression}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitPostDecrementExpression(SchemaParser.PostDecrementExpressionContext ctx);
+	T visitUnaryPlusExpression(SchemaParser.UnaryPlusExpressionContext ctx);
 	/**
 	 * Visit a parse tree produced by the {@code EqualityExpression}
 	 * labeled alternative in {@link SchemaParser#expression}.
@@ -405,54 +342,131 @@ public interface SchemaParserVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitMultiplicativeExpression(SchemaParser.MultiplicativeExpressionContext ctx);
 	/**
+	 * Visit a parse tree produced by the {@code PreIncDecExpression}
+	 * labeled alternative in {@link SchemaParser#expression}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitPreIncDecExpression(SchemaParser.PreIncDecExpressionContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code RangeEndExpression}
+	 * labeled alternative in {@link SchemaParser#expression}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitRangeEndExpression(SchemaParser.RangeEndExpressionContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code ParenthesizedExpression}
+	 * labeled alternative in {@link SchemaParser#expression}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitParenthesizedExpression(SchemaParser.ParenthesizedExpressionContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code AdditiveExpression}
+	 * labeled alternative in {@link SchemaParser#expression}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitAdditiveExpression(SchemaParser.AdditiveExpressionContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code RelationalExpression}
+	 * labeled alternative in {@link SchemaParser#expression}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitRelationalExpression(SchemaParser.RelationalExpressionContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code MemberBracketExpression}
+	 * labeled alternative in {@link SchemaParser#expression}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitMemberBracketExpression(SchemaParser.MemberBracketExpressionContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code PostIncDecExpression}
+	 * labeled alternative in {@link SchemaParser#expression}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitPostIncDecExpression(SchemaParser.PostIncDecExpressionContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code LiteralExpression}
+	 * labeled alternative in {@link SchemaParser#expression}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitLiteralExpression(SchemaParser.LiteralExpressionContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code MemberDotExpression}
+	 * labeled alternative in {@link SchemaParser#expression}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitMemberDotExpression(SchemaParser.MemberDotExpressionContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code TargetExpression}
+	 * labeled alternative in {@link SchemaParser#expression}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitTargetExpression(SchemaParser.TargetExpressionContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code LogicalNotExpression}
+	 * labeled alternative in {@link SchemaParser#expression}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitLogicalNotExpression(SchemaParser.LogicalNotExpressionContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code ThrowExpression}
+	 * labeled alternative in {@link SchemaParser#expression}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitThrowExpression(SchemaParser.ThrowExpressionContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code IdentifierExpression}
+	 * labeled alternative in {@link SchemaParser#expression}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitIdentifierExpression(SchemaParser.IdentifierExpressionContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code InvokeFunctionExpression}
+	 * labeled alternative in {@link SchemaParser#expression}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitInvokeFunctionExpression(SchemaParser.InvokeFunctionExpressionContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code AssignmentIdExpression}
+	 * labeled alternative in {@link SchemaParser#expression}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitAssignmentIdExpression(SchemaParser.AssignmentIdExpressionContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code InvokeMethodExpression}
+	 * labeled alternative in {@link SchemaParser#expression}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitInvokeMethodExpression(SchemaParser.InvokeMethodExpressionContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code AssignmentDotExpression}
+	 * labeled alternative in {@link SchemaParser#expression}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitAssignmentDotExpression(SchemaParser.AssignmentDotExpressionContext ctx);
+	/**
 	 * Visit a parse tree produced by the {@code RangeBothExpression}
 	 * labeled alternative in {@link SchemaParser#expression}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
 	T visitRangeBothExpression(SchemaParser.RangeBothExpressionContext ctx);
-	/**
-	 * Visit a parse tree produced by the {@code CallerExpression}
-	 * labeled alternative in {@link SchemaParser#refExpression}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitCallerExpression(SchemaParser.CallerExpressionContext ctx);
-	/**
-	 * Visit a parse tree produced by the {@code InvokeExpression}
-	 * labeled alternative in {@link SchemaParser#refExpression}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitInvokeExpression(SchemaParser.InvokeExpressionContext ctx);
-	/**
-	 * Visit a parse tree produced by the {@code DotExpression}
-	 * labeled alternative in {@link SchemaParser#refExpression}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitDotExpression(SchemaParser.DotExpressionContext ctx);
-	/**
-	 * Visit a parse tree produced by the {@code TargetExpression}
-	 * labeled alternative in {@link SchemaParser#refExpression}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitTargetExpression(SchemaParser.TargetExpressionContext ctx);
-	/**
-	 * Visit a parse tree produced by the {@code IndexExpression}
-	 * labeled alternative in {@link SchemaParser#refExpression}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitIndexExpression(SchemaParser.IndexExpressionContext ctx);
-	/**
-	 * Visit a parse tree produced by the {@code IdentifierExpression}
-	 * labeled alternative in {@link SchemaParser#refExpression}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitIdentifierExpression(SchemaParser.IdentifierExpressionContext ctx);
 	/**
 	 * Visit a parse tree produced by the {@code TrueLiteral}
 	 * labeled alternative in {@link SchemaParser#literal}.

@@ -11,7 +11,6 @@ import org.antlr.v4.runtime.Token;
 import java.util.Collections;
 import java.util.List;
 
-import static com.relogiclabs.jschema.internal.util.StringHelper.concat;
 import static com.relogiclabs.jschema.message.ErrorCode.TRYS01;
 import static com.relogiclabs.jschema.message.MessageFormatter.formatForSchema;
 
@@ -24,14 +23,18 @@ public final class LogHelper {
 
     public static int level = ERROR;
 
+    private LogHelper() {
+        throw new UnsupportedOperationException("This class is not intended for instantiation");
+    }
+
     public static void debug(DataTree expected, DataTree actual) {
         if(level > DEBUG) return;
-        System.out.println(concat("[DEBUG] Expected ", expected.getType(),
-                " tree interpretation:"));
+        System.out.println("[DEBUG] Expected " + expected.getType()
+            + " tree interpretation:");
         System.out.println(expected.getRoot());
         System.out.println("---");
-        System.out.println(concat("[DEBUG] Actual ", actual.getType(),
-                " tree interpretation:"));
+        System.out.println("[DEBUG] Actual " + actual.getType()
+            + " tree interpretation:");
         System.out.println(actual.getRoot());
         System.out.println("---");
     }
@@ -60,7 +63,7 @@ public final class LogHelper {
         if(level > DEBUG) return;
         Exception ex = exception instanceof CommonException ? exception
                 : new ScriptRuntimeException(formatForSchema(
-                TRYS01, exception.getMessage(), token));
+                TRYS01, exception.getMessage(), token), exception);
         System.out.print("[DEBUG] [TRYOF ERROR]: ");
         ex.printStackTrace(System.out);
     }

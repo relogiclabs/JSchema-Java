@@ -10,7 +10,6 @@ import org.antlr.v4.runtime.tree.TerminalNode;
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.relogiclabs.jschema.internal.util.StringHelper.concat;
 import static com.relogiclabs.jschema.message.ErrorCode.DTYP01;
 import static com.relogiclabs.jschema.message.MessageFormatter.formatForSchema;
 import static com.relogiclabs.jschema.type.EType.ANY;
@@ -66,7 +65,7 @@ public final class JsonType {
     private static JsonType from(String name, Location location) {
         var type = stringTypeMap.get(name);
         if(type == null) throw new InvalidDataTypeException(formatForSchema(DTYP01,
-                concat("Invalid data type ", name), location));
+            "Invalid data type " + name, location));
         return new JsonType(type);
     }
 
@@ -75,13 +74,13 @@ public final class JsonType {
         if(type == DATE) {
             var date = (JString) node;
             var dateTime = node.getRuntime().getPragmas().getDateTypeParser()
-                    .tryParse(date.getValue(), error);
+                .tryParse(date.getValue(), error);
             if(dateTime == null) return false;
             date.setDerived(JDate.from(date, dateTime));
         } else if(type == TIME) {
             var time = (JString) node;
             var dateTime = node.getRuntime().getPragmas().getTimeTypeParser()
-                    .tryParse(time.getValue(), error);
+                .tryParse(time.getValue(), error);
             if(dateTime == null) return false;
             time.setDerived(JTime.from(time, dateTime));
         }

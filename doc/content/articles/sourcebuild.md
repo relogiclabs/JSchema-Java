@@ -20,7 +20,7 @@ mvn clean install
 Maven will resolve the library's dependencies, compile the code, and create a jar file which will be installed in the local Maven repository.
 
 ## Add the Library to Your Project
-To integrate the library into your project, open it in your preferred IDE (such as IntelliJ IDEA, NetBeans IDE, Eclipse IDE, or VS Code). If you are using a build tool like Maven or Gradle, adding the library to your project is straightforward. For example in a Maven project, navigate to the Maven `pom.xml` file and locate the section named `<dependencies>` and add the following XML snippet within the section of the file, replacing `2.x.x` with the version you have built:
+To integrate the library into your project, open it in your preferred IDE (such as IntelliJ IDEA, NetBeans IDE, Eclipse IDE, or VS Code). If you are using a build tool like Maven or Gradle, adding the library to your project is straightforward. For example in a Maven project, navigate to the Maven `pom.xml` file and locate the section named `<dependencies>` and add the following XML snippet within the section, replacing `2.x.x` with the version you have built:
 ```xml
 <dependency>
     <groupId>com.relogiclabs.json</groupId>

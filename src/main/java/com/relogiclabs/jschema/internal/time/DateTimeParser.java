@@ -77,7 +77,6 @@ import static com.relogiclabs.jschema.internal.time.SegmentProcessor.WeekdayShor
 import static com.relogiclabs.jschema.internal.time.SegmentProcessor.Whitespace;
 import static com.relogiclabs.jschema.internal.time.SegmentProcessor.YearNumber2;
 import static com.relogiclabs.jschema.internal.time.SegmentProcessor.YearNumber4;
-import static com.relogiclabs.jschema.internal.util.StringHelper.concat;
 import static com.relogiclabs.jschema.message.ErrorCode.DINV02;
 
 public final class DateTimeParser {
@@ -142,8 +141,8 @@ public final class DateTimeParser {
             var processor = PROCESSORS.get(dateTimeLexer.getVocabulary().getSymbolicName(token.getType()));
             input = processor.process(input, token, context);
         }
-        if(input.length() != 0) throw new InvalidDateTimeException(DINV02,
-                concat("Invalid ", context.getType(), " input format"));
+        if(!input.isEmpty()) throw new InvalidDateTimeException(DINV02,
+            "Invalid " + context.getType() + " input format");
 
         var dateTime = context.validate();
         LogHelper.debug(context);

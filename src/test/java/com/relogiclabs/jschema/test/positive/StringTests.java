@@ -14,7 +14,10 @@ public class StringTests {
     @Test
     public void When_DataTypeWithUnicodeString_ValidTrue() {
         var schema = "#string";
-        var json = "\"\\u0985\\u0986\\r\\n\\t\"";
+        var json =
+            """
+            "\\u0985\\u0986\\r\\n\\t"
+            """;
         JsonAssert.isValid(schema, json);
     }
 

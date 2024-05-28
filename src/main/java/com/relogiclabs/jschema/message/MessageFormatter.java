@@ -10,6 +10,7 @@ import static org.apache.commons.lang3.StringUtils.capitalize;
 
 @Getter
 public abstract class MessageFormatter {
+    public static final String ERROR_POINTER = "<|>";
     private static final String NEWLINE = System.lineSeparator();
 
     private static final String SCHEMA_BASIC_FORMAT = "Schema Input [%s]: %s";

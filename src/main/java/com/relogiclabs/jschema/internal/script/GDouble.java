@@ -7,7 +7,7 @@ import lombok.RequiredArgsConstructor;
 
 @Getter
 @EqualsAndHashCode
-@RequiredArgsConstructor(staticName = "of")
+@RequiredArgsConstructor(staticName = "from")
 public final class GDouble implements EDouble {
     private final double value;
 

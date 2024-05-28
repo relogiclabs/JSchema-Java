@@ -2,23 +2,19 @@ package com.relogiclabs.jschema.internal.script;
 
 import com.relogiclabs.jschema.type.EType;
 import com.relogiclabs.jschema.type.EValue;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.Setter;
 
 import java.util.Objects;
 
 import static com.relogiclabs.jschema.internal.engine.ScriptTreeHelper.dereference;
 
 @Getter
-public final class GReference implements EValue {
+@Setter
+@AllArgsConstructor
+public final class GLeftValue implements EValue {
     private EValue value;
-
-    public GReference(EValue value) {
-        this.value = dereference(value);
-    }
-
-    public void setValue(EValue value) {
-        this.value = dereference(value);
-    }
 
     @Override
     public EType getType() {
@@ -27,8 +23,7 @@ public final class GReference implements EValue {
 
     @Override
     public boolean equals(Object o) {
-        if(!(o instanceof EValue v)) return false;
-        return Objects.equals(value, dereference(v));
+        return o instanceof EValue v && Objects.equals(value, dereference(v));
     }
 
     @Override

@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Test;
 
 public class AggregatedTests {
     @Test
-    public void When_SchemaAggregatedTestWithBasicJson_ValidTrue() {
+    public void When_SchemaAggregatedTestExample_ValidTrue() {
         var schema = """
         %title: "Example Schema For Some Json HTTP Request or Response"
         %version: "February 11, 2023"
@@ -19,7 +19,7 @@ public class AggregatedTests {
             "key14": $component3
         }
         %define $component2: [@length(1, 10) #string, @url #string]
-        /* if it is null do not check for nested function or data type*/
+        // No checks of functions or data types if it is null
         %define $component3: @range*(1, 100) #integer* #array #null
         %define $component4: @regex*("[A-Z]{3}") #string* ?
 
@@ -118,7 +118,6 @@ public class AggregatedTests {
         """;
         var actual = """
         {
-            "key7": true,
             "key3": [5, 10, 15, 20],
             "key1": 10, "key2": "val2",
             "key4": 0.5, "key5": 10E-10,
@@ -127,14 +126,14 @@ public class AggregatedTests {
                 "key13": ["Microsoft", "https://www.microsoft.com/en-us/"],
                 "key11": "test", "key14": [10, 20, 30, 40]
             },
-            "key8": ["ABC", "EFG", "XYZ"], "key9": null
+            "key8": ["ABC", "EFG", "XYZ"], "key7": true, "key9": null
         }
         """;
         JsonAssert.areEqual(expected, actual);
     }
 
     @Test
-    public void When_SimpleJsonSchemaAggregatedTest_ValidTrue() {
+    public void When_SimpleJSchemaAggregatedTest_ValidTrue() {
         var schema = """
         %title: "User Profile Response"
         %version: "1.0.0-basic"
@@ -192,12 +191,12 @@ public class AggregatedTests {
     }
 
     @Test
-    public void When_ExtendedJsonSchemaAggregatedTest_ValidTrue() {
+    public void When_ExtendedJSchemaAggregatedTest_ValidTrue() {
         var schema = """
         %title: "Extended User Profile Dashboard API Response"
         %version: "2.0.0-extended"
         %import: com.relogiclabs.jschema.test.external.ExternalFunctions
-        
+
         %pragma DateDataTypeFormat: "DD-MM-YYYY"
         %pragma TimeDataTypeFormat: "DD-MM-YYYY hh:mm:ss"
         %pragma IgnoreUndefinedProperties: true
@@ -208,7 +207,7 @@ public class AggregatedTests {
             "content": @length(30, 1000) #string,
             "tags": $tags
         } #object
-        
+
         %define $product: {
             "id": @length(2, 10) @regex("[a-z][a-z0-9]+") #string,
             "name": @length(5, 30) #string,
@@ -221,11 +220,11 @@ public class AggregatedTests {
                 "storage": @regex("[0-9]{1,4}GB (SSD|HDD)") #string
             } #object #null
         }
-        
+
         %define $tags: @length(1, 10) #string*($tag) #array
         %define $tag: @length(3, 20) @regex("[A-Za-z_]+") #string
-        
-        %schema: 
+
+        %schema:
         {
             "user": {
                 "id": @range(1, 10000) #integer,
@@ -336,10 +335,10 @@ public class AggregatedTests {
                     "id": "p2",
                     "name": "Laptop",
                     "brand": "SuperTech",
-                    "price": 1299.99,
+                    "price": 11.99,
                     "inStock": false,
                     "specs": {
-                        "cpu": "Ryzen 11",
+                        "cpu": "Ryzen",
                         "ram": "11GB",
                         "storage": "11GB SSD"
                     }
@@ -356,11 +355,11 @@ public class AggregatedTests {
     }
 
     @Test
-    public void When_ExtendedJsonSchemaWithScriptAggregatedTest_ValidTrue() {
+    public void When_ExtendedJSchemaWithScriptAggregatedTest_ValidTrue() {
         var schema = """
         %title: "Extended User Profile Dashboard API Response"
         %version: "2.0.0-extended"
-        
+
         %pragma DateDataTypeFormat: "DD-MM-YYYY"
         %pragma TimeDataTypeFormat: "DD-MM-YYYY hh:mm:ss"
         %pragma IgnoreUndefinedProperties: true
@@ -371,7 +370,7 @@ public class AggregatedTests {
             "content": @length(30, 1000) #string,
             "tags": $tags
         } #object
-        
+
         %define $product: {
             "id": @length(2, 10) @regex("[a-z][a-z0-9]+") #string,
             "name": @length(5, 30) #string,
@@ -384,11 +383,11 @@ public class AggregatedTests {
                 "storage": @regex("[0-9]{1,4}GB (SSD|HDD)") #string
             } #object #null
         }
-        
+
         %define $tags: @length(1, 10) #string*($tag) #array
         %define $tag: @length(3, 20) @regex("[A-Za-z_]+") #string
-        
-        %schema: 
+
+        %schema:
         {
             "user": {
                 "id": @range(1, 10000) #integer,
@@ -425,14 +424,16 @@ public class AggregatedTests {
                 "isCloudy": #boolean
             }
         }
-        
+
         %script: {
             future checkAccess(role) {
-                if(role[0] == "user" && target > 5) return fail(
+                // Auto-unpacking unwraps single-value '&role' array into its value
+                // 'target' keyword refers to the target JSON value
+                if(role == "user" && target > 5) return fail(
                     "ERRACCESS", "Data access incompatible with 'user' role",
                     expected("an access at most 5 for 'user' role"),
                     actual("found access " + target + " which is greater than 5"));
-                return true; // Skipping this line also works as expected
+                return true; // Skipping this line also works
             }
         }
         """;
@@ -509,10 +510,10 @@ public class AggregatedTests {
                     "id": "p2",
                     "name": "Laptop",
                     "brand": "SuperTech",
-                    "price": 1299.99,
+                    "price": 11.99,
                     "inStock": false,
                     "specs": {
-                        "cpu": "Ryzen 11",
+                        "cpu": "Ryzen",
                         "ram": "11GB",
                         "storage": "11GB SSD"
                     }

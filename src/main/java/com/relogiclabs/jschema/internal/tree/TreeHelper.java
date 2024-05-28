@@ -9,7 +9,6 @@ import java.util.List;
 import java.util.function.Function;
 
 import static com.relogiclabs.jschema.internal.util.StreamHelper.halt;
-import static com.relogiclabs.jschema.internal.util.StringHelper.concat;
 import static com.relogiclabs.jschema.message.ErrorCode.PROP03;
 import static com.relogiclabs.jschema.message.ErrorCode.PROP04;
 import static com.relogiclabs.jschema.message.MessageFormatter.formatForJson;
@@ -33,6 +32,6 @@ public final class TreeHelper {
     }
 
     private static String getMessage(JProperty property) {
-        return concat("Multiple key with name '", property.getKey(), "' found");
+        return "Multiple key with name '" + property.getKey() + "' found";
     }
 }

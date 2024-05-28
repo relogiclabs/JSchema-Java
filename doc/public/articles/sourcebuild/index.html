@@ -1,9 +1,13 @@
 <!DOCTYPE html>
-<html lang="en-us"><link rel="stylesheet" href="/JSchema-Java/css/style.css" type="text/css" media="all" />
+<html lang="en-us">
+<link rel="stylesheet" href="/JSchema-Java/css/style.css" type="text/css" media="all" />
 <link rel="stylesheet" href="/JSchema-Java/css/syntax.css" type="text/css" media="all" />
 <link rel="icon" href="/JSchema-Java/images/favicon.ico">
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-<script src="/JSchema-Java/js/script.js"></script><body><header>
+<script src="/JSchema-Java/js/script.js"></script>
+
+<body>
+    <header>
     <nav class="header" role="navigation">
         <div class="header-left">
             <label for="menu-checkbox">
@@ -23,51 +27,52 @@
         </div>
     </nav>
 </header>
+    
 <div class="overlay"></div>
 <div class="sidebar">
     <ul>
         
-        <li class="section-header ">
+        <li class="section-header">
             <a href="/JSchema-Java/articles/">Articles</a>
         </li>
         
-        <li class="section-item ">
+        <li class="section-item">
             <a href="/JSchema-Java/articles/introduction/">Introduction</a>
         </li>
         
-        <li class="section-item ">
+        <li class="section-item">
             <a href="/JSchema-Java/articles/quickstart/">Quick Start</a>
         </li>
         
-        <li class="section-item ">
+        <li class="section-item">
             <a href="/JSchema-Java/articles/validation/">Validation Syntax</a>
         </li>
         
-        <li class="section-item ">
+        <li class="section-item">
             <a href="/JSchema-Java/articles/directives/">Directives</a>
         </li>
         
-        <li class="section-item ">
+        <li class="section-item">
             <a href="/JSchema-Java/articles/specification/">Specification</a>
         </li>
         
-        <li class="section-item ">
+        <li class="section-item">
             <a href="/JSchema-Java/articles/datatypes/">Data Types</a>
         </li>
         
-        <li class="section-item ">
+        <li class="section-item">
             <a href="/JSchema-Java/articles/functions/">Functions</a>
         </li>
         
-        <li class="section-item ">
+        <li class="section-item">
             <a href="/JSchema-Java/articles/cscript/">CScript DSL</a>
         </li>
         
-        <li class="section-item ">
+        <li class="section-item">
             <a href="/JSchema-Java/articles/datetime/">Date and Time</a>
         </li>
         
-        <li class="section-item ">
+        <li class="section-item">
             <a href="/JSchema-Java/articles/components/">Components</a>
         </li>
         
@@ -77,7 +82,9 @@
         
         
     </ul>
-</div><main>
+</div>
+    <main>
+        
 <div class="content">
     <h1 id="build-from-source-code">Build from Source Code</h1>
 <p>This comprehensive guide illustrates the procedures for retrieving source code from a GitHub repository, compiling the project source code into a library, and seamlessly integrating the compiled library into your project. It is essential to have a foundational understanding of the Java language, as well as a modest level of familiarity with the Java SDK and command-line interface. Furthermore, some basic knowledge of how to work with Maven packages would be helpful.</p>
@@ -88,7 +95,7 @@
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">mvn clean install
 </span></span></code></pre></div><p>Maven will resolve the library&rsquo;s dependencies, compile the code, and create a jar file which will be installed in the local Maven repository.</p>
 <h2 id="add-the-library-to-your-project">Add the Library to Your Project</h2>
-<p>To integrate the library into your project, open it in your preferred IDE (such as IntelliJ IDEA, NetBeans IDE, Eclipse IDE, or VS Code). If you are using a build tool like Maven or Gradle, adding the library to your project is straightforward. For example in a Maven project, navigate to the Maven <code>pom.xml</code> file and locate the section named <code>&lt;dependencies&gt;</code> and add the following XML snippet within the section of the file, replacing <code>2.x.x</code> with the version you have built:</p>
+<p>To integrate the library into your project, open it in your preferred IDE (such as IntelliJ IDEA, NetBeans IDE, Eclipse IDE, or VS Code). If you are using a build tool like Maven or Gradle, adding the library to your project is straightforward. For example in a Maven project, navigate to the Maven <code>pom.xml</code> file and locate the section named <code>&lt;dependencies&gt;</code> and add the following XML snippet within the section, replacing <code>2.x.x</code> with the version you have built:</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-xml" data-lang="xml"><span class="line"><span class="cl"><span class="nt">&lt;dependency&gt;</span>
 </span></span><span class="line"><span class="cl">    <span class="nt">&lt;groupId&gt;</span>com.relogiclabs.json<span class="nt">&lt;/groupId&gt;</span>
 </span></span><span class="line"><span class="cl">    <span class="nt">&lt;artifactId&gt;</span>relogiclabs-jschema<span class="nt">&lt;/artifactId&gt;</span>
@@ -96,70 +103,70 @@
 </span></span><span class="line"><span class="cl"><span class="nt">&lt;/dependency&gt;</span>
 </span></span></code></pre></div><h2 id="write-a-sample-to-test">Write a Sample to Test</h2>
 <p>With all the necessary components in place, you are now ready to create a sample schema and validate a corresponding JSON against the schema. The subsequent example presents a Java class featuring a method designed for validating a sample JSON based on a provided schema. If you are working with Java 17 or above, you can enhance the code further by utilizing new language features.</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">com.relogiclabs.jschema.JsonSchema</span><span class="o">;</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="kd">public</span> <span class="kd">class</span> <span class="nc">SampleSchema</span> <span class="o">{</span>
-</span></span><span class="line"><span class="cl">    <span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">checkIsValid</span><span class="o">()</span> <span class="o">{</span>
-</span></span><span class="line"><span class="cl">        <span class="n">var</span> <span class="n">schema</span> <span class="o">=</span>
-</span></span><span class="line"><span class="cl">            <span class="s">&#34;&#34;&#34;
-</span></span></span><span class="line"><span class="cl"><span class="s">            %title: &#34;</span><span class="n">User</span> <span class="n">Profile</span> <span class="n">Response</span><span class="s">&#34;
-</span></span></span><span class="line"><span class="cl"><span class="s">            %version: &#34;</span><span class="mi">1</span><span class="o">.</span><span class="na">0</span><span class="o">.</span><span class="na">0</span><span class="o">-</span><span class="n">basic</span><span class="s">&#34;
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="kn">import</span><span class="w"> </span><span class="nn">com.relogiclabs.jschema.JsonSchema</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">SampleSchema</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">boolean</span><span class="w"> </span><span class="nf">checkIsValid</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="kd">var</span><span class="w"> </span><span class="n">schema</span><span class="w"> </span><span class="o">=</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="s">&#34;&#34;&#34;
+</span></span></span><span class="line"><span class="cl"><span class="s">            %title: &#34;User Profile Response&#34;
+</span></span></span><span class="line"><span class="cl"><span class="s">            %version: &#34;1.0.0-basic&#34;
 </span></span></span><span class="line"><span class="cl"><span class="s">            %schema:
 </span></span></span><span class="line"><span class="cl"><span class="s">            {
-</span></span></span><span class="line"><span class="cl"><span class="s">                &#34;</span><span class="n">user</span><span class="s">&#34;: {
-</span></span></span><span class="line"><span class="cl"><span class="s">                    &#34;</span><span class="n">id</span><span class="s">&#34;: @range(1, 10000) #integer,
+</span></span></span><span class="line"><span class="cl"><span class="s">                &#34;user&#34;: {
+</span></span></span><span class="line"><span class="cl"><span class="s">                    &#34;id&#34;: @range(1, 10000) #integer,
 </span></span></span><span class="line"><span class="cl"><span class="s">                    /*username does not allow special characters*/
-</span></span></span><span class="line"><span class="cl"><span class="s">                    &#34;</span><span class="n">username</span><span class="s">&#34;: @regex(&#34;</span><span class="o">[</span><span class="n">a</span><span class="o">-</span><span class="n">z_</span><span class="o">]{</span><span class="mi">3</span><span class="o">,</span><span class="mi">30</span><span class="o">}</span><span class="s">&#34;) #string,
+</span></span></span><span class="line"><span class="cl"><span class="s">                    &#34;username&#34;: @regex(&#34;[a-z_]{3,30}&#34;) #string,
 </span></span></span><span class="line"><span class="cl"><span class="s">                    /*currently only one role is allowed by system*/
-</span></span></span><span class="line"><span class="cl"><span class="s">                    &#34;</span><span class="n">role</span><span class="s">&#34;: &#34;</span><span class="n">user</span><span class="s">&#34; #string,
-</span></span></span><span class="line"><span class="cl"><span class="s">                    &#34;</span><span class="n">isActive</span><span class="s">&#34;: #boolean, //user account current status
-</span></span></span><span class="line"><span class="cl"><span class="s">                    &#34;</span><span class="n">registeredAt</span><span class="s">&#34;: #time,
-</span></span></span><span class="line"><span class="cl"><span class="s">                    &#34;</span><span class="n">profile</span><span class="s">&#34;: {
-</span></span></span><span class="line"><span class="cl"><span class="s">                        &#34;</span><span class="n">firstName</span><span class="s">&#34;: @regex(&#34;</span><span class="o">[</span><span class="n">A</span><span class="o">-</span><span class="n">Za</span><span class="o">-</span><span class="n">z</span> <span class="o">]{</span><span class="mi">3</span><span class="o">,</span><span class="mi">50</span><span class="o">}</span><span class="s">&#34;) #string,
-</span></span></span><span class="line"><span class="cl"><span class="s">                        &#34;</span><span class="n">lastName</span><span class="s">&#34;: @regex(&#34;</span><span class="o">[</span><span class="n">A</span><span class="o">-</span><span class="n">Za</span><span class="o">-</span><span class="n">z</span> <span class="o">]{</span><span class="mi">3</span><span class="o">,</span><span class="mi">50</span><span class="o">}</span><span class="s">&#34;) #string,
-</span></span></span><span class="line"><span class="cl"><span class="s">                        &#34;</span><span class="n">dateOfBirth</span><span class="s">&#34;: #date,
-</span></span></span><span class="line"><span class="cl"><span class="s">                        &#34;</span><span class="n">age</span><span class="s">&#34;: @range(18, 130) #integer,
-</span></span></span><span class="line"><span class="cl"><span class="s">                        &#34;</span><span class="n">email</span><span class="s">&#34;: @email #string,
-</span></span></span><span class="line"><span class="cl"><span class="s">                        &#34;</span><span class="n">pictureURL</span><span class="s">&#34;: @url #string,
-</span></span></span><span class="line"><span class="cl"><span class="s">                        &#34;</span><span class="n">address</span><span class="s">&#34;: {
-</span></span></span><span class="line"><span class="cl"><span class="s">                            &#34;</span><span class="n">street</span><span class="s">&#34;: @length(10, 200) #string,
-</span></span></span><span class="line"><span class="cl"><span class="s">                            &#34;</span><span class="n">city</span><span class="s">&#34;: @length(3, 50) #string,
-</span></span></span><span class="line"><span class="cl"><span class="s">                            &#34;</span><span class="n">country</span><span class="s">&#34;: @regex(&#34;</span><span class="o">[</span><span class="n">A</span><span class="o">-</span><span class="n">Za</span><span class="o">-</span><span class="n">z</span> <span class="o">]{</span><span class="mi">3</span><span class="o">,</span><span class="mi">50</span><span class="o">}</span><span class="s">&#34;) #string
+</span></span></span><span class="line"><span class="cl"><span class="s">                    &#34;role&#34;: &#34;user&#34; #string,
+</span></span></span><span class="line"><span class="cl"><span class="s">                    &#34;isActive&#34;: #boolean, //user account current status
+</span></span></span><span class="line"><span class="cl"><span class="s">                    &#34;registeredAt&#34;: #time,
+</span></span></span><span class="line"><span class="cl"><span class="s">                    &#34;profile&#34;: {
+</span></span></span><span class="line"><span class="cl"><span class="s">                        &#34;firstName&#34;: @regex(&#34;[A-Za-z ]{3,50}&#34;) #string,
+</span></span></span><span class="line"><span class="cl"><span class="s">                        &#34;lastName&#34;: @regex(&#34;[A-Za-z ]{3,50}&#34;) #string,
+</span></span></span><span class="line"><span class="cl"><span class="s">                        &#34;dateOfBirth&#34;: #date,
+</span></span></span><span class="line"><span class="cl"><span class="s">                        &#34;age&#34;: @range(18, 130) #integer,
+</span></span></span><span class="line"><span class="cl"><span class="s">                        &#34;email&#34;: @email #string,
+</span></span></span><span class="line"><span class="cl"><span class="s">                        &#34;pictureURL&#34;: @url #string,
+</span></span></span><span class="line"><span class="cl"><span class="s">                        &#34;address&#34;: {
+</span></span></span><span class="line"><span class="cl"><span class="s">                            &#34;street&#34;: @length(10, 200) #string,
+</span></span></span><span class="line"><span class="cl"><span class="s">                            &#34;city&#34;: @length(3, 50) #string,
+</span></span></span><span class="line"><span class="cl"><span class="s">                            &#34;country&#34;: @regex(&#34;[A-Za-z ]{3,50}&#34;) #string
 </span></span></span><span class="line"><span class="cl"><span class="s">                        } #object #null
 </span></span></span><span class="line"><span class="cl"><span class="s">                    }
 </span></span></span><span class="line"><span class="cl"><span class="s">                }
 </span></span></span><span class="line"><span class="cl"><span class="s">            }
-</span></span></span><span class="line"><span class="cl"><span class="s">            &#34;&#34;&#34;</span><span class="o">;</span>
-</span></span><span class="line"><span class="cl">        <span class="n">var</span> <span class="n">json</span> <span class="o">=</span>
-</span></span><span class="line"><span class="cl">            <span class="s">&#34;&#34;&#34;
+</span></span></span><span class="line"><span class="cl"><span class="s">            &#34;&#34;&#34;</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="kd">var</span><span class="w"> </span><span class="n">json</span><span class="w"> </span><span class="o">=</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="s">&#34;&#34;&#34;
 </span></span></span><span class="line"><span class="cl"><span class="s">            {
-</span></span></span><span class="line"><span class="cl"><span class="s">                &#34;</span><span class="n">user</span><span class="s">&#34;: {
-</span></span></span><span class="line"><span class="cl"><span class="s">                    &#34;</span><span class="n">id</span><span class="s">&#34;: 1111,
-</span></span></span><span class="line"><span class="cl"><span class="s">                    &#34;</span><span class="n">username</span><span class="s">&#34;: &#34;</span><span class="n">johndoe</span><span class="s">&#34;,
-</span></span></span><span class="line"><span class="cl"><span class="s">                    &#34;</span><span class="n">role</span><span class="s">&#34;: &#34;</span><span class="n">user</span><span class="s">&#34;,
-</span></span></span><span class="line"><span class="cl"><span class="s">                    &#34;</span><span class="n">isActive</span><span class="s">&#34;: true,
-</span></span></span><span class="line"><span class="cl"><span class="s">                    &#34;</span><span class="n">registeredAt</span><span class="s">&#34;: &#34;</span><span class="mi">2023</span><span class="o">-</span><span class="mi">09</span><span class="o">-</span><span class="mi">06</span><span class="n">T15</span><span class="o">:</span><span class="mi">10</span><span class="o">:</span><span class="mi">30</span><span class="o">.</span><span class="na">639Z</span><span class="s">&#34;,
-</span></span></span><span class="line"><span class="cl"><span class="s">                    &#34;</span><span class="n">profile</span><span class="s">&#34;: {
-</span></span></span><span class="line"><span class="cl"><span class="s">                        &#34;</span><span class="n">firstName</span><span class="s">&#34;: &#34;</span><span class="n">John</span><span class="s">&#34;,
-</span></span></span><span class="line"><span class="cl"><span class="s">                        &#34;</span><span class="n">lastName</span><span class="s">&#34;: &#34;</span><span class="n">Doe</span><span class="s">&#34;,
-</span></span></span><span class="line"><span class="cl"><span class="s">                        &#34;</span><span class="n">dateOfBirth</span><span class="s">&#34;: &#34;</span><span class="mi">1993</span><span class="o">-</span><span class="mi">06</span><span class="o">-</span><span class="mi">17</span><span class="s">&#34;,
-</span></span></span><span class="line"><span class="cl"><span class="s">                        &#34;</span><span class="n">age</span><span class="s">&#34;: 30,
-</span></span></span><span class="line"><span class="cl"><span class="s">                        &#34;</span><span class="n">email</span><span class="s">&#34;: &#34;</span><span class="n">john</span><span class="o">.</span><span class="na">doe</span><span class="nd">@example.com</span><span class="s">&#34;,
-</span></span></span><span class="line"><span class="cl"><span class="s">                        &#34;</span><span class="n">pictureURL</span><span class="s">&#34;: &#34;</span><span class="n">https</span><span class="o">:</span><span class="c1">//example.com/picture.jpg&#34;,
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>                        <span class="s">&#34;address&#34;</span><span class="o">:</span> <span class="o">{</span>
-</span></span><span class="line"><span class="cl">                            <span class="s">&#34;street&#34;</span><span class="o">:</span> <span class="s">&#34;123 Some St&#34;</span><span class="o">,</span>
-</span></span><span class="line"><span class="cl">                            <span class="s">&#34;city&#34;</span><span class="o">:</span> <span class="s">&#34;Some town&#34;</span><span class="o">,</span>
-</span></span><span class="line"><span class="cl">                            <span class="s">&#34;country&#34;</span><span class="o">:</span> <span class="s">&#34;Some Country&#34;</span>
-</span></span><span class="line"><span class="cl">                        <span class="o">}</span>
-</span></span><span class="line"><span class="cl">                    <span class="o">}</span>
-</span></span><span class="line"><span class="cl">                <span class="o">}</span>
-</span></span><span class="line"><span class="cl">            <span class="o">}</span>
-</span></span><span class="line"><span class="cl">            <span class="s">&#34;&#34;</span><span class="err">&#34;</span><span class="o">;</span>
-</span></span><span class="line"><span class="cl">        <span class="n">var</span> <span class="n">jsonSchema</span> <span class="o">=</span> <span class="k">new</span> <span class="n">JsonSchema</span><span class="o">(</span><span class="n">schema</span><span class="o">);</span>
-</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="n">jsonSchema</span><span class="o">.</span><span class="na">isValid</span><span class="o">(</span><span class="n">json</span><span class="o">);</span>
-</span></span><span class="line"><span class="cl">    <span class="o">}</span>
-</span></span><span class="line"><span class="cl"><span class="o">}</span>
-</span></span></code></pre></div><h2 id="create-validation-errors">Create Validation Errors</h2>
+</span></span></span><span class="line"><span class="cl"><span class="s">                &#34;user&#34;: {
+</span></span></span><span class="line"><span class="cl"><span class="s">                    &#34;id&#34;: 1111,
+</span></span></span><span class="line"><span class="cl"><span class="s">                    &#34;username&#34;: &#34;johndoe&#34;,
+</span></span></span><span class="line"><span class="cl"><span class="s">                    &#34;role&#34;: &#34;user&#34;,
+</span></span></span><span class="line"><span class="cl"><span class="s">                    &#34;isActive&#34;: true,
+</span></span></span><span class="line"><span class="cl"><span class="s">                    &#34;registeredAt&#34;: &#34;2023-09-06T15:10:30.639Z&#34;,
+</span></span></span><span class="line"><span class="cl"><span class="s">                    &#34;profile&#34;: {
+</span></span></span><span class="line"><span class="cl"><span class="s">                        &#34;firstName&#34;: &#34;John&#34;,
+</span></span></span><span class="line"><span class="cl"><span class="s">                        &#34;lastName&#34;: &#34;Doe&#34;,
+</span></span></span><span class="line"><span class="cl"><span class="s">                        &#34;dateOfBirth&#34;: &#34;1993-06-17&#34;,
+</span></span></span><span class="line"><span class="cl"><span class="s">                        &#34;age&#34;: 30,
+</span></span></span><span class="line"><span class="cl"><span class="s">                        &#34;email&#34;: &#34;john.doe@example.com&#34;,
+</span></span></span><span class="line"><span class="cl"><span class="s">                        &#34;pictureURL&#34;: &#34;https://example.com/picture.jpg&#34;,
+</span></span></span><span class="line"><span class="cl"><span class="s">                        &#34;address&#34;: {
+</span></span></span><span class="line"><span class="cl"><span class="s">                            &#34;street&#34;: &#34;123 Some St&#34;,
+</span></span></span><span class="line"><span class="cl"><span class="s">                            &#34;city&#34;: &#34;Some town&#34;,
+</span></span></span><span class="line"><span class="cl"><span class="s">                            &#34;country&#34;: &#34;Some Country&#34;
+</span></span></span><span class="line"><span class="cl"><span class="s">                        }
+</span></span></span><span class="line"><span class="cl"><span class="s">                    }
+</span></span></span><span class="line"><span class="cl"><span class="s">                }
+</span></span></span><span class="line"><span class="cl"><span class="s">            }
+</span></span></span><span class="line"><span class="cl"><span class="s">            &#34;&#34;&#34;</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="kd">var</span><span class="w"> </span><span class="n">jsonSchema</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">JsonSchema</span><span class="p">(</span><span class="n">schema</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">jsonSchema</span><span class="p">.</span><span class="na">isValid</span><span class="p">(</span><span class="n">json</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="p">}</span><span class="w">
+</span></span></span></code></pre></div><h2 id="create-validation-errors">Create Validation Errors</h2>
 <p>Let&rsquo;s intentionally introduce a few errors by modifying the previous JSON document and then examine the validation results. To begin, we&rsquo;ll alter the <code>id</code> within the <code>user</code> object to a string type and observe the outcome. Additionally, we&rsquo;ll modify the <code>username</code> by inserting a space into its value, thus creating an invalid <code>username</code>. Below is the revised JSON representation, now containing these purposeful errors.</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-json" data-lang="json"><span class="line"><span class="cl"><span class="p">{</span>
 </span></span><span class="line"><span class="cl">    <span class="nt">&#34;user&#34;</span><span class="p">:</span> <span class="p">{</span>
@@ -182,13 +189,13 @@
 </span></span><span class="line"><span class="cl">    <span class="p">}</span>
 </span></span><span class="line"><span class="cl"><span class="p">}</span>
 </span></span></code></pre></div><p>To achieve the desired outcome, please make the following changes to the preceding code. Specifically, ensure that any schema validation errors are displayed in the console. The modified code snippet that invokes the <code>writeError</code> method to display the errors if validation fails is as follows:</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="o">...</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="n">var</span> <span class="n">jsonSchema</span> <span class="o">=</span> <span class="k">new</span> <span class="n">JsonSchema</span><span class="o">(</span><span class="n">schema</span><span class="o">);</span>
-</span></span><span class="line"><span class="cl"><span class="k">if</span><span class="o">(!</span><span class="n">jsonSchema</span><span class="o">.</span><span class="na">isValid</span><span class="o">(</span><span class="n">json</span><span class="o">))</span> <span class="n">jsonSchema</span><span class="o">.</span><span class="na">writeError</span><span class="o">();</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="o">...</span>
-</span></span></code></pre></div><p>Here is the error as displayed in the console. More specific errors will be listed first, followed by more general errors. Consequently, the specific errors will precisely pinpoint the issues within the JSON document, while the generic errors will provide contextual information about where the errors occurred.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="p">...</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="kd">var</span><span class="w"> </span><span class="n">jsonSchema</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">JsonSchema</span><span class="p">(</span><span class="n">schema</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="n">jsonSchema</span><span class="p">.</span><span class="na">isValid</span><span class="p">(</span><span class="n">json</span><span class="p">))</span><span class="w"> </span><span class="n">jsonSchema</span><span class="p">.</span><span class="na">writeError</span><span class="p">();</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="p">...</span><span class="w">
+</span></span></span></code></pre></div><p>Here is the error as displayed in the console. More specific errors will be listed first, followed by more general errors. Consequently, the specific errors will precisely pinpoint the issues within the JSON document, while the generic errors will provide contextual information about where the errors occurred.</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-json" data-lang="json"><span class="line"><span class="cl"><span class="err">Schema</span> <span class="err">(Line:</span> <span class="mi">6</span><span class="err">:</span><span class="mi">31</span><span class="err">)</span> <span class="err">Json</span> <span class="err">(Line:</span> <span class="mi">3</span><span class="err">:</span><span class="mi">14</span><span class="err">)</span> <span class="p">[</span><span class="err">DTYP</span><span class="mi">04</span><span class="p">]</span><span class="err">:</span> <span class="err">Data</span> <span class="err">type</span> <span class="err">mismatch.</span> <span class="err">Data</span> <span class="err">type</span> <span class="err">#integer</span> <span class="err">is</span> <span class="err">expected</span> <span class="err">but</span> <span class="err">found</span> <span class="err">#string</span> <span class="err">inferred</span> <span class="err">by</span> <span class="s2">&#34;not number&#34;</span><span class="err">.</span>
 </span></span><span class="line"><span class="cl"><span class="err">Schema</span> <span class="err">(Line:</span> <span class="mi">6</span><span class="err">:</span><span class="mi">14</span><span class="err">)</span> <span class="err">Json</span> <span class="err">(Line:</span> <span class="mi">3</span><span class="err">:</span><span class="mi">14</span><span class="err">)</span> <span class="p">[</span><span class="err">FUNC</span><span class="mi">03</span><span class="p">]</span><span class="err">:</span> <span class="err">Function</span> <span class="err">@range(</span><span class="mi">1</span><span class="err">,</span> <span class="mi">10000</span><span class="err">)</span> <span class="err">is</span> <span class="err">incompatible</span> <span class="err">with</span> <span class="err">the</span> <span class="err">target</span> <span class="err">data</span> <span class="err">type.</span> <span class="err">Applying</span> <span class="err">to</span> <span class="err">a</span> <span class="err">supported</span> <span class="err">data</span> <span class="err">type</span> <span class="err">such</span> <span class="err">as</span> <span class="err">#number</span> <span class="err">is</span> <span class="err">expected</span> <span class="err">but</span> <span class="err">applied</span> <span class="err">to</span> <span class="err">an</span> <span class="err">unsupported</span> <span class="err">data</span> <span class="err">type</span> <span class="err">#string</span> <span class="err">of</span> <span class="s2">&#34;not number&#34;</span><span class="err">.</span>
 </span></span><span class="line"><span class="cl"><span class="err">Schema</span> <span class="err">(Line:</span> <span class="mi">8</span><span class="err">:</span><span class="mi">20</span><span class="err">)</span> <span class="err">Json</span> <span class="err">(Line:</span> <span class="mi">4</span><span class="err">:</span><span class="mi">20</span><span class="err">)</span> <span class="p">[</span><span class="err">REGX</span><span class="mi">01</span><span class="p">]</span><span class="err">:</span> <span class="err">Regex</span> <span class="err">pattern</span> <span class="err">does</span> <span class="err">not</span> <span class="err">match.</span> <span class="err">String</span> <span class="err">of</span> <span class="err">pattern</span> <span class="s2">&#34;[a-z_]{3,30}&#34;</span> <span class="err">is</span> <span class="err">expected</span> <span class="err">but</span> <span class="err">found</span> <span class="s2">&#34;john doe&#34;</span> <span class="err">that</span> <span class="err">mismatches</span> <span class="err">with</span> <span class="err">pattern.</span>
@@ -196,16 +203,16 @@
 </span></span></span><span class="line"><span class="cl"><span class="s2">Schema (Line: 4:0) Json (Line: 1:0) [VALD01]: Validation failed. A valid value of {&#34;</span><span class="err">user</span><span class="s2">&#34;: {&#34;</span><span class="err">id</span><span class="s2">&#34;: @range(1, 10000) #integer, &#34;</span><span class="err">username</span><span class="s2">&#34;: @regex(&#34;</span><span class="p">[</span><span class="err">a-z_</span><span class="p">]{</span><span class="err">3,30</span><span class="p">}</span><span class="s2">&#34;) #string, &#34;</span><span class="err">role</span><span class="s2">&#34;: &#34;</span><span class="err">user</span><span class="s2">&#34; #string, &#34;</span><span class="err">isActive</span><span class="s2">&#34;: #boolean, ...ng, &#34;</span><span class="err">country</span><span class="s2">&#34;: @regex(&#34;</span><span class="p">[</span><span class="err">A-Za-z</span> <span class="p">]{</span><span class="err">3,50</span><span class="p">}</span><span class="s2">&#34;) #string} #object #null}}} is expected but found {&#34;</span><span class="err">user</span><span class="s2">&#34;: {&#34;</span><span class="err">id</span><span class="s2">&#34;: &#34;</span><span class="err">not</span> <span class="err">number</span><span class="s2">&#34;, &#34;</span><span class="err">username</span><span class="s2">&#34;: &#34;</span><span class="err">john</span> <span class="err">doe</span><span class="s2">&#34;, &#34;</span><span class="err">role</span><span class="s2">&#34;: &#34;</span><span class="err">user</span><span class="s2">&#34;, &#34;</span><span class="err">isActive</span><span class="s2">&#34;: true, &#34;</span><span class="err">registeredAt</span><span class="s2">&#34;: &#34;</span><span class="mi">2023-09-06</span><span class="err">T</span><span class="mi">15</span><span class="p">:</span><span class="mi">10</span><span class="p">:</span><span class="mf">30.639</span><span class="err">Z</span><span class="s2">&#34;, &#34;</span><span class="err">...</span> <span class="s2">&#34;123 Some St&#34;</span><span class="p">,</span> <span class="nt">&#34;city&#34;</span><span class="p">:</span> <span class="s2">&#34;Some town&#34;</span><span class="p">,</span> <span class="nt">&#34;country&#34;</span><span class="p">:</span> <span class="s2">&#34;Some Country&#34;</span><span class="p">}</span><span class="err">}}}.</span>
 </span></span></code></pre></div><h2 id="assertion-for-validation">Assertion for Validation</h2>
 <p>To utilize this library for test automation and API testing, you can use the following alternative code snippet to perform assertions on input JSON against a specified schema. For instance, let&rsquo;s examine how to assert the JSON, which has been intentionally altered to introduce some errors, against the aforementioned schema. The following demonstrates the adjusted code for asserting the JSON with errors:</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="o">...</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="k">try</span> <span class="o">{</span>
-</span></span><span class="line"><span class="cl">    <span class="n">JsonAssert</span><span class="o">.</span><span class="na">isValid</span><span class="o">(</span><span class="n">schema</span><span class="o">,</span> <span class="n">json</span><span class="o">);</span>
-</span></span><span class="line"><span class="cl"><span class="o">}</span> <span class="k">catch</span><span class="o">(</span><span class="n">Exception</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
-</span></span><span class="line"><span class="cl">    <span class="n">e</span><span class="o">.</span><span class="na">printStackTrace</span><span class="o">();</span>
-</span></span><span class="line"><span class="cl"><span class="o">}</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="o">...</span>
-</span></span></code></pre></div><p>The following presents the printed stack trace for the preceding example. It&rsquo;s important to note that when using <code>JsonAssert</code>, it throws an exception upon encountering the first error, thus preventing the continuation of processing the rest of the schema:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="p">...</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="k">try</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="n">JsonAssert</span><span class="p">.</span><span class="na">isValid</span><span class="p">(</span><span class="n">schema</span><span class="p">,</span><span class="w"> </span><span class="n">json</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="p">}</span><span class="w"> </span><span class="k">catch</span><span class="p">(</span><span class="n">Exception</span><span class="w"> </span><span class="n">e</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="n">e</span><span class="p">.</span><span class="na">printStackTrace</span><span class="p">();</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="p">...</span><span class="w">
+</span></span></span></code></pre></div><p>The following presents the printed stack trace for the preceding example. It&rsquo;s important to note that when using <code>JsonAssert</code>, it throws an exception upon encountering the first error, thus preventing the continuation of processing the rest of the schema:</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-json" data-lang="json"><span class="line"><span class="cl"><span class="err">com.relogiclabs.jschema.exception.JsonSchemaException:</span> <span class="err">DTYP</span><span class="mi">04</span><span class="err">:</span> <span class="err">Data</span> <span class="err">type</span> <span class="err">mismatch</span>
 </span></span><span class="line"><span class="cl"><span class="err">Expected</span> <span class="err">(Schema</span> <span class="err">Line:</span> <span class="mi">6</span><span class="err">:</span><span class="mi">31</span><span class="err">):</span> <span class="err">data</span> <span class="err">type</span> <span class="err">#integer</span>
 </span></span><span class="line"><span class="cl"><span class="err">Actual</span> <span class="err">(Json</span> <span class="err">Line:</span> <span class="mi">3</span><span class="err">:</span><span class="mi">14</span><span class="err">):</span> <span class="err">found</span> <span class="err">#string</span> <span class="err">inferred</span> <span class="err">by</span> <span class="s2">&#34;not number&#34;</span>
@@ -226,10 +233,12 @@
 
 </div>
 
-    </main><div class="footer">
+    </main>
+    <div class="footer">
     <div class="footer-right">
       © Relogic Labs. All rights reserved.
     </div>
-</div></body>
+</div>
+</body>
 
 </html>

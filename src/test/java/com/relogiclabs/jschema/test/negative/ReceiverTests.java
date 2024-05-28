@@ -2,13 +2,13 @@ package com.relogiclabs.jschema.test.negative;
 
 import com.relogiclabs.jschema.JsonAssert;
 import com.relogiclabs.jschema.JsonSchema;
+import com.relogiclabs.jschema.exception.InvalidReceiverStateException;
 import com.relogiclabs.jschema.exception.JsonSchemaException;
-import com.relogiclabs.jschema.exception.NoValueReceivedException;
 import com.relogiclabs.jschema.exception.ReceiverNotFoundException;
 import org.junit.jupiter.api.Test;
 
 import static com.relogiclabs.jschema.message.ErrorCode.RECV01;
-import static com.relogiclabs.jschema.message.ErrorCode.RECV03;
+import static com.relogiclabs.jschema.message.ErrorCode.RECV02;
 import static com.relogiclabs.jschema.test.external.ExternalFunctions.CONDFUNC01;
 import static com.relogiclabs.jschema.test.external.ExternalFunctions.CONDFUNC02;
 import static com.relogiclabs.jschema.test.external.ExternalFunctions.MINMAX01;
@@ -37,7 +37,7 @@ public class ReceiverTests {
             """;
         //JsonSchema.isValid(schema, json);
         var exception = assertThrows(ReceiverNotFoundException.class,
-                () -> JsonAssert.isValid(schema, json));
+            () -> JsonAssert.isValid(schema, json));
         assertEquals(RECV01, exception.getCode());
         exception.printStackTrace();
     }
@@ -61,10 +61,10 @@ public class ReceiverTests {
             }
             """;
         //JsonSchema.isValid(schema, json);
-        //This exception is avoidable inside @condition as needed
-        var exception = assertThrows(NoValueReceivedException.class,
-                () -> JsonAssert.isValid(schema, json));
-        assertEquals(RECV03, exception.getCode());
+        //This exception is avoidable inside @condition when needed
+        var exception = assertThrows(InvalidReceiverStateException.class,
+            () -> JsonAssert.isValid(schema, json));
+        assertEquals(RECV02, exception.getCode());
         exception.printStackTrace();
     }
 
@@ -89,7 +89,7 @@ public class ReceiverTests {
             """;
         JsonSchema.isValid(schema, json);
         var exception = assertThrows(JsonSchemaException.class,
-                () -> JsonAssert.isValid(schema, json));
+            () -> JsonAssert.isValid(schema, json));
         assertEquals(CONDFUNC01, exception.getCode());
         exception.printStackTrace();
     }
@@ -116,7 +116,7 @@ public class ReceiverTests {
             """;
         JsonSchema.isValid(schema, json);
         var exception = assertThrows(JsonSchemaException.class,
-                () -> JsonAssert.isValid(schema, json));
+            () -> JsonAssert.isValid(schema, json));
         assertEquals(CONDFUNC02, exception.getCode());
         exception.printStackTrace();
     }
@@ -128,8 +128,8 @@ public class ReceiverTests {
             %import: com.relogiclabs.jschema.test.external.ExternalFunctions
             %schema:
             {
-                "key1": #integer &relatedData,
                 "key10": @sumEqual(&relatedData) #integer,
+                "key1": #integer &relatedData,
                 "key2": #integer &relatedData,
                 "key3": #integer &relatedData,
                 "key4": #integer &relatedData,
@@ -139,17 +139,17 @@ public class ReceiverTests {
         var json =
             """
             {
-                "key1": 10,
+                "key1": 9,
                 "key2": 5,
-                "key10": 101,
                 "key3": 13,
                 "key4": 60,
-                "key5": 12
+                "key5": 12,
+                "key10": 100
             }
             """;
         JsonSchema.isValid(schema, json);
         var exception = assertThrows(JsonSchemaException.class,
-                () -> JsonAssert.isValid(schema, json));
+            () -> JsonAssert.isValid(schema, json));
         assertEquals(SUMEQUAL01, exception.getCode());
         exception.printStackTrace();
     }
@@ -177,7 +177,7 @@ public class ReceiverTests {
             """;
         JsonSchema.isValid(schema, json);
         var exception = assertThrows(JsonSchemaException.class,
-                () -> JsonAssert.isValid(schema, json));
+            () -> JsonAssert.isValid(schema, json));
         assertEquals(MINMAX01, exception.getCode());
         exception.printStackTrace();
     }

@@ -52,47 +52,47 @@ public class JsonParserBaseVisitor<T> extends AbstractParseTreeVisitor<T> implem
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitPrimitiveTrue(JsonParser.PrimitiveTrueContext ctx) { return visitChildren(ctx); }
+	@Override public T visitTrueNode(JsonParser.TrueNodeContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitPrimitiveFalse(JsonParser.PrimitiveFalseContext ctx) { return visitChildren(ctx); }
+	@Override public T visitFalseNode(JsonParser.FalseNodeContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitPrimitiveString(JsonParser.PrimitiveStringContext ctx) { return visitChildren(ctx); }
+	@Override public T visitStringNode(JsonParser.StringNodeContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitPrimitiveInteger(JsonParser.PrimitiveIntegerContext ctx) { return visitChildren(ctx); }
+	@Override public T visitIntegerNode(JsonParser.IntegerNodeContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitPrimitiveFloat(JsonParser.PrimitiveFloatContext ctx) { return visitChildren(ctx); }
+	@Override public T visitFloatNode(JsonParser.FloatNodeContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitPrimitiveDouble(JsonParser.PrimitiveDoubleContext ctx) { return visitChildren(ctx); }
+	@Override public T visitDoubleNode(JsonParser.DoubleNodeContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitPrimitiveNull(JsonParser.PrimitiveNullContext ctx) { return visitChildren(ctx); }
+	@Override public T visitNullNode(JsonParser.NullNodeContext ctx) { return visitChildren(ctx); }
 }

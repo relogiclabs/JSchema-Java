@@ -1,11 +1,12 @@
 package com.relogiclabs.jschema.type;
 
 public interface EUndefined extends EValue {
-    String STRING = "undefined";
+    String LITERAL = "undefined";
+    String MARKER = "!";
     EUndefined UNDEFINED = new EUndefined() {
         @Override
         public String toString() {
-            return STRING;
+            return LITERAL;
         }
     };
 

@@ -15,7 +15,7 @@ public class OptionalTests {
     public void When_OptionalInObject_ValidTrue() {
         var schema =
             """
-                {"key1": #string ?}
+            {"key1":#string?}
             """;
         var json = "{}";
         JsonAssert.isValid(schema, json);

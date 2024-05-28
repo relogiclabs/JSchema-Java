@@ -28,7 +28,7 @@ public class ArrayTests {
 
         JsonSchema.isValid(schema, json);
         var exception = assertThrows(JsonSchemaException.class,
-                () -> JsonAssert.isValid(schema, json));
+            () -> JsonAssert.isValid(schema, json));
         assertEquals(DTYP04, exception.getCode());
         exception.printStackTrace();
     }
@@ -53,7 +53,7 @@ public class ArrayTests {
             """;
         JsonSchema.isValid(schema, json);
         var exception = assertThrows(JsonSchemaException.class,
-                () -> JsonAssert.isValid(schema, json));
+            () -> JsonAssert.isValid(schema, json));
         assertEquals(DTYP04, exception.getCode());
         exception.printStackTrace();
     }
@@ -70,7 +70,7 @@ public class ArrayTests {
             """;
         JsonSchema.isValid(schema, json);
         var exception = assertThrows(JsonSchemaException.class,
-                () -> JsonAssert.isValid(schema, json));
+            () -> JsonAssert.isValid(schema, json));
         assertEquals(DTYP04, exception.getCode());
         exception.printStackTrace();
     }
@@ -87,7 +87,7 @@ public class ArrayTests {
             """;
         JsonSchema.isValid(schema, json);
         var exception = assertThrows(JsonSchemaException.class,
-                () -> JsonAssert.isValid(schema, json));
+            () -> JsonAssert.isValid(schema, json));
         assertEquals(DTYP06, exception.getCode());
         exception.printStackTrace();
     }
@@ -108,7 +108,7 @@ public class ArrayTests {
             """;
         JsonSchema.isValid(schema, json);
         var exception = assertThrows(JsonSchemaException.class,
-                () -> JsonAssert.isValid(schema, json));
+            () -> JsonAssert.isValid(schema, json));
         assertEquals(DTYP06, exception.getCode());
         exception.printStackTrace();
     }
@@ -120,7 +120,7 @@ public class ArrayTests {
 
         JsonSchema.isValid(schema, json);
         var exception = assertThrows(JsonSchemaException.class,
-                () -> JsonAssert.isValid(schema, json));
+            () -> JsonAssert.isValid(schema, json));
         assertEquals(ELEM01, exception.getCode());
         exception.printStackTrace();
     }
@@ -132,7 +132,7 @@ public class ArrayTests {
 
         JsonSchema.isValid(schema, json);
         var exception = assertThrows(JsonSchemaException.class,
-                () -> JsonAssert.isValid(schema, json));
+            () -> JsonAssert.isValid(schema, json));
         assertEquals(ELEM01, exception.getCode());
         exception.printStackTrace();
     }
@@ -153,7 +153,7 @@ public class ArrayTests {
             """;
         JsonSchema.isValid(schema, json);
         var exception = assertThrows(JsonSchemaException.class,
-                () -> JsonAssert.isValid(schema, json));
+            () -> JsonAssert.isValid(schema, json));
         assertEquals(ENUM02, exception.getCode());
         exception.printStackTrace();
     }
@@ -165,7 +165,7 @@ public class ArrayTests {
 
         //JsonSchema.isValid(schema, json);
         var exception = assertThrows(JsonParserException.class,
-                () -> JsonAssert.isValid(schema, json));
+            () -> JsonAssert.isValid(schema, json));
         assertEquals(JPRS01, exception.getCode());
         exception.printStackTrace();
     }
@@ -188,7 +188,7 @@ public class ArrayTests {
             """;
         JsonSchema.isValid(schema, json);
         var exception = assertThrows(JsonSchemaException.class,
-                () -> JsonAssert.isValid(schema, json));
+            () -> JsonAssert.isValid(schema, json));
         assertEquals(NEMT02, exception.getCode());
         exception.printStackTrace();
     }
@@ -208,7 +208,7 @@ public class ArrayTests {
             """;
         JsonSchema.isValid(schema, json);
         var exception = assertThrows(JsonSchemaException.class,
-                () -> JsonAssert.isValid(schema, json));
+            () -> JsonAssert.isValid(schema, json));
         assertEquals(ALEN01, exception.getCode());
         exception.printStackTrace();
     }
@@ -228,7 +228,7 @@ public class ArrayTests {
             """;
         JsonSchema.isValid(schema, json);
         var exception = assertThrows(JsonSchemaException.class,
-                () -> JsonAssert.isValid(schema, json));
+            () -> JsonAssert.isValid(schema, json));
         assertEquals(ALEN02, exception.getCode());
         exception.printStackTrace();
     }
@@ -248,7 +248,7 @@ public class ArrayTests {
             """;
         JsonSchema.isValid(schema, json);
         var exception = assertThrows(JsonSchemaException.class,
-                () -> JsonAssert.isValid(schema, json));
+            () -> JsonAssert.isValid(schema, json));
         assertEquals(ALEN03, exception.getCode());
         exception.printStackTrace();
     }
@@ -268,7 +268,7 @@ public class ArrayTests {
             """;
         JsonSchema.isValid(schema, json);
         var exception = assertThrows(JsonSchemaException.class,
-                () -> JsonAssert.isValid(schema, json));
+            () -> JsonAssert.isValid(schema, json));
         assertEquals(ALEN04, exception.getCode());
         exception.printStackTrace();
     }
@@ -288,7 +288,7 @@ public class ArrayTests {
             """;
         JsonSchema.isValid(schema, json);
         var exception = assertThrows(JsonSchemaException.class,
-                () -> JsonAssert.isValid(schema, json));
+            () -> JsonAssert.isValid(schema, json));
         assertEquals(ALEN05, exception.getCode());
         exception.printStackTrace();
     }

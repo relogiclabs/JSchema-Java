@@ -5,7 +5,6 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
 import static com.relogiclabs.jschema.internal.util.CollectionHelper.asList;
-import static com.relogiclabs.jschema.internal.util.StringHelper.concat;
 import static java.util.Objects.requireNonNull;
 
 @Getter
@@ -28,6 +27,6 @@ public final class JDefinition extends JDirective {
 
     @Override
     public String toString() {
-        return concat(DEFINE_MARKER, " ", alias, ": ", validator);
+        return DEFINE_MARKER + " " + alias + ": " + validator;
     }
 }

@@ -12,9 +12,9 @@ import org.antlr.v4.runtime.Recognizer;
 import static com.relogiclabs.jschema.message.ErrorCode.DLEX01;
 import static com.relogiclabs.jschema.message.ErrorCode.JLEX01;
 import static com.relogiclabs.jschema.message.ErrorCode.SLEX01;
+import static com.relogiclabs.jschema.message.MessageFormatter.ERROR_POINTER;
 
 public abstract class LexerErrorListener extends BaseErrorListener {
-
     public static final LexerErrorListener SCHEMA = new SchemaErrorListener();
     public static final LexerErrorListener JSON = new JsonErrorListener();
     public static final LexerErrorListener DATE_TIME = new DateTimeErrorListener();
@@ -64,14 +64,12 @@ public abstract class LexerErrorListener extends BaseErrorListener {
     @Override
     public void syntaxError(Recognizer<?, ?> recognizer, Object offendingSymbol, int line,
                             int charPositionInLine, String msg, RecognitionException e) {
-        var lexer = (Lexer) recognizer;
-        if(this == DATE_TIME) {
-            throw failOnSyntaxError(getMessageFormat().formatted(msg, lexer.getText()), e);
-        } else {
-            var errorLine = new StringBuilder(recognizer.getInputStream().toString()
-                    .split("\\r?\\n")[line - 1]).insert(charPositionInLine, "<|>").toString().trim();
-            throw failOnSyntaxError(getMessageFormat().formatted(line, charPositionInLine,
-                    msg, errorLine), e);
-        }
+        if(this == DATE_TIME) throw failOnSyntaxError(getMessageFormat().formatted(msg,
+            ((Lexer) recognizer).getText()), e);
+        var errorLine = new StringBuilder(recognizer.getInputStream().toString()
+            .split("\\r?\\n")[line - 1]).insert(charPositionInLine, ERROR_POINTER)
+            .toString().trim();
+        throw failOnSyntaxError(getMessageFormat().formatted(line, charPositionInLine,
+            msg, errorLine), e);
     }
 }

@@ -1,6 +1,7 @@
 package com.relogiclabs.jschema.internal.script;
 
 import com.relogiclabs.jschema.exception.ScriptCommonException;
+import com.relogiclabs.jschema.exception.UpdateNotSupportedException;
 import com.relogiclabs.jschema.type.EArray;
 import com.relogiclabs.jschema.type.EValue;
 import lombok.EqualsAndHashCode;
@@ -10,9 +11,10 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import static com.relogiclabs.jschema.internal.util.StringHelper.concat;
 import static com.relogiclabs.jschema.internal.util.StringHelper.joinWith;
-import static com.relogiclabs.jschema.message.ErrorCode.INDX01;
+import static com.relogiclabs.jschema.message.ErrorCode.AUPD03;
+import static com.relogiclabs.jschema.message.ErrorCode.AWRT01;
+import static com.relogiclabs.jschema.message.ErrorCode.AWRT02;
 
 @Getter
 @EqualsAndHashCode
@@ -26,12 +28,12 @@ public final class GArray implements EArray {
 
     public GArray(Collection<? extends EValue> collection) {
         this.elements = new ArrayList<>(collection.size());
-        for(var v : collection) elements.add(new GReference(v));
+        for(var v : collection) elements.add(new GLeftValue(v));
     }
 
     public static GArray filledFrom(EValue value, int size) {
         var array = new GArray(size);
-        for(int i = 0; i < size; i++) array.elements.add(new GReference(value));
+        for(int i = 0; i < size; i++) array.elements.add(new GLeftValue(value));
         return array;
     }
 
@@ -43,14 +45,22 @@ public final class GArray implements EArray {
 
     @Override
     public EValue get(int index) {
+        return elements.get(index);
+    }
+
+    @Override
+    public void set(int index, EValue value) {
         var size = elements.size();
-        if(index < size) return elements.get(index);
-        if(index > MAX_LIMIT) throw new ScriptCommonException(INDX01,
-                concat("Array index ", index, " exceeds maximum size limit"));
-        if(index > size) throw new ArrayIndexOutOfBoundsException(index);
-        var reference = new GReference(VOID);
-        elements.add(reference);
-        return reference;
+        if(index > MAX_LIMIT) throw new ScriptCommonException(AWRT02,
+            "Array index " + index + " exceeds maximum size limit");
+        if(index == size) elements.add(new GLeftValue(value));
+        else if(index < size) {
+            if(!(elements.get(index) instanceof GLeftValue l))
+                throw new UpdateNotSupportedException(AUPD03,
+                    "Readonly array index " + index + " cannot be updated");
+            l.setValue(value);
+        } else throw new ScriptCommonException(AWRT01,
+            "Index " + index + " is out of bounds for writing to array length " + size);
     }
 
     @Override

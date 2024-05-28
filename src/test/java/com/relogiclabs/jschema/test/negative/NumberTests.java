@@ -29,7 +29,7 @@ public class NumberTests {
             """;
         JsonSchema.isValid(schema, json);
         var exception = assertThrows(JsonSchemaException.class,
-                () -> JsonAssert.isValid(schema, json));
+            () -> JsonAssert.isValid(schema, json));
         assertEquals(MINI01, exception.getCode());
         exception.printStackTrace();
     }
@@ -46,7 +46,7 @@ public class NumberTests {
             """;
         JsonSchema.isValid(schema, json);
         var exception = assertThrows(JsonSchemaException.class,
-                () -> JsonAssert.isValid(schema, json));
+            () -> JsonAssert.isValid(schema, json));
         assertEquals(MAXI01, exception.getCode());
         exception.printStackTrace();
     }
@@ -67,7 +67,7 @@ public class NumberTests {
             """;
         JsonSchema.isValid(schema, json);
         var exception = assertThrows(JsonSchemaException.class,
-                () -> JsonAssert.isValid(schema, json));
+            () -> JsonAssert.isValid(schema, json));
         assertEquals(MINI01, exception.getCode());
         exception.printStackTrace();
     }
@@ -88,7 +88,7 @@ public class NumberTests {
             """;
         JsonSchema.isValid(schema, json);
         var exception = assertThrows(JsonSchemaException.class,
-                () -> JsonAssert.isValid(schema, json));
+            () -> JsonAssert.isValid(schema, json));
         assertEquals(MINI01, exception.getCode());
         exception.printStackTrace();
     }
@@ -109,7 +109,7 @@ public class NumberTests {
             """;
         JsonSchema.isValid(schema, json);
         var exception = assertThrows(JsonSchemaException.class,
-                () -> JsonAssert.isValid(schema, json));
+            () -> JsonAssert.isValid(schema, json));
         assertEquals(MAXI01, exception.getCode());
         exception.printStackTrace();
     }
@@ -130,7 +130,7 @@ public class NumberTests {
             """;
         JsonSchema.isValid(schema, json);
         var exception = assertThrows(JsonSchemaException.class,
-                () -> JsonAssert.isValid(schema, json));
+            () -> JsonAssert.isValid(schema, json));
         assertEquals(MAXI01, exception.getCode());
         exception.printStackTrace();
     }
@@ -151,7 +151,7 @@ public class NumberTests {
             """;
         JsonSchema.isValid(schema, json);
         var exception = assertThrows(JsonSchemaException.class,
-                () -> JsonAssert.isValid(schema, json));
+            () -> JsonAssert.isValid(schema, json));
         assertEquals(MINI03, exception.getCode());
         exception.printStackTrace();
     }
@@ -172,7 +172,7 @@ public class NumberTests {
             """;
         JsonSchema.isValid(schema, json);
         var exception = assertThrows(JsonSchemaException.class,
-                () -> JsonAssert.isValid(schema, json));
+            () -> JsonAssert.isValid(schema, json));
         assertEquals(MAXI03, exception.getCode());
         exception.printStackTrace();
     }
@@ -189,7 +189,7 @@ public class NumberTests {
             """;
         JsonSchema.isValid(schema, json);
         var exception = assertThrows(JsonSchemaException.class,
-                () -> JsonAssert.isValid(schema, json));
+            () -> JsonAssert.isValid(schema, json));
         assertEquals(POSI01, exception.getCode());
         exception.printStackTrace();
     }
@@ -206,7 +206,7 @@ public class NumberTests {
             """;
         JsonSchema.isValid(schema, json);
         var exception = assertThrows(JsonSchemaException.class,
-                () -> JsonAssert.isValid(schema, json));
+            () -> JsonAssert.isValid(schema, json));
         assertEquals(POSI02, exception.getCode());
         exception.printStackTrace();
     }
@@ -223,7 +223,7 @@ public class NumberTests {
             """;
         JsonSchema.isValid(schema, json);
         var exception = assertThrows(JsonSchemaException.class,
-                () -> JsonAssert.isValid(schema, json));
+            () -> JsonAssert.isValid(schema, json));
         assertEquals(NEGI01, exception.getCode());
         exception.printStackTrace();
     }
@@ -240,7 +240,7 @@ public class NumberTests {
             """;
         JsonSchema.isValid(schema, json);
         var exception = assertThrows(JsonSchemaException.class,
-                () -> JsonAssert.isValid(schema, json));
+            () -> JsonAssert.isValid(schema, json));
         assertEquals(NEGI02, exception.getCode());
         exception.printStackTrace();
     }

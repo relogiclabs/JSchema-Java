@@ -51,9 +51,10 @@ public class CommonException extends RuntimeException {
     private void formatStackTrace() {
         StackTraceElement[] stackTrace = getStackTrace();
         int offset = 0;
-        for(var e : stackTrace)
+        for(var e : stackTrace) {
             if(e.getMethodName().startsWith(FAIL_METHOD_PREFIX)) offset++;
             else break;
+        }
         setStackTrace(copyOfRange(stackTrace, offset, stackTrace.length));
     }
 }

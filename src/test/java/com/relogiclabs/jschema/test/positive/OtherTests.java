@@ -33,7 +33,7 @@ public class OtherTests {
     }
 
     @Test
-    public void When_NonStaticValidMethod_ValidTrue() {
+    public void When_JsonAssertNonStaticIsValidMethodUsed_ValidTrue() {
         var schema =
             """
             %version: "October 09, 2010"

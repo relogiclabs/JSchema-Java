@@ -3,8 +3,32 @@ package com.relogiclabs.jschema.internal.engine;
 import com.relogiclabs.jschema.exception.CommonException;
 import com.relogiclabs.jschema.exception.ScriptRuntimeException;
 import com.relogiclabs.jschema.exception.ScriptTemplateException;
-import com.relogiclabs.jschema.internal.antlr.SchemaParser;
+import com.relogiclabs.jschema.internal.antlr.SchemaParser.ArrayLiteralContext;
+import com.relogiclabs.jschema.internal.antlr.SchemaParser.BlockStatementContext;
+import com.relogiclabs.jschema.internal.antlr.SchemaParser.BreakStatementContext;
+import com.relogiclabs.jschema.internal.antlr.SchemaParser.CompleteSchemaContext;
+import com.relogiclabs.jschema.internal.antlr.SchemaParser.DoubleLiteralContext;
+import com.relogiclabs.jschema.internal.antlr.SchemaParser.ExpressionListContext;
+import com.relogiclabs.jschema.internal.antlr.SchemaParser.ExpressionStatementContext;
+import com.relogiclabs.jschema.internal.antlr.SchemaParser.FalseLiteralContext;
+import com.relogiclabs.jschema.internal.antlr.SchemaParser.ForStatementContext;
+import com.relogiclabs.jschema.internal.antlr.SchemaParser.ForeachStatementContext;
+import com.relogiclabs.jschema.internal.antlr.SchemaParser.FunctionDeclarationContext;
+import com.relogiclabs.jschema.internal.antlr.SchemaParser.IfStatementContext;
+import com.relogiclabs.jschema.internal.antlr.SchemaParser.IntegerLiteralContext;
+import com.relogiclabs.jschema.internal.antlr.SchemaParser.NullLiteralContext;
+import com.relogiclabs.jschema.internal.antlr.SchemaParser.ObjectLiteralContext;
+import com.relogiclabs.jschema.internal.antlr.SchemaParser.ReturnStatementContext;
+import com.relogiclabs.jschema.internal.antlr.SchemaParser.ScriptNodeContext;
+import com.relogiclabs.jschema.internal.antlr.SchemaParser.ShortSchemaContext;
+import com.relogiclabs.jschema.internal.antlr.SchemaParser.StringLiteralContext;
+import com.relogiclabs.jschema.internal.antlr.SchemaParser.TrueLiteralContext;
+import com.relogiclabs.jschema.internal.antlr.SchemaParser.UndefinedLiteralContext;
+import com.relogiclabs.jschema.internal.antlr.SchemaParser.VarDeclarationContext;
+import com.relogiclabs.jschema.internal.antlr.SchemaParser.VarStatementContext;
+import com.relogiclabs.jschema.internal.antlr.SchemaParser.WhileStatementContext;
 import com.relogiclabs.jschema.internal.antlr.SchemaParserBaseVisitor;
+import com.relogiclabs.jschema.internal.function.FunctionId;
 import com.relogiclabs.jschema.internal.script.GArray;
 import com.relogiclabs.jschema.internal.script.GControl;
 import com.relogiclabs.jschema.internal.script.GDouble;
@@ -25,14 +49,13 @@ import static com.relogiclabs.jschema.internal.antlr.SchemaLexer.G_STRING;
 import static com.relogiclabs.jschema.internal.engine.ScriptErrorHelper.failOnInvalidReturnType;
 import static com.relogiclabs.jschema.internal.engine.ScriptErrorHelper.failOnRuntime;
 import static com.relogiclabs.jschema.internal.engine.ScriptErrorHelper.failOnSystemException;
-import static com.relogiclabs.jschema.internal.engine.ScriptTreeHelper.formatFunctionName;
+import static com.relogiclabs.jschema.internal.engine.ScriptTreeHelper.dereference;
 import static com.relogiclabs.jschema.internal.engine.ScriptTreeHelper.getFunctionMode;
-import static com.relogiclabs.jschema.internal.engine.ScriptTreeHelper.toConstraintName;
+import static com.relogiclabs.jschema.internal.engine.ScriptTreeHelper.isConstraint;
 import static com.relogiclabs.jschema.internal.engine.ScriptTreeHelper.toParameters;
 import static com.relogiclabs.jschema.internal.script.GBoolean.FALSE;
 import static com.relogiclabs.jschema.internal.script.GBoolean.TRUE;
 import static com.relogiclabs.jschema.internal.script.GControl.BREAK;
-import static com.relogiclabs.jschema.internal.script.GFunction.isConstraint;
 import static com.relogiclabs.jschema.internal.util.CollectionHelper.subList;
 import static com.relogiclabs.jschema.internal.util.StringHelper.toEncoded;
 import static com.relogiclabs.jschema.message.ErrorCode.ARRL01;
@@ -41,7 +64,7 @@ import static com.relogiclabs.jschema.message.ErrorCode.EXPR01;
 import static com.relogiclabs.jschema.message.ErrorCode.EXPR02;
 import static com.relogiclabs.jschema.message.ErrorCode.FORS01;
 import static com.relogiclabs.jschema.message.ErrorCode.FREC01;
-import static com.relogiclabs.jschema.message.ErrorCode.FUNS07;
+import static com.relogiclabs.jschema.message.ErrorCode.FUND03;
 import static com.relogiclabs.jschema.message.ErrorCode.IFST01;
 import static com.relogiclabs.jschema.message.ErrorCode.IFST02;
 import static com.relogiclabs.jschema.message.ErrorCode.OBJL01;
@@ -49,8 +72,8 @@ import static com.relogiclabs.jschema.message.ErrorCode.RETN02;
 import static com.relogiclabs.jschema.message.ErrorCode.RETN03;
 import static com.relogiclabs.jschema.message.ErrorCode.SRPT01;
 import static com.relogiclabs.jschema.message.ErrorCode.SRPT02;
+import static com.relogiclabs.jschema.message.ErrorCode.VARD02;
 import static com.relogiclabs.jschema.message.ErrorCode.VARD03;
-import static com.relogiclabs.jschema.message.ErrorCode.VRIN01;
 import static com.relogiclabs.jschema.message.ErrorCode.WHIL01;
 import static com.relogiclabs.jschema.type.ENull.NULL;
 import static com.relogiclabs.jschema.type.EUndefined.UNDEFINED;
@@ -60,12 +83,12 @@ import static lombok.AccessLevel.NONE;
 @Getter
 public abstract class ScriptTreeVisitor1 extends SchemaParserBaseVisitor<Evaluator>
                                          implements ScriptTreeVisitor {
-    private static final Evaluator VOID_SUPPLIER = s -> VOID;
-    private static final Evaluator TRUE_SUPPLIER = s -> TRUE;
-    private static final Evaluator FALSE_SUPPLIER = s -> FALSE;
-    private static final Evaluator NULL_SUPPLIER = S -> NULL;
-    private static final Evaluator UNDEFINED_SUPPLIER = s -> UNDEFINED;
-    private static final Evaluator BREAK_SUPPLIER = s -> BREAK;
+    static final Evaluator VOID_SUPPLIER = s -> VOID;
+    static final Evaluator TRUE_SUPPLIER = s -> TRUE;
+    static final Evaluator FALSE_SUPPLIER = s -> FALSE;
+    static final Evaluator NULL_SUPPLIER = S -> NULL;
+    static final Evaluator UNDEFINED_SUPPLIER = s -> UNDEFINED;
+    static final Evaluator BREAK_SUPPLIER = s -> BREAK;
 
     final RuntimeContext runtime;
     private final ParseTreeProperty<Evaluator> scripts;
@@ -77,18 +100,13 @@ public abstract class ScriptTreeVisitor1 extends SchemaParserBaseVisitor<Evaluat
     }
 
     @Override
-    public Evaluator visitCompleteSchema(SchemaParser.CompleteSchemaContext ctx) {
+    public Evaluator visitCompleteSchema(CompleteSchemaContext ctx) {
         var scripts = ctx.scriptNode().stream().map(this::processScript).toList();
         if(scripts.isEmpty()) return VOID_SUPPLIER;
         return tryCatch(scope -> {
             for(var s : scripts) s.evaluate(scope);
             return VOID;
         }, SRPT01, ctx);
-    }
-
-    @Override
-    public Evaluator visitShortSchema(SchemaParser.ShortSchemaContext ctx) {
-        return VOID_SUPPLIER;
     }
 
     private Evaluator processScript(ParserRuleContext context) {
@@ -98,7 +116,12 @@ public abstract class ScriptTreeVisitor1 extends SchemaParserBaseVisitor<Evaluat
     }
 
     @Override
-    public Evaluator visitScriptNode(SchemaParser.ScriptNodeContext ctx) {
+    public Evaluator visitShortSchema(ShortSchemaContext ctx) {
+        return VOID_SUPPLIER;
+    }
+
+    @Override
+    public Evaluator visitScriptNode(ScriptNodeContext ctx) {
         var statements = ctx.globalStatement().stream().map(this::visit).toList();
         return tryCatch(scope -> {
             for(var s : statements) s.evaluate(scope);
@@ -107,47 +130,45 @@ public abstract class ScriptTreeVisitor1 extends SchemaParserBaseVisitor<Evaluat
     }
 
     @Override
-    public Evaluator visitFunctionDeclaration(SchemaParser.FunctionDeclarationContext ctx) {
+    public Evaluator visitFunctionDeclaration(FunctionDeclarationContext ctx) {
         var baseName = ctx.name.getText();
         var mode = getFunctionMode(ctx.G_CONSTRAINT(), ctx.G_FUTURE(), ctx.G_SUBROUTINE());
         var parameters = toParameters(subList(ctx.G_IDENTIFIER(), 1), ctx.G_ELLIPSIS());
         var constraint = isConstraint(mode);
-        var functionName = constraint
-                ? toConstraintName(formatFunctionName(baseName, parameters))
-                : formatFunctionName(baseName, parameters);
+        var functionId = FunctionId.generate(baseName, parameters, constraint);
         if(constraint) returnType = EBoolean.class;
         var functionBody = visit(ctx.blockStatement());
         returnType = null;
         var function = new GFunction(parameters, functionBody, mode);
         return tryCatch(scope -> {
-            scope.addFunction(functionName, function);
+            scope.addFunction(functionId, function);
             if(constraint) runtime.getFunctions()
-                    .addFunction(new ScriptFunction(baseName, function));
+                .addFunction(new ScriptFunction(baseName, function));
             return VOID;
-        }, FUNS07, ctx);
+        }, FUND03, ctx);
     }
 
     @Override
-    public Evaluator visitVarStatement(SchemaParser.VarStatementContext ctx) {
-        var varInitialization = ctx.varInitialization().stream().map(this::visit).toList();
+    public Evaluator visitVarStatement(VarStatementContext ctx) {
+        var varDeclarations = ctx.varDeclaration().stream().map(this::visit).toList();
         return tryCatch(scope -> {
-            for(var i : varInitialization) i.evaluate(scope);
+            for(var d : varDeclarations) d.evaluate(scope);
             return VOID;
         }, VARD03, ctx);
     }
 
     @Override
-    public Evaluator visitVarInitialization(SchemaParser.VarInitializationContext ctx) {
+    public Evaluator visitVarDeclaration(VarDeclarationContext ctx) {
         var varName = ctx.G_IDENTIFIER().getText();
         var expression = visit(ctx.expression(), VOID_SUPPLIER);
         return tryCatch(scope -> {
-            scope.addVariable(varName, expression.evaluate(scope));
+            scope.addVariable(varName, dereference(expression.evaluate(scope)));
             return VOID;
-        }, VRIN01, ctx);
+        }, VARD02, ctx);
     }
 
     @Override
-    public Evaluator visitExpressionStatement(SchemaParser.ExpressionStatementContext ctx) {
+    public Evaluator visitExpressionStatement(ExpressionStatementContext ctx) {
         var expression = visit(ctx.expression());
         return tryCatch(scope -> {
             expression.evaluate(scope);
@@ -156,7 +177,7 @@ public abstract class ScriptTreeVisitor1 extends SchemaParserBaseVisitor<Evaluat
     }
 
     @Override
-    public Evaluator visitIfStatement(SchemaParser.IfStatementContext ctx) {
+    public Evaluator visitIfStatement(IfStatementContext ctx) {
         var condition = visit(ctx.expression());
         var thenStatement = visit(ctx.statement(0));
         if(ctx.G_ELSE() == null) return tryCatch(scope -> {
@@ -174,7 +195,7 @@ public abstract class ScriptTreeVisitor1 extends SchemaParserBaseVisitor<Evaluat
     }
 
     @Override
-    public Evaluator visitWhileStatement(SchemaParser.WhileStatementContext ctx) {
+    public Evaluator visitWhileStatement(WhileStatementContext ctx) {
         var condition = visit(ctx.expression());
         var statement = visit(ctx.statement());
         return tryCatch(scope -> {
@@ -187,13 +208,14 @@ public abstract class ScriptTreeVisitor1 extends SchemaParserBaseVisitor<Evaluat
     }
 
     @Override
-    public Evaluator visitForStatement(SchemaParser.ForStatementContext ctx) {
-        var initialization = visit(ctx.varStatement(), visit(ctx.initialization, VOID_SUPPLIER));
+    public Evaluator visitForStatement(ForStatementContext ctx) {
+        var initialization = visit(ctx.varStatement(),
+            visit(ctx.initialization, VOID_SUPPLIER));
         var condition = visit(ctx.condition, TRUE_SUPPLIER);
         var updation = visit(ctx.updation, VOID_SUPPLIER);
         var statement = visit(ctx.statement());
         return tryCatch(scope -> {
-            var forScope = new ScopeContext(scope);
+            var forScope = new ScriptScope(scope);
             for(initialization.evaluate(forScope);
                 condition.evaluate(forScope).toBoolean();
                 updation.evaluate(forScope)) {
@@ -205,7 +227,7 @@ public abstract class ScriptTreeVisitor1 extends SchemaParserBaseVisitor<Evaluat
     }
 
     @Override
-    public Evaluator visitExpressionList(SchemaParser.ExpressionListContext ctx) {
+    public Evaluator visitExpressionList(ExpressionListContext ctx) {
         var expressions = ctx.expression().stream().map(this::visit).toList();
         return tryCatch(scope -> {
             for(var e : expressions) e.evaluate(scope);
@@ -214,15 +236,15 @@ public abstract class ScriptTreeVisitor1 extends SchemaParserBaseVisitor<Evaluat
     }
 
     @Override
-    public Evaluator visitForeachStatement(SchemaParser.ForeachStatementContext ctx) {
+    public Evaluator visitForeachStatement(ForeachStatementContext ctx) {
         var varName = ctx.G_IDENTIFIER().getText();
         var collection = visit(ctx.expression());
         var statement = visit(ctx.statement());
         return tryCatch(scope -> {
-            var forScope = new ScopeContext(scope);
-            var reference = forScope.addVariable(varName, VOID);
-            for(var v : GIterator.of(collection.evaluate(scope))) {
-                reference.setValue(v);
+            var forScope = new ScriptScope(scope);
+            var lvalue = forScope.addVariable(varName, VOID);
+            for(var v : new GIterator(dereference(collection.evaluate(scope)))) {
+                lvalue.setValue(dereference(v));
                 var result = statement.evaluate(forScope);
                 if(result instanceof GControl ctrl) return ctrl.toIteration();
             }
@@ -231,10 +253,10 @@ public abstract class ScriptTreeVisitor1 extends SchemaParserBaseVisitor<Evaluat
     }
 
     @Override
-    public Evaluator visitReturnStatement(SchemaParser.ReturnStatementContext ctx) {
+    public Evaluator visitReturnStatement(ReturnStatementContext ctx) {
         var expression = visit(ctx.expression());
         if(returnType == null) return tryCatch(scope -> GControl.ofReturn(
-                expression.evaluate(scope)), RETN02, ctx);
+            expression.evaluate(scope)), RETN02, ctx);
         var thisReturnType = returnType;
         return tryCatch(scope -> {
             var v1 = expression.evaluate(scope);
@@ -245,15 +267,15 @@ public abstract class ScriptTreeVisitor1 extends SchemaParserBaseVisitor<Evaluat
     }
 
     @Override
-    public Evaluator visitBreakStatement(SchemaParser.BreakStatementContext ctx) {
+    public Evaluator visitBreakStatement(BreakStatementContext ctx) {
         return BREAK_SUPPLIER;
     }
 
     @Override
-    public Evaluator visitBlockStatement(SchemaParser.BlockStatementContext ctx) {
+    public Evaluator visitBlockStatement(BlockStatementContext ctx) {
         var statements = ctx.statement().stream().map(this::visit).toList();
         return tryCatch(scope -> {
-            var blockScope = new ScopeContext(scope);
+            var blockScope = new ScriptScope(scope);
             for(var s : statements) {
                 var result = s.evaluate(blockScope);
                 if(result instanceof GControl ctrl) return ctrl;
@@ -263,82 +285,74 @@ public abstract class ScriptTreeVisitor1 extends SchemaParserBaseVisitor<Evaluat
     }
 
     @Override
-    public Evaluator visitTrueLiteral(SchemaParser.TrueLiteralContext ctx) {
+    public Evaluator visitTrueLiteral(TrueLiteralContext ctx) {
         return TRUE_SUPPLIER;
     }
 
     @Override
-    public Evaluator visitFalseLiteral(SchemaParser.FalseLiteralContext ctx) {
+    public Evaluator visitFalseLiteral(FalseLiteralContext ctx) {
         return FALSE_SUPPLIER;
     }
 
     @Override
-    public Evaluator visitNullLiteral(SchemaParser.NullLiteralContext ctx) {
+    public Evaluator visitNullLiteral(NullLiteralContext ctx) {
         return NULL_SUPPLIER;
     }
 
     @Override
-    public Evaluator visitUndefinedLiteral(SchemaParser.UndefinedLiteralContext ctx) {
+    public Evaluator visitUndefinedLiteral(UndefinedLiteralContext ctx) {
         return UNDEFINED_SUPPLIER;
     }
 
     @Override
-    public Evaluator visitIntegerLiteral(SchemaParser.IntegerLiteralContext ctx) {
-        var value = GInteger.of(Long.parseLong(ctx.G_INTEGER().getText()));
+    public Evaluator visitIntegerLiteral(IntegerLiteralContext ctx) {
+        var value = GInteger.from(Long.parseLong(ctx.G_INTEGER().getText()));
         return scope -> value;
     }
 
     @Override
-    public Evaluator visitDoubleLiteral(SchemaParser.DoubleLiteralContext ctx) {
-        var value = GDouble.of(Double.parseDouble(ctx.G_DOUBLE().getText()));
+    public Evaluator visitDoubleLiteral(DoubleLiteralContext ctx) {
+        var value = GDouble.from(Double.parseDouble(ctx.G_DOUBLE().getText()));
         return scope -> value;
     }
 
     @Override
-    public Evaluator visitStringLiteral(SchemaParser.StringLiteralContext ctx) {
-        var value = GString.of(toEncoded(ctx.getText()));
+    public Evaluator visitStringLiteral(StringLiteralContext ctx) {
+        var value = GString.from(toEncoded(ctx.getText()));
         return scope -> value;
     }
 
     @Override
-    public Evaluator visitArrayLiteral(SchemaParser.ArrayLiteralContext ctx) {
+    public Evaluator visitArrayLiteral(ArrayLiteralContext ctx) {
         var list = ctx.expression().stream().map(this::visit).toList();
         return tryCatch(scope -> new GArray(list.stream().map(e
-                -> e.evaluate(scope)).toList()), ARRL01, ctx);
+                -> dereference(e.evaluate(scope))).toList()), ARRL01, ctx);
     }
 
     @Override
-    public Evaluator visitObjectLiteral(SchemaParser.ObjectLiteralContext ctx) {
-        var keys = ctx.keys.stream().map(t -> t.getType() == G_STRING
-                ? toEncoded(t.getText()) : t.getText()).toList();
+    public Evaluator visitObjectLiteral(ObjectLiteralContext ctx) {
+        var keys = ctx.keys.stream().map(k -> k.getType() == G_STRING
+                ? toEncoded(k.getText()) : k.getText()).toList();
         var values = ctx.values.stream().map(this::visit).toList();
         return tryCatch(scope -> new GObject(keys, values.stream().map(v
-                -> v.evaluate(scope)).toList()), OBJL01, ctx);
+                -> dereference(v.evaluate(scope))).toList()), OBJL01, ctx);
     }
 
-    static Evaluator tryCatch(Evaluator evaluator, String code,
-                ParserRuleContext context) {
+    static Evaluator tryCatch(Evaluator evaluator, String code, ParserRuleContext ctx) {
         return scope -> {
             try {
                 return evaluator.evaluate(scope);
             } catch(ScriptRuntimeException | ScriptTemplateException e) {
                 throw e;
             } catch(CommonException e) {
-                throw failOnRuntime(e.getCode(), e.getMessage(), context.start, e);
+                throw failOnRuntime(e.getCode(), e.getMessage(), ctx.start, e);
             } catch(Exception e) {
-                throw failOnSystemException(code, e, context.start);
+                throw failOnSystemException(code, e, ctx.start);
             }
         };
     }
 
-    @Override
-    public Evaluator visit(ParseTree tree) {
-        if(tree == null) return null;
-        return super.visit(tree);
-    }
-
-    private Evaluator visit(ParseTree tree, Evaluator defaultValue) {
-        if(tree == null) return defaultValue;
-        return super.visit(tree);
+    Evaluator visit(ParseTree tree, Evaluator defaultValue) {
+        return tree == null ? defaultValue : super.visit(tree);
     }
 }

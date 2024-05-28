@@ -17,19 +17,19 @@ public final class ExpectedHelper {
     }
 
     public static ExpectedDetail asArrayElementNotFound(JNode node, int index) {
-        return new ExpectedDetail(node, "'", node.getOutline(), "' element at ", index);
+        return new ExpectedDetail(node, "'" + node.getOutline() + "' element at " + index);
     }
 
     public static ExpectedDetail asValueMismatch(JNode node) {
-        return new ExpectedDetail(node, "value ", node.getOutline());
+        return new ExpectedDetail(node, "value " + node.getOutline());
     }
 
     public static ExpectedDetail asGeneralValueMismatch(JNode node) {
-        return new ExpectedDetail(node, "a valid value of ", node.getOutline());
+        return new ExpectedDetail(node, "a valid value of " + node.getOutline());
     }
 
     public static ExpectedDetail asDataTypeMismatch(JDataType dataType) {
-        return new ExpectedDetail(dataType, "data type ", dataType.toString(true));
+        return new ExpectedDetail(dataType, "data type " + dataType.toString(true));
     }
 
     public static ExpectedDetail asInvalidNonCompositeType(JDataType dataType) {
@@ -37,25 +37,24 @@ public final class ExpectedHelper {
     }
 
     public static ExpectedDetail asDataTypeArgumentFailed(JDataType dataType) {
-        return new ExpectedDetail(dataType, "a valid value for ", quote(dataType.getAlias()));
+        return new ExpectedDetail(dataType, "a valid value for " + quote(dataType.getAlias()));
     }
 
     public static ExpectedDetail asDataTypeMismatch(JNode node) {
-        return new ExpectedDetail(node, getTypeName(node), " inferred by ",
-                node.getOutline());
+        return new ExpectedDetail(node, getTypeName(node) + " inferred by " + node.getOutline());
     }
 
     public static ExpectedDetail asPropertyNotFound(JProperty property) {
-        return new ExpectedDetail(property, "property {", property.getOutline(), "}");
+        return new ExpectedDetail(property, "property {" + property.getOutline() + "}");
     }
 
     public static ExpectedDetail asUndefinedProperty(JObject object, JProperty property) {
-        return new ExpectedDetail(object, "no property with key ", quote(property.getKey()));
+        return new ExpectedDetail(object, "no property with key " + quote(property.getKey()));
     }
 
     public static ExpectedDetail asPropertyOrderMismatch(JProperty property) {
-        return new ExpectedDetail(property, "property with key ",
-                quote(property.getKey()), " at current position");
+        return new ExpectedDetail(property, "property with key "
+            + quote(property.getKey()) + " at current position");
     }
 
     public static ExpectedDetail asInvalidFunction(JFunction function) {

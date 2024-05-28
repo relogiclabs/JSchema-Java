@@ -1,10 +1,10 @@
-# JSchema - The New JSON Schema
+# JSchema - The Customizable JSON Schema
 A JSON Schema is crucial for making communication, interoperability, validation, testing, documentation, and specification seamless. All of this combined contributes to better maintenance and evolution of data-driven applications and systems. If you are interested in a comprehensive overview of the roles and uses of JSON Schema in modern web applications, check out our in-depth post [here](https://www.relogiclabs.com/2023/01/the-roles-of-json-schema.html).
 
 ## Design Goals
 The traditional standard JSON Schema rigorously follows the conventional JSON structure, which unfortunately comes at the expense of simplicity, conciseness, and readability. Our goal is to develop a new JSON Schema that promotes these essential aspects that were previously missing.
 
-This new schema is simple, lucid, easy to grasp, and doesn't require much prior knowledge to understand it. It also offers a shallow learning curve for both reading and writing. Additionally, its simplicity and conciseness allow us and machines to read-write more efficiently. Moreover, a large set of constraint data types and functions within the core schema promotes the precise definition of JSON documents, significantly reducing the potential for communication gaps among collaborators. Furthermore, its inherent extensibility not only facilitates the test automation process in API testing but also simplifies the integrations of new constraints and functionalities to meet the diverse requirements of modern web services.
+This new schema is simple, lucid, easy to grasp, and doesn't require much prior knowledge to get started. Additionally, its simplicity and conciseness allow us and machines to read-write more efficiently. Moreover, a large set of constraint data types and functions within the core schema promotes the precise definition of JSON documents, significantly reducing the potential for communication gaps among collaborators. Furthermore, its inherent extensibility not only facilitates the test automation process in API testing but also simplifies the integrations of new constraints and functionalities to meet the diverse requirements of modern web services.
 
 ## Basic Example
 Let's explore an example of our schema for a typical JSON API response containing information about a user profile or account. The schema is very self-explanatory and thus almost no prior knowledge is required to understand the schema and the JSON responses specified by this schema.
@@ -95,7 +95,7 @@ The next example represents an expanded version of the previous one, which bring
 %define $tags: @length(1, 10) #string*($tag) #array
 %define $tag: @length(3, 20) @regex("[A-Za-z_]+") #string
 
-%schema: 
+%schema:
 {
     "user": {
         "id": @range(1, 10000) #integer,
@@ -135,16 +135,16 @@ The next example represents an expanded version of the previous one, which bring
 
 %script: {
     constraint function checkAccess(role) {
-        // Receiver &role received only one value
+        // Auto-unpacking unwraps single-value '&role' array into its value
         // 'target' keyword refers to the target JSON value
-        if(role[0] == "user" && target > 5) return fail(
+        if(role == "user" && target > 5) return fail(
             "ERRACCESS01", "Data access incompatible with 'user' role",
             expected("an access at most 5 for 'user' role"),
             actual("found access " + target + " which is greater than 5"));
     }
 }
 ```
-The subsequent JSON sample is an illustrative example that successfully validates against the expanded schema mentioned earlier. Within this example, recurring JSON structures appear that can be validated by defining components or nested functions and data types. Besides, reusing simple component definitions, you can achieve a clear and concise schema when validating large JSON with repetitive structures instead of duplicating or referring to various structures across the schema. This improves the overall readability and maintainability of the schema.
+The subsequent JSON sample is an illustrative example that successfully validates against the expanded schema mentioned earlier. Within this example, recurring JSON structures appear that can be validated by defining components or nested functions and data types. Besides, reusing simple component definitions, you can achieve a clear and concise schema when validating large JSON with repetitive structures. This improves the overall readability and maintainability of the schema.
 ```json
 {
     "user": {
@@ -218,10 +218,10 @@ The subsequent JSON sample is an illustrative example that successfully validate
             "id": "p2",
             "name": "Laptop",
             "brand": "SuperTech",
-            "price": 1299.99,
+            "price": 11.99,
             "inStock": false,
             "specs": {
-                "cpu": "Ryzen 11",
+                "cpu": "Ryzen",
                 "ram": "11GB",
                 "storage": "11GB SSD"
             }

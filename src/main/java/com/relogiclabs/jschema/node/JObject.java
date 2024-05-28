@@ -2,6 +2,7 @@ package com.relogiclabs.jschema.node;
 
 import com.relogiclabs.jschema.collection.IndexMap;
 import com.relogiclabs.jschema.exception.JsonSchemaException;
+import com.relogiclabs.jschema.exception.UpdateNotSupportedException;
 import com.relogiclabs.jschema.internal.builder.JObjectBuilder;
 import com.relogiclabs.jschema.internal.message.ActualHelper;
 import com.relogiclabs.jschema.internal.message.ExpectedHelper;
@@ -20,8 +21,9 @@ import java.util.Set;
 import static com.relogiclabs.jschema.internal.message.MessageHelper.PropertyNotFound;
 import static com.relogiclabs.jschema.internal.message.MessageHelper.PropertyOrderMismatch;
 import static com.relogiclabs.jschema.internal.message.MessageHelper.UndefinedPropertyFound;
-import static com.relogiclabs.jschema.internal.util.MiscellaneousHelper.nonNullFrom;
+import static com.relogiclabs.jschema.internal.util.CommonHelper.nonNullFrom;
 import static com.relogiclabs.jschema.internal.util.StringHelper.joinWith;
+import static com.relogiclabs.jschema.message.ErrorCode.OUPD01;
 import static com.relogiclabs.jschema.message.ErrorCode.PROP05;
 import static com.relogiclabs.jschema.message.ErrorCode.PROP06;
 import static com.relogiclabs.jschema.message.ErrorCode.PROP07;
@@ -110,6 +112,11 @@ public final class JObject extends JComposite implements EObject, Iterable<JProp
     public EValue get(String key) {
         var property = properties.get(key);
         return property == null ? null : property.getValue();
+    }
+
+    @Override
+    public void set(String key, EValue value) {
+        throw new UpdateNotSupportedException(OUPD01, "Readonly object cannot be updated");
     }
 
     @Override

@@ -1,6 +1,9 @@
 package com.relogiclabs.jschema.type;
 
-public interface EValue {
+import com.relogiclabs.jschema.internal.library.CommonLibrary;
+import com.relogiclabs.jschema.internal.library.MethodEvaluator;
+
+public interface EValue extends Scriptable {
     EValue VOID = new EValue() {
         @Override
         public EType getType() {
@@ -24,5 +27,10 @@ public interface EValue {
 
     default boolean toBoolean() {
         return true;
+    }
+
+    @Override
+    default MethodEvaluator getMethod(String name, int argCount) {
+        return CommonLibrary.getInstance().getMethod(name, argCount);
     }
 }

@@ -13,7 +13,7 @@ import lombok.Getter;
 import java.util.List;
 
 import static com.relogiclabs.jschema.internal.message.MessageHelper.InvalidNestedFunction;
-import static com.relogiclabs.jschema.internal.util.MiscellaneousHelper.nonNullFrom;
+import static com.relogiclabs.jschema.internal.util.CommonHelper.nonNullFrom;
 import static com.relogiclabs.jschema.internal.util.StreamHelper.forEachTrue;
 import static com.relogiclabs.jschema.internal.util.StringHelper.join;
 import static com.relogiclabs.jschema.message.ErrorCode.FUNC06;
@@ -46,9 +46,9 @@ public final class JFunction extends JBranch implements NestedMode {
         if(!nested) return invokeFunction(node);
         if(!(node instanceof JComposite composite))
             return fail(new JsonSchemaException(
-                    new ErrorDetail(FUNC06, InvalidNestedFunction),
-                    ExpectedHelper.asInvalidFunction(this),
-                    ActualHelper.asInvalidFunction(node)));
+                new ErrorDetail(FUNC06, InvalidNestedFunction),
+                ExpectedHelper.asInvalidFunction(this),
+                ActualHelper.asInvalidFunction(node)));
         return forEachTrue(composite.components().stream().map(this::invokeFunction));
     }
 
@@ -57,7 +57,7 @@ public final class JFunction extends JBranch implements NestedMode {
             return getRuntime().getFunctions().invokeFunction(this, node);
         } catch(Exception ex) {
             var exception = ex instanceof TargetInvocationException
-                    ? nonNullFrom(ex.getCause(), ex) : ex;
+                ? nonNullFrom(ex.getCause(), ex) : ex;
             if(exception instanceof RuntimeException runtimeException) throw runtimeException;
             else throw new RuntimeException(exception);
         }

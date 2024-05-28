@@ -3,10 +3,15 @@ package com.relogiclabs.jschema.message;
 import static org.apache.commons.lang3.StringUtils.left;
 import static org.apache.commons.lang3.StringUtils.right;
 
-public class OutlineFormatter {
+public final class OutlineFormatter {
+    private static final String ABBREVIATE_MARKER = "...";
     private static int outlineLength = 200;
     private static int startLength = 2 * outlineLength / 3;
     private static int endLength = outlineLength / 3;
+
+    private OutlineFormatter() {
+        throw new UnsupportedOperationException("This class is not intended for instantiation");
+    }
 
     public static void setOutlineLength(int length) {
         outlineLength = length;
@@ -16,7 +21,7 @@ public class OutlineFormatter {
 
     public static String createOutline(Object object) {
         var string = object.toString();
-        if(outlineLength >= string.length()) return string;
-        return left(string, startLength) + "..." + right(string, endLength);
+        return outlineLength >= string.length() ? string
+            : left(string, startLength) + ABBREVIATE_MARKER + right(string, endLength);
     }
 }

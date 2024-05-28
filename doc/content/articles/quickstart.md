@@ -8,7 +8,7 @@ weight = 2
 This guide will walk you through the essential steps to quickly get up and running with the JSchema library. It is also assumed a modest familiarity with the Java language, Java SDK, and Java command-line interface, including basic familiarity with Maven packages.
 
 ## Maven Library Package
-To get started, launch your preferred IDE (such as IntelliJ IDEA, NetBeans IDE, Eclipse IDE, or VS Code) and open the Java project where you intend to include this library package. If you are using a build tool like Maven or Gradle, adding the library to your project is straightforward. For example in Maven project, navigate to the Maven `pom.xml` file and locate the section named `<dependencies>` and add the following XML snippet within the section of the file, replacing `2.x.x` with either the latest version or your preferred version:
+To get started, launch your preferred IDE (such as IntelliJ IDEA, NetBeans IDE, Eclipse IDE, or VS Code) and open the Java project where you intend to include this library package. If you are using a build tool like Maven or Gradle, adding the library to your project is straightforward. For example in Maven project, navigate to the Maven `pom.xml` file and locate the section named `<dependencies>` and add the following XML snippet within the section, replacing `2.x.x` with either the latest version or your preferred version:
 ```xml
 <dependency>
     <groupId>com.relogiclabs.json</groupId>

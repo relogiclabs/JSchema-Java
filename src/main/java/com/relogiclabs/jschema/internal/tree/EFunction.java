@@ -6,6 +6,9 @@ import com.relogiclabs.jschema.type.EValue;
 import java.util.List;
 
 public interface EFunction {
+    String CONSTRAINT_PREFIX = "@";
+    int VARIADIC_ARITY = -1;
+
     String getName();
     int getArity();
     Class<?> getTargetType();

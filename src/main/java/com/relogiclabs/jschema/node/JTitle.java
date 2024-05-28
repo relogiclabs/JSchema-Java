@@ -4,7 +4,7 @@ import com.relogiclabs.jschema.internal.builder.JTitleBuilder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
-import static com.relogiclabs.jschema.internal.util.StringHelper.concat;
+import static com.relogiclabs.jschema.internal.util.StringHelper.quote;
 import static java.util.Objects.requireNonNull;
 
 @Getter
@@ -24,6 +24,6 @@ public final class JTitle extends JDirective {
 
     @Override
     public String toString() {
-        return concat(TITLE_MARKER, ": ", title);
+        return TITLE_MARKER + ": " + quote(title);
     }
 }

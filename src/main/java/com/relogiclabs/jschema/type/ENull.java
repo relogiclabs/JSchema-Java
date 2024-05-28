@@ -1,11 +1,11 @@
 package com.relogiclabs.jschema.type;
 
 public interface ENull extends EValue {
-    String STRING = "null";
+    String LITERAL = "null";
     ENull NULL = new ENull() {
         @Override
         public String toString() {
-            return STRING;
+            return LITERAL;
         }
     };
 

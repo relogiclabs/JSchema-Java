@@ -5,7 +5,6 @@ import com.relogiclabs.jschema.internal.builder.JAliasBuilder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
-import static com.relogiclabs.jschema.internal.util.StringHelper.concat;
 import static com.relogiclabs.jschema.message.ErrorCode.DEFI02;
 import static com.relogiclabs.jschema.message.MessageFormatter.formatForSchema;
 import static java.util.Objects.requireNonNull;
@@ -28,7 +27,7 @@ public final class JAlias extends JLeaf {
     public boolean match(JNode node) {
         var definitions = getRuntime().getDefinitions();
         if(!definitions.containsKey(this)) throw new DefinitionNotFoundException(formatForSchema(
-                DEFI02, concat("Definition of '", name, "' not found"), getContext()));
+            DEFI02, "Definition of '" + name + "' not found", getContext()));
         return definitions.get(this).match(node);
     }
 
