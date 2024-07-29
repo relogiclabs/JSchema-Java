@@ -9,8 +9,8 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
-import static com.relogiclabs.jschema.message.ErrorCode.PRAG01;
-import static com.relogiclabs.jschema.message.ErrorCode.PRAG02;
+import static com.relogiclabs.jschema.message.ErrorCode.PRGCHK01;
+import static com.relogiclabs.jschema.message.ErrorCode.PRGCHK02;
 import static com.relogiclabs.jschema.message.MessageFormatter.formatForSchema;
 
 @Getter @Setter
@@ -22,10 +22,10 @@ public final class JPragmaBuilder extends JNodeBuilder<JPragmaBuilder> {
     private void checkPragma() {
         var descriptor = PragmaDescriptor.from(name);
         if (descriptor == null)
-            throw new PragmaNotFoundException(formatForSchema(PRAG01, "Invalid pragma '"
+            throw new PragmaNotFoundException(formatForSchema(PRGCHK01, "Invalid pragma '"
                 + name + "' with value " + value.getOutline() + " found", context()));
         if (!descriptor.matchType(value.getClass()))
-            throw new InvalidPragmaValueException(formatForSchema(PRAG02, "Invalid value "
+            throw new InvalidPragmaValueException(formatForSchema(PRGCHK02, "Invalid value "
                 + value.getOutline() + " for pragma '" + name + "' found", value));
     }
 
