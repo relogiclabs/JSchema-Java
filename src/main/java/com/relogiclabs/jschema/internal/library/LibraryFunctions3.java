@@ -13,19 +13,19 @@ import java.util.Map;
 
 import static com.relogiclabs.jschema.internal.engine.ScriptTreeHelper.areCompatible;
 import static com.relogiclabs.jschema.internal.script.RFunction.hasVariadic;
-import static com.relogiclabs.jschema.message.ErrorCode.FNVK03;
+import static com.relogiclabs.jschema.message.ErrorCode.FNSNVK03;
 
-public final class ScriptLibrary3 extends ScriptLibrary2 {
-    private static final ScriptLibrary3 LIBRARY = new ScriptLibrary3();
+public final class LibraryFunctions3 extends LibraryFunctions2 {
+    private static final LibraryFunctions3 LIBRARY = new LibraryFunctions3();
     private final Map<String, RFunction> functions;
 
     @Getter
-    private static class LibraryFunction implements RFunction {
+    private static class BuiltinFunction implements RFunction {
         private final GParameter[] parameters;
         private final boolean variadic;
         private final FunctionEvaluator body;
 
-        public LibraryFunction(FunctionEvaluator body, String... parameters) {
+        public BuiltinFunction(FunctionEvaluator body, String... parameters) {
             this.body = body;
             this.parameters = toParameters(parameters);
             this.variadic = hasVariadic(this.parameters);
@@ -37,7 +37,7 @@ public final class ScriptLibrary3 extends ScriptLibrary2 {
 
         @Override
         public ScriptScope bind(ScriptScope parentScope, List<EValue> arguments) {
-            areCompatible(parameters, arguments, FNVK03);
+            areCompatible(parameters, arguments, FNSNVK03);
             return parentScope;
         }
 
@@ -47,21 +47,21 @@ public final class ScriptLibrary3 extends ScriptLibrary2 {
         }
     }
 
-    private ScriptLibrary3() {
+    private LibraryFunctions3() {
         functions = new HashMap<>(10);
-        addFunction(Print_F1, ScriptLibrary2::printFunction, Message_Id);
-        addFunction(Fail_F1, ScriptLibrary2::failFunction1, Message_Id);
-        addFunction(Fail_F2, ScriptLibrary2::failFunction2, Code_Id, Message_Id);
-        addFunction(Fail_F4, ScriptLibrary2::failFunction4, Code_Id, Message_Id, Expected_Id, Actual_Id);
-        addFunction(Expected_F1, ScriptLibrary2::expectedFunction1, Message_Id);
-        addFunction(Expected_F2, ScriptLibrary2::expectedFunction2, Node_Id, Message_Id);
-        addFunction(Actual_F1, ScriptLibrary2::actualFunction1, Message_Id);
-        addFunction(Actual_F2, ScriptLibrary2::actualFunction2, Node_Id, Message_Id);
-        addFunction(Ticks_F0, ScriptLibrary2::ticksFunction);
+        addFunction(Print_F1, LibraryFunctions2::printFunction, Message_Id);
+        addFunction(Fail_F1, LibraryFunctions2::failFunction1, Message_Id);
+        addFunction(Fail_F2, LibraryFunctions2::failFunction2, Code_Id, Message_Id);
+        addFunction(Fail_F4, LibraryFunctions2::failFunction4, Code_Id, Message_Id, Expected_Id, Actual_Id);
+        addFunction(Expected_F1, LibraryFunctions2::expectedFunction1, Message_Id);
+        addFunction(Expected_F2, LibraryFunctions2::expectedFunction2, Node_Id, Message_Id);
+        addFunction(Actual_F1, LibraryFunctions2::actualFunction1, Message_Id);
+        addFunction(Actual_F2, LibraryFunctions2::actualFunction2, Node_Id, Message_Id);
+        addFunction(Ticks_F0, LibraryFunctions2::ticksFunction);
     }
 
     private void addFunction(String functionId, FunctionEvaluator body, String... parameters) {
-        functions.put(functionId, new LibraryFunction(body, parameters));
+        functions.put(functionId, new BuiltinFunction(body, parameters));
     }
 
     public static EValue resolveStatic(String name) {

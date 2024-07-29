@@ -12,7 +12,7 @@ import static com.relogiclabs.jschema.internal.engine.ScriptTreeHelper.areCompat
 import static com.relogiclabs.jschema.internal.script.RFunction.hasVariadic;
 import static com.relogiclabs.jschema.internal.util.CollectionHelper.subList;
 import static com.relogiclabs.jschema.internal.util.CommonHelper.hasFlag;
-import static com.relogiclabs.jschema.message.ErrorCode.FNVK02;
+import static com.relogiclabs.jschema.message.ErrorCode.FNSNVK02;
 
 @Getter
 @RequiredArgsConstructor
@@ -35,7 +35,7 @@ public final class GFunction implements RFunction {
 
     @Override
     public ScriptScope bind(ScriptScope parentScope, List<EValue> arguments) {
-        areCompatible(parameters, arguments, FNVK02);
+        areCompatible(parameters, arguments, FNSNVK02);
         var scope = new ScriptScope(parentScope);
         var i = 0;
         for(var p : parameters) scope.addVariable(p.getName(), p.isVariadic()

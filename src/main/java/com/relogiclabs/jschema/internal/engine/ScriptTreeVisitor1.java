@@ -1,8 +1,7 @@
 package com.relogiclabs.jschema.internal.engine;
 
-import com.relogiclabs.jschema.exception.CommonException;
-import com.relogiclabs.jschema.exception.ScriptRuntimeException;
-import com.relogiclabs.jschema.exception.ScriptTemplateException;
+import com.relogiclabs.jschema.exception.BaseRuntimeException;
+import com.relogiclabs.jschema.exception.MultilevelRuntimeException;
 import com.relogiclabs.jschema.internal.antlr.SchemaParser.ArrayLiteralContext;
 import com.relogiclabs.jschema.internal.antlr.SchemaParser.BlockStatementContext;
 import com.relogiclabs.jschema.internal.antlr.SchemaParser.BreakStatementContext;
@@ -47,7 +46,6 @@ import org.antlr.v4.runtime.tree.ParseTreeProperty;
 
 import static com.relogiclabs.jschema.internal.antlr.SchemaLexer.G_STRING;
 import static com.relogiclabs.jschema.internal.engine.ScriptErrorHelper.failOnInvalidReturnType;
-import static com.relogiclabs.jschema.internal.engine.ScriptErrorHelper.failOnRuntime;
 import static com.relogiclabs.jschema.internal.engine.ScriptErrorHelper.failOnSystemException;
 import static com.relogiclabs.jschema.internal.engine.ScriptTreeHelper.dereference;
 import static com.relogiclabs.jschema.internal.engine.ScriptTreeHelper.getFunctionMode;
@@ -58,23 +56,23 @@ import static com.relogiclabs.jschema.internal.script.GBoolean.TRUE;
 import static com.relogiclabs.jschema.internal.script.GControl.BREAK;
 import static com.relogiclabs.jschema.internal.util.CollectionHelper.subList;
 import static com.relogiclabs.jschema.internal.util.StringHelper.toEncoded;
-import static com.relogiclabs.jschema.message.ErrorCode.ARRL01;
-import static com.relogiclabs.jschema.message.ErrorCode.BLOK01;
-import static com.relogiclabs.jschema.message.ErrorCode.EXPR01;
-import static com.relogiclabs.jschema.message.ErrorCode.EXPR02;
-import static com.relogiclabs.jschema.message.ErrorCode.FORS01;
-import static com.relogiclabs.jschema.message.ErrorCode.FREC01;
-import static com.relogiclabs.jschema.message.ErrorCode.FUND03;
-import static com.relogiclabs.jschema.message.ErrorCode.IFST01;
-import static com.relogiclabs.jschema.message.ErrorCode.IFST02;
-import static com.relogiclabs.jschema.message.ErrorCode.OBJL01;
-import static com.relogiclabs.jschema.message.ErrorCode.RETN02;
-import static com.relogiclabs.jschema.message.ErrorCode.RETN03;
-import static com.relogiclabs.jschema.message.ErrorCode.SRPT01;
-import static com.relogiclabs.jschema.message.ErrorCode.SRPT02;
-import static com.relogiclabs.jschema.message.ErrorCode.VARD02;
-import static com.relogiclabs.jschema.message.ErrorCode.VARD03;
-import static com.relogiclabs.jschema.message.ErrorCode.WHIL01;
+import static com.relogiclabs.jschema.message.ErrorCode.ARRLIT01;
+import static com.relogiclabs.jschema.message.ErrorCode.BLOKSE01;
+import static com.relogiclabs.jschema.message.ErrorCode.EXPRSE01;
+import static com.relogiclabs.jschema.message.ErrorCode.EXPRSE02;
+import static com.relogiclabs.jschema.message.ErrorCode.FNSDEC01;
+import static com.relogiclabs.jschema.message.ErrorCode.FORECH01;
+import static com.relogiclabs.jschema.message.ErrorCode.FORSTM01;
+import static com.relogiclabs.jschema.message.ErrorCode.IFSTMT01;
+import static com.relogiclabs.jschema.message.ErrorCode.IFSTMT02;
+import static com.relogiclabs.jschema.message.ErrorCode.OBJLIT01;
+import static com.relogiclabs.jschema.message.ErrorCode.RETNSE01;
+import static com.relogiclabs.jschema.message.ErrorCode.RETNSE03;
+import static com.relogiclabs.jschema.message.ErrorCode.SRPTSE01;
+import static com.relogiclabs.jschema.message.ErrorCode.SRPTSE02;
+import static com.relogiclabs.jschema.message.ErrorCode.VARDEC01;
+import static com.relogiclabs.jschema.message.ErrorCode.VARDEC02;
+import static com.relogiclabs.jschema.message.ErrorCode.WHILSE01;
 import static com.relogiclabs.jschema.type.ENull.NULL;
 import static com.relogiclabs.jschema.type.EUndefined.UNDEFINED;
 import static com.relogiclabs.jschema.type.EValue.VOID;
@@ -106,7 +104,7 @@ public abstract class ScriptTreeVisitor1 extends SchemaParserBaseVisitor<Evaluat
         return tryCatch(scope -> {
             for(var s : scripts) s.evaluate(scope);
             return VOID;
-        }, SRPT01, ctx);
+        }, SRPTSE01, ctx);
     }
 
     private Evaluator processScript(ParserRuleContext context) {
@@ -126,7 +124,7 @@ public abstract class ScriptTreeVisitor1 extends SchemaParserBaseVisitor<Evaluat
         return tryCatch(scope -> {
             for(var s : statements) s.evaluate(scope);
             return VOID;
-        }, SRPT02, ctx);
+        }, SRPTSE02, ctx);
     }
 
     @Override
@@ -145,7 +143,7 @@ public abstract class ScriptTreeVisitor1 extends SchemaParserBaseVisitor<Evaluat
             if(constraint) runtime.getFunctions()
                 .addFunction(new ScriptFunction(baseName, function));
             return VOID;
-        }, FUND03, ctx);
+        }, FNSDEC01, ctx);
     }
 
     @Override
@@ -154,7 +152,7 @@ public abstract class ScriptTreeVisitor1 extends SchemaParserBaseVisitor<Evaluat
         return tryCatch(scope -> {
             for(var d : varDeclarations) d.evaluate(scope);
             return VOID;
-        }, VARD03, ctx);
+        }, VARDEC02, ctx);
     }
 
     @Override
@@ -164,7 +162,7 @@ public abstract class ScriptTreeVisitor1 extends SchemaParserBaseVisitor<Evaluat
         return tryCatch(scope -> {
             scope.addVariable(varName, dereference(expression.evaluate(scope)));
             return VOID;
-        }, VARD02, ctx);
+        }, VARDEC01, ctx);
     }
 
     @Override
@@ -173,7 +171,7 @@ public abstract class ScriptTreeVisitor1 extends SchemaParserBaseVisitor<Evaluat
         return tryCatch(scope -> {
             expression.evaluate(scope);
             return VOID;
-        }, EXPR01, ctx);
+        }, EXPRSE01, ctx);
     }
 
     @Override
@@ -184,14 +182,14 @@ public abstract class ScriptTreeVisitor1 extends SchemaParserBaseVisitor<Evaluat
             if(condition.evaluate(scope).toBoolean())
                 return thenStatement.evaluate(scope);
             return VOID;
-        }, IFST01, ctx);
+        }, IFSTMT01, ctx);
 
         var elseStatement = visit(ctx.statement(1));
         return tryCatch(scope -> {
             if(condition.evaluate(scope).toBoolean())
                 return thenStatement.evaluate(scope);
             else return elseStatement.evaluate(scope);
-        }, IFST02, ctx);
+        }, IFSTMT02, ctx);
     }
 
     @Override
@@ -204,7 +202,7 @@ public abstract class ScriptTreeVisitor1 extends SchemaParserBaseVisitor<Evaluat
                 if(result instanceof GControl ctrl) return ctrl.toIteration();
             }
             return VOID;
-        }, WHIL01, ctx);
+        }, WHILSE01, ctx);
     }
 
     @Override
@@ -223,7 +221,7 @@ public abstract class ScriptTreeVisitor1 extends SchemaParserBaseVisitor<Evaluat
                 if(result instanceof GControl ctrl) return ctrl.toIteration();
             }
             return VOID;
-        }, FORS01, ctx);
+        }, FORSTM01, ctx);
     }
 
     @Override
@@ -232,7 +230,7 @@ public abstract class ScriptTreeVisitor1 extends SchemaParserBaseVisitor<Evaluat
         return tryCatch(scope -> {
             for(var e : expressions) e.evaluate(scope);
             return VOID;
-        }, EXPR02, ctx);
+        }, EXPRSE02, ctx);
     }
 
     @Override
@@ -249,21 +247,21 @@ public abstract class ScriptTreeVisitor1 extends SchemaParserBaseVisitor<Evaluat
                 if(result instanceof GControl ctrl) return ctrl.toIteration();
             }
             return VOID;
-        }, FREC01, ctx);
+        }, FORECH01, ctx);
     }
 
     @Override
     public Evaluator visitReturnStatement(ReturnStatementContext ctx) {
         var expression = visit(ctx.expression());
         if(returnType == null) return tryCatch(scope -> GControl.ofReturn(
-            expression.evaluate(scope)), RETN02, ctx);
+            expression.evaluate(scope)), RETNSE01, ctx);
         var thisReturnType = returnType;
         return tryCatch(scope -> {
             var v1 = expression.evaluate(scope);
             if(!thisReturnType.isInstance(v1))
                 throw failOnInvalidReturnType(v1, ctx.expression().getStart());
             return GControl.ofReturn(v1);
-        }, RETN03, ctx);
+        }, RETNSE03, ctx);
     }
 
     @Override
@@ -281,7 +279,7 @@ public abstract class ScriptTreeVisitor1 extends SchemaParserBaseVisitor<Evaluat
                 if(result instanceof GControl ctrl) return ctrl;
             }
             return VOID;
-        }, BLOK01, ctx);
+        }, BLOKSE01, ctx);
     }
 
     @Override
@@ -326,7 +324,7 @@ public abstract class ScriptTreeVisitor1 extends SchemaParserBaseVisitor<Evaluat
     public Evaluator visitArrayLiteral(ArrayLiteralContext ctx) {
         var list = ctx.expression().stream().map(this::visit).toList();
         return tryCatch(scope -> new GArray(list.stream().map(e
-                -> dereference(e.evaluate(scope))).toList()), ARRL01, ctx);
+                -> dereference(e.evaluate(scope))).toList()), ARRLIT01, ctx);
     }
 
     @Override
@@ -335,19 +333,19 @@ public abstract class ScriptTreeVisitor1 extends SchemaParserBaseVisitor<Evaluat
                 ? toEncoded(k.getText()) : k.getText()).toList();
         var values = ctx.values.stream().map(this::visit).toList();
         return tryCatch(scope -> new GObject(keys, values.stream().map(v
-                -> dereference(v.evaluate(scope))).toList()), OBJL01, ctx);
+                -> dereference(v.evaluate(scope))).toList()), OBJLIT01, ctx);
     }
 
     static Evaluator tryCatch(Evaluator evaluator, String code, ParserRuleContext ctx) {
         return scope -> {
             try {
                 return evaluator.evaluate(scope);
-            } catch(ScriptRuntimeException | ScriptTemplateException e) {
+            } catch(MultilevelRuntimeException e) {
+                throw e.translate(ctx.getStart());
+            } catch(BaseRuntimeException e) {
                 throw e;
-            } catch(CommonException e) {
-                throw failOnRuntime(e.getCode(), e.getMessage(), ctx.start, e);
             } catch(Exception e) {
-                throw failOnSystemException(code, e, ctx.start);
+                throw failOnSystemException(code, e, ctx.getStart());
             }
         };
     }
