@@ -2,8 +2,8 @@ package com.relogiclabs.jschema.exception;
 
 import com.relogiclabs.jschema.message.ErrorDetail;
 
-public class InvalidDataTypeException extends BaseRuntimeException {
-    public InvalidDataTypeException(ErrorDetail detail) {
+public class DuplicateAliasException extends BaseRuntimeException {
+    public DuplicateAliasException(ErrorDetail detail) {
         super(detail);
     }
 }
