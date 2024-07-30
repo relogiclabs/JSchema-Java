@@ -1,6 +1,6 @@
 package com.relogiclabs.jschema.node;
 
-import com.relogiclabs.jschema.exception.JsonSchemaException;
+import com.relogiclabs.jschema.exception.ValueValidationException;
 import com.relogiclabs.jschema.internal.builder.JFloatBuilder;
 import com.relogiclabs.jschema.internal.message.ActualHelper;
 import com.relogiclabs.jschema.internal.message.ExpectedHelper;
@@ -12,8 +12,8 @@ import lombok.Getter;
 
 import java.text.DecimalFormat;
 
-import static com.relogiclabs.jschema.internal.message.MessageHelper.ValueMismatch;
-import static com.relogiclabs.jschema.message.ErrorCode.FLOT01;
+import static com.relogiclabs.jschema.internal.message.MessageHelper.ValueMismatched;
+import static com.relogiclabs.jschema.message.ErrorCode.FLOTVL01;
 import static java.util.Objects.requireNonNull;
 
 @Getter
@@ -41,10 +41,10 @@ public final class JFloat extends JNumber implements EDouble, PragmaValue<Double
         var other = castType(node, JFloat.class);
         if(other == null) return false;
         if(areEqual(value, other.value)) return true;
-        return fail(new JsonSchemaException(
-                new ErrorDetail(FLOT01, ValueMismatch),
-                ExpectedHelper.asValueMismatch(this),
-                ActualHelper.asValueMismatch(other)));
+        return fail(new ValueValidationException(
+            new ErrorDetail(FLOTVL01, ValueMismatched),
+            ExpectedHelper.asValueMismatched(this),
+            ActualHelper.asValueMismatched(other)));
     }
 
     @Override

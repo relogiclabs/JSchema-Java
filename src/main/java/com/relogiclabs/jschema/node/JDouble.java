@@ -1,6 +1,6 @@
 package com.relogiclabs.jschema.node;
 
-import com.relogiclabs.jschema.exception.JsonSchemaException;
+import com.relogiclabs.jschema.exception.ValueValidationException;
 import com.relogiclabs.jschema.internal.builder.JDoubleBuilder;
 import com.relogiclabs.jschema.internal.message.ActualHelper;
 import com.relogiclabs.jschema.internal.message.ExpectedHelper;
@@ -11,8 +11,8 @@ import lombok.Getter;
 
 import java.text.DecimalFormat;
 
-import static com.relogiclabs.jschema.internal.message.MessageHelper.ValueMismatch;
-import static com.relogiclabs.jschema.message.ErrorCode.DUBL01;
+import static com.relogiclabs.jschema.internal.message.MessageHelper.ValueMismatched;
+import static com.relogiclabs.jschema.message.ErrorCode.DUBLVL01;
 import static java.util.Objects.requireNonNull;
 
 @Getter
@@ -35,10 +35,10 @@ public final class JDouble extends JNumber implements EDouble, PragmaValue<Doubl
         var other = castType(node, JDouble.class);
         if(other == null) return false;
         if(areEqual(value, other.value)) return true;
-        return fail(new JsonSchemaException(
-                new ErrorDetail(DUBL01, ValueMismatch),
-                ExpectedHelper.asValueMismatch(this),
-                ActualHelper.asValueMismatch(other)));
+        return fail(new ValueValidationException(
+            new ErrorDetail(DUBLVL01, ValueMismatched),
+            ExpectedHelper.asValueMismatched(this),
+            ActualHelper.asValueMismatched(other)));
     }
 
     @Override

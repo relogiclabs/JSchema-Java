@@ -1,6 +1,7 @@
 package com.relogiclabs.jschema.type;
 
-import com.relogiclabs.jschema.internal.library.CommonLibrary;
+import com.relogiclabs.jschema.exception.MethodNotFoundException;
+import com.relogiclabs.jschema.internal.library.CommonMethods;
 import com.relogiclabs.jschema.internal.library.MethodEvaluator;
 
 public interface EValue extends Scriptable {
@@ -31,6 +32,11 @@ public interface EValue extends Scriptable {
 
     @Override
     default MethodEvaluator getMethod(String name, int argCount) {
-        return CommonLibrary.getInstance().getMethod(name, argCount);
+        try {
+            return CommonMethods.getInstance().getMethod(name, argCount);
+        } catch(MethodNotFoundException e) {
+            e.setType(getType());
+            throw e;
+        }
     }
 }

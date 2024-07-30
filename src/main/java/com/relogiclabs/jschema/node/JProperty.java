@@ -1,7 +1,7 @@
 package com.relogiclabs.jschema.node;
 
 import com.relogiclabs.jschema.collection.Keyable;
-import com.relogiclabs.jschema.exception.JsonSchemaException;
+import com.relogiclabs.jschema.exception.ValueValidationException;
 import com.relogiclabs.jschema.internal.builder.JPropertyBuilder;
 import com.relogiclabs.jschema.internal.message.ActualHelper;
 import com.relogiclabs.jschema.internal.message.ExpectedHelper;
@@ -10,12 +10,12 @@ import lombok.Getter;
 
 import java.util.Objects;
 
-import static com.relogiclabs.jschema.internal.message.MessageHelper.PropertyKeyMismatch;
-import static com.relogiclabs.jschema.internal.message.MessageHelper.PropertyValueMismatch;
+import static com.relogiclabs.jschema.internal.message.MessageHelper.PropertyKeyMismatched;
+import static com.relogiclabs.jschema.internal.message.MessageHelper.PropertyValueMismatched;
 import static com.relogiclabs.jschema.internal.util.CollectionHelper.asList;
 import static com.relogiclabs.jschema.internal.util.StringHelper.quote;
-import static com.relogiclabs.jschema.message.ErrorCode.PROP01;
-import static com.relogiclabs.jschema.message.ErrorCode.PROP02;
+import static com.relogiclabs.jschema.message.ErrorCode.PROPMS01;
+import static com.relogiclabs.jschema.message.ErrorCode.PROPMS02;
 import static java.util.Objects.requireNonNull;
 
 @Getter
@@ -51,14 +51,14 @@ public final class JProperty extends JBranch implements Keyable<String> {
     public boolean match(JNode node) {
         var other = castType(node, JProperty.class);
         if(other == null) return false;
-        if(!key.equals(other.key)) return fail(new JsonSchemaException(
-                new ErrorDetail(PROP01, PropertyKeyMismatch),
-                ExpectedHelper.asValueMismatch(this),
-                ActualHelper.asValueMismatch(other)));
-        if(!value.match(other.value)) return fail(new JsonSchemaException(
-                new ErrorDetail(PROP02, PropertyValueMismatch),
-                ExpectedHelper.asValueMismatch(this),
-                ActualHelper.asValueMismatch(other)));
+        if(!key.equals(other.key)) return fail(new ValueValidationException(
+            new ErrorDetail(PROPMS01, PropertyKeyMismatched),
+            ExpectedHelper.asValueMismatched(this),
+            ActualHelper.asValueMismatched(other)));
+        if(!value.match(other.value)) return fail(new ValueValidationException(
+            new ErrorDetail(PROPMS02, PropertyValueMismatched),
+            ExpectedHelper.asValueMismatched(this),
+            ActualHelper.asValueMismatched(other)));
         return true;
     }
 

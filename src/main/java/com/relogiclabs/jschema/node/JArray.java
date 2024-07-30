@@ -1,8 +1,8 @@
 package com.relogiclabs.jschema.node;
 
-import com.relogiclabs.jschema.exception.JsonSchemaException;
 import com.relogiclabs.jschema.exception.MisplacedOptionalException;
 import com.relogiclabs.jschema.exception.UpdateNotSupportedException;
+import com.relogiclabs.jschema.exception.ValueValidationException;
 import com.relogiclabs.jschema.internal.builder.JArrayBuilder;
 import com.relogiclabs.jschema.internal.message.ActualHelper;
 import com.relogiclabs.jschema.internal.message.ExpectedHelper;
@@ -18,9 +18,9 @@ import java.util.List;
 
 import static com.relogiclabs.jschema.internal.message.MessageHelper.ArrayElementNotFound;
 import static com.relogiclabs.jschema.internal.util.StringHelper.joinWith;
-import static com.relogiclabs.jschema.message.ErrorCode.ARRY01;
-import static com.relogiclabs.jschema.message.ErrorCode.ARRY02;
-import static com.relogiclabs.jschema.message.ErrorCode.AUPD01;
+import static com.relogiclabs.jschema.message.ErrorCode.ARRELM01;
+import static com.relogiclabs.jschema.message.ErrorCode.ARROPT01;
+import static com.relogiclabs.jschema.message.ErrorCode.ROARRY01;
 import static com.relogiclabs.jschema.message.MessageFormatter.formatForSchema;
 import static java.util.Objects.requireNonNull;
 
@@ -52,14 +52,14 @@ public final class JArray extends JComposite implements EArray, Iterable<JNode> 
         for(var i = 0; i < elements.size(); i++) {
             var optional = isOptional(elements.get(i));
             if((restOptional |= optional) != optional)
-                return fail(new MisplacedOptionalException(formatForSchema(ARRY02,
-                        "Mandatory array element cannot appear after optional element",
-                        elements.get(i))));
+                return fail(new MisplacedOptionalException(formatForSchema(ARROPT01,
+                    "Mandatory array element cannot appear after optional element",
+                    elements.get(i))));
             if(i >= other.elements.size() && !optional)
-                return fail(new JsonSchemaException(
-                        new ErrorDetail(ARRY01, ArrayElementNotFound),
-                        ExpectedHelper.asArrayElementNotFound(elements.get(i), i),
-                        ActualHelper.asArrayElementNotFound(other, i)));
+                return fail(new ValueValidationException(
+                    new ErrorDetail(ARRELM01, ArrayElementNotFound),
+                    ExpectedHelper.asArrayElementNotFound(elements.get(i), i),
+                    ActualHelper.asArrayElementNotFound(other)));
             if(i >= other.elements.size()) continue;
             result &= elements.get(i).match(other.elements.get(i));
         }
@@ -79,7 +79,7 @@ public final class JArray extends JComposite implements EArray, Iterable<JNode> 
 
     @Override
     public void set(int index, EValue value) {
-        throw new UpdateNotSupportedException(AUPD01, "Readonly array cannot be updated");
+        throw new UpdateNotSupportedException(ROARRY01, "Readonly array cannot be updated");
     }
 
     @Override

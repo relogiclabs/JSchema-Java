@@ -1,6 +1,7 @@
 package com.relogiclabs.jschema.node;
 
-import com.relogiclabs.jschema.exception.JsonSchemaException;
+import com.relogiclabs.jschema.exception.DataTypeValidationException;
+import com.relogiclabs.jschema.exception.ValidationException;
 import com.relogiclabs.jschema.internal.builder.JValidatorBuilder;
 import com.relogiclabs.jschema.internal.message.ActualHelper;
 import com.relogiclabs.jschema.internal.message.ExpectedHelper;
@@ -13,16 +14,16 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
-import static com.relogiclabs.jschema.internal.message.MessageHelper.DataTypeMismatch;
+import static com.relogiclabs.jschema.internal.message.MessageHelper.DataTypeMismatched;
 import static com.relogiclabs.jschema.internal.message.MessageHelper.InvalidNonCompositeType;
 import static com.relogiclabs.jschema.internal.message.MessageHelper.ValidationFailed;
 import static com.relogiclabs.jschema.internal.util.CollectionHelper.addToList;
 import static com.relogiclabs.jschema.internal.util.CollectionHelper.tryGetLast;
+import static com.relogiclabs.jschema.internal.util.CommonHelper.nonNullFrom;
 import static com.relogiclabs.jschema.internal.util.StreamHelper.forEachTrue;
 import static com.relogiclabs.jschema.internal.util.StringHelper.join;
-import static com.relogiclabs.jschema.message.ErrorCode.DTYP03;
-import static com.relogiclabs.jschema.message.ErrorCode.VALD01;
-import static com.relogiclabs.jschema.node.JDataType.DATA_TYPE_NAME;
+import static com.relogiclabs.jschema.message.ErrorCode.DTYCPS01;
+import static com.relogiclabs.jschema.message.ErrorCode.VALDFL01;
 import static java.util.Collections.unmodifiableCollection;
 import static lombok.AccessLevel.NONE;
 
@@ -67,18 +68,19 @@ public final class JValidator extends JBranch {
         if(other == null) return false;
         getRuntime().getReceivers().receive(receivers, node);
         if(node instanceof JNull && dataTypes.stream()
-                .anyMatch(JDataType::isMatchNull)) return true;
+            .anyMatch(JDataType::isMatchNull)) return true;
         if(value != null) rValue &= value.match(other.getNode());
-        if(!rValue) return fail(new JsonSchemaException(
-                new ErrorDetail(VALD01, ValidationFailed),
-                ExpectedHelper.asGeneralValueMismatch(value),
-                ActualHelper.asGeneralValueMismatch(node)));
+        if(!rValue) return getRuntime().getPragmas().isEnableContextualException()
+            && fail(new ValidationException(
+                new ErrorDetail(VALDFL01, ValidationFailed),
+                ExpectedHelper.asGeneralValidationFailed(value),
+                ActualHelper.asGeneralValidationFailed(node)));
         var rDataType = matchDataType(node);
         var fDataType = rDataType && !dataTypes.isEmpty();
-        boolean rFunction = forEachTrue(functions.stream()
-                .filter(f -> f.isApplicable(node) || !fDataType)
-                .map(f -> f.match(node)));
-        return rValue & rDataType & rFunction;
+        var rFunction = forEachTrue(functions.stream()
+            .filter(f -> f.isApplicable(node) || !fDataType)
+            .map(f -> f.match(node)));
+        return rValue && rDataType && rFunction;
     }
 
     private boolean matchDataType(JNode node) {
@@ -98,25 +100,26 @@ public final class JValidator extends JBranch {
         return list;
     }
 
-    private static JsonSchemaException mergeException(Exception ex1, Exception ex2) {
-        if(!(ex1 instanceof JsonSchemaException e1)) return null;
-        if(!(ex2 instanceof JsonSchemaException e2)) return null;
+    private static DataTypeValidationException mergeException(Exception ex1, Exception ex2) {
+        if(!(ex1 instanceof DataTypeValidationException e1)) return null;
+        if(!(ex2 instanceof DataTypeValidationException e2)) return null;
         if(!e1.getCode().equals(e2.getCode())) return null;
-        var a1 = e1.getAttribute(DATA_TYPE_NAME);
-        var a2 = e2.getAttribute(DATA_TYPE_NAME);
-        if(a1 == null || a2 == null) return null;
-        var cause = ex1.getCause() != null ? ex1.getCause() : ex1;
-        cause.addSuppressed(ex2);
-        var result = new JsonSchemaException(new ErrorDetail(e1.getCode(), DataTypeMismatch),
+        var t1 = e1.getTypeBaseName();
+        var t2 = e2.getTypeBaseName();
+        if(t1 == null || t2 == null) return null;
+        var cause = nonNullFrom(e1.getCause(), e1);
+        cause.addSuppressed(e2);
+        var result = new DataTypeValidationException(
+            new ErrorDetail(e1.getCode(), DataTypeMismatched),
             mergeExpected(e1, e2), e2.getActual(), cause);
-        result.setAttribute(DATA_TYPE_NAME, a1 + a2);
+        result.setTypeBaseName(t1 + t2);
         return result;
     }
 
-    private static ExpectedDetail mergeExpected(JsonSchemaException ex1,
-                                                JsonSchemaException ex2) {
-        var typeName2 = ex2.getAttribute(DATA_TYPE_NAME);
-        var expected1 = ex1.getExpected();
+    private static ExpectedDetail mergeExpected(DataTypeValidationException e1,
+                                                DataTypeValidationException e2) {
+        var typeName2 = e2.getTypeBaseName();
+        var expected1 = e1.getExpected();
         return new ExpectedDetail(expected1.getContext(),
             expected1.getMessage() + " or " + typeName2);
     }
@@ -129,13 +132,13 @@ public final class JValidator extends JBranch {
                 && (d.isApplicable(node) || !result1)).toList();
         if(list2.isEmpty()) return result1 || list1.isEmpty();
         if(!(node instanceof JComposite composite))
-            return fail(new JsonSchemaException(
-                    new ErrorDetail(DTYP03, InvalidNonCompositeType),
-                    ExpectedHelper.asInvalidNonCompositeType(list2.get(0)),
-                    ActualHelper.asInvalidNonCompositeType(node)));
+            return fail(new DataTypeValidationException(
+                new ErrorDetail(DTYCPS01, InvalidNonCompositeType),
+                ExpectedHelper.asInvalidNonCompositeType(list2.get(0)),
+                ActualHelper.asInvalidNonCompositeType(node)));
         saveTryBuffer();
         var result2 = forEachTrue(composite.components().stream()
-                .map(n -> anyMatch(list2, n)));
+            .map(n -> anyMatch(list2, n)));
         return (result1 || list1.isEmpty()) && result2;
     }
 

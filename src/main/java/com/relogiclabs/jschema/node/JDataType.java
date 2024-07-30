@@ -1,34 +1,32 @@
 package com.relogiclabs.jschema.node;
 
-import com.relogiclabs.jschema.exception.DefinitionNotFoundException;
-import com.relogiclabs.jschema.exception.JsonSchemaException;
+import com.relogiclabs.jschema.exception.AliasNotFoundException;
+import com.relogiclabs.jschema.exception.DataTypeValidationException;
 import com.relogiclabs.jschema.internal.builder.JDataTypeBuilder;
 import com.relogiclabs.jschema.internal.message.ActualHelper;
 import com.relogiclabs.jschema.internal.message.ExpectedHelper;
+import com.relogiclabs.jschema.internal.util.MatchResult;
 import com.relogiclabs.jschema.message.ErrorDetail;
-import com.relogiclabs.jschema.util.Reference;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
 import static com.relogiclabs.jschema.internal.message.MessageHelper.DataTypeArgumentFailed;
-import static com.relogiclabs.jschema.internal.message.MessageHelper.DataTypeMismatch;
+import static com.relogiclabs.jschema.internal.message.MessageHelper.DataTypeMismatched;
 import static com.relogiclabs.jschema.internal.util.CollectionHelper.asList;
-import static com.relogiclabs.jschema.message.ErrorCode.DEFI03;
-import static com.relogiclabs.jschema.message.ErrorCode.DEFI04;
-import static com.relogiclabs.jschema.message.ErrorCode.DTYP04;
-import static com.relogiclabs.jschema.message.ErrorCode.DTYP05;
-import static com.relogiclabs.jschema.message.ErrorCode.DTYP06;
-import static com.relogiclabs.jschema.message.ErrorCode.DTYP07;
+import static com.relogiclabs.jschema.message.ErrorCode.ALSDEF02;
+import static com.relogiclabs.jschema.message.ErrorCode.ALSDEF03;
+import static com.relogiclabs.jschema.message.ErrorCode.DTYARG01;
+import static com.relogiclabs.jschema.message.ErrorCode.DTYARG02;
+import static com.relogiclabs.jschema.message.ErrorCode.DTYPMS01;
+import static com.relogiclabs.jschema.message.ErrorCode.DTYPMS02;
 import static com.relogiclabs.jschema.message.MessageFormatter.formatForSchema;
 import static java.util.Objects.requireNonNull;
-import static org.apache.commons.lang3.StringUtils.isEmpty;
 import static org.apache.commons.lang3.StringUtils.uncapitalize;
 
 @Getter
 @EqualsAndHashCode
 public final class JDataType extends JBranch implements NestedMode {
     static final String NESTED_MARKER = "*";
-    static final String DATA_TYPE_NAME = "DATA_TYPE_NAME";
     private final JsonType jsonType;
     private final JAlias alias;
     private final boolean nested;
@@ -47,30 +45,30 @@ public final class JDataType extends JBranch implements NestedMode {
 
     @Override
     public boolean match(JNode node) {
-        Reference<String> error = new Reference<>();
-        if(!jsonType.match(node, error)) return failTypeWith(new JsonSchemaException(
-            new ErrorDetail(nested ? DTYP06 : DTYP04,
-                formatMessage(DataTypeMismatch, error.getValue())),
-            ExpectedHelper.asDataTypeMismatch(this),
-            ActualHelper.asDataTypeMismatch(node)));
+        var result = jsonType.match(node);
+        if(!result.isSuccess()) return failOnType(new DataTypeValidationException(
+            new ErrorDetail(nested ? DTYPMS02 : DTYPMS01, formatMessage(result)),
+            ExpectedHelper.asDataTypeMismatched(this, result),
+            ActualHelper.asDataTypeMismatched(node)));
         if(alias == null) return true;
         var validator = getRuntime().getDefinitions().get(alias);
-        if(validator == null) return fail(new DefinitionNotFoundException(formatForSchema(
-            nested ? DEFI04 : DEFI03, "No definition found for '" + alias + "'", this)));
-        if(!validator.match(node)) return fail(new JsonSchemaException(
-            new ErrorDetail(nested ? DTYP07 : DTYP05, DataTypeArgumentFailed),
+        if(validator == null) return fail(new AliasNotFoundException(formatForSchema(
+            nested ? ALSDEF03 : ALSDEF02, "No definition found for '" + alias + "'", this)));
+        if(!validator.match(node)) return fail(new DataTypeValidationException(
+            new ErrorDetail(nested ? DTYARG02 : DTYARG01, DataTypeArgumentFailed),
             ExpectedHelper.asDataTypeArgumentFailed(this),
             ActualHelper.asDataTypeArgumentFailed(node)));
         return true;
     }
 
-    private boolean failTypeWith(JsonSchemaException exception) {
-        exception.setAttribute(DATA_TYPE_NAME, toString(true));
+    private boolean failOnType(DataTypeValidationException exception) {
+        exception.setTypeBaseName(toString(true));
         return fail(exception);
     }
 
-    private static String formatMessage(String main, String optional) {
-        return isEmpty(optional) ? main : main + " (" + uncapitalize(optional) + ")";
+    private static String formatMessage(MatchResult result) {
+        if(result.getNote() == null) return DataTypeMismatched;
+        return DataTypeMismatched + " (" + uncapitalize(result.getNote()) + ")";
     }
 
     boolean isApplicable(JNode node) {
