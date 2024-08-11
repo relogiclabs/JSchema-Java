@@ -1,7 +1,6 @@
 package com.relogiclabs.jschema.internal.function;
 
 import com.relogiclabs.jschema.exception.ClassInstantiationException;
-import com.relogiclabs.jschema.exception.CommonException;
 import com.relogiclabs.jschema.exception.InvalidFunctionException;
 import com.relogiclabs.jschema.function.FunctionProvider;
 import com.relogiclabs.jschema.function.FutureFunction;
@@ -13,12 +12,12 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 
 import static com.relogiclabs.jschema.internal.tree.NativeFunction.getSignature;
-import static com.relogiclabs.jschema.message.ErrorCode.FUNC01;
-import static com.relogiclabs.jschema.message.ErrorCode.FUNC02;
-import static com.relogiclabs.jschema.message.ErrorCode.INST01;
-import static com.relogiclabs.jschema.message.ErrorCode.INST02;
-import static com.relogiclabs.jschema.message.ErrorCode.INST03;
-import static com.relogiclabs.jschema.message.ErrorCode.INST04;
+import static com.relogiclabs.jschema.message.ErrorCode.FNCSIG01;
+import static com.relogiclabs.jschema.message.ErrorCode.FNCSIG02;
+import static com.relogiclabs.jschema.message.ErrorCode.INSTCR01;
+import static com.relogiclabs.jschema.message.ErrorCode.INSTCR02;
+import static com.relogiclabs.jschema.message.ErrorCode.INSTCR03;
+import static com.relogiclabs.jschema.message.ErrorCode.INSTCR04;
 import static com.relogiclabs.jschema.message.MessageFormatter.formatForSchema;
 
 public final class FunctionLoader {
@@ -50,13 +49,13 @@ public final class FunctionLoader {
             var constructor = type.getDeclaredConstructor();
             return constructor.newInstance();
         } catch (NoSuchMethodException e) {
-            throw failOnCreateInstance(INST01, e, type, context);
+            throw failOnCreateInstance(INSTCR01, e, type, context);
         } catch (InstantiationException e) {
-            throw failOnCreateInstance(INST02, e, type, context);
+            throw failOnCreateInstance(INSTCR02, e, type, context);
         } catch (InvocationTargetException e) {
-            throw failOnCreateInstance(INST03, e, type, context);
+            throw failOnCreateInstance(INSTCR03, e, type, context);
         } catch (IllegalAccessException e) {
-            throw failOnCreateInstance(INST04, e, type, context);
+            throw failOnCreateInstance(INSTCR04, e, type, context);
         }
     }
 
@@ -67,19 +66,19 @@ public final class FunctionLoader {
         return false;
     }
 
-    private static CommonException failOnCreateInstance(String code, Exception ex,
+    private static RuntimeException failOnCreateInstance(String code, Exception ex,
                 Class<?> type, Context context) {
         return new ClassInstantiationException(formatForSchema(code,
-            "Fail to create instance of " + type.getName(), context), ex);
+            "Fail to create an instance of class " + type.getName(), context), ex);
     }
 
     private static InvalidFunctionException failOnReturnType(Method method, Context context) {
-        return new InvalidFunctionException(formatForSchema(FUNC01,
+        return new InvalidFunctionException(formatForSchema(FNCSIG01,
             "Function [" + getSignature(method) + "] requires valid return type", context));
     }
 
     private static InvalidFunctionException failOnTargetParameter(Method method, Context context) {
-        return new InvalidFunctionException(formatForSchema(FUNC02,
+        return new InvalidFunctionException(formatForSchema(FNCSIG02,
             "Function [" + getSignature(method) + "] requires valid target parameter", context));
     }
 }

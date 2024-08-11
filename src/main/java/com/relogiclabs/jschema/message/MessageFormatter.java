@@ -2,10 +2,10 @@ package com.relogiclabs.jschema.message;
 
 import com.relogiclabs.jschema.node.JNode;
 import com.relogiclabs.jschema.tree.Context;
-import com.relogiclabs.jschema.tree.Location;
 import lombok.Getter;
 import org.antlr.v4.runtime.Token;
 
+import static com.relogiclabs.jschema.message.ContextDetail.getLocation;
 import static org.apache.commons.lang3.StringUtils.capitalize;
 
 @Getter
@@ -17,6 +17,7 @@ public abstract class MessageFormatter {
     private static final String JSON_BASIC_FORMAT = "Json Input [%s]: %s";
     private static final String SCHEMA_DETAIL_FORMAT = "Schema (Line: %s) [%s]: %s";
     private static final String JSON_DETAIL_FORMAT = "Json (Line: %s) [%s]: %s";
+    private static final String BOTH_DETAIL_FORMAT = "Schema (Line: %s) Json (Line: %s) [%s]: %s";
 
     public static final MessageFormatter SCHEMA_VALIDATION = new ValidationFormatter(
             "Schema (Line: %s) Json (Line: %s) [%s]: %s.",
@@ -52,10 +53,10 @@ public abstract class MessageFormatter {
 
         @Override
         public String format(ErrorDetail error, ExpectedDetail expected, ActualDetail actual) {
-            return  getSummary().formatted(expected.getLocation(), actual.getLocation(),
-                            error.getCode(), error.getMessage()) +
-                    getExpected().formatted(capitalize(expected.getMessage())) +
-                    getActual().formatted(actual.getMessage());
+            return getSummary().formatted(expected.getLocation(), actual.getLocation(),
+                error.getCode(), error.getMessage())
+                + getExpected().formatted(capitalize(expected.getMessage()))
+                + getActual().formatted(actual.getMessage());
         }
     }
 
@@ -66,58 +67,52 @@ public abstract class MessageFormatter {
 
         @Override
         public String format(ErrorDetail error, ExpectedDetail expected, ActualDetail actual) {
-            return  getSummary().formatted(error.getCode(), error.getMessage()) +
-                    getExpected().formatted(expected.getLocation(), expected.getMessage()) +
-                    getActual().formatted(actual.getLocation(), actual.getMessage());
+            return getSummary().formatted(error.getCode(), error.getMessage())
+                + getExpected().formatted(expected.getLocation(), expected.getMessage())
+                + getActual().formatted(actual.getLocation(), actual.getMessage());
         }
     }
 
     public static ErrorDetail formatForSchema(String code, String message, JNode node) {
-        return formatForSchema(code, message, node != null? node.getContext().getLocation() : null);
+        return formatForSchema(code, message, node != null? node.getContext().getToken() : null);
     }
 
     public static ErrorDetail formatForSchema(String code, String message, Context context) {
-        return formatForSchema(code, message, context != null? context.getLocation() : null);
-    }
-
-    public static ErrorDetail formatForSchema(String code, String message, Location location) {
-        return location == null
-                ? createError(code, SCHEMA_BASIC_FORMAT, message)
-                : createError(code, SCHEMA_DETAIL_FORMAT, message, location);
+        return formatForSchema(code, message, context != null? context.getToken() : null);
     }
 
     public static ErrorDetail formatForSchema(String code, String message, Token token) {
         return token == null
-                ? createError(code, SCHEMA_BASIC_FORMAT, message)
-                : createError(code, SCHEMA_DETAIL_FORMAT, message, token);
+            ? createError(code, SCHEMA_BASIC_FORMAT, message)
+            : createError(code, SCHEMA_DETAIL_FORMAT, message, token);
     }
 
     public static ErrorDetail formatForJson(String code, String message, JNode node) {
-        return formatForJson(code, message, node != null? node.getContext().getLocation() : null);
+        return formatForJson(code, message, node != null? node.getContext().getToken() : null);
     }
 
     public static ErrorDetail formatForJson(String code, String message, Context context) {
-        return formatForJson(code, message, context != null? context.getLocation() : null);
+        return formatForJson(code, message, context != null? context.getToken() : null);
     }
 
-    public static ErrorDetail formatForJson(String code, String message, Location location) {
-        return location == null
-                ? createError(code, JSON_BASIC_FORMAT, message)
-                : createError(code, JSON_DETAIL_FORMAT, message, location);
+    public static ErrorDetail formatForJson(String code, String message, Token token) {
+        return token == null
+            ? createError(code, JSON_BASIC_FORMAT, message)
+            : createError(code, JSON_DETAIL_FORMAT, message, token);
+    }
+
+    public static ErrorDetail formatForBoth(String code, String message, JNode schemaNode,
+                JNode jsonNode) {
+        return new ErrorDetail(code, BOTH_DETAIL_FORMAT.formatted(
+            getLocation(schemaNode.getContext().getToken()),
+            getLocation(jsonNode.getContext().getToken()), code, message));
     }
 
     private static ErrorDetail createError(String code, String format, String message) {
         return new ErrorDetail(code, format.formatted(code, message));
     }
 
-    private static ErrorDetail createError(String code, String format, String message,
-                                            Location location) {
-        return new ErrorDetail(code, format.formatted(location, code, message));
-    }
-
-    private static ErrorDetail createError(String code, String format, String message,
-                                            Token token) {
-        return new ErrorDetail(code, format.formatted(token.getLine() + ":"
-                + token.getCharPositionInLine(), code, message));
+    private static ErrorDetail createError(String code, String format, String message, Token token) {
+        return new ErrorDetail(code, format.formatted(getLocation(token), code, message));
     }
 }

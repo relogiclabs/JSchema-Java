@@ -233,7 +233,7 @@ public final class SchemaTreeVisitor extends SchemaParserBaseVisitor<JNode> {
         return new JDataTypeBuilder()
             .relations(relations)
             .context(new Context(ctx, runtime))
-            .jsonType(JsonType.from(ctx.S_DATATYPE()))
+            .jsonType(JsonType.from(ctx.S_DATATYPE().getSymbol()))
             .alias((JAlias) visit(ctx.aliasNode()))
             .nested(ctx.S_STAR() != null)
             .build();

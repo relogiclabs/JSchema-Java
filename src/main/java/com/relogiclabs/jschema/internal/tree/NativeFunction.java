@@ -1,6 +1,6 @@
 package com.relogiclabs.jschema.internal.tree;
 
-import com.relogiclabs.jschema.exception.InvalidFunctionException;
+import com.relogiclabs.jschema.exception.InvalidReturnTypeException;
 import com.relogiclabs.jschema.exception.TargetInvocationException;
 import com.relogiclabs.jschema.function.FunctionProvider;
 import com.relogiclabs.jschema.node.JFunction;
@@ -18,9 +18,9 @@ import java.util.List;
 import static com.relogiclabs.jschema.internal.util.CollectionHelper.subList;
 import static com.relogiclabs.jschema.internal.util.CommonHelper.getDerived;
 import static com.relogiclabs.jschema.internal.util.CommonHelper.nonNullFrom;
-import static com.relogiclabs.jschema.message.ErrorCode.FUNC07;
-import static com.relogiclabs.jschema.message.ErrorCode.FUNC08;
-import static com.relogiclabs.jschema.message.ErrorCode.FUNC09;
+import static com.relogiclabs.jschema.message.ErrorCode.FNCNVK01;
+import static com.relogiclabs.jschema.message.ErrorCode.FNCNVK02;
+import static com.relogiclabs.jschema.message.ErrorCode.FNCNVK03;
 import static java.util.stream.Collectors.joining;
 
 @Getter
@@ -69,14 +69,14 @@ public final class NativeFunction implements EFunction {
             instance.setRuntime(caller.getRuntime());
             instance.setCaller(caller);
             var result = method.invoke(instance, arguments);
-            if(result == null) throw new InvalidFunctionException(FUNC07,
+            if(result == null) throw new InvalidReturnTypeException(FNCNVK01,
                 "Function " + method.getName() + " must not return null");
             return result;
         } catch (InvocationTargetException e) {
-            throw new TargetInvocationException(FUNC08,
+            throw new TargetInvocationException(FNCNVK02,
                 "Target invocation exception occurred", nonNullFrom(e.getCause(), e));
         } catch (IllegalAccessException e) {
-            throw new TargetInvocationException(FUNC09, "Illegal access exception occurred", e);
+            throw new TargetInvocationException(FNCNVK03, "Illegal access exception occurred", e);
         }
     }
 

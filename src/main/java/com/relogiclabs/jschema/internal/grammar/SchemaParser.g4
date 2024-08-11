@@ -208,7 +208,7 @@ expression
             | G_DIV_ASSIGN | G_MOD_ASSIGN ) expression                          # AssignmentAugExpression
     | G_TARGET                                                                  # TargetExpression
     | G_CALLER                                                                  # CallerExpression
-    | G_IDENTIFIER                                                              # IdentifierExpression
+    | G_IDENTIFIER                                                              # VariableExpression
     | literal                                                                   # LiteralExpression
     | G_LPAREN expression G_RPAREN                                              # ParenthesizedExpression
     | G_TRYOF G_LPAREN expression G_RPAREN                                      # TryofExpression

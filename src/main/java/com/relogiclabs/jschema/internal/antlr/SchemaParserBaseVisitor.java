@@ -458,14 +458,14 @@ public class SchemaParserBaseVisitor<T> extends AbstractParseTreeVisitor<T> impl
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitThrowExpression(SchemaParser.ThrowExpressionContext ctx) { return visitChildren(ctx); }
+	@Override public T visitVariableExpression(SchemaParser.VariableExpressionContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitIdentifierExpression(SchemaParser.IdentifierExpressionContext ctx) { return visitChildren(ctx); }
+	@Override public T visitThrowExpression(SchemaParser.ThrowExpressionContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *

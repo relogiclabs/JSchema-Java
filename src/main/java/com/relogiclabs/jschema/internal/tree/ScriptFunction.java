@@ -1,9 +1,9 @@
 package com.relogiclabs.jschema.internal.tree;
 
-import com.relogiclabs.jschema.exception.InvalidFunctionException;
-import com.relogiclabs.jschema.exception.JsonSchemaException;
-import com.relogiclabs.jschema.exception.ScriptCommonException;
-import com.relogiclabs.jschema.exception.ScriptInitiatedException;
+import com.relogiclabs.jschema.exception.BaseRuntimeException;
+import com.relogiclabs.jschema.exception.FunctionValidationException;
+import com.relogiclabs.jschema.exception.InvalidReturnTypeException;
+import com.relogiclabs.jschema.exception.ScriptThrowInitiatedException;
 import com.relogiclabs.jschema.function.FutureFunction;
 import com.relogiclabs.jschema.internal.script.GArray;
 import com.relogiclabs.jschema.internal.script.GFunction;
@@ -20,7 +20,7 @@ import java.util.List;
 
 import static com.relogiclabs.jschema.internal.util.CollectionHelper.subList;
 import static com.relogiclabs.jschema.internal.util.StringHelper.joinWith;
-import static com.relogiclabs.jschema.message.ErrorCode.FUNC08;
+import static com.relogiclabs.jschema.message.ErrorCode.FNSRET01;
 import static com.relogiclabs.jschema.type.EValue.VOID;
 
 @Getter
@@ -64,8 +64,8 @@ public final class ScriptFunction implements EFunction {
         int i = 1;
         for(var p : parameters) scope.addVariable(p.getName(), (EValue) arguments[i++]);
         return function.isFuture()
-                ? (FutureFunction) () -> invoke(scope)
-                : invoke(scope);
+            ? (FutureFunction) () -> invoke(scope)
+            : invoke(scope);
     }
 
     private boolean invoke(ConstraintScope scope) {
@@ -73,12 +73,12 @@ public final class ScriptFunction implements EFunction {
             scope.unpackReceivers();
             var result = function.invoke(scope);
             if(result == VOID) return true;
-            if(!(result instanceof EBoolean b)) throw new InvalidFunctionException(FUNC08,
+            if(!(result instanceof EBoolean b)) throw new InvalidReturnTypeException(FNSRET01,
                 "Function '" + name + "' must return a boolean value");
             return b.getValue();
-        } catch(JsonSchemaException | ScriptInitiatedException e) {
+        } catch(FunctionValidationException | ScriptThrowInitiatedException e) {
             throw e;
-        } catch(ScriptCommonException e) {
+        } catch(BaseRuntimeException e) {
             scope.getRuntime().getExceptions().fail(e);
             return false;
         }
