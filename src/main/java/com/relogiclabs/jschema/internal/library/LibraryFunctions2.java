@@ -35,10 +35,10 @@ import static com.relogiclabs.jschema.message.ErrorCode.FAILEX01;
 import static com.relogiclabs.jschema.message.ErrorCode.FAILEX02;
 import static com.relogiclabs.jschema.message.ErrorCode.FAILEX03;
 import static com.relogiclabs.jschema.message.ErrorCode.FAILEX04;
-import static com.relogiclabs.jschema.message.ErrorCode.FAILMB01;
-import static com.relogiclabs.jschema.message.ErrorCode.FAILMB02;
-import static com.relogiclabs.jschema.message.ErrorCode.FAILMB03;
-import static com.relogiclabs.jschema.message.ErrorCode.FAILMB04;
+import static com.relogiclabs.jschema.message.ErrorCode.FAILMV01;
+import static com.relogiclabs.jschema.message.ErrorCode.FAILMV02;
+import static com.relogiclabs.jschema.message.ErrorCode.FAILMV03;
+import static com.relogiclabs.jschema.message.ErrorCode.FAILMV04;
 import static com.relogiclabs.jschema.message.MessageFormatter.formatForBoth;
 import static com.relogiclabs.jschema.type.EValue.VOID;
 
@@ -113,26 +113,26 @@ public abstract class LibraryFunctions2 extends LibraryFunctions1 {
         try {
             expectedNode = castMember(expected, Node_Id, JNode.class);
         } catch(InvalidArgumentException e) {
-            e.setContext(FAILMB01, Expected_Id);
+            e.setContext(FAILMV01, Expected_Id);
             throw e.failWithFunctionException();
         }
         try {
             expectedMessage = castMember(expected, Message_Id, EString.class).getValue();
         } catch(InvalidArgumentException e) {
-            e.setContext(FAILMB02, Expected_Id);
+            e.setContext(FAILMV02, Expected_Id);
             throw e.failWithFunctionException();
         }
 
         try {
             actualNode = castMember(actual, Node_Id, JNode.class);
         } catch(InvalidArgumentException e) {
-            e.setContext(FAILMB03, Actual_Id);
+            e.setContext(FAILMV03, Actual_Id);
             throw e.failWithFunctionException();
         }
         try {
             actualMessage = castMember(actual, Message_Id, EString.class).getValue();
         } catch(InvalidArgumentException e) {
-            e.setContext(FAILMB04, Actual_Id);
+            e.setContext(FAILMV04, Actual_Id);
             throw e.failWithFunctionException();
         }
         fail(scope, new FunctionValidationException(

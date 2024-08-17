@@ -2,21 +2,22 @@ package com.relogiclabs.jschema.test.negative;
 
 import com.relogiclabs.jschema.JsonAssert;
 import com.relogiclabs.jschema.JsonSchema;
-import com.relogiclabs.jschema.exception.DefinitionNotFoundException;
-import com.relogiclabs.jschema.exception.JsonSchemaException;
+import com.relogiclabs.jschema.exception.AliasNotFoundException;
+import com.relogiclabs.jschema.exception.DataTypeValidationException;
 import org.junit.jupiter.api.Test;
 
-import static com.relogiclabs.jschema.message.ErrorCode.DEFI03;
-import static com.relogiclabs.jschema.message.ErrorCode.DEFI04;
-import static com.relogiclabs.jschema.message.ErrorCode.DTYP03;
-import static com.relogiclabs.jschema.message.ErrorCode.DTYP04;
-import static com.relogiclabs.jschema.message.ErrorCode.DTYP06;
+import static com.relogiclabs.jschema.message.ErrorCode.ALSDEF02;
+import static com.relogiclabs.jschema.message.ErrorCode.ALSDEF03;
+import static com.relogiclabs.jschema.message.ErrorCode.DTYCPS01;
+import static com.relogiclabs.jschema.message.ErrorCode.DTYPMS01;
+import static com.relogiclabs.jschema.message.ErrorCode.DTYPMS02;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.fail;
 
 public class DataTypeTests {
     @Test
-    public void When_WrongJsonWithDirectDataType_ExceptionThrown() {
+    public void When_DirectDataTypeWithWrongJson_ExceptionThrown() {
         var schema =
             """
             #string* #array
@@ -26,14 +27,14 @@ public class DataTypeTests {
             10
             """;
         JsonSchema.isValid(schema, json);
-        var exception = assertThrows(JsonSchemaException.class,
+        var exception = assertThrows(DataTypeValidationException.class,
             () -> JsonAssert.isValid(schema, json));
-        assertEquals(DTYP04, exception.getCode());
+        assertEquals(DTYPMS01, exception.getCode());
         exception.printStackTrace();
     }
 
     @Test
-    public void When_WrongJsonWithNestedDataType_ExceptionThrown() {
+    public void When_NestedDataTypeWithWrongJson_ExceptionThrown() {
         var schema =
             """
             #string* #array
@@ -43,9 +44,9 @@ public class DataTypeTests {
             [10, 20]
             """;
         JsonSchema.isValid(schema, json);
-        var exception = assertThrows(JsonSchemaException.class,
+        var exception = assertThrows(DataTypeValidationException.class,
             () -> JsonAssert.isValid(schema, json));
-        assertEquals(DTYP06, exception.getCode());
+        assertEquals(DTYPMS02, exception.getCode());
         exception.printStackTrace();
     }
 
@@ -60,14 +61,14 @@ public class DataTypeTests {
             10
             """;
         JsonSchema.isValid(schema, json);
-        var exception = assertThrows(JsonSchemaException.class,
+        var exception = assertThrows(DataTypeValidationException.class,
             () -> JsonAssert.isValid(schema, json));
-        assertEquals(DTYP03, exception.getCode());
+        assertEquals(DTYCPS01, exception.getCode());
         exception.printStackTrace();
     }
 
     @Test
-    public void When_UndefinedDataTypeArgument_ExceptionThrown() {
+    public void When_DirectDataTypeWithUndefinedAliasArgument_ExceptionThrown() {
         var schema =
             """
             #array($undefined)
@@ -77,14 +78,14 @@ public class DataTypeTests {
             [10, 20]
             """;
         JsonSchema.isValid(schema, json);
-        var exception = assertThrows(DefinitionNotFoundException.class,
+        var exception = assertThrows(AliasNotFoundException.class,
             () -> JsonAssert.isValid(schema, json));
-        assertEquals(DEFI03, exception.getCode());
+        assertEquals(ALSDEF02, exception.getCode());
         exception.printStackTrace();
     }
 
     @Test
-    public void When_UndefinedNestedDataTypeArgument_ExceptionThrown() {
+    public void When_NestedDataTypeWithUndefinedAliasArgument_ExceptionThrown() {
         var schema =
             """
             #integer*($undefined) #array
@@ -94,9 +95,9 @@ public class DataTypeTests {
             [10, 20]
             """;
         JsonSchema.isValid(schema, json);
-        var exception = assertThrows(DefinitionNotFoundException.class,
+        var exception = assertThrows(AliasNotFoundException.class,
             () -> JsonAssert.isValid(schema, json));
-        assertEquals(DEFI04, exception.getCode());
+        assertEquals(ALSDEF03, exception.getCode());
         exception.printStackTrace();
     }
 
@@ -112,9 +113,9 @@ public class DataTypeTests {
             {"k1": 10}
             """;
         JsonSchema.isValid(schema, json);
-        var exception = assertThrows(JsonSchemaException.class,
+        var exception = assertThrows(DataTypeValidationException.class,
             () -> JsonAssert.isValid(schema, json));
-        assertEquals(DTYP04, exception.getCode());
+        assertEquals(DTYPMS01, exception.getCode());
         exception.printStackTrace();
     }
 
@@ -130,9 +131,9 @@ public class DataTypeTests {
             [{"k1": 10}]
             """;
         JsonSchema.isValid(schema, json);
-        var exception = assertThrows(JsonSchemaException.class,
+        var exception = assertThrows(DataTypeValidationException.class,
             () -> JsonAssert.isValid(schema, json));
-        assertEquals(DTYP04, exception.getCode());
+        assertEquals(DTYPMS01, exception.getCode());
         exception.printStackTrace();
     }
 
@@ -155,9 +156,9 @@ public class DataTypeTests {
             }
             """;
         JsonSchema.isValid(schema, json);
-        var exception = assertThrows(JsonSchemaException.class,
+        var exception = assertThrows(DataTypeValidationException.class,
             () -> JsonAssert.isValid(schema, json));
-        assertEquals(DTYP06, exception.getCode());
+        assertEquals(DTYPMS02, exception.getCode());
         exception.printStackTrace();
     }
 
@@ -180,11 +181,11 @@ public class DataTypeTests {
             }
             """;
         var jsonSchema = new JsonSchema(schema);
-        if(!jsonSchema.isValid(json)) jsonSchema.writeError();
-        assertEquals(8, jsonSchema.getExceptions().getCount());
-        var exception = assertThrows(JsonSchemaException.class,
+        if(jsonSchema.isValid(json)) fail("Test failed");
+        assertEquals(7, jsonSchema.writeError());
+        var exception = assertThrows(DataTypeValidationException.class,
             () -> JsonAssert.isValid(schema, json));
-        assertEquals(DTYP06, exception.getCode());
+        assertEquals(DTYPMS02, exception.getCode());
         exception.printStackTrace();
     }
 
@@ -211,9 +212,9 @@ public class DataTypeTests {
             }
             """;
         JsonSchema.isValid(schema, json);
-        var exception = assertThrows(JsonSchemaException.class,
+        var exception = assertThrows(DataTypeValidationException.class,
             () -> JsonAssert.isValid(schema, json));
-        assertEquals(DTYP04, exception.getCode());
+        assertEquals(DTYPMS01, exception.getCode());
         exception.printStackTrace();
     }
 }

@@ -16,11 +16,11 @@ public class ScriptGeneralTests {
             %script: {
                 future constraint checkAccess(role) {
                     if(role == "user" && target > 5) return fail(
-                        "ERRACCESS01", "Data access incompatible with 'user' role",
+                        "EX_ERRACCESS01", "Data access incompatible with 'user' role",
                         // 'caller' is the default node added automatically
                         expected("an access at most 5 for 'user' role"),
                         // 'target' is the default node added automatically
-                        actual("found access " + target + " which is greater than 5"));
+                        actual("found access " + target + " that is greater than 5"));
                 }
             }
             """;
@@ -46,11 +46,11 @@ public class ScriptGeneralTests {
             %script: {
                 future checkAccess(role) {
                     if(role == "user" && target > 5) return fail(
-                        "ERRACCESS01", "Data access incompatible with 'user' role",
+                        "EX_ERRACCESS01", "Data access incompatible with 'user' role",
                         // Pass any node explicitly to the expected function
                         expected(caller, "an access at most 5 for 'user' role"),
                         // Pass any node explicitly to the actual function
-                        actual(target, "found access " + target + " which is greater than 5"));
+                        actual(target, "found access " + target + " that is greater than 5"));
                 }
             }
             """;
@@ -76,12 +76,12 @@ public class ScriptGeneralTests {
             %script: {
                 constraint checkAccess(role) {
                     if(role == "user" && target > 5) return fail(
-                        "ERRACCESS01", "Data access incompatible with 'user' role",
+                        "EX_ERRACCESS01", "Data access incompatible with 'user' role",
                         // Create an expected object explicitly without any function
                         { node: caller, message: "an access at most 5 for 'user' role" },
                         // Create an actual object explicitly without any function
                         { node: target, message: "found access " + target
-                                + " which is greater than 5" });
+                                + " that is greater than 5" });
                 }
             }
             """;
@@ -198,9 +198,9 @@ public class ScriptGeneralTests {
             %script: {
                 future constraint checkRange(min, max) {
                     if(target < min || target > max) return fail(
-                        "RANGEERR01", "The target value is out of range",
-                        expected("a value in range " + [min, max]),
-                        actual("found " + target + " which is out of range"));
+                        "EX_RANGEERR01", "Target number is out of range",
+                        expected("a number in range " + [min, max]),
+                        actual("found " + target + " that is out of range"));
                 }
             }
             """;

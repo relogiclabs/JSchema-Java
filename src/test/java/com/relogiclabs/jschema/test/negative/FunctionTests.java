@@ -5,26 +5,26 @@ import com.relogiclabs.jschema.JsonSchema;
 import com.relogiclabs.jschema.exception.ClassInstantiationException;
 import com.relogiclabs.jschema.exception.DuplicateImportException;
 import com.relogiclabs.jschema.exception.FunctionNotFoundException;
+import com.relogiclabs.jschema.exception.FunctionValidationException;
 import com.relogiclabs.jschema.exception.InvalidFunctionException;
 import com.relogiclabs.jschema.exception.InvalidImportException;
-import com.relogiclabs.jschema.exception.JsonSchemaException;
 import com.relogiclabs.jschema.exception.NoClassFoundException;
 import org.junit.jupiter.api.Test;
 
-import static com.relogiclabs.jschema.message.ErrorCode.CLAS01;
-import static com.relogiclabs.jschema.message.ErrorCode.CLAS02;
-import static com.relogiclabs.jschema.message.ErrorCode.CLAS03;
-import static com.relogiclabs.jschema.message.ErrorCode.FUNC01;
-import static com.relogiclabs.jschema.message.ErrorCode.FUNC02;
-import static com.relogiclabs.jschema.message.ErrorCode.FUNC03;
-import static com.relogiclabs.jschema.message.ErrorCode.FUNC05;
-import static com.relogiclabs.jschema.message.ErrorCode.INST03;
+import static com.relogiclabs.jschema.message.ErrorCode.FNCDEF01;
+import static com.relogiclabs.jschema.message.ErrorCode.FNCSIG01;
+import static com.relogiclabs.jschema.message.ErrorCode.FNCSIG02;
+import static com.relogiclabs.jschema.message.ErrorCode.FNTRGT01;
+import static com.relogiclabs.jschema.message.ErrorCode.IMPCLS01;
+import static com.relogiclabs.jschema.message.ErrorCode.IMPCLS02;
+import static com.relogiclabs.jschema.message.ErrorCode.IMPDUP01;
+import static com.relogiclabs.jschema.message.ErrorCode.INSTCR03;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class FunctionTests {
     @Test
-    public void When_FunctionAppliedOnWrongType_ExceptionThrown() {
+    public void When_FunctionAppliedOnWrongTargetType_ExceptionThrown() {
         var schema =
             """
             %schema: @range(10, 20)
@@ -35,9 +35,9 @@ public class FunctionTests {
             """;
 
         JsonSchema.isValid(schema, json);
-        var exception = assertThrows(JsonSchemaException.class,
+        var exception = assertThrows(FunctionValidationException.class,
             () -> JsonAssert.isValid(schema, json));
-        assertEquals(FUNC03, exception.getCode());
+        assertEquals(FNTRGT01, exception.getCode());
         exception.printStackTrace();
     }
 
@@ -53,7 +53,7 @@ public class FunctionTests {
         //JsonSchema.isValid(schema, json);
         var exception = assertThrows(InvalidImportException.class,
             () -> JsonAssert.isValid(schema, json));
-        assertEquals(CLAS03, exception.getCode());
+        assertEquals(IMPCLS02, exception.getCode());
         exception.printStackTrace();
     }
 
@@ -69,7 +69,7 @@ public class FunctionTests {
         //JsonSchema.isValid(schema, json);
         var exception = assertThrows(NoClassFoundException.class,
             () -> JsonAssert.isValid(schema, json));
-        assertEquals(CLAS02, exception.getCode());
+        assertEquals(IMPCLS01, exception.getCode());
         exception.printStackTrace();
     }
 
@@ -86,7 +86,7 @@ public class FunctionTests {
         //JsonSchema.isValid(schema, json);
         var exception = assertThrows(DuplicateImportException.class,
             () -> JsonAssert.isValid(schema, json));
-        assertEquals(CLAS01, exception.getCode());
+        assertEquals(IMPDUP01, exception.getCode());
         exception.printStackTrace();
     }
 
@@ -102,7 +102,7 @@ public class FunctionTests {
         //JsonSchema.isValid(schema, json);
         var exception = assertThrows(ClassInstantiationException.class,
             () -> JsonAssert.isValid(schema, json));
-        assertEquals(INST03, exception.getCode());
+        assertEquals(INSTCR03, exception.getCode());
         exception.printStackTrace();
     }
 
@@ -118,12 +118,12 @@ public class FunctionTests {
         //JsonSchema.isValid(schema, json);
         var exception = assertThrows(InvalidFunctionException.class,
             () -> JsonAssert.isValid(schema, json));
-        assertEquals(FUNC01, exception.getCode());
+        assertEquals(FNCSIG01, exception.getCode());
         exception.printStackTrace();
     }
 
     @Test
-    public void When_ExternalFunctionWrongParameterNumber_ExceptionThrown() {
+    public void When_ExternalFunctionMissingMandatoryTargetParameter_ExceptionThrown() {
         var schema =
             """
             %import: com.relogiclabs.jschema.test.external.ExternalFunctions3
@@ -134,7 +134,7 @@ public class FunctionTests {
         //JsonSchema.isValid(schema, json);
         var exception = assertThrows(InvalidFunctionException.class,
             () -> JsonAssert.isValid(schema, json));
-        assertEquals(FUNC02, exception.getCode());
+        assertEquals(FNCSIG02, exception.getCode());
         exception.printStackTrace();
     }
 
@@ -150,12 +150,12 @@ public class FunctionTests {
         //JsonSchema.isValid(schema, json);
         var exception = assertThrows(FunctionNotFoundException.class,
             () -> JsonAssert.isValid(schema, json));
-        assertEquals(FUNC05, exception.getCode());
+        assertEquals(FNCDEF01, exception.getCode());
         exception.printStackTrace();
     }
 
     @Test
-    public void When_FunctionThrowArbitraryException_ExceptionThrown() {
+    public void When_ExternalFunctionThrowArbitraryException_ExceptionThrown() {
         var schema =
             """
             %import: com.relogiclabs.jschema.test.external.ExternalFunctions4
@@ -181,9 +181,9 @@ public class FunctionTests {
             "test"
             """;
         JsonSchema.isValid(schema, json);
-        var exception = assertThrows(JsonSchemaException.class,
+        var exception = assertThrows(FunctionValidationException.class,
             () -> JsonAssert.isValid(schema, json));
-        assertEquals(FUNC03, exception.getCode());
+        assertEquals(FNTRGT01, exception.getCode());
         exception.printStackTrace();
     }
 }

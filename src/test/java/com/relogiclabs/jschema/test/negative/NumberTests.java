@@ -2,17 +2,17 @@ package com.relogiclabs.jschema.test.negative;
 
 import com.relogiclabs.jschema.JsonAssert;
 import com.relogiclabs.jschema.JsonSchema;
-import com.relogiclabs.jschema.exception.JsonSchemaException;
+import com.relogiclabs.jschema.exception.FunctionValidationException;
 import org.junit.jupiter.api.Test;
 
-import static com.relogiclabs.jschema.message.ErrorCode.MAXI01;
-import static com.relogiclabs.jschema.message.ErrorCode.MAXI03;
-import static com.relogiclabs.jschema.message.ErrorCode.MINI01;
-import static com.relogiclabs.jschema.message.ErrorCode.MINI03;
-import static com.relogiclabs.jschema.message.ErrorCode.NEGI01;
-import static com.relogiclabs.jschema.message.ErrorCode.NEGI02;
-import static com.relogiclabs.jschema.message.ErrorCode.POSI01;
-import static com.relogiclabs.jschema.message.ErrorCode.POSI02;
+import static com.relogiclabs.jschema.message.ErrorCode.MAXICF01;
+import static com.relogiclabs.jschema.message.ErrorCode.MAXICF03;
+import static com.relogiclabs.jschema.message.ErrorCode.MINICF01;
+import static com.relogiclabs.jschema.message.ErrorCode.MINICF03;
+import static com.relogiclabs.jschema.message.ErrorCode.NEGICF01;
+import static com.relogiclabs.jschema.message.ErrorCode.NEGICF02;
+import static com.relogiclabs.jschema.message.ErrorCode.POSICF01;
+import static com.relogiclabs.jschema.message.ErrorCode.POSICF02;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -28,9 +28,9 @@ public class NumberTests {
             9.999999
             """;
         JsonSchema.isValid(schema, json);
-        var exception = assertThrows(JsonSchemaException.class,
+        var exception = assertThrows(FunctionValidationException.class,
             () -> JsonAssert.isValid(schema, json));
-        assertEquals(MINI01, exception.getCode());
+        assertEquals(MINICF01, exception.getCode());
         exception.printStackTrace();
     }
 
@@ -45,14 +45,14 @@ public class NumberTests {
             1000
             """;
         JsonSchema.isValid(schema, json);
-        var exception = assertThrows(JsonSchemaException.class,
+        var exception = assertThrows(FunctionValidationException.class,
             () -> JsonAssert.isValid(schema, json));
-        assertEquals(MAXI01, exception.getCode());
+        assertEquals(MAXICF01, exception.getCode());
         exception.printStackTrace();
     }
 
     @Test
-    public void When_WrongJsonWithNestedMinimumIntegerInArray_ExceptionThrown() {
+    public void When_NestedMinimumWithWrongIntegerInArray_ExceptionThrown() {
         var schema =
             """
             @minimum*(10.5) #integer*
@@ -66,14 +66,14 @@ public class NumberTests {
             ]
             """;
         JsonSchema.isValid(schema, json);
-        var exception = assertThrows(JsonSchemaException.class,
+        var exception = assertThrows(FunctionValidationException.class,
             () -> JsonAssert.isValid(schema, json));
-        assertEquals(MINI01, exception.getCode());
+        assertEquals(MINICF01, exception.getCode());
         exception.printStackTrace();
     }
 
     @Test
-    public void When_WrongJsonWithNestedMinimumFloatInObject_ExceptionThrown() {
+    public void When_NestedMinimumWithWrongFloatInObject_ExceptionThrown() {
         var schema =
             """
             @minimum*(100) #number*
@@ -87,14 +87,14 @@ public class NumberTests {
             }
             """;
         JsonSchema.isValid(schema, json);
-        var exception = assertThrows(JsonSchemaException.class,
+        var exception = assertThrows(FunctionValidationException.class,
             () -> JsonAssert.isValid(schema, json));
-        assertEquals(MINI01, exception.getCode());
+        assertEquals(MINICF01, exception.getCode());
         exception.printStackTrace();
     }
 
     @Test
-    public void When_WrongJsonWithNestedMaximumNumberInArray_ExceptionThrown() {
+    public void When_NestedMaximumWithWrongNumberInArray_ExceptionThrown() {
         var schema =
             """
             @maximum*(1000.05) #number*
@@ -108,14 +108,14 @@ public class NumberTests {
             ]
             """;
         JsonSchema.isValid(schema, json);
-        var exception = assertThrows(JsonSchemaException.class,
+        var exception = assertThrows(FunctionValidationException.class,
             () -> JsonAssert.isValid(schema, json));
-        assertEquals(MAXI01, exception.getCode());
+        assertEquals(MAXICF01, exception.getCode());
         exception.printStackTrace();
     }
 
     @Test
-    public void When_NestedMaximumWrongFloatInObject_ExceptionThrown() {
+    public void When_NestedMaximumWithWrongFloatInObject_ExceptionThrown() {
         var schema =
             """
             @maximum*(100) #float*
@@ -129,14 +129,14 @@ public class NumberTests {
             }
             """;
         JsonSchema.isValid(schema, json);
-        var exception = assertThrows(JsonSchemaException.class,
+        var exception = assertThrows(FunctionValidationException.class,
             () -> JsonAssert.isValid(schema, json));
-        assertEquals(MAXI01, exception.getCode());
+        assertEquals(MAXICF01, exception.getCode());
         exception.printStackTrace();
     }
 
     @Test
-    public void When_NestedMinimumExclusiveWrongFloatInObject_ExceptionThrown() {
+    public void When_NestedMinimumExclusiveWithWrongFloatInObject_ExceptionThrown() {
         var schema =
             """
             @minimum*(100, true) #float*
@@ -150,17 +150,17 @@ public class NumberTests {
             }
             """;
         JsonSchema.isValid(schema, json);
-        var exception = assertThrows(JsonSchemaException.class,
+        var exception = assertThrows(FunctionValidationException.class,
             () -> JsonAssert.isValid(schema, json));
-        assertEquals(MINI03, exception.getCode());
+        assertEquals(MINICF03, exception.getCode());
         exception.printStackTrace();
     }
 
     @Test
-    public void When_NestedMaximumExclusiveWrongFloatInObject_ExceptionThrown() {
+    public void When_NestedMinMaxExclusiveWithWrongFloatInObject_ExceptionThrown() {
         var schema =
             """
-            @maximum*(100, true) #float*
+            @minimum*(10, true) @maximum*(100, true) #float*
             """;
         var json =
             """
@@ -171,9 +171,9 @@ public class NumberTests {
             }
             """;
         JsonSchema.isValid(schema, json);
-        var exception = assertThrows(JsonSchemaException.class,
+        var exception = assertThrows(FunctionValidationException.class,
             () -> JsonAssert.isValid(schema, json));
-        assertEquals(MAXI03, exception.getCode());
+        assertEquals(MAXICF03, exception.getCode());
         exception.printStackTrace();
     }
 
@@ -188,9 +188,9 @@ public class NumberTests {
             [1, 100.5, -500]
             """;
         JsonSchema.isValid(schema, json);
-        var exception = assertThrows(JsonSchemaException.class,
+        var exception = assertThrows(FunctionValidationException.class,
             () -> JsonAssert.isValid(schema, json));
-        assertEquals(POSI01, exception.getCode());
+        assertEquals(POSICF01, exception.getCode());
         exception.printStackTrace();
     }
 
@@ -205,9 +205,9 @@ public class NumberTests {
             [0, 100, 0.1, -1]
             """;
         JsonSchema.isValid(schema, json);
-        var exception = assertThrows(JsonSchemaException.class,
+        var exception = assertThrows(FunctionValidationException.class,
             () -> JsonAssert.isValid(schema, json));
-        assertEquals(POSI02, exception.getCode());
+        assertEquals(POSICF02, exception.getCode());
         exception.printStackTrace();
     }
 
@@ -222,9 +222,9 @@ public class NumberTests {
             [-100, -500, -0.1, 0]
             """;
         JsonSchema.isValid(schema, json);
-        var exception = assertThrows(JsonSchemaException.class,
+        var exception = assertThrows(FunctionValidationException.class,
             () -> JsonAssert.isValid(schema, json));
-        assertEquals(NEGI01, exception.getCode());
+        assertEquals(NEGICF01, exception.getCode());
         exception.printStackTrace();
     }
 
@@ -239,9 +239,9 @@ public class NumberTests {
             [-100, -500, -0.01, 1]
             """;
         JsonSchema.isValid(schema, json);
-        var exception = assertThrows(JsonSchemaException.class,
+        var exception = assertThrows(FunctionValidationException.class,
             () -> JsonAssert.isValid(schema, json));
-        assertEquals(NEGI02, exception.getCode());
+        assertEquals(NEGICF02, exception.getCode());
         exception.printStackTrace();
     }
 }

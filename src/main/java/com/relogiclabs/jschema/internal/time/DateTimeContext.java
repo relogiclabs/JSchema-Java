@@ -11,23 +11,23 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.relogiclabs.jschema.message.ErrorCode.AMPMVD01;
+import static com.relogiclabs.jschema.message.ErrorCode.AMPMMS01;
 import static com.relogiclabs.jschema.message.ErrorCode.CNFLDT01;
-import static com.relogiclabs.jschema.message.ErrorCode.DAYVDF01;
-import static com.relogiclabs.jschema.message.ErrorCode.DAYVDF02;
-import static com.relogiclabs.jschema.message.ErrorCode.ERAVDF01;
-import static com.relogiclabs.jschema.message.ErrorCode.HURVDF01;
-import static com.relogiclabs.jschema.message.ErrorCode.HURVDF02;
-import static com.relogiclabs.jschema.message.ErrorCode.HURVDF03;
-import static com.relogiclabs.jschema.message.ErrorCode.HURVDF04;
+import static com.relogiclabs.jschema.message.ErrorCode.DAYRNG01;
+import static com.relogiclabs.jschema.message.ErrorCode.DAYRNG02;
+import static com.relogiclabs.jschema.message.ErrorCode.ERANMS01;
+import static com.relogiclabs.jschema.message.ErrorCode.HURRNG01;
+import static com.relogiclabs.jschema.message.ErrorCode.HURRNG02;
+import static com.relogiclabs.jschema.message.ErrorCode.HURRNG03;
+import static com.relogiclabs.jschema.message.ErrorCode.HURRNG04;
 import static com.relogiclabs.jschema.message.ErrorCode.INVLDT02;
-import static com.relogiclabs.jschema.message.ErrorCode.MNTVDF01;
-import static com.relogiclabs.jschema.message.ErrorCode.MONVDF01;
-import static com.relogiclabs.jschema.message.ErrorCode.SECVDF01;
-import static com.relogiclabs.jschema.message.ErrorCode.UTCVDF01;
-import static com.relogiclabs.jschema.message.ErrorCode.UTCVDF02;
-import static com.relogiclabs.jschema.message.ErrorCode.WEKVDF01;
-import static com.relogiclabs.jschema.message.ErrorCode.YARVDF01;
+import static com.relogiclabs.jschema.message.ErrorCode.MNTRNG01;
+import static com.relogiclabs.jschema.message.ErrorCode.MONRNG01;
+import static com.relogiclabs.jschema.message.ErrorCode.SECRNG01;
+import static com.relogiclabs.jschema.message.ErrorCode.UTCRNG01;
+import static com.relogiclabs.jschema.message.ErrorCode.UTCRNG02;
+import static com.relogiclabs.jschema.message.ErrorCode.WEKDMS01;
+import static com.relogiclabs.jschema.message.ErrorCode.YARRNG01;
 import static com.relogiclabs.jschema.time.JsonDateTime.UNSET;
 import static java.time.DayOfWeek.FRIDAY;
 import static java.time.DayOfWeek.MONDAY;
@@ -105,13 +105,13 @@ public class DateTimeContext {
         var eraNum = switch(era.toUpperCase()) {
             case "BC" -> 1;
             case "AD" -> 2;
-            default -> throw failOnInvalidDateTime(ERAVDF01, "era input");
+            default -> throw failOnInvalidDateTime(ERANMS01, "era input");
         };
         this.era = checkField(this.era, eraNum);
     }
 
     public void setYear(int year, int digitNum) {
-        if(year < 1 || year > 9999) throw failOnInvalidDateTime(YARVDF01, "year out of range");
+        if(year < 1 || year > 9999) throw failOnInvalidDateTime(YARRNG01, "year out of range");
         year = digitNum <= 2 ? toFourDigitYear(year) : year;
         this.year = checkField(this.year, year);
     }
@@ -122,7 +122,7 @@ public class DateTimeContext {
     }
 
     public void setMonth(int month) {
-        if(month < 1 || month > 12) throw failOnInvalidDateTime(MONVDF01, "month out of range");
+        if(month < 1 || month > 12) throw failOnInvalidDateTime(MONRNG01, "month out of range");
         this.month = checkField(this.month, month);
     }
 
@@ -132,7 +132,7 @@ public class DateTimeContext {
     }
 
     public void setDay(int day) {
-        if(day < 1 || day > 31) throw failOnInvalidDateTime(DAYVDF01, "day out of range");
+        if(day < 1 || day > 31) throw failOnInvalidDateTime(DAYRNG01, "day out of range");
         this.day = checkField(this.day, day);
     }
 
@@ -140,28 +140,28 @@ public class DateTimeContext {
         var amPmNum = switch(amPm.toLowerCase()) {
             case "am" -> 1;
             case "pm" -> 2;
-            default -> throw failOnInvalidDateTime(AMPMVD01, "hour AM/PM input");
+            default -> throw failOnInvalidDateTime(AMPMMS01, "hour AM/PM input");
         };
         if(hour != UNSET && (hour < 1 || hour > 12))
-            throw failOnInvalidDateTime(HURVDF01, "hour out of range for AM/PM");
+            throw failOnInvalidDateTime(HURRNG01, "hour out of range for AM/PM");
         this.amPm = checkField(this.amPm, amPmNum);
     }
 
     public void setHour(int hour) {
         if(amPm != UNSET && (this.hour < 1 || this.hour > 12))
-            throw failOnInvalidDateTime(HURVDF02, "hour out of range for AM/PM");
+            throw failOnInvalidDateTime(HURRNG02, "hour out of range for AM/PM");
         if(hour < 0 || hour > 23)
-            throw failOnInvalidDateTime(HURVDF03, "hour out of range");
+            throw failOnInvalidDateTime(HURRNG03, "hour out of range");
         this.hour = checkField(this.hour, hour);
     }
 
     public void setMinute(int minute) {
-        if(minute < 0 || minute > 59) throw failOnInvalidDateTime(MNTVDF01, "minute out of range");
+        if(minute < 0 || minute > 59) throw failOnInvalidDateTime(MNTRNG01, "minute out of range");
         this.minute = checkField(this.minute, minute);
     }
 
     public void setSecond(int second) {
-        if(second < 0 || second > 59) throw failOnInvalidDateTime(SECVDF01, "second out of range");
+        if(second < 0 || second > 59) throw failOnInvalidDateTime(SECRNG01, "second out of range");
         this.second = checkField(this.second, second);
     }
 
@@ -170,9 +170,9 @@ public class DateTimeContext {
     }
 
     public void setUtcOffset(int hour, int minute) {
-        if(hour < -12 || hour > 12) throw failOnInvalidDateTime(UTCVDF01,
+        if(hour < -12 || hour > 12) throw failOnInvalidDateTime(UTCRNG01,
             "UTC offset hour out of range");
-        if(minute < 0 || minute > 59) throw failOnInvalidDateTime(UTCVDF02,
+        if(minute < 0 || minute > 59) throw failOnInvalidDateTime(UTCRNG02,
             "UTC offset minute out of range");
         utcHour = checkField(utcHour, hour);
         utcMinute = checkField(utcMinute, minute);
@@ -194,14 +194,14 @@ public class DateTimeContext {
             if(isAllSet(year, month, day)) {
                 DAYS_IN_MONTH[2] = isLeapYear(year)? 29 : 28;
                 if(day < 1 || day > DAYS_IN_MONTH[month])
-                    throw failOnInvalidDateTime(DAYVDF02, "day out of range");
+                    throw failOnInvalidDateTime(DAYRNG02, "day out of range");
                 dateTime = new JsonDateTime(type, year, month, day);
                 if(weekday != UNSET && dateTime.getDayOfWeek().getValue() != weekday)
-                    throw failOnInvalidDateTime(WEKVDF01, "weekday not matched");
+                    throw failOnInvalidDateTime(WEKDMS01, "weekday not matched");
             }
             if(isAllSet(hour, amPm)) convertTo24Hour();
             if(hour != UNSET && (hour < 0 || hour > 23))
-                throw failOnInvalidDateTime(HURVDF04, "hour out of range");
+                throw failOnInvalidDateTime(HURRNG04, "hour out of range");
             return new JsonDateTime(type, year, month, day, hour, minute, second,
                 fraction, new JsonUtcOffset(utcHour, utcMinute));
         } catch(InvalidDateTimeException e) {

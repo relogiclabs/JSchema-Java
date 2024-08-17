@@ -2,96 +2,93 @@ package com.relogiclabs.jschema.test.negative;
 
 import com.relogiclabs.jschema.JsonAssert;
 import com.relogiclabs.jschema.JsonSchema;
-import com.relogiclabs.jschema.exception.JsonSchemaException;
+import com.relogiclabs.jschema.exception.DataTypeValidationException;
+import com.relogiclabs.jschema.exception.FunctionValidationException;
 import org.junit.jupiter.api.Test;
 
-import static com.relogiclabs.jschema.message.ErrorCode.AFTR01;
-import static com.relogiclabs.jschema.message.ErrorCode.BFOR01;
-import static com.relogiclabs.jschema.message.ErrorCode.DCNF01;
-import static com.relogiclabs.jschema.message.ErrorCode.DDAY03;
-import static com.relogiclabs.jschema.message.ErrorCode.DDAY04;
-import static com.relogiclabs.jschema.message.ErrorCode.DERA01;
-import static com.relogiclabs.jschema.message.ErrorCode.DFRC04;
-import static com.relogiclabs.jschema.message.ErrorCode.DHUR01;
-import static com.relogiclabs.jschema.message.ErrorCode.DHUR02;
-import static com.relogiclabs.jschema.message.ErrorCode.DHUR03;
-import static com.relogiclabs.jschema.message.ErrorCode.DHUR06;
-import static com.relogiclabs.jschema.message.ErrorCode.DINV02;
-import static com.relogiclabs.jschema.message.ErrorCode.DLEX01;
-import static com.relogiclabs.jschema.message.ErrorCode.DMIN01;
-import static com.relogiclabs.jschema.message.ErrorCode.DMIN03;
-import static com.relogiclabs.jschema.message.ErrorCode.DMON01;
-import static com.relogiclabs.jschema.message.ErrorCode.DMON02;
-import static com.relogiclabs.jschema.message.ErrorCode.DMON03;
-import static com.relogiclabs.jschema.message.ErrorCode.DMON05;
-import static com.relogiclabs.jschema.message.ErrorCode.DRNG01;
-import static com.relogiclabs.jschema.message.ErrorCode.DRNG02;
-import static com.relogiclabs.jschema.message.ErrorCode.DSEC01;
-import static com.relogiclabs.jschema.message.ErrorCode.DSEC03;
-import static com.relogiclabs.jschema.message.ErrorCode.DTAP01;
-import static com.relogiclabs.jschema.message.ErrorCode.DTXT01;
-import static com.relogiclabs.jschema.message.ErrorCode.DTYP04;
-import static com.relogiclabs.jschema.message.ErrorCode.DUTC01;
-import static com.relogiclabs.jschema.message.ErrorCode.DUTC04;
-import static com.relogiclabs.jschema.message.ErrorCode.DUTC05;
-import static com.relogiclabs.jschema.message.ErrorCode.DWKD02;
-import static com.relogiclabs.jschema.message.ErrorCode.DWKD03;
-import static com.relogiclabs.jschema.message.ErrorCode.DWTS01;
-import static com.relogiclabs.jschema.message.ErrorCode.DYAR01;
-import static com.relogiclabs.jschema.message.ErrorCode.DYAR02;
-import static com.relogiclabs.jschema.message.ErrorCode.DYAR03;
-import static com.relogiclabs.jschema.message.ErrorCode.ENDE01;
-import static com.relogiclabs.jschema.message.ErrorCode.ENDE02;
-import static com.relogiclabs.jschema.message.ErrorCode.STRT01;
+import static com.relogiclabs.jschema.message.ErrorCode.AFTRDT01;
+import static com.relogiclabs.jschema.message.ErrorCode.AMPMDT01;
+import static com.relogiclabs.jschema.message.ErrorCode.BFORDT01;
+import static com.relogiclabs.jschema.message.ErrorCode.CNFLDT01;
+import static com.relogiclabs.jschema.message.ErrorCode.DAYRNG01;
+import static com.relogiclabs.jschema.message.ErrorCode.DAYRNG02;
+import static com.relogiclabs.jschema.message.ErrorCode.DTYPMS01;
+import static com.relogiclabs.jschema.message.ErrorCode.ENDFDT01;
+import static com.relogiclabs.jschema.message.ErrorCode.ENDFDT02;
+import static com.relogiclabs.jschema.message.ErrorCode.ERANAM01;
+import static com.relogiclabs.jschema.message.ErrorCode.FRACDT04;
+import static com.relogiclabs.jschema.message.ErrorCode.HURNUM01;
+import static com.relogiclabs.jschema.message.ErrorCode.HURNUM02;
+import static com.relogiclabs.jschema.message.ErrorCode.HURRNG01;
+import static com.relogiclabs.jschema.message.ErrorCode.HURRNG03;
+import static com.relogiclabs.jschema.message.ErrorCode.INVLDT01;
+import static com.relogiclabs.jschema.message.ErrorCode.LEXRDT01;
+import static com.relogiclabs.jschema.message.ErrorCode.MNTNUM01;
+import static com.relogiclabs.jschema.message.ErrorCode.MNTRNG01;
+import static com.relogiclabs.jschema.message.ErrorCode.MONNAM01;
+import static com.relogiclabs.jschema.message.ErrorCode.MONNAM02;
+import static com.relogiclabs.jschema.message.ErrorCode.MONNUM01;
+import static com.relogiclabs.jschema.message.ErrorCode.MONRNG01;
+import static com.relogiclabs.jschema.message.ErrorCode.RNDEND02;
+import static com.relogiclabs.jschema.message.ErrorCode.RNDSTA01;
+import static com.relogiclabs.jschema.message.ErrorCode.SECNUM01;
+import static com.relogiclabs.jschema.message.ErrorCode.SECRNG01;
+import static com.relogiclabs.jschema.message.ErrorCode.STRTDT01;
+import static com.relogiclabs.jschema.message.ErrorCode.TEXTDT01;
+import static com.relogiclabs.jschema.message.ErrorCode.UTCRNG01;
+import static com.relogiclabs.jschema.message.ErrorCode.UTCRNG02;
+import static com.relogiclabs.jschema.message.ErrorCode.UTCTIM01;
+import static com.relogiclabs.jschema.message.ErrorCode.WEKDMS01;
+import static com.relogiclabs.jschema.message.ErrorCode.WEKNAM02;
+import static com.relogiclabs.jschema.message.ErrorCode.WSPACE01;
+import static com.relogiclabs.jschema.message.ErrorCode.YARNUM01;
+import static com.relogiclabs.jschema.message.ErrorCode.YARNUM02;
+import static com.relogiclabs.jschema.message.ErrorCode.YARRNG01;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class DateTimeTests {
     @Test
-    public void When_JsonNotDate_ExceptionThrown() {
-        var schema = "#date";
-        var json = "\"This is not a date\"";
-
-        JsonSchema.isValid(schema, json);
-        var exception = assertThrows(JsonSchemaException.class,
-            () -> JsonAssert.isValid(schema, json));
-        assertEquals(DTYP04, exception.getCode());
-        exception.printStackTrace();
-    }
-
-    @Test
     public void When_JsonNotValidDate_ExceptionThrown() {
-        var schema = "#date";
-        var json = "\"1939-02-29\"";
+        var schema =
+            """
+            [ #date, #date, #date ]
+            """;
+        var json =
+            """
+            [
+                "This is not a date",
+                "1939-13-10",
+                "1939-02-29"
+            ]
+            """;
 
         JsonSchema.isValid(schema, json);
-        var exception = assertThrows(JsonSchemaException.class,
+        var exception = assertThrows(DataTypeValidationException.class,
             () -> JsonAssert.isValid(schema, json));
-        assertEquals(DTYP04, exception.getCode());
-        exception.printStackTrace();
-    }
-
-    @Test
-    public void When_JsonNotTime_ExceptionThrown() {
-        var schema = "#time";
-        var json = "\"This is not a time\"";
-
-        JsonSchema.isValid(schema, json);
-        var exception = assertThrows(JsonSchemaException.class,
-            () -> JsonAssert.isValid(schema, json));
-        assertEquals(DTYP04, exception.getCode());
+        assertEquals(DTYPMS01, exception.getCode());
         exception.printStackTrace();
     }
 
     @Test
     public void When_JsonNotValidTime_ExceptionThrown() {
-        var schema = "#time";
-        var json = "\"1939-09-02T2:12:12.000Z\"";
+        var schema =
+            """
+            [ #time, #time, #time ]
+            """;
+        var json =
+            """
+            [
+                "This is not a time",
+                "1939-09-02T24:02:02.000Z",
+                "1939-09-20T02:60:09.000Z"
+            ]
+            """;
 
         JsonSchema.isValid(schema, json);
-        var exception = assertThrows(JsonSchemaException.class,
+        var exception = assertThrows(DataTypeValidationException.class,
             () -> JsonAssert.isValid(schema, json));
-        assertEquals(DTYP04, exception.getCode());
+        assertEquals(DTYPMS01, exception.getCode());
         exception.printStackTrace();
     }
 
@@ -106,9 +103,9 @@ public class DateTimeTests {
             "99-09-01"
             """;
         JsonSchema.isValid(schema, json);
-        var exception = assertThrows(JsonSchemaException.class,
+        var exception = assertThrows(FunctionValidationException.class,
             () -> JsonAssert.isValid(schema, json));
-        assertEquals(DDAY04, exception.getCode());
+        assertEquals(DAYRNG01, exception.getCode());
         exception.printStackTrace();
     }
 
@@ -123,9 +120,9 @@ public class DateTimeTests {
             "13:10:10 PM"
             """;
         JsonSchema.isValid(schema, json);
-        var exception = assertThrows(JsonSchemaException.class,
+        var exception = assertThrows(FunctionValidationException.class,
             () -> JsonAssert.isValid(schema, json));
-        assertEquals(DHUR03, exception.getCode());
+        assertEquals(HURRNG01, exception.getCode());
         exception.printStackTrace();
     }
 
@@ -140,9 +137,9 @@ public class DateTimeTests {
             "29-02-1939"
             """;
         JsonSchema.isValid(schema, json);
-        var exception = assertThrows(JsonSchemaException.class,
+        var exception = assertThrows(FunctionValidationException.class,
             () -> JsonAssert.isValid(schema, json));
-        assertEquals(DDAY03, exception.getCode());
+        assertEquals(DAYRNG02, exception.getCode());
         exception.printStackTrace();
     }
 
@@ -157,9 +154,9 @@ public class DateTimeTests {
             "32-12-1939"
             """;
         JsonSchema.isValid(schema, json);
-        var exception = assertThrows(JsonSchemaException.class,
+        var exception = assertThrows(FunctionValidationException.class,
             () -> JsonAssert.isValid(schema, json));
-        assertEquals(DDAY04, exception.getCode());
+        assertEquals(DAYRNG01, exception.getCode());
         exception.printStackTrace();
     }
 
@@ -174,9 +171,9 @@ public class DateTimeTests {
             "Septembar 01, 1939 AD"
             """;
         JsonSchema.isValid(schema, json);
-        var exception = assertThrows(JsonSchemaException.class,
+        var exception = assertThrows(FunctionValidationException.class,
             () -> JsonAssert.isValid(schema, json));
-        assertEquals(DMON01, exception.getCode());
+        assertEquals(MONNAM01, exception.getCode());
         exception.printStackTrace();
     }
 
@@ -191,9 +188,9 @@ public class DateTimeTests {
             "Sap 01, 1939 AD"
             """;
         JsonSchema.isValid(schema, json);
-        var exception = assertThrows(JsonSchemaException.class,
+        var exception = assertThrows(FunctionValidationException.class,
             () -> JsonAssert.isValid(schema, json));
-        assertEquals(DMON02, exception.getCode());
+        assertEquals(MONNAM02, exception.getCode());
         exception.printStackTrace();
     }
 
@@ -208,9 +205,9 @@ public class DateTimeTests {
             "Sep-01, 1939 AD"
             """;
         JsonSchema.isValid(schema, json);
-        var exception = assertThrows(JsonSchemaException.class,
+        var exception = assertThrows(FunctionValidationException.class,
             () -> JsonAssert.isValid(schema, json));
-        assertEquals(DMON03, exception.getCode());
+        assertEquals(MONNUM01, exception.getCode());
         exception.printStackTrace();
     }
 
@@ -225,9 +222,9 @@ public class DateTimeTests {
             "13-01, 1939 AD"
             """;
         JsonSchema.isValid(schema, json);
-        var exception = assertThrows(JsonSchemaException.class,
+        var exception = assertThrows(FunctionValidationException.class,
             () -> JsonAssert.isValid(schema, json));
-        assertEquals(DMON05, exception.getCode());
+        assertEquals(MONRNG01, exception.getCode());
         exception.printStackTrace();
     }
 
@@ -242,9 +239,9 @@ public class DateTimeTests {
             "Fry, Sep 01, 1939 AD"
             """;
         JsonSchema.isValid(schema, json);
-        var exception = assertThrows(JsonSchemaException.class,
+        var exception = assertThrows(FunctionValidationException.class,
             () -> JsonAssert.isValid(schema, json));
-        assertEquals(DWKD02, exception.getCode());
+        assertEquals(WEKNAM02, exception.getCode());
         exception.printStackTrace();
     }
 
@@ -259,9 +256,9 @@ public class DateTimeTests {
             "January, 01-12-1939"
             """;
         JsonSchema.isValid(schema, json);
-        var exception = assertThrows(JsonSchemaException.class,
+        var exception = assertThrows(FunctionValidationException.class,
             () -> JsonAssert.isValid(schema, json));
-        assertEquals(DCNF01, exception.getCode());
+        assertEquals(CNFLDT01, exception.getCode());
         exception.printStackTrace();
     }
 
@@ -276,14 +273,14 @@ public class DateTimeTests {
             "12, 11:10:12"
             """;
         JsonSchema.isValid(schema, json);
-        var exception = assertThrows(JsonSchemaException.class,
+        var exception = assertThrows(FunctionValidationException.class,
             () -> JsonAssert.isValid(schema, json));
-        assertEquals(DCNF01, exception.getCode());
+        assertEquals(CNFLDT01, exception.getCode());
         exception.printStackTrace();
     }
 
     @Test
-    public void When_InvalidDateWeekday_ExceptionThrown() {
+    public void When_InvalidDateWeekdayMismatched_ExceptionThrown() {
         var schema =
             """
             @date("DDD, MMM DD, YYYY G")
@@ -293,9 +290,9 @@ public class DateTimeTests {
             "Sat, Sep 01, 1939 AD"
             """;
         JsonSchema.isValid(schema, json);
-        var exception = assertThrows(JsonSchemaException.class,
+        var exception = assertThrows(FunctionValidationException.class,
             () -> JsonAssert.isValid(schema, json));
-        assertEquals(DWKD03, exception.getCode());
+        assertEquals(WEKDMS01, exception.getCode());
         exception.printStackTrace();
     }
 
@@ -310,9 +307,9 @@ public class DateTimeTests {
             "01-09-Twenty"
             """;
         JsonSchema.isValid(schema, json);
-        var exception = assertThrows(JsonSchemaException.class,
+        var exception = assertThrows(FunctionValidationException.class,
             () -> JsonAssert.isValid(schema, json));
-        assertEquals(DYAR02, exception.getCode());
+        assertEquals(YARNUM02, exception.getCode());
         exception.printStackTrace();
     }
 
@@ -327,9 +324,9 @@ public class DateTimeTests {
             "01-09-0000"
             """;
         JsonSchema.isValid(schema, json);
-        var exception = assertThrows(JsonSchemaException.class,
+        var exception = assertThrows(FunctionValidationException.class,
             () -> JsonAssert.isValid(schema, json));
-        assertEquals(DYAR03, exception.getCode());
+        assertEquals(YARRNG01, exception.getCode());
         exception.printStackTrace();
     }
 
@@ -344,9 +341,9 @@ public class DateTimeTests {
             "01-09-1939"
             """;
         JsonSchema.isValid(schema, json);
-        var exception = assertThrows(JsonSchemaException.class,
+        var exception = assertThrows(FunctionValidationException.class,
             () -> JsonAssert.isValid(schema, json));
-        assertEquals(DINV02, exception.getCode());
+        assertEquals(INVLDT01, exception.getCode());
         exception.printStackTrace();
     }
 
@@ -361,9 +358,9 @@ public class DateTimeTests {
             "02-12-1939 AA"
             """;
         JsonSchema.isValid(schema, json);
-        var exception = assertThrows(JsonSchemaException.class,
+        var exception = assertThrows(FunctionValidationException.class,
             () -> JsonAssert.isValid(schema, json));
-        assertEquals(DERA01, exception.getCode());
+        assertEquals(ERANAM01, exception.getCode());
         exception.printStackTrace();
     }
 
@@ -378,9 +375,9 @@ public class DateTimeTests {
             "01-11-1939 10:00:00"
             """;
         JsonSchema.isValid(schema, json);
-        var exception = assertThrows(JsonSchemaException.class,
+        var exception = assertThrows(FunctionValidationException.class,
             () -> JsonAssert.isValid(schema, json));
-        assertEquals(DTXT01, exception.getCode());
+        assertEquals(TEXTDT01, exception.getCode());
         exception.printStackTrace();
     }
 
@@ -395,9 +392,9 @@ public class DateTimeTests {
             "Twelve:00:00"
             """;
         JsonSchema.isValid(schema, json);
-        var exception = assertThrows(JsonSchemaException.class,
+        var exception = assertThrows(FunctionValidationException.class,
             () -> JsonAssert.isValid(schema, json));
-        assertEquals(DHUR01, exception.getCode());
+        assertEquals(HURNUM01, exception.getCode());
         exception.printStackTrace();
     }
 
@@ -412,9 +409,9 @@ public class DateTimeTests {
             "24:00:00"
             """;
         JsonSchema.isValid(schema, json);
-        var exception = assertThrows(JsonSchemaException.class,
+        var exception = assertThrows(FunctionValidationException.class,
             () -> JsonAssert.isValid(schema, json));
-        assertEquals(DHUR06, exception.getCode());
+        assertEquals(HURRNG03, exception.getCode());
         exception.printStackTrace();
     }
 
@@ -429,9 +426,9 @@ public class DateTimeTests {
             "23:one:00"
             """;
         JsonSchema.isValid(schema, json);
-        var exception = assertThrows(JsonSchemaException.class,
+        var exception = assertThrows(FunctionValidationException.class,
             () -> JsonAssert.isValid(schema, json));
-        assertEquals(DMIN01, exception.getCode());
+        assertEquals(MNTNUM01, exception.getCode());
         exception.printStackTrace();
     }
 
@@ -446,9 +443,9 @@ public class DateTimeTests {
             "23:60:00"
             """;
         JsonSchema.isValid(schema, json);
-        var exception = assertThrows(JsonSchemaException.class,
+        var exception = assertThrows(FunctionValidationException.class,
             () -> JsonAssert.isValid(schema, json));
-        assertEquals(DMIN03, exception.getCode());
+        assertEquals(MNTRNG01, exception.getCode());
         exception.printStackTrace();
     }
 
@@ -463,9 +460,9 @@ public class DateTimeTests {
             "23:59:Three"
             """;
         JsonSchema.isValid(schema, json);
-        var exception = assertThrows(JsonSchemaException.class,
+        var exception = assertThrows(FunctionValidationException.class,
             () -> JsonAssert.isValid(schema, json));
-        assertEquals(DSEC01, exception.getCode());
+        assertEquals(SECNUM01, exception.getCode());
         exception.printStackTrace();
     }
 
@@ -480,9 +477,9 @@ public class DateTimeTests {
             "23:59:60"
             """;
         JsonSchema.isValid(schema, json);
-        var exception = assertThrows(JsonSchemaException.class,
+        var exception = assertThrows(FunctionValidationException.class,
             () -> JsonAssert.isValid(schema, json));
-        assertEquals(DSEC03, exception.getCode());
+        assertEquals(SECRNG01, exception.getCode());
         exception.printStackTrace();
     }
 
@@ -497,9 +494,9 @@ public class DateTimeTests {
             "23:59:00.11"
             """;
         JsonSchema.isValid(schema, json);
-        var exception = assertThrows(JsonSchemaException.class,
+        var exception = assertThrows(FunctionValidationException.class,
             () -> JsonAssert.isValid(schema, json));
-        assertEquals(DFRC04, exception.getCode());
+        assertEquals(FRACDT04, exception.getCode());
         exception.printStackTrace();
     }
 
@@ -514,9 +511,9 @@ public class DateTimeTests {
             ":3:8"
             """;
         JsonSchema.isValid(schema, json);
-        var exception = assertThrows(JsonSchemaException.class,
+        var exception = assertThrows(FunctionValidationException.class,
             () -> JsonAssert.isValid(schema, json));
-        assertEquals(DHUR02, exception.getCode());
+        assertEquals(HURNUM02, exception.getCode());
         exception.printStackTrace();
     }
 
@@ -531,9 +528,9 @@ public class DateTimeTests {
             "01:10:08"
             """;
         JsonSchema.isValid(schema, json);
-        var exception = assertThrows(JsonSchemaException.class,
+        var exception = assertThrows(FunctionValidationException.class,
             () -> JsonAssert.isValid(schema, json));
-        assertEquals(DWTS01, exception.getCode());
+        assertEquals(WSPACE01, exception.getCode());
         exception.printStackTrace();
     }
 
@@ -548,9 +545,9 @@ public class DateTimeTests {
             "12:00:00 AD"
             """;
         JsonSchema.isValid(schema, json);
-        var exception = assertThrows(JsonSchemaException.class,
+        var exception = assertThrows(FunctionValidationException.class,
             () -> JsonAssert.isValid(schema, json));
-        assertEquals(DTAP01, exception.getCode());
+        assertEquals(AMPMDT01, exception.getCode());
         exception.printStackTrace();
     }
 
@@ -565,9 +562,9 @@ public class DateTimeTests {
             "13:00:00 AM"
             """;
         JsonSchema.isValid(schema, json);
-        var exception = assertThrows(JsonSchemaException.class,
+        var exception = assertThrows(FunctionValidationException.class,
             () -> JsonAssert.isValid(schema, json));
-        assertEquals(DHUR03, exception.getCode());
+        assertEquals(HURRNG01, exception.getCode());
         exception.printStackTrace();
     }
 
@@ -582,9 +579,9 @@ public class DateTimeTests {
             "11:11:11"
             """;
         JsonSchema.isValid(schema, json);
-        var exception = assertThrows(JsonSchemaException.class,
+        var exception = assertThrows(FunctionValidationException.class,
             () -> JsonAssert.isValid(schema, json));
-        assertEquals(DTAP01, exception.getCode());
+        assertEquals(AMPMDT01, exception.getCode());
         exception.printStackTrace();
     }
 
@@ -599,9 +596,9 @@ public class DateTimeTests {
             "11:00:00 Six"
             """;
         JsonSchema.isValid(schema, json);
-        var exception = assertThrows(JsonSchemaException.class,
+        var exception = assertThrows(FunctionValidationException.class,
             () -> JsonAssert.isValid(schema, json));
-        assertEquals(DUTC01, exception.getCode());
+        assertEquals(UTCTIM01, exception.getCode());
         exception.printStackTrace();
     }
 
@@ -616,9 +613,9 @@ public class DateTimeTests {
             "11:00:00 +14"
             """;
         JsonSchema.isValid(schema, json);
-        var exception = assertThrows(JsonSchemaException.class,
+        var exception = assertThrows(FunctionValidationException.class,
             () -> JsonAssert.isValid(schema, json));
-        assertEquals(DUTC04, exception.getCode());
+        assertEquals(UTCRNG01, exception.getCode());
         exception.printStackTrace();
     }
 
@@ -633,43 +630,43 @@ public class DateTimeTests {
             "11:00:00 +10:60"
             """;
         JsonSchema.isValid(schema, json);
-        var exception = assertThrows(JsonSchemaException.class,
+        var exception = assertThrows(FunctionValidationException.class,
             () -> JsonAssert.isValid(schema, json));
-        assertEquals(DUTC05, exception.getCode());
+        assertEquals(UTCRNG02, exception.getCode());
         exception.printStackTrace();
     }
 
     @Test
-    public void When_InvalidDatePatternCauseLexerError_ExceptionThrown() {
+    public void When_InvalidDatePatternFormat_ExceptionThrown() {
         var schema =
             """
-            @date("ABCD")
+            @date("TEST")
             """;
         var json =
             """
             "23-09-01T14:35:10.555"
             """;
         JsonSchema.isValid(schema, json);
-        var exception = assertThrows(JsonSchemaException.class,
+        var exception = assertThrows(FunctionValidationException.class,
             () -> JsonAssert.isValid(schema, json));
-        assertEquals(DLEX01, exception.getCode());
+        assertEquals(LEXRDT01, exception.getCode());
         exception.printStackTrace();
     }
 
     @Test
-    public void When_InvalidTimePatternCauseLexerError_ExceptionThrown() {
+    public void When_InvalidTimePatternFormat_ExceptionThrown() {
         var schema =
             """
-            @time("ABCD")
+            @time("TEST")
             """;
         var json =
             """
             "23-09-01T14:35:10.555"
             """;
         JsonSchema.isValid(schema, json);
-        var exception = assertThrows(JsonSchemaException.class,
+        var exception = assertThrows(FunctionValidationException.class,
             () -> JsonAssert.isValid(schema, json));
-        assertEquals(DLEX01, exception.getCode());
+        assertEquals(LEXRDT01, exception.getCode());
         exception.printStackTrace();
     }
 
@@ -690,9 +687,9 @@ public class DateTimeTests {
             ]
             """;
         JsonSchema.isValid(schema, json);
-        var exception = assertThrows(JsonSchemaException.class,
+        var exception = assertThrows(FunctionValidationException.class,
             () -> JsonAssert.isValid(schema, json));
-        assertEquals(DRNG01, exception.getCode());
+        assertEquals(RNDSTA01, exception.getCode());
         exception.printStackTrace();
     }
 
@@ -703,6 +700,7 @@ public class DateTimeTests {
             @range*("2010-01-01T00:00:00.000Z",
                     "2010-12-31T23:59:59.999Z")
             #time* #array
+            // range also consider UTC offset if given
             """;
         var json =
             """
@@ -712,14 +710,14 @@ public class DateTimeTests {
                 "2010-06-30T12:01:07.999999Z",
                 "2009-12-31T22:39:50.0-04:00",
                 "2011-01-01T02:10:00.0+06:00",
-                "2009-12-31T22:59:59.000Z",
-                "2011-01-01T00:00:00.000Z"
+                "2011-01-01T00:00:00.000Z",
+                "2009-12-31T22:59:59.000Z"
             ]
             """;
         JsonSchema.isValid(schema, json);
-        var exception = assertThrows(JsonSchemaException.class,
+        var exception = assertThrows(FunctionValidationException.class,
             () -> JsonAssert.isValid(schema, json));
-        assertEquals(DRNG02, exception.getCode());
+        assertEquals(RNDEND02, exception.getCode());
         exception.printStackTrace();
     }
 
@@ -740,9 +738,9 @@ public class DateTimeTests {
             ]
             """;
         JsonSchema.isValid(schema, json);
-        var exception = assertThrows(JsonSchemaException.class,
+        var exception = assertThrows(FunctionValidationException.class,
             () -> JsonAssert.isValid(schema, json));
-        assertEquals(STRT01, exception.getCode());
+        assertEquals(STRTDT01, exception.getCode());
         exception.printStackTrace();
     }
 
@@ -763,9 +761,9 @@ public class DateTimeTests {
             ]
             """;
         JsonSchema.isValid(schema, json);
-        var exception = assertThrows(JsonSchemaException.class,
+        var exception = assertThrows(FunctionValidationException.class,
             () -> JsonAssert.isValid(schema, json));
-        assertEquals(ENDE01, exception.getCode());
+        assertEquals(ENDFDT01, exception.getCode());
         exception.printStackTrace();
     }
 
@@ -786,9 +784,9 @@ public class DateTimeTests {
             ]
             """;
         JsonSchema.isValid(schema, json);
-        var exception = assertThrows(JsonSchemaException.class,
+        var exception = assertThrows(FunctionValidationException.class,
             () -> JsonAssert.isValid(schema, json));
-        assertEquals(BFOR01, exception.getCode());
+        assertEquals(BFORDT01, exception.getCode());
         exception.printStackTrace();
     }
 
@@ -809,9 +807,9 @@ public class DateTimeTests {
             ]
             """;
         JsonSchema.isValid(schema, json);
-        var exception = assertThrows(JsonSchemaException.class,
+        var exception = assertThrows(FunctionValidationException.class,
             () -> JsonAssert.isValid(schema, json));
-        assertEquals(AFTR01, exception.getCode());
+        assertEquals(AFTRDT01, exception.getCode());
         exception.printStackTrace();
     }
 
@@ -830,14 +828,14 @@ public class DateTimeTests {
             ]
             """;
         JsonSchema.isValid(schema, json);
-        var exception = assertThrows(JsonSchemaException.class,
+        var exception = assertThrows(FunctionValidationException.class,
             () -> JsonAssert.isValid(schema, json));
-        assertEquals(ENDE02, exception.getCode());
+        assertEquals(ENDFDT02, exception.getCode());
         exception.printStackTrace();
     }
 
     @Test
-    public void When_SchemaDateNotValidWithBefore_ExceptionThrown() {
+    public void When_SchemaDateNotValidFormatWithBefore_ExceptionThrown() {
         var schema =
             """
             @before*("01-01-2011") #date* #array
@@ -851,14 +849,14 @@ public class DateTimeTests {
             ]
             """;
         JsonSchema.isValid(schema, json);
-        var exception = assertThrows(JsonSchemaException.class,
+        var exception = assertThrows(FunctionValidationException.class,
             () -> JsonAssert.isValid(schema, json));
-        assertEquals(DYAR01, exception.getCode());
+        assertEquals(YARNUM01, exception.getCode());
         exception.printStackTrace();
     }
 
     @Test
-    public void When_SchemaDateNotValidWithAfter_ExceptionThrown() {
+    public void When_SchemaDateNotValidFormatWithAfter_ExceptionThrown() {
         var schema =
             """
             @after*("12-31-2009") #date* #array
@@ -872,9 +870,9 @@ public class DateTimeTests {
             ]
             """;
         JsonSchema.isValid(schema, json);
-        var exception = assertThrows(JsonSchemaException.class,
+        var exception = assertThrows(FunctionValidationException.class,
             () -> JsonAssert.isValid(schema, json));
-        assertEquals(DYAR01, exception.getCode());
+        assertEquals(YARNUM01, exception.getCode());
         exception.printStackTrace();
     }
 }

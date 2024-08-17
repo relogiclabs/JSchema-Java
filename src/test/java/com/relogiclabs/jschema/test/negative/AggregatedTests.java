@@ -2,20 +2,22 @@ package com.relogiclabs.jschema.test.negative;
 
 import com.relogiclabs.jschema.JsonAssert;
 import com.relogiclabs.jschema.JsonSchema;
-import com.relogiclabs.jschema.exception.JsonSchemaException;
+import com.relogiclabs.jschema.exception.DataTypeValidationException;
+import com.relogiclabs.jschema.exception.FunctionValidationException;
 import org.junit.jupiter.api.Test;
 
-import static com.relogiclabs.jschema.message.ErrorCode.DTYP04;
-import static com.relogiclabs.jschema.test.external.ExternalFunctions.ERRACCESS01;
+import static com.relogiclabs.jschema.message.ErrorCode.DTYPMS01;
+import static com.relogiclabs.jschema.test.external.ExternalFunctions.EX_ERRACCESS01;
+import static com.relogiclabs.jschema.test.external.ExternalFunctions.EX_ERRORIP02;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class AggregatedTests {
     @Test
-    public void When_JsonSchemaAggregatedTestWithWrongData_ExceptionThrown() {
+    public void When_AggregatedTestWithWrongDataType_ExceptionThrown() {
         var schema =
             """
-            %title: "User Profile Response"
+            %title: "User Profile API Request"
             %version: "1.0.0-basic"
             %schema:
             {
@@ -69,9 +71,9 @@ public class AggregatedTests {
             }
             """;
         JsonSchema.isValid(schema, json);
-        var exception = assertThrows(JsonSchemaException.class,
+        var exception = assertThrows(DataTypeValidationException.class,
             () -> JsonAssert.isValid(schema, json));
-        assertEquals(DTYP04, exception.getCode());
+        assertEquals(DTYPMS01, exception.getCode());
         exception.printStackTrace();
     }
 
@@ -113,7 +115,7 @@ public class AggregatedTests {
                     "role": @enum("user", "admin") #string &role,
                     "isActive": #boolean, //user account current status
                     "registeredAt": @time("DD-MM-YYYY hh:mm:ss") #string,
-                    "dataAccess": @checkAccess(&role) #integer,
+                    "dataAccess": @checkDataAccess(&role) #integer,
                     "profile": {
                         "firstName": @regex("[A-Za-z]{3,50}") #string,
                         "lastName": @regex("[A-Za-z]{3,50}") #string,
@@ -181,7 +183,7 @@ public class AggregatedTests {
                             "title": "Working with JSON in Java",
                             "content": "Java provides great support for working with JSON...",
                             "tags": [
-                                "CSharp",
+                                "Java",
                                 "JSON",
                                 "tutorial"
                             ]
@@ -233,9 +235,57 @@ public class AggregatedTests {
             }
             """;
         JsonSchema.isValid(schema, json);
-        var exception = assertThrows(JsonSchemaException.class,
+        var exception = assertThrows(FunctionValidationException.class,
             () -> JsonAssert.isValid(schema, json));
-        assertEquals(ERRACCESS01, exception.getCode());
+        assertEquals(EX_ERRACCESS01, exception.getCode());
+        exception.printStackTrace();
+    }
+
+    @Test
+    public void When_AggregatedTestWithWrongIP_ExceptionThrown() {
+        var schema =
+            """
+            %title: "Profile Dashboard Request"
+            %version: "1.0.0-IPTest"
+            %import: com.relogiclabs.jschema.test.external.ExternalFunctions
+
+            %schema:
+            {
+                "user": {
+                    /*username does not allow special characters*/
+                    "username": @regex("[a-z_]{3,30}") #string,
+                    /*currently only one role is allowed by system*/
+                    "role": "user" #string &role,
+                    "dataAccess": @checkDataAccess(&role) #integer,
+                    "ipAddress": @checkIPAddress #string,
+                    "profile": {
+                        "firstName": @regex("[A-Za-z ]{3,50}") #string,
+                        "lastName": @regex("[A-Za-z ]{3,50}") #string,
+                        "dateOfBirth": #date
+                    }
+                }
+            }
+            """;
+        var json =
+            """
+            {
+                "user": {
+                    "username": "johndoe",
+                    "role": "user",
+                    "dataAccess": 5,
+                    "ipAddress": "0.192.168.1",
+                    "profile": {
+                        "firstName": "John",
+                        "lastName": "Doe",
+                        "dateOfBirth": "1911-06-17"
+                    }
+                }
+            }
+            """;
+        JsonSchema.isValid(schema, json);
+        var exception = assertThrows(FunctionValidationException.class,
+            () -> JsonAssert.isValid(schema, json));
+        assertEquals(EX_ERRORIP02, exception.getCode());
         exception.printStackTrace();
     }
 
@@ -245,6 +295,7 @@ public class AggregatedTests {
             """
             %title: "Extended User Profile Dashboard API Response"
             %version: "2.0.0-extended"
+            %import: com.relogiclabs.jschema.test.external.ExternalFunctions
 
             %pragma DateDataTypeFormat: "DD-MM-YYYY"
             %pragma TimeDataTypeFormat: "DD-MM-YYYY hh:mm:ss"
@@ -283,6 +334,7 @@ public class AggregatedTests {
                     "isActive": #boolean, //user account current status
                     "registeredAt": @after("01-01-2010 00:00:00") #time,
                     "dataAccess": @checkAccess(&role) #integer,
+                    "ipAddress": @checkIPAddress #string,
                     "profile": {
                         "firstName": @regex("[A-Za-z]{3,50}") #string,
                         "lastName": @regex("[A-Za-z]{3,50}") #string,
@@ -316,9 +368,9 @@ public class AggregatedTests {
                     // Auto-unpacking turns the single-value '&role' array into the value itself
                     // 'target' keyword refers to the target JSON value
                     if(role == "user" && target > 5) return fail(
-                        "ERRACCESS01", "Data access incompatible with 'user' role",
+                        "EX_ERRACCESS01", "Data access incompatible with 'user' role",
                         expected("an access at most 5 for 'user' role"),
-                        actual("found access " + target + " which is greater than 5"));
+                        actual("found access " + target + " that is greater than 5"));
                 }
             }
             """;
@@ -332,6 +384,7 @@ public class AggregatedTests {
                     "isActive": true,
                     "registeredAt": "06-09-2023 15:10:30",
                     "dataAccess": 6,
+                    "ipAddress": "127.0.0.1",
                     "profile": {
                         "firstName": "John",
                         "lastName": "Doe",
@@ -361,7 +414,7 @@ public class AggregatedTests {
                             "title": "Working with JSON in Java",
                             "content": "Java provides great support for working with JSON...",
                             "tags": [
-                                "CSharp",
+                                "Java",
                                 "JSON",
                                 "tutorial"
                             ]
@@ -399,7 +452,7 @@ public class AggregatedTests {
                         "price": 1299.99,
                         "inStock": false,
                         "specs": {
-                            "cpu": "Ryzen 11",
+                            "cpu": "Ryzen",
                             "ram": "11GB",
                             "storage": "11GB SSD"
                         }
@@ -413,9 +466,9 @@ public class AggregatedTests {
             }
             """;
         JsonSchema.isValid(schema, json);
-        var exception = assertThrows(JsonSchemaException.class,
+        var exception = assertThrows(FunctionValidationException.class,
             () -> JsonAssert.isValid(schema, json));
-        assertEquals(ERRACCESS01, exception.getCode());
+        assertEquals("EX_ERRACCESS01", exception.getCode());
         exception.printStackTrace();
     }
 }

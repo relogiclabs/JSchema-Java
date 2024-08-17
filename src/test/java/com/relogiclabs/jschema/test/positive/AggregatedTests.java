@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Test;
 
 public class AggregatedTests {
     @Test
-    public void When_SchemaAggregatedTestExample_ValidTrue() {
+    public void When_SchemaAggregatedTest_ValidTrue() {
         var schema = """
         %title: "Example Schema For Some Json HTTP Request or Response"
         %version: "February 11, 2023"
@@ -133,7 +133,7 @@ public class AggregatedTests {
     }
 
     @Test
-    public void When_SimpleJSchemaAggregatedTest_ValidTrue() {
+    public void When_BasicJSchemaAggregatedTest_ValidTrue() {
         var schema = """
         %title: "User Profile Response"
         %version: "1.0.0-basic"
@@ -233,7 +233,8 @@ public class AggregatedTests {
                 "role": @enum("user", "admin") #string &role,
                 "isActive": #boolean, //user account current status
                 "registeredAt": @after("01-01-2010 00:00:00") #time,
-                "dataAccess": @checkAccess(&role) #integer,
+                "dataAccess": @checkDataAccess(&role) #integer,
+                "ipAddress": @checkIPAddress #string,
                 "profile": {
                     "firstName": @regex("[A-Za-z]{3,50}") #string,
                     "lastName": @regex("[A-Za-z]{3,50}") #string,
@@ -271,6 +272,7 @@ public class AggregatedTests {
                 "isActive": true,
                 "registeredAt": "06-09-2023 15:10:30",
                 "dataAccess": 10,
+                "ipAddress": "127.0.0.1",
                 "profile": {
                     "firstName": "John",
                     "lastName": "Doe",
@@ -300,7 +302,7 @@ public class AggregatedTests {
                         "title": "Working with JSON in Java",
                         "content": "Java provides great support for working with JSON...",
                         "tags": [
-                            "CSharp",
+                            "Java",
                             "JSON",
                             "tutorial"
                         ]
@@ -359,6 +361,7 @@ public class AggregatedTests {
         var schema = """
         %title: "Extended User Profile Dashboard API Response"
         %version: "2.0.0-extended"
+        %import: com.relogiclabs.jschema.test.external.ExternalFunctions
 
         %pragma DateDataTypeFormat: "DD-MM-YYYY"
         %pragma TimeDataTypeFormat: "DD-MM-YYYY hh:mm:ss"
@@ -397,6 +400,7 @@ public class AggregatedTests {
                 "isActive": #boolean, //user account current status
                 "registeredAt": @after("01-01-2010 00:00:00") #time,
                 "dataAccess": @checkAccess(&role) #integer,
+                "ipAddress": @checkIPAddress #string,
                 "profile": {
                     "firstName": @regex("[A-Za-z]{3,50}") #string,
                     "lastName": @regex("[A-Za-z]{3,50}") #string,
@@ -430,9 +434,9 @@ public class AggregatedTests {
                 // Auto-unpacking unwraps single-value '&role' array into its value
                 // 'target' keyword refers to the target JSON value
                 if(role == "user" && target > 5) return fail(
-                    "ERRACCESS", "Data access incompatible with 'user' role",
+                    "EX_ERRACCESS", "Data access incompatible with 'user' role",
                     expected("an access at most 5 for 'user' role"),
-                    actual("found access " + target + " which is greater than 5"));
+                    actual("found access " + target + " that is greater than 5"));
                 return true; // Skipping this line also works
             }
         }
@@ -440,12 +444,13 @@ public class AggregatedTests {
         var json = """
         {
             "user": {
-                "id": 1234,
+                "id": 1111,
                 "username": "johndoe",
                 "role": "admin",
                 "isActive": true,
                 "registeredAt": "06-09-2023 15:10:30",
                 "dataAccess": 10,
+                "ipAddress": "127.0.0.1",
                 "profile": {
                     "firstName": "John",
                     "lastName": "Doe",
@@ -475,7 +480,7 @@ public class AggregatedTests {
                         "title": "Working with JSON in Java",
                         "content": "Java provides great support for working with JSON...",
                         "tags": [
-                            "CSharp",
+                            "Java",
                             "JSON",
                             "tutorial"
                         ]

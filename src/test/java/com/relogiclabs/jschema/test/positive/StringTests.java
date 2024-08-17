@@ -229,6 +229,33 @@ public class StringTests {
     }
 
     @Test
+    public void When_IPWithDifferentFunctionsAndVersions_ValidTrue() {
+        var schema =
+            """
+            {
+                "ip1v4": @ipv4 #string,
+                "ip2v6": @ipv6 #string,
+                "ip3v4": @ipv(4) #string,
+                "ip4v6": @ipv(6) #string,
+                "ip5vAny": @ipv(4, 6) #string,
+                "ip6vAny": @ipv(4, 6) #string
+            }
+            """;
+        var json =
+            """
+            {
+                "ip1v4": "18.195.85.27",
+                "ip2v6": "2a00:1450:400b:c01:0:0:0:71",
+                "ip3v4": "8.8.8.8",
+                "ip4v6": "2001:4860:4860::8888",
+                "ip5vAny": "108.177.16.0",
+                "ip6vAny": "::ffff:8.8.4.4"
+            }
+            """;
+        JsonAssert.isValid(schema, json);
+    }
+
+    @Test
     public void When_NonEmptyStringInObject_ValidTrue() {
         var schema =
             """

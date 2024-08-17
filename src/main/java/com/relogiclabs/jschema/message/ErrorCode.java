@@ -14,7 +14,7 @@ public interface ErrorCode {
     String ALSDEF03 = "ALSDEF03";
     String ALSDUP01 = "ALSDUP01";
     String AMPMDT01 = "AMPMDT01";
-    String AMPMVD01 = "AMPMVD01";
+    String AMPMMS01 = "AMPMMS01";
     String ARNSRT01 = "ARNSRT01";
     String ARNSRT02 = "ARNSRT02";
     String ARRASN01 = "ARRASN01";
@@ -53,8 +53,8 @@ public interface ErrorCode {
     String CNFLDT01 = "CNFLDT01";
     String DAYNUM01 = "DAYNUM01";
     String DAYNUM02 = "DAYNUM02";
-    String DAYVDF01 = "DAYVDF01";
-    String DAYVDF02 = "DAYVDF02";
+    String DAYRNG01 = "DAYRNG01";
+    String DAYRNG02 = "DAYRNG02";
     String DECPRE01 = "DECPRE01";
     String DECPRE02 = "DECPRE02";
     String DECPRE03 = "DECPRE03";
@@ -82,7 +82,7 @@ public interface ErrorCode {
     String ENMNUM01 = "ENMNUM01";
     String ENMSTR01 = "ENMSTR01";
     String ERANAM01 = "ERANAM01";
-    String ERAVDF01 = "ERAVDF01";
+    String ERANMS01 = "ERANMS01";
     String EXPRSE01 = "EXPRSE01";
     String EXPRSE02 = "EXPRSE02";
     String EXPTSF01 = "EXPTSF01";
@@ -96,10 +96,10 @@ public interface ErrorCode {
     String FAILEX02 = "FAILEX02";
     String FAILEX03 = "FAILEX03";
     String FAILEX04 = "FAILEX04";
-    String FAILMB01 = "FAILMB01";
-    String FAILMB02 = "FAILMB02";
-    String FAILMB03 = "FAILMB03";
-    String FAILMB04 = "FAILMB04";
+    String FAILMV01 = "FAILMV01";
+    String FAILMV02 = "FAILMV02";
+    String FAILMV03 = "FAILMV03";
+    String FAILMV04 = "FAILMV04";
     String FILARR01 = "FILARR01";
     String FLOTVL01 = "FLOTVL01";
     String FNCDEF01 = "FNCDEF01";
@@ -134,10 +134,10 @@ public interface ErrorCode {
     String FRACDT07 = "FRACDT07";
     String HURNUM01 = "HURNUM01";
     String HURNUM02 = "HURNUM02";
-    String HURVDF01 = "HURVDF01";
-    String HURVDF02 = "HURVDF02";
-    String HURVDF03 = "HURVDF03";
-    String HURVDF04 = "HURVDF04";
+    String HURRNG01 = "HURRNG01";
+    String HURRNG02 = "HURRNG02";
+    String HURRNG03 = "HURRNG03";
+    String HURRNG04 = "HURRNG04";
     String IDXASN01 = "IDXASN01";
     String IDXUPD01 = "IDXUPD01";
     String IFSTMT01 = "IFSTMT01";
@@ -191,7 +191,7 @@ public interface ErrorCode {
     String MINICF03 = "MINICF03";
     String MNTNUM01 = "MNTNUM01";
     String MNTNUM02 = "MNTNUM02";
-    String MNTVDF01 = "MNTVDF01";
+    String MNTRNG01 = "MNTRNG01";
     String MODASN01 = "MODASN01";
     String MODASN02 = "MODASN02";
     String MODASN03 = "MODASN03";
@@ -199,7 +199,7 @@ public interface ErrorCode {
     String MONNAM02 = "MONNAM02";
     String MONNUM01 = "MONNUM01";
     String MONNUM02 = "MONNUM02";
-    String MONVDF01 = "MONVDF01";
+    String MONRNG01 = "MONRNG01";
     String MTHNVK01 = "MTHNVK01";
     String MTHNVK02 = "MTHNVK02";
     String MULASN01 = "MULASN01";
@@ -242,8 +242,8 @@ public interface ErrorCode {
     String POSICF01 = "POSICF01";
     String POSICF02 = "POSICF02";
     String POWNUM01 = "POWNUM01";
-    String PRGCHK01 = "PRGCHK01";
-    String PRGCHK02 = "PRGCHK02";
+    String PRGDEF01 = "PRGDEF01";
+    String PRGDEF02 = "PRGDEF02";
     String PRGDUP01 = "PRGDUP01";
     String PROPMS01 = "PROPMS01";
     String PROPMS02 = "PROPMS02";
@@ -286,7 +286,7 @@ public interface ErrorCode {
     String SCMPRS01 = "SCMPRS01";
     String SECNUM01 = "SECNUM01";
     String SECNUM02 = "SECNUM02";
-    String SECVDF01 = "SECVDF01";
+    String SECRNG01 = "SECRNG01";
     String SRPTSE01 = "SRPTSE01";
     String SRPTSE02 = "SRPTSE02";
     String STRASN01 = "STRASN01";
@@ -313,11 +313,11 @@ public interface ErrorCode {
     String URLADR02 = "URLADR02";
     String URLSCM01 = "URLSCM01";
     String URLSCM02 = "URLSCM02";
+    String UTCRNG01 = "UTCRNG01";
+    String UTCRNG02 = "UTCRNG02";
     String UTCTIM01 = "UTCTIM01";
     String UTCTIM02 = "UTCTIM02";
     String UTCTIM03 = "UTCTIM03";
-    String UTCVDF01 = "UTCVDF01";
-    String UTCVDF02 = "UTCVDF02";
     String VALDFL01 = "VALDFL01";
     String VALFND01 = "VALFND01";
     String VARDEC01 = "VARDEC01";
@@ -325,12 +325,12 @@ public interface ErrorCode {
     String VARDUP01 = "VARDUP01";
     String VARRES01 = "VARRES01";
     String VARRES02 = "VARRES02";
+    String WEKDMS01 = "WEKDMS01";
     String WEKNAM01 = "WEKNAM01";
     String WEKNAM02 = "WEKNAM02";
-    String WEKVDF01 = "WEKVDF01";
     String WHILSE01 = "WHILSE01";
     String WSPACE01 = "WSPACE01";
     String YARNUM01 = "YARNUM01";
     String YARNUM02 = "YARNUM02";
-    String YARVDF01 = "YARVDF01";
+    String YARRNG01 = "YARRNG01";
 }

@@ -2,26 +2,29 @@ package com.relogiclabs.jschema.test.negative;
 
 import com.relogiclabs.jschema.JsonAssert;
 import com.relogiclabs.jschema.JsonSchema;
+import com.relogiclabs.jschema.exception.DataTypeValidationException;
+import com.relogiclabs.jschema.exception.FunctionValidationException;
 import com.relogiclabs.jschema.exception.JsonLexerException;
-import com.relogiclabs.jschema.exception.JsonSchemaException;
 import com.relogiclabs.jschema.exception.SchemaLexerException;
 import org.junit.jupiter.api.Test;
 
-import static com.relogiclabs.jschema.message.ErrorCode.DTYP04;
-import static com.relogiclabs.jschema.message.ErrorCode.DTYP06;
-import static com.relogiclabs.jschema.message.ErrorCode.EMAL01;
-import static com.relogiclabs.jschema.message.ErrorCode.ENUM01;
-import static com.relogiclabs.jschema.message.ErrorCode.JLEX01;
-import static com.relogiclabs.jschema.message.ErrorCode.NEMT01;
-import static com.relogiclabs.jschema.message.ErrorCode.PHON01;
-import static com.relogiclabs.jschema.message.ErrorCode.REGX01;
-import static com.relogiclabs.jschema.message.ErrorCode.SLEN01;
-import static com.relogiclabs.jschema.message.ErrorCode.SLEN03;
-import static com.relogiclabs.jschema.message.ErrorCode.SLEN04;
-import static com.relogiclabs.jschema.message.ErrorCode.SLEN05;
-import static com.relogiclabs.jschema.message.ErrorCode.SLEX01;
-import static com.relogiclabs.jschema.message.ErrorCode.URLA01;
-import static com.relogiclabs.jschema.message.ErrorCode.URLA04;
+import static com.relogiclabs.jschema.message.ErrorCode.DTYPMS01;
+import static com.relogiclabs.jschema.message.ErrorCode.DTYPMS02;
+import static com.relogiclabs.jschema.message.ErrorCode.EMALCF01;
+import static com.relogiclabs.jschema.message.ErrorCode.EMPTCF01;
+import static com.relogiclabs.jschema.message.ErrorCode.ENMSTR01;
+import static com.relogiclabs.jschema.message.ErrorCode.IPV4CF01;
+import static com.relogiclabs.jschema.message.ErrorCode.IPV6CF01;
+import static com.relogiclabs.jschema.message.ErrorCode.JSNLEX01;
+import static com.relogiclabs.jschema.message.ErrorCode.LENSTR01;
+import static com.relogiclabs.jschema.message.ErrorCode.LENSTR03;
+import static com.relogiclabs.jschema.message.ErrorCode.LENSTR04;
+import static com.relogiclabs.jschema.message.ErrorCode.LENSTR05;
+import static com.relogiclabs.jschema.message.ErrorCode.PHONCF01;
+import static com.relogiclabs.jschema.message.ErrorCode.REGXCF01;
+import static com.relogiclabs.jschema.message.ErrorCode.SCMLEX01;
+import static com.relogiclabs.jschema.message.ErrorCode.URLADR01;
+import static com.relogiclabs.jschema.message.ErrorCode.URLSCM02;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -32,9 +35,9 @@ public class StringTests {
         var json = "10";
 
         JsonSchema.isValid(schema, json);
-        var exception = assertThrows(JsonSchemaException.class,
+        var exception = assertThrows(DataTypeValidationException.class,
             () -> JsonAssert.isValid(schema, json));
-        assertEquals(DTYP04, exception.getCode());
+        assertEquals(DTYPMS01, exception.getCode());
         exception.printStackTrace();
     }
 
@@ -51,7 +54,7 @@ public class StringTests {
         //JsonSchema.isValid(schema, json);
         var exception = assertThrows(SchemaLexerException.class,
             () -> JsonAssert.isValid(schema, json));
-        assertEquals(SLEX01, exception.getCode());
+        assertEquals(SCMLEX01, exception.getCode());
         exception.printStackTrace();
     }
 
@@ -68,7 +71,7 @@ public class StringTests {
         //JsonSchema.isValid(schema, json);
         var exception = assertThrows(JsonLexerException.class,
             () -> JsonAssert.isValid(schema, json));
-        assertEquals(JLEX01, exception.getCode());
+        assertEquals(JSNLEX01, exception.getCode());
         exception.printStackTrace();
     }
 
@@ -91,9 +94,9 @@ public class StringTests {
             }
             """;
         JsonSchema.isValid(schema, json);
-        var exception = assertThrows(JsonSchemaException.class,
+        var exception = assertThrows(DataTypeValidationException.class,
             () -> JsonAssert.isValid(schema, json));
-        assertEquals(DTYP04, exception.getCode());
+        assertEquals(DTYPMS01, exception.getCode());
         exception.printStackTrace();
     }
 
@@ -109,14 +112,14 @@ public class StringTests {
             "Lorem ipsum dolor sit amet, consectetur adipiscing elit"]
             """;
         JsonSchema.isValid(schema, json);
-        var exception = assertThrows(JsonSchemaException.class,
+        var exception = assertThrows(DataTypeValidationException.class,
             () -> JsonAssert.isValid(schema, json));
-        assertEquals(DTYP04, exception.getCode());
+        assertEquals(DTYPMS01, exception.getCode());
         exception.printStackTrace();
     }
 
     @Test
-    public void When_NestedJsonNotStringInArray_ExceptionThrown() {
+    public void When_JsonNotNestedStringInArray_ExceptionThrown() {
         var schema =
             """
             #string*
@@ -126,14 +129,14 @@ public class StringTests {
             ["value1", 10, "value3"]
             """;
         JsonSchema.isValid(schema, json);
-        var exception = assertThrows(JsonSchemaException.class,
+        var exception = assertThrows(DataTypeValidationException.class,
             () -> JsonAssert.isValid(schema, json));
-        assertEquals(DTYP06, exception.getCode());
+        assertEquals(DTYPMS02, exception.getCode());
         exception.printStackTrace();
     }
 
     @Test
-    public void When_NestedJsonNotStringInObject_ExceptionThrown() {
+    public void When_JsonNotNestedStringInObject_ExceptionThrown() {
         var schema =
             """
             #string*
@@ -147,9 +150,9 @@ public class StringTests {
             }
             """;
         JsonSchema.isValid(schema, json);
-        var exception = assertThrows(JsonSchemaException.class,
+        var exception = assertThrows(DataTypeValidationException.class,
             () -> JsonAssert.isValid(schema, json));
-        assertEquals(DTYP06, exception.getCode());
+        assertEquals(DTYPMS02, exception.getCode());
         exception.printStackTrace();
     }
 
@@ -168,9 +171,9 @@ public class StringTests {
             }
             """;
         JsonSchema.isValid(schema, json);
-        var exception = assertThrows(JsonSchemaException.class,
+        var exception = assertThrows(FunctionValidationException.class,
             () -> JsonAssert.isValid(schema, json));
-        assertEquals(SLEN01, exception.getCode());
+        assertEquals(LENSTR01, exception.getCode());
         exception.printStackTrace();
     }
 
@@ -189,9 +192,9 @@ public class StringTests {
             }
             """;
         JsonSchema.isValid(schema, json);
-        var exception = assertThrows(JsonSchemaException.class,
+        var exception = assertThrows(FunctionValidationException.class,
             () -> JsonAssert.isValid(schema, json));
-        assertEquals(SLEN03, exception.getCode());
+        assertEquals(LENSTR03, exception.getCode());
         exception.printStackTrace();
     }
 
@@ -210,9 +213,9 @@ public class StringTests {
             }
             """;
         JsonSchema.isValid(schema, json);
-        var exception = assertThrows(JsonSchemaException.class,
+        var exception = assertThrows(FunctionValidationException.class,
             () -> JsonAssert.isValid(schema, json));
-        assertEquals(SLEN04, exception.getCode());
+        assertEquals(LENSTR04, exception.getCode());
         exception.printStackTrace();
     }
 
@@ -227,9 +230,9 @@ public class StringTests {
             ["Lorem ipsum dolor sit amet", "value11", "value111"]
             """;
         JsonSchema.isValid(schema, json);
-        var exception = assertThrows(JsonSchemaException.class,
+        var exception = assertThrows(FunctionValidationException.class,
             () -> JsonAssert.isValid(schema, json));
-        assertEquals(SLEN05, exception.getCode());
+        assertEquals(LENSTR05, exception.getCode());
         exception.printStackTrace();
     }
 
@@ -246,9 +249,9 @@ public class StringTests {
             }
             """;
         JsonSchema.isValid(schema, json);
-        var exception = assertThrows(JsonSchemaException.class,
+        var exception = assertThrows(FunctionValidationException.class,
             () -> JsonAssert.isValid(schema, json));
-        assertEquals(REGX01, exception.getCode());
+        assertEquals(REGXCF01, exception.getCode());
         exception.printStackTrace();
     }
 
@@ -269,9 +272,9 @@ public class StringTests {
             }
             """;
         JsonSchema.isValid(schema, json);
-        var exception = assertThrows(JsonSchemaException.class,
+        var exception = assertThrows(FunctionValidationException.class,
             () -> JsonAssert.isValid(schema, json));
-        assertEquals(ENUM01, exception.getCode());
+        assertEquals(ENMSTR01, exception.getCode());
         exception.printStackTrace();
     }
 
@@ -292,20 +295,20 @@ public class StringTests {
             }
             """;
         JsonSchema.isValid(schema, json);
-        var exception = assertThrows(JsonSchemaException.class,
+        var exception = assertThrows(FunctionValidationException.class,
             () -> JsonAssert.isValid(schema, json));
-        assertEquals(EMAL01, exception.getCode());
+        assertEquals(EMALCF01, exception.getCode());
         exception.printStackTrace();
     }
 
     @Test
-    public void When_UrlWithWrongStringAddressInObject_ExceptionThrown() {
+    public void When_UrlWithWrongFormatInObject_ExceptionThrown() {
         var schema =
             """
             {
                 "key1": @url #string,
                 "key2": @url #string,
-                "key3": @url("ftps") #string
+                "key3": @url #string
             }
             """;
         var json =
@@ -317,37 +320,39 @@ public class StringTests {
             }
             """;
         JsonSchema.isValid(schema, json);
-        var exception = assertThrows(JsonSchemaException.class,
+        var exception = assertThrows(FunctionValidationException.class,
             () -> JsonAssert.isValid(schema, json));
-        assertEquals(URLA01, exception.getCode());
+        assertEquals(URLADR01, exception.getCode());
         exception.printStackTrace();
     }
 
     @Test
-    public void When_UrlWithSchemeAndWrongStringAddressInObject_ExceptionThrown() {
+    public void When_UrlWithSchemeMismatchedInObject_ExceptionThrown() {
         var schema =
             """
             {
                 "key1": @url("ftps") #string,
-                "key2": @url #string
+                "key2": @url("https") #string,
+                "key3": @url("irc") #string
             }
             """;
         var json =
             """
             {
                 "key1": "ssh://www.example.com/test/",
-                "key2": "ftp://www.example.com/"
+                "key2": "ftp://www.example.com/",
+                "key3": "http://www.example.com/test?q=str"
             }
             """;
         JsonSchema.isValid(schema, json);
-        var exception = assertThrows(JsonSchemaException.class,
+        var exception = assertThrows(FunctionValidationException.class,
             () -> JsonAssert.isValid(schema, json));
-        assertEquals(URLA04, exception.getCode());
+        assertEquals(URLSCM02, exception.getCode());
         exception.printStackTrace();
     }
 
     @Test
-    public void When_PhoneWithWrongStringInObject_ExceptionThrown() {
+    public void When_MalformedPhoneNumberInObject_ExceptionThrown() {
         var schema =
             """
             {
@@ -359,15 +364,65 @@ public class StringTests {
         var json =
             """
             {
-                "key1": "Phone 01737048177",
+                "key1": "Phone: 01737048177",
                 "key2": "+880:1737048177",
                 "key3": "0088/01737048177"
             }
             """;
         JsonSchema.isValid(schema, json);
-        var exception = assertThrows(JsonSchemaException.class,
+        var exception = assertThrows(FunctionValidationException.class,
             () -> JsonAssert.isValid(schema, json));
-        assertEquals(PHON01, exception.getCode());
+        assertEquals(PHONCF01, exception.getCode());
+        exception.printStackTrace();
+    }
+
+    @Test
+    public void When_InvalidIPv4AddressInObject_ExceptionThrown() {
+        var schema =
+            """
+            {
+                "ip1v4": @ipv4 #string,
+                "ip2v4": @ipv(4) #string,
+                "ip3vAny": @ipv(4, 6) #string
+            }
+            """;
+        var json =
+            """
+            {
+                "ip1v4": "13.0.0",
+                "ip2v4": "13.0.0.256",
+                "ip3vAny": "13:0:0:0"
+            }
+            """;
+        JsonSchema.isValid(schema, json);
+        var exception = assertThrows(FunctionValidationException.class,
+            () -> JsonAssert.isValid(schema, json));
+        assertEquals(IPV4CF01, exception.getCode());
+        exception.printStackTrace();
+    }
+
+    @Test
+    public void When_InvalidIPv6AddressInObject_ExceptionThrown() {
+        var schema =
+            """
+            {
+                "ip1v6": @ipv6 #string,
+                "ip2v6": @ipv(6) #string,
+                "ip3vAny": @ipv(4, 6) #string
+            }
+            """;
+        var json =
+            """
+            {
+                "ip1v6": "130d::1310:500c:d01::22",
+                "ip2v6": "130c:1310:500c:d01:0:0:22",
+                "ip3vAny": "13cd:500c::192.0.2.256"
+            }
+            """;
+        JsonSchema.isValid(schema, json);
+        var exception = assertThrows(FunctionValidationException.class,
+            () -> JsonAssert.isValid(schema, json));
+        assertEquals(IPV6CF01, exception.getCode());
         exception.printStackTrace();
     }
 
@@ -388,9 +443,9 @@ public class StringTests {
             }
             """;
         JsonSchema.isValid(schema, json);
-        var exception = assertThrows(JsonSchemaException.class,
+        var exception = assertThrows(FunctionValidationException.class,
             () -> JsonAssert.isValid(schema, json));
-        assertEquals(NEMT01, exception.getCode());
+        assertEquals(EMPTCF01, exception.getCode());
         exception.printStackTrace();
     }
 }
