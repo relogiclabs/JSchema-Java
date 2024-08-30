@@ -325,10 +325,46 @@ table th:first-of-type { min-width: 140px; }
 <h3 id="phone-number">Phone Number</h3>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-stylus" data-lang="stylus"><span class="line"><span class="cl"><span class="err">#string</span> <span class="err">target</span> <span class="o">-</span> <span class="kp">@phone</span>
 </span></span></code></pre></div><p>Validates whether the <code>target</code> string is a valid phone number. It follows the ITU-T E.163 and E.164 telephone number notation to determine the validity of the phone number. In addition to conforming to this standard, it recognizes all widely used national and international phone number formats, ensuring compatibility with a wide range of systems and user requirements.</p>
+<h3 id="ip-address">IP Address</h3>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-stylus" data-lang="stylus"><span class="line"><span class="cl"><span class="err">#string</span> <span class="err">target</span> <span class="o">-</span> <span class="kp">@ipv4</span>
+</span></span><span class="line"><span class="cl"><span class="err">#string</span> <span class="err">target</span> <span class="o">-</span> <span class="kp">@ipv6</span>
+</span></span><span class="line"><span class="cl"><span class="err">#string</span> <span class="err">target</span> <span class="o">-</span> <span class="kp">@ipv</span><span class="p">(</span><span class="err">#integer</span><span class="o">...</span> <span class="err">versions</span><span class="p">)</span>
+</span></span></code></pre></div><p>Validates whether the <code>target</code> string is a valid IPv4 or IPv6 address for the first and second variants respectively. For the third variant, target must match one of the IP versions specified by the <code>versions</code> parameter. It follows RFC 790, RFC 1918, and RFC 2373, as well as recognizing common IP formats widely used.</p>
+<table>
+<thead>
+<tr>
+<th>Ues Cases</th>
+<th>Valid Values</th>
+<th>Invalid Values</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>@ipv4</code></td>
+<td><code>18.195.85.27</code></td>
+<td><code>13.0.1</code></td>
+</tr>
+<tr>
+<td><code>@ipv6</code></td>
+<td><code>2a00:1450:400b:c01::71</code></td>
+<td><code>130d::1310:600c:d01::22</code></td>
+</tr>
+<tr>
+<td><code>@ipv(4)</code></td>
+<td><code>8.8.8.8</code></td>
+<td><code>192.0.2.256</code></td>
+</tr>
+<tr>
+<td><code>@ipv(4, 6)</code></td>
+<td><code>2001:db8:3:4::192.0.2.33</code></td>
+<td><code>13cd:0:0:13</code></td>
+</tr>
+</tbody>
+</table>
 <h3 id="date-and-time">Date and Time</h3>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-stylus" data-lang="stylus"><span class="line"><span class="cl"><span class="err">#string</span> <span class="err">target</span> <span class="o">-</span> <span class="kp">@date</span><span class="p">(</span><span class="err">pattern</span><span class="p">)</span>
 </span></span></code></pre></div><p>Validates that the <code>target</code> string matches the date and time pattern specified by the <code>pattern</code> parameter. It fully supports the ISO 8601 date and time format. Beyond this standard, it also allows custom date and time formats, ensuring compatibility with various systems and meeting diverse users and businesses requirements. This <a href="/JSchema-Java/articles/datetime">document</a> provides a comprehensive overview of the date-time custom patterns.</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">#string target - @time(pattern)
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-stylus" data-lang="stylus"><span class="line"><span class="cl"><span class="err">#string</span> <span class="err">target</span> <span class="o">-</span> <span class="kp">@time</span><span class="p">(</span><span class="err">pattern</span><span class="p">)</span>
 </span></span></code></pre></div><p>Both the <code>@date</code> and <code>@time</code> functions support a complete range of date-time patterns, enabling the precise definition of any date and time scenario. Therefore, these functions can be used interchangeably. When the sole consideration is the date or day of the month in a year, employing the <code>@date</code> function is the more convenient choice. In contrast, when it becomes necessary to specify a particular time on a date, the <code>@time</code> function is the more appropriate option. To learn more about date-time patterns, please refer to <a href="/JSchema-Java/articles/datetime">this page</a>.</p>
 <h3 id="date-and-time-range">Date and Time Range</h3>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-stylus" data-lang="stylus"><span class="line"><span class="cl"><span class="err">#datetime</span> <span class="err">target</span> <span class="o">-</span> <span class="kp">@range</span><span class="p">(</span><span class="err">#string</span> <span class="err">start</span><span class="p">,</span> <span class="err">#string</span> <span class="err">end</span><span class="p">)</span>
@@ -366,24 +402,24 @@ table th:first-of-type { min-width: 140px; }
 </tbody>
 </table>
 <h3 id="date-and-time-start">Date and Time Start</h3>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-stylus" data-lang="stylus"><span class="line"><span class="cl"><span class="err">#datetime</span> <span class="err">target</span> <span class="o">-</span> <span class="kp">@start</span><span class="p">(</span><span class="err">#string</span> <span class="err">reference</span><span class="p">)</span>
-</span></span></code></pre></div><p>Validates that the <code>target</code> date-time starts from or finds after the specified <code>reference</code> date-time parameter. If the <code>target</code> date-time finds before the <code>reference</code> date-time, a validation error is triggered. The <code>reference</code> parameter must be the string representation of the <code>target</code> data type, which can either be a <code>#date</code> or <code>#time</code> type.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-stylus" data-lang="stylus"><span class="line"><span class="cl"><span class="err">#datetime</span> <span class="err">target</span> <span class="o">-</span> <span class="kp">@start</span><span class="p">(</span><span class="err">#string</span> <span class="err">datetime</span><span class="p">)</span>
+</span></span></code></pre></div><p>Validates that the <code>target</code> date-time starts from or finds after the specified <code>datetime</code> parameter. If the <code>target</code> date-time finds before the <code>datetime</code> specified, a validation error is triggered. The <code>datetime</code> parameter must be the string representation of the <code>target</code> data type, which can either be a <code>#date</code> or <code>#time</code> type.</p>
 <h3 id="date-and-time-end">Date and Time End</h3>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-stylus" data-lang="stylus"><span class="line"><span class="cl"><span class="err">#datetime</span> <span class="err">target</span> <span class="o">-</span> <span class="kp">@end</span><span class="p">(</span><span class="err">#string</span> <span class="err">reference</span><span class="p">)</span>
-</span></span></code></pre></div><p>Validates that the <code>target</code> date-time finds before or ends at the specified <code>reference</code> date-time parameter. If the <code>target</code> date-time finds after the <code>reference</code> date-time, a validation error is triggered. The <code>reference</code> parameter must be the string representation of the <code>target</code> data type, which can either be a <code>#date</code> or <code>#time</code> type.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-stylus" data-lang="stylus"><span class="line"><span class="cl"><span class="err">#datetime</span> <span class="err">target</span> <span class="o">-</span> <span class="kp">@end</span><span class="p">(</span><span class="err">#string</span> <span class="err">datetime</span><span class="p">)</span>
+</span></span></code></pre></div><p>Validates that the <code>target</code> date-time finds before or ends at the specified <code>datetime</code> parameter. If the <code>target</code> date-time finds after the <code>datetime</code> specified, a validation error is triggered. The <code>datetime</code> parameter must be the string representation of the <code>target</code> data type, which can either be a <code>#date</code> or <code>#time</code> type.</p>
 <h3 id="date-and-time-before">Date and Time Before</h3>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-stylus" data-lang="stylus"><span class="line"><span class="cl"><span class="err">#datetime</span> <span class="err">target</span> <span class="o">-</span> <span class="kp">@before</span><span class="p">(</span><span class="err">#string</span> <span class="err">reference</span><span class="p">)</span>
-</span></span></code></pre></div><p>Validates that the <code>target</code> date-time is exclusively before the <code>reference</code> date-time. If the <code>target</code> date-time finds on or after the <code>reference</code> date-time, a validation error is triggered. The <code>reference</code> parameter must be the string representation of the <code>target</code> data type, which can either be a <code>#date</code> or <code>#time</code> type.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-stylus" data-lang="stylus"><span class="line"><span class="cl"><span class="err">#datetime</span> <span class="err">target</span> <span class="o">-</span> <span class="kp">@before</span><span class="p">(</span><span class="err">#string</span> <span class="err">datetime</span><span class="p">)</span>
+</span></span></code></pre></div><p>Validates that the <code>target</code> date-time is exclusively before the <code>datetime</code> parameter. If the <code>target</code> date-time finds on or after the <code>datetime</code> specified, a validation error is triggered. The <code>datetime</code> parameter must be the string representation of the <code>target</code> data type, which can either be a <code>#date</code> or <code>#time</code> type.</p>
 <h3 id="date-and-time-after">Date and Time After</h3>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-stylus" data-lang="stylus"><span class="line"><span class="cl"><span class="err">#datetime</span> <span class="err">target</span> <span class="o">-</span> <span class="kp">@after</span><span class="p">(</span><span class="err">#string</span> <span class="err">reference</span><span class="p">)</span>
-</span></span></code></pre></div><p>Validates that the <code>target</code> date-time is exclusively after the <code>reference</code> date-time. If the <code>target</code> date-time finds on or before the <code>reference</code> date-time, a validation error is triggered. The <code>reference</code> parameter must be the string representation of the <code>target</code> data type, which can either be a <code>#date</code> or <code>#time</code> type.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-stylus" data-lang="stylus"><span class="line"><span class="cl"><span class="err">#datetime</span> <span class="err">target</span> <span class="o">-</span> <span class="kp">@after</span><span class="p">(</span><span class="err">#string</span> <span class="err">datetime</span><span class="p">)</span>
+</span></span></code></pre></div><p>Validates that the <code>target</code> date-time is exclusively after the <code>datetime</code> parameter. If the <code>target</code> date-time finds on or before the <code>datetime</code> specified, a validation error is triggered. The <code>datetime</code> parameter must be the string representation of the <code>target</code> data type, which can either be a <code>#date</code> or <code>#time</code> type.</p>
 <h3 id="number-positive-and-negative">Number Positive and Negative</h3>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-stylus" data-lang="stylus"><span class="line"><span class="cl"><span class="err">#number</span> <span class="err">target</span> <span class="o">-</span> <span class="kp">@positive</span>
 </span></span><span class="line"><span class="cl"><span class="err">#number</span> <span class="err">target</span> <span class="o">-</span> <span class="kp">@positive</span><span class="p">(</span><span class="err">#number</span> <span class="err">reference</span><span class="p">)</span>
-</span></span></code></pre></div><p>Validates that the <code>target</code> number is positive or positive from (or relative to) the specified <code>reference</code>. If the <code>target</code> number is zero or negative for the first definition or less than the <code>reference</code> for the second definition, it generates a validation error.</p>
+</span></span></code></pre></div><p>Validates that the <code>target</code> number is positive or positive from (or relative to) the specified <code>reference</code>. If the <code>target</code> number is zero or negative for the first variant or less than the <code>reference</code> for the second variant, it generates a validation error.</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-stylus" data-lang="stylus"><span class="line"><span class="cl"><span class="err">#number</span> <span class="err">target</span> <span class="o">-</span> <span class="kp">@negative</span>
 </span></span><span class="line"><span class="cl"><span class="err">#number</span> <span class="err">target</span> <span class="o">-</span> <span class="kp">@negative</span><span class="p">(</span><span class="err">#number</span> <span class="err">reference</span><span class="p">)</span>
-</span></span></code></pre></div><p>Validates that the <code>target</code> number is negative or negative from (or relative to) the specified <code>reference</code>. If the <code>target</code> number is zero or positive for the first definition or greater than the <code>reference</code> for the second definition, it generates a validation error.</p>
+</span></span></code></pre></div><p>Validates that the <code>target</code> number is negative or negative from (or relative to) the specified <code>reference</code>. If the <code>target</code> number is zero or positive for the first variant or greater than the <code>reference</code> for the second variant, it generates a validation error.</p>
 <table>
 <thead>
 <tr>
@@ -435,15 +471,11 @@ table th:first-of-type { min-width: 140px; }
 </tr>
 </tbody>
 </table>
-<h3 id="string-not-empty">String Not Empty</h3>
+<h3 id="not-empty">Not Empty</h3>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-stylus" data-lang="stylus"><span class="line"><span class="cl"><span class="err">#string</span> <span class="err">target</span> <span class="o">-</span> <span class="kp">@nonempty</span>
-</span></span></code></pre></div><p>Validates that the <code>target</code> string is not empty. If the <code>target</code> string is empty, it generates a validation error.</p>
-<h3 id="array-not-empty">Array Not Empty</h3>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-stylus" data-lang="stylus"><span class="line"><span class="cl"><span class="err">#array</span> <span class="err">target</span> <span class="o">-</span> <span class="kp">@nonempty</span>
-</span></span></code></pre></div><p>Validates that the <code>target</code> array is not empty. If the <code>target</code> array is empty, it generates a validation error.</p>
-<h3 id="object-not-empty">Object Not Empty</h3>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-stylus" data-lang="stylus"><span class="line"><span class="cl"><span class="err">#</span><span class="nt">object</span> <span class="err">target</span> <span class="o">-</span> <span class="kp">@nonempty</span>
-</span></span></code></pre></div><p>Validates that the <code>target</code> object is not empty. If the <code>target</code> object is empty, it generates a validation error.</p>
+</span></span><span class="line"><span class="cl"><span class="err">#array</span> <span class="err">target</span> <span class="o">-</span> <span class="kp">@nonempty</span>
+</span></span><span class="line"><span class="cl"><span class="err">#</span><span class="nt">object</span> <span class="err">target</span> <span class="o">-</span> <span class="kp">@nonempty</span>
+</span></span></code></pre></div><p>Validates that the <code>target</code> string or array or object is not empty. If the <code>target</code> string or array or object is empty, it generates a validation error.</p>
 
 </div>
 

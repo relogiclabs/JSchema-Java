@@ -98,7 +98,7 @@ public class SampleSchema {
 ```
 
 ## Create Validation Errors
-Let's intentionally introduce a few errors by modifying the previous JSON document and then examine the validation results. To begin, we'll alter the `id` within the `user` object to a string type and observe the outcome. Additionally, we'll modify the `username` by inserting a space into its value, thus creating an invalid `username`. Below is the revised JSON representation, now containing these purposeful errors.
+Let's intentionally introduce a few errors by modifying the previous JSON document and examine the validation results. The revised JSON, shown below, contains two purposeful errors. The `id` within the `user` object is now a string type value, and the `username` is now invalid due to a space inserted in its value.
 ```json
 {
     "user": {
@@ -130,17 +130,15 @@ if(!jsonSchema.isValid(json)) jsonSchema.writeError();
 
 ...
 ```
-Here is the error as displayed in the console. More specific errors will be listed first, followed by more general errors. Consequently, the specific errors will precisely pinpoint the issues within the JSON document, while the generic errors will provide contextual information about where the errors occurred.
+The schema validation using `JsonSchema` attempts to continue processing JSON data even when encountering validation errors, allowing it to identify and report multiple issues in the data all at once. However, if a critical schema error is detected that could lead to unpredictable behavior, the validator will halt processing to prevent unintended consequences.
 ```json
-Schema (Line: 6:31) Json (Line: 3:14) [DTYP04]: Data type mismatch. Data type #integer is expected but found #string inferred by "not number".
-Schema (Line: 6:14) Json (Line: 3:14) [FUNC03]: Function @range(1, 10000) is incompatible with the target data type. Applying to a supported data type such as #number is expected but applied to an unsupported data type #string of "not number".
-Schema (Line: 8:20) Json (Line: 4:20) [REGX01]: Regex pattern does not match. String of pattern "[a-z_]{3,30}" is expected but found "john doe" that mismatches with pattern.
-Schema (Line: 5:12) Json (Line: 2:12) [VALD01]: Validation failed. A valid value of {"id": @range(1, 10000) #integer, "username": @regex("[a-z_]{3,30}") #string, "role": "user" #string, "isActive": #boolean, "register...ing, "country": @regex("[A-Za-z ]{3,50}") #string} #object #null}} is expected but found {"id": "not number", "username": "john doe", "role": "user", "isActive": true, "registeredAt": "2023-09-06T15:10:30.639Z", "profile":...: "123 Some St", "city": "Some town", "country": "Some Country"}}}.
-Schema (Line: 4:0) Json (Line: 1:0) [VALD01]: Validation failed. A valid value of {"user": {"id": @range(1, 10000) #integer, "username": @regex("[a-z_]{3,30}") #string, "role": "user" #string, "isActive": #boolean, ...ng, "country": @regex("[A-Za-z ]{3,50}") #string} #object #null}}} is expected but found {"user": {"id": "not number", "username": "john doe", "role": "user", "isActive": true, "registeredAt": "2023-09-06T15:10:30.639Z", "... "123 Some St", "city": "Some town", "country": "Some Country"}}}}.
+DataTypeValidationException: Schema (Line: 6:31) Json (Line: 3:14) [DTYPMS01]: Data type mismatched. Data type #integer is expected but found #string inferred by "not number".
+FunctionValidationException: Schema (Line: 6:14) Json (Line: 3:14) [FNTRGT01]: Function @range(1, 10000) is incompatible with target data type. A supported data type such as #number is expected but found unsupported target #string of "not number".
+FunctionValidationException: Schema (Line: 8:20) Json (Line: 4:20) [REGXCF01]: Target mismatched with regex pattern. A string following pattern "[a-z_]{3,30}" is expected but mismatched for target "john doe".
 ```
 
 ## Assertion for Validation
-To utilize this library for test automation and API testing, you can use the following alternative code snippet to perform assertions on input JSON against a specified schema. For instance, let's examine how to assert the JSON, which has been intentionally altered to introduce some errors, against the aforementioned schema. The following demonstrates the adjusted code for asserting the JSON with errors:
+To utilize this library for test automation and API testing, you can use the following alternative code snippet to perform assertions on input JSON against a specified schema. For instance, let's examine how to assert the JSON, which has been intentionally altered to introduce few errors, against the aforementioned schema. The following demonstrates the adjusted code for asserting the JSON with errors:
 ```java
 ...
 
@@ -152,23 +150,23 @@ try {
 
 ...
 ```
-The following presents the printed stack trace for the preceding example. It's important to note that when using `JsonAssert`, it throws an exception upon encountering the first error, thus preventing the continuation of processing the rest of the schema:
+In contrast to continuing processing after encountering validation errors, schema assertion using `JsonAssert` throws an exception immediately upon discovering the first error, reducing processing time when a detailed report of all validation issues is not required. The following presents the printed stack trace for the preceding example:
 ```json
-com.relogiclabs.jschema.exception.JsonSchemaException: DTYP04: Data type mismatch
+com.relogiclabs.jschema.exception.DataTypeValidationException: DTYPMS01: Data type mismatched
 Expected (Schema Line: 6:31): data type #integer
 Actual (Json Line: 3:14): found #string inferred by "not number"
 
-	at com.relogiclabs.jschema.node.JValidator.matchDataType(JValidator.java:87)
-	at com.relogiclabs.jschema.node.JValidator.match(JValidator.java:76)
-	at com.relogiclabs.jschema.node.JObject.match(JObject.java:56)
+	at com.relogiclabs.jschema.node.JValidator.matchDataType(JValidator.java:88)
+	at com.relogiclabs.jschema.node.JValidator.match(JValidator.java:77)
+	at com.relogiclabs.jschema.node.JObject.match(JObject.java:60)
 	at com.relogiclabs.jschema.node.JValidator.match(JValidator.java:71)
-	at com.relogiclabs.jschema.node.JObject.match(JObject.java:56)
+	at com.relogiclabs.jschema.node.JObject.match(JObject.java:60)
 	at com.relogiclabs.jschema.node.JValidator.match(JValidator.java:71)
 	at com.relogiclabs.jschema.node.JRoot.match(JRoot.java:52)
 	at com.relogiclabs.jschema.tree.SchemaTree.match(SchemaTree.java:38)
 	at com.relogiclabs.jschema.JsonAssert.isValid(JsonAssert.java:61)
 	at com.relogiclabs.jschema.JsonAssert.isValid(JsonAssert.java:72)
-	at com.example.SampleSchema.checkIsValid(SampleSchema.java:68)
+	at com.example.SampleSchema.checkIsValid(SampleSchema.java:69)
 	at com.example.Main.main(Main.java:5)
 ```
 Similar to the above illustration, there are a lot of test cases with various types of examples available in the source code repository [here](https://github.com/relogiclabs/JSchema-Java/tree/master/src/test/java/com/relogiclabs/jschema/test).

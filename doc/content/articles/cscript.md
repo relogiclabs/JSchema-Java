@@ -49,20 +49,20 @@ The `#void` type is reserved for internal operations, including initializing una
 ## Operators & Precedences
 CScript operators are symbols that are used to perform operations on variables and values. The direct operation of any operator that requires a modifiable l-value including `++`, `--` or `=` will raise an exception for the readonly schema nodes. The following table lists the operators according to their precedences from the highest to the lowest:
 
-| SN | Category                      | Operator                          |
-|----|-------------------------------|-----------------------------------|
-| 1  | Property Access & Parentheses | `.`; `[]`; `()`                   |
-| 2  | Unary Minus & Logical Not     | `-`; `!`                          |
-| 3  | Postfix Increment/Decrement   | `i++`; `i--`                      |
-| 4  | Prefix Increment/Decrement    | `++i`; `--i`                      |
-| 5  | Arithmetic Multiplicative     | `*`; `/`; `%`                     |
-| 6  | Arithmetic Additive           | `+`; `-`                          |
-| 7  | Sequence Range                | `..`                              |
-| 8  | Relational Comparison         | `>`; `<`; `>=`; `<=`              |
-| 9  | Equality Comparison           | `==`; `!=`                        |
-| 10 | Logical And (Short-Circuit)   | `&&`                              |
-| 11 | Logical Or (Short-Circuit)    | `\|\|`                            |
-| 12 | Assignment                    | `=`; `+=`; `-=`; `*=`; `/=`; `%=` |
+| SN | Category                       | Operator                          |
+|----|--------------------------------|-----------------------------------|
+| 1  | Property Access & Parentheses  | `.`; `[]`; `()`                   |
+| 2  | Unary Plus/Minus & Logical Not | `+`; `-`; `!`                     |
+| 3  | Postfix Increment/Decrement    | `i++`; `i--`                      |
+| 4  | Prefix Increment/Decrement     | `++i`; `--i`                      |
+| 5  | Arithmetic Multiplicative      | `*`; `/`; `%`                     |
+| 6  | Arithmetic Additive            | `+`; `-`                          |
+| 7  | Sequence Range                 | `..`                              |
+| 8  | Relational Comparison          | `>`; `<`; `>=`; `<=`              |
+| 9  | Equality Comparison            | `==`; `!=`                        |
+| 10 | Logical And (Short-Circuit)    | `&&`                              |
+| 11 | Logical Or (Short-Circuit)     | `\|\|`                            |
+| 12 | Assignment (Augmented)         | `=`; `+=`; `-=`; `*=`; `/=`; `%=` |
 
 ## Function Types
 Function types are essential for specifying the executable units that serve as the building-blocks of validation process within CScript. All function types can also accept variable number of arguments, specified by an ellipsis `...` after the last parameter name which is then bound to an array containing the remaining arguments.
