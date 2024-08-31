@@ -1,12 +1,12 @@
 package com.relogiclabs.jschema.test.negative;
 
 import com.relogiclabs.jschema.JsonAssert;
-import com.relogiclabs.jschema.exception.DefinitionNotFoundException;
-import com.relogiclabs.jschema.exception.DuplicateDefinitionException;
+import com.relogiclabs.jschema.exception.AliasNotFoundException;
+import com.relogiclabs.jschema.exception.DuplicateAliasException;
 import org.junit.jupiter.api.Test;
 
-import static com.relogiclabs.jschema.message.ErrorCode.DEFI01;
-import static com.relogiclabs.jschema.message.ErrorCode.DEFI02;
+import static com.relogiclabs.jschema.message.ErrorCode.ALSDEF01;
+import static com.relogiclabs.jschema.message.ErrorCode.ALSDUP01;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -28,9 +28,9 @@ public class ComponentTests {
             }
             """;
         //JsonSchema.isValid(schema, json);
-        var exception = assertThrows(DefinitionNotFoundException.class,
+        var exception = assertThrows(AliasNotFoundException.class,
             () -> JsonAssert.isValid(schema, json));
-        assertEquals(DEFI02, exception.getCode());
+        assertEquals(ALSDEF01, exception.getCode());
         exception.printStackTrace();
     }
 
@@ -53,9 +53,9 @@ public class ComponentTests {
             }
             """;
         //JsonSchema.isValid(schema, json);
-        var exception = assertThrows(DuplicateDefinitionException.class,
+        var exception = assertThrows(DuplicateAliasException.class,
             () -> JsonAssert.isValid(schema, json));
-        assertEquals(DEFI01, exception.getCode());
+        assertEquals(ALSDUP01, exception.getCode());
         exception.printStackTrace();
     }
 }

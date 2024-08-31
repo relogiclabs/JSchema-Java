@@ -1,6 +1,6 @@
 package com.relogiclabs.jschema.node;
 
-import com.relogiclabs.jschema.exception.JsonSchemaException;
+import com.relogiclabs.jschema.exception.ValueValidationException;
 import com.relogiclabs.jschema.internal.builder.JBooleanBuilder;
 import com.relogiclabs.jschema.internal.message.ActualHelper;
 import com.relogiclabs.jschema.internal.message.ExpectedHelper;
@@ -8,8 +8,8 @@ import com.relogiclabs.jschema.message.ErrorDetail;
 import com.relogiclabs.jschema.type.EBoolean;
 import lombok.EqualsAndHashCode;
 
-import static com.relogiclabs.jschema.internal.message.MessageHelper.ValueMismatch;
-import static com.relogiclabs.jschema.message.ErrorCode.BOOL01;
+import static com.relogiclabs.jschema.internal.message.MessageHelper.ValueMismatched;
+import static com.relogiclabs.jschema.message.ErrorCode.BOOLVL01;
 import static java.util.Objects.requireNonNull;
 
 @EqualsAndHashCode
@@ -30,10 +30,10 @@ public final class JBoolean extends JPrimitive implements EBoolean, PragmaValue<
         var other = castType(node, JBoolean.class);
         if(other == null) return false;
         if(value == other.value) return true;
-        return fail(new JsonSchemaException(
-                new ErrorDetail(BOOL01, ValueMismatch),
-                ExpectedHelper.asValueMismatch(this),
-                ActualHelper.asValueMismatch(other)));
+        return fail(new ValueValidationException(
+            new ErrorDetail(BOOLVL01, ValueMismatched),
+            ExpectedHelper.asValueMismatched(this),
+            ActualHelper.asValueMismatched(other)));
     }
 
     @Override

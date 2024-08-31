@@ -2,8 +2,8 @@ package com.relogiclabs.jschema.tree;
 
 import com.relogiclabs.jschema.exception.DuplicateImportException;
 import com.relogiclabs.jschema.exception.FunctionNotFoundException;
+import com.relogiclabs.jschema.exception.FunctionValidationException;
 import com.relogiclabs.jschema.exception.InvalidImportException;
-import com.relogiclabs.jschema.exception.JsonSchemaException;
 import com.relogiclabs.jschema.exception.NoClassFoundException;
 import com.relogiclabs.jschema.function.FunctionProvider;
 import com.relogiclabs.jschema.function.FutureFunction;
@@ -26,12 +26,12 @@ import java.util.Set;
 
 import static com.relogiclabs.jschema.internal.message.MessageHelper.getTypeName;
 import static com.relogiclabs.jschema.internal.util.CommonHelper.getDerived;
-import static com.relogiclabs.jschema.message.ErrorCode.CLAS01;
-import static com.relogiclabs.jschema.message.ErrorCode.CLAS02;
-import static com.relogiclabs.jschema.message.ErrorCode.CLAS03;
-import static com.relogiclabs.jschema.message.ErrorCode.FUNC03;
-import static com.relogiclabs.jschema.message.ErrorCode.FUNC04;
-import static com.relogiclabs.jschema.message.ErrorCode.FUNC05;
+import static com.relogiclabs.jschema.message.ErrorCode.FNCDEF01;
+import static com.relogiclabs.jschema.message.ErrorCode.FNCDEF02;
+import static com.relogiclabs.jschema.message.ErrorCode.FNTRGT01;
+import static com.relogiclabs.jschema.message.ErrorCode.IMPCLS01;
+import static com.relogiclabs.jschema.message.ErrorCode.IMPCLS02;
+import static com.relogiclabs.jschema.message.ErrorCode.IMPDUP01;
 import static com.relogiclabs.jschema.message.MessageFormatter.formatForSchema;
 
 public final class FunctionRegistry {
@@ -52,20 +52,24 @@ public final class FunctionRegistry {
 
     @SuppressWarnings("unchecked")
     public void addClass(String className, Context context) {
-        if(!imports.add(className)) throw new DuplicateImportException(formatForSchema(CLAS01,
+        if(!imports.add(className)) throw new DuplicateImportException(formatForSchema(IMPDUP01,
             "Class already imported " + className, context));
         Class<?> providerImpl;
         try {
             providerImpl = Class.forName(className);
         } catch(ClassNotFoundException ex) {
-            throw new NoClassFoundException(formatForSchema(CLAS02, "Not found "
+            throw new NoClassFoundException(formatForSchema(IMPCLS01, "Not found class "
                 + className, context));
         }
         var providerBase = FunctionProvider.class;
         if(!providerBase.isAssignableFrom(providerImpl))
-            throw new InvalidImportException(formatForSchema(CLAS03, providerImpl.getName()
+            throw new InvalidImportException(formatForSchema(IMPCLS02, providerImpl.getName()
                 + " needs to inherit " + providerBase.getName(), context));
         functions.mergeWith(FunctionLoader.load((Class<FunctionProvider>) providerImpl, context));
+    }
+
+    public void addFunction(ScriptFunction function) {
+        functions.add(function);
     }
 
     private boolean processResult(Object result) {
@@ -92,13 +96,14 @@ public final class FunctionRegistry {
             mismatchTarget = targetType;
         }
         if(mismatchTarget != null)
-            return fail(new JsonSchemaException(new ErrorDetail(FUNC03,
-                "Function " + caller.getOutline() + " is incompatible with the target data type"),
-                new ExpectedDetail(caller, "applying to a supported data type such as "
+            return fail(new FunctionValidationException(new ErrorDetail(FNTRGT01,
+                "Function " + caller.getOutline() + " is incompatible with target data type"),
+                new ExpectedDetail(caller, "a supported data type such as "
                     + getTypeName(mismatchTarget)),
-                new ActualDetail(target, "applied to an unsupported data type "
+                new ActualDetail(target, "found unsupported target "
                     + getTypeName(target.getClass()) + " of " + target.getOutline())));
-        return fail(new FunctionNotFoundException(formatForSchema(FUNC04, caller.getOutline(), caller)));
+        return fail(new FunctionNotFoundException(formatForSchema(FNCDEF02,
+            "Not found function " + caller.getOutline(), caller)));
     }
 
     private List<EFunction> getFunctions(JFunction caller) {
@@ -113,12 +118,8 @@ public final class FunctionRegistry {
         if(list != null) return list;
         list = CoreLibrary.getFunctions(key2);
         if(list != null) return list;
-        throw new FunctionNotFoundException(formatForSchema(FUNC05,
+        throw new FunctionNotFoundException(formatForSchema(FNCDEF01,
             "Not found function " + caller.getOutline(), caller));
-    }
-
-    public void addFunction(ScriptFunction function) {
-        functions.add(function);
     }
 
     private static List<Object> addTarget(List<Object> arguments, JNode target) {

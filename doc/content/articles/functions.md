@@ -85,7 +85,7 @@ If either the parameter values for `minimum` or `maximum` are unspecified or und
 ```stylus
 #number target - @range(#number minimum, #number maximum)
 ```
-Validates that the `target` number satisfies the range requirement specified by the parameters. It checks that the `target` number is greater than or equal to the `minimum` number specified and simultaneously less than or equal to the `maximum` number specified. If not, a validation error will generate. 
+Validates that the `target` number satisfies the range requirement specified by the parameters. It checks that the `target` number is greater than or equal to the `minimum` number specified and simultaneously less than or equal to the `maximum` number specified. If not, a validation error will generate.
 
 If either the parameter values for `minimum` or `maximum` are unspecified or undefined, the `undefined` symbol `!` can be used in place of either of these parameters. The following examples illustrate the various use cases of the `@range` function of the two variations described above, for the target data type number:
 
@@ -121,7 +121,7 @@ Validates that the `target` number is less than or equal to the `maximum` number
 | `@maximum(10.5)`    | `10.50`; `10.49`; `-1000.1`  | `10.51`; `11.0`; `1000.1` |
 | `@maximum(0, true)` | `-0.001`; `-1.01`; `-1000.1` | `0`; `0.01`; `100.1`      |
 
-### Enum String and Number 
+### Enum String and Number
 ```stylus
 #string target - @enum(#string... items)
 #number target - @enum(#number... items)
@@ -175,13 +175,28 @@ Validates whether the `target` string is a valid URL or URI with `HTTP` and `HTT
 ```
 Validates whether the `target` string is a valid phone number. It follows the ITU-T E.163 and E.164 telephone number notation to determine the validity of the phone number. In addition to conforming to this standard, it recognizes all widely used national and international phone number formats, ensuring compatibility with a wide range of systems and user requirements.
 
+### IP Address
+```stylus
+#string target - @ipv4
+#string target - @ipv6
+#string target - @ipv(#integer... versions)
+```
+Validates whether the `target` string is a valid IPv4 or IPv6 address for the first and second variants respectively. For the third variant, target must match one of the IP versions specified by the `versions` parameter. It follows RFC 790, RFC 1918, and RFC 2373, as well as recognizing common IP formats widely used.
+
+| Ues Cases    | Valid Values               | Invalid Values            |
+|--------------|----------------------------|---------------------------|
+| `@ipv4`      | `18.195.85.27`             | `13.0.1`                  |
+| `@ipv6`      | `2a00:1450:400b:c01::71`   | `130d::1310:600c:d01::22` |
+| `@ipv(4)`    | `8.8.8.8`                  | `192.0.2.256`             |
+| `@ipv(4, 6)` | `2001:db8:3:4::192.0.2.33` | `13cd:0:0:13`             |
+
 ### Date and Time
 ```stylus
 #string target - @date(pattern)
 ```
 Validates that the `target` string matches the date and time pattern specified by the `pattern` parameter. It fully supports the ISO 8601 date and time format. Beyond this standard, it also allows custom date and time formats, ensuring compatibility with various systems and meeting diverse users and businesses requirements. This [document](/JSchema-Java/articles/datetime) provides a comprehensive overview of the date-time custom patterns.
 
-```
+```stylus
 #string target - @time(pattern)
 ```
 Both the `@date` and `@time` functions support a complete range of date-time patterns, enabling the precise definition of any date and time scenario. Therefore, these functions can be used interchangeably. When the sole consideration is the date or day of the month in a year, employing the `@date` function is the more convenient choice. In contrast, when it becomes necessary to specify a particular time on a date, the `@time` function is the more appropriate option. To learn more about date-time patterns, please refer to [this page](/JSchema-Java/articles/datetime).
@@ -203,40 +218,40 @@ If either the parameter values for `start` or `end` are unspecified or undefined
 
 ### Date and Time Start
 ```stylus
-#datetime target - @start(#string reference)
+#datetime target - @start(#string datetime)
 ```
-Validates that the `target` date-time starts from or finds after the specified `reference` date-time parameter. If the `target` date-time finds before the `reference` date-time, a validation error is triggered. The `reference` parameter must be the string representation of the `target` data type, which can either be a `#date` or `#time` type.
+Validates that the `target` date-time starts from or finds after the specified `datetime` parameter. If the `target` date-time finds before the `datetime` specified, a validation error is triggered. The `datetime` parameter must be the string representation of the `target` data type, which can either be a `#date` or `#time` type.
 
 ### Date and Time End
 ```stylus
-#datetime target - @end(#string reference)
+#datetime target - @end(#string datetime)
 ```
-Validates that the `target` date-time finds before or ends at the specified `reference` date-time parameter. If the `target` date-time finds after the `reference` date-time, a validation error is triggered. The `reference` parameter must be the string representation of the `target` data type, which can either be a `#date` or `#time` type.
+Validates that the `target` date-time finds before or ends at the specified `datetime` parameter. If the `target` date-time finds after the `datetime` specified, a validation error is triggered. The `datetime` parameter must be the string representation of the `target` data type, which can either be a `#date` or `#time` type.
 
 ### Date and Time Before
 ```stylus
-#datetime target - @before(#string reference)
+#datetime target - @before(#string datetime)
 ```
-Validates that the `target` date-time is exclusively before the `reference` date-time. If the `target` date-time finds on or after the `reference` date-time, a validation error is triggered. The `reference` parameter must be the string representation of the `target` data type, which can either be a `#date` or `#time` type.
+Validates that the `target` date-time is exclusively before the `datetime` parameter. If the `target` date-time finds on or after the `datetime` specified, a validation error is triggered. The `datetime` parameter must be the string representation of the `target` data type, which can either be a `#date` or `#time` type.
 
 ### Date and Time After
 ```stylus
-#datetime target - @after(#string reference)
+#datetime target - @after(#string datetime)
 ```
-Validates that the `target` date-time is exclusively after the `reference` date-time. If the `target` date-time finds on or before the `reference` date-time, a validation error is triggered. The `reference` parameter must be the string representation of the `target` data type, which can either be a `#date` or `#time` type.
+Validates that the `target` date-time is exclusively after the `datetime` parameter. If the `target` date-time finds on or before the `datetime` specified, a validation error is triggered. The `datetime` parameter must be the string representation of the `target` data type, which can either be a `#date` or `#time` type.
 
 ### Number Positive and Negative
 ```stylus
 #number target - @positive
 #number target - @positive(#number reference)
 ```
-Validates that the `target` number is positive or positive from (or relative to) the specified `reference`. If the `target` number is zero or negative for the first definition or less than the `reference` for the second definition, it generates a validation error.
+Validates that the `target` number is positive or positive from (or relative to) the specified `reference`. If the `target` number is zero or negative for the first variant or less than the `reference` for the second variant, it generates a validation error.
 
 ```stylus
 #number target - @negative
 #number target - @negative(#number reference)
 ```
-Validates that the `target` number is negative or negative from (or relative to) the specified `reference`. If the `target` number is zero or positive for the first definition or greater than the `reference` for the second definition, it generates a validation error.
+Validates that the `target` number is negative or negative from (or relative to) the specified `reference`. If the `target` number is zero or positive for the first variant or greater than the `reference` for the second variant, it generates a validation error.
 
 | Ues Cases        | Valid Values             | Invalid Values         |
 |------------------|--------------------------|------------------------|
@@ -249,20 +264,10 @@ Validates that the `target` number is negative or negative from (or relative to)
 | `@positive(-1)`  | `-1`; `0`; `10000`       | `-10`; `-100`; `-1000` |
 | `@negative(1)`   | `1`; `0`; `-10000`       | `10`; `100`; `1000`    |
 
-### String Not Empty
+### Not Empty
 ```stylus
 #string target - @nonempty
-```
-Validates that the `target` string is not empty. If the `target` string is empty, it generates a validation error.
-
-### Array Not Empty
-```stylus
 #array target - @nonempty
-```
-Validates that the `target` array is not empty. If the `target` array is empty, it generates a validation error.
-
-### Object Not Empty
-```stylus
 #object target - @nonempty
 ```
-Validates that the `target` object is not empty. If the `target` object is empty, it generates a validation error.
+Validates that the `target` string or array or object is not empty. If the `target` string or array or object is empty, it generates a validation error.

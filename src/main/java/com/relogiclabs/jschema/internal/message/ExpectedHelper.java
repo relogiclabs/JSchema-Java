@@ -1,5 +1,6 @@
 package com.relogiclabs.jschema.internal.message;
 
+import com.relogiclabs.jschema.internal.util.MatchResult;
 import com.relogiclabs.jschema.message.ExpectedDetail;
 import com.relogiclabs.jschema.node.JDataType;
 import com.relogiclabs.jschema.node.JFunction;
@@ -17,19 +18,23 @@ public final class ExpectedHelper {
     }
 
     public static ExpectedDetail asArrayElementNotFound(JNode node, int index) {
-        return new ExpectedDetail(node, "'" + node.getOutline() + "' element at " + index);
+        return new ExpectedDetail(node, "an element for [" + node.getOutline()
+            + "] at " + index);
     }
 
-    public static ExpectedDetail asValueMismatch(JNode node) {
+    public static ExpectedDetail asValueMismatched(JNode node) {
         return new ExpectedDetail(node, "value " + node.getOutline());
     }
 
-    public static ExpectedDetail asGeneralValueMismatch(JNode node) {
+    public static ExpectedDetail asGeneralValidationFailed(JNode node) {
         return new ExpectedDetail(node, "a valid value of " + node.getOutline());
     }
 
-    public static ExpectedDetail asDataTypeMismatch(JDataType dataType) {
-        return new ExpectedDetail(dataType, "data type " + dataType.toString(true));
+    public static ExpectedDetail asDataTypeMismatched(JDataType dataType, MatchResult result) {
+        var builder = new StringBuilder("data type ").append(dataType.toString(true));
+        if(result.getPattern() == null) return new ExpectedDetail(dataType, builder.toString());
+        builder.append(" formatted as ").append(quote(result.getPattern()));
+        return new ExpectedDetail(dataType, builder.toString());
     }
 
     public static ExpectedDetail asInvalidNonCompositeType(JDataType dataType) {
@@ -40,24 +45,24 @@ public final class ExpectedHelper {
         return new ExpectedDetail(dataType, "a valid value for " + quote(dataType.getAlias()));
     }
 
-    public static ExpectedDetail asDataTypeMismatch(JNode node) {
+    public static ExpectedDetail asDataTypeMismatched(JNode node) {
         return new ExpectedDetail(node, getTypeName(node) + " inferred by " + node.getOutline());
     }
 
     public static ExpectedDetail asPropertyNotFound(JProperty property) {
-        return new ExpectedDetail(property, "property {" + property.getOutline() + "}");
+        return new ExpectedDetail(property, "a property for {" + property.getOutline() + "}");
     }
 
-    public static ExpectedDetail asUndefinedProperty(JObject object, JProperty property) {
+    public static ExpectedDetail asUndefinedPropertyFound(JObject object, JProperty property) {
         return new ExpectedDetail(object, "no property with key " + quote(property.getKey()));
     }
 
-    public static ExpectedDetail asPropertyOrderMismatch(JProperty property) {
-        return new ExpectedDetail(property, "property with key "
+    public static ExpectedDetail asPropertyOrderMismatched(JProperty property) {
+        return new ExpectedDetail(property, "a property with key "
             + quote(property.getKey()) + " at current position");
     }
 
-    public static ExpectedDetail asInvalidFunction(JFunction function) {
-        return new ExpectedDetail(function, "applying on composite type");
+    public static ExpectedDetail asNestedFunctionFailed(JFunction function) {
+        return new ExpectedDetail(function, "a composite data type for " + function);
     }
 }

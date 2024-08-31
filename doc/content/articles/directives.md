@@ -55,7 +55,7 @@ To customize the default format of the `#time` data type, utilize the `TimeDataT
 ```
 
 ### Floating Point Tolerance
-The `FloatingPointTolerance` pragma directive allows you to define the tolerance level for relative errors in floating-point numbers during calculations and computations carried out by the validation process. By default, this directive is set to `1E-10`, indicating a small tolerance. However, you have the flexibility to adjust this value to any desired number. To specify a custom tolerance value of `1E-07`, you can use the following notation as an example:
+The pragma directive `FloatingPointTolerance` allows you to define the tolerance level for relative errors in floating-point numbers during calculations and computations carried out by the validation process. By default, this directive is set to `1E-10`, indicating a small tolerance. However, you have the flexibility to adjust this value to any desired number. To specify a custom tolerance value of `1E-07`, you can use the following notation as an example:
 ```js
 %pragma FloatingPointTolerance: 1E-07
 ```
@@ -64,6 +64,18 @@ The `FloatingPointTolerance` pragma directive allows you to define the tolerance
 The `IgnoreObjectPropertyOrder` pragma directive provides a means to enforce a specific order or sequence of JSON object properties, following the schema definition. This requirement for strict ordering is only needed in certain special cases. By default, this directive is set to `true`, meaning that the object property order outlined in the schema document is not mandatory. However, you can override this default by setting it to `false`, as shown in the following example below:
 ```js
 %pragma IgnoreObjectPropertyOrder: false
+```
+
+### Enable Contextual Exception
+The `EnableContextualException` pragma directive enables an additional type of exception. These exceptions provide supplementary contextual information about the primary exceptions, showing the errors that occurred during the validation process. The default value of this directive is `false`, meaning no contextual exceptions are generated.
+```js
+%pragma EnableContextualException: true
+```
+
+### Outline Maximum Length
+The pragma directive `OutlineMaximumLength` specifies the maximum length of tree outlines generated when string representations of large Schema and JSON trees or subtrees are needed. The default maximum length is `200` characters. If the tree or subtree string exceeds this limit, an outline is shown instead of the full string representation. Currently, a basic abbreviation rule is used to create the tree outlines.
+```js
+%pragma OutlineMaximumLength: 500
 ```
 
 ## Definition / Define Directive
@@ -102,7 +114,7 @@ The script directive enables the inclusion of CScript code into a JSchema docume
 %script: {
     constraint function checkAccess(role) {
         if(role[0] == "user" && target > 5) return fail(
-            "ERRACCESS01", "Data access incompatible with 'user' role",
+            "EX_ERRACCESS01", "Data access incompatible with 'user' role",
             expected("an access at most 5 for 'user' role"),
             actual("found access " + target + " which is greater than 5"));
     }

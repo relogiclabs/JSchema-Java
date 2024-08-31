@@ -201,7 +201,7 @@ public class ScriptBasicTests {
                     var result2 = tryof(target.k1[5].item);
                     if(result2.error) print("Error: " + result2.error);
                     else print("Value: " + result2.value);
-                    if(!result2.error.find("[IDXR01]")) throw("Invalid: " + target);
+                    if(!result2.error.find("[REDIDX01]")) throw("Invalid: " + target);
                 }
             }
             """;
@@ -228,11 +228,11 @@ public class ScriptBasicTests {
                     var result = tryof(throwerFunc(-1));
                     if(result.error) print("Error: " + result.error);
                     else print("Value : " + result.value);
-                    if(!result.error.find("[ERR01]")) throw("Invalid: " + result);
+                    if(!result.error.find("[EX_ERR01]")) throw("Invalid: " + result);
                 }
 
                 subroutine function throwerFunc(value) {
-                    if(value < 0) throw("ERR01", "Invalid argument value");
+                    if(value < 0) throw("EX_ERR01", "Invalid argument value");
                     print("line not execute");
                 }
             }

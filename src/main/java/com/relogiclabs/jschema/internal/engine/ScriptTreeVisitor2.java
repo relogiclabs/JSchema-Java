@@ -1,13 +1,14 @@
 package com.relogiclabs.jschema.internal.engine;
 
-import com.relogiclabs.jschema.exception.ScriptArgumentException;
-import com.relogiclabs.jschema.exception.ScriptInitiatedException;
-import com.relogiclabs.jschema.exception.ScriptInvocationException;
+import com.relogiclabs.jschema.exception.InvocationRuntimeException;
+import com.relogiclabs.jschema.exception.MultilevelRuntimeException;
+import com.relogiclabs.jschema.exception.ScriptThrowInitiatedException;
 import com.relogiclabs.jschema.internal.antlr.SchemaParser.ExpressionContext;
 import com.relogiclabs.jschema.internal.antlr.SchemaParser.InvokeFunctionExpressionContext;
 import com.relogiclabs.jschema.internal.antlr.SchemaParser.InvokeMethodExpressionContext;
 import com.relogiclabs.jschema.internal.antlr.SchemaParser.PostIncDecExpressionContext;
 import com.relogiclabs.jschema.internal.antlr.SchemaParser.PreIncDecExpressionContext;
+import com.relogiclabs.jschema.internal.antlr.SchemaParser.VariableExpressionContext;
 import com.relogiclabs.jschema.internal.script.GArray;
 import com.relogiclabs.jschema.internal.script.GLeftValue;
 import com.relogiclabs.jschema.internal.script.GRange;
@@ -30,7 +31,6 @@ import static com.relogiclabs.jschema.internal.antlr.SchemaParser.G_DOT;
 import static com.relogiclabs.jschema.internal.antlr.SchemaParser.G_IDENTIFIER;
 import static com.relogiclabs.jschema.internal.antlr.SchemaParser.G_INC;
 import static com.relogiclabs.jschema.internal.antlr.SchemaParser.G_LBRACKET;
-import static com.relogiclabs.jschema.internal.antlr.SchemaParser.IdentifierExpressionContext;
 import static com.relogiclabs.jschema.internal.antlr.SchemaParser.MemberBracketExpressionContext;
 import static com.relogiclabs.jschema.internal.antlr.SchemaParser.MemberDotExpressionContext;
 import static com.relogiclabs.jschema.internal.antlr.SchemaParser.RangeBothExpressionContext;
@@ -49,16 +49,15 @@ import static com.relogiclabs.jschema.internal.engine.ScriptErrorHelper.OpRangeS
 import static com.relogiclabs.jschema.internal.engine.ScriptErrorHelper.failOnArrayRangeUpdate;
 import static com.relogiclabs.jschema.internal.engine.ScriptErrorHelper.failOnCallerNotFound;
 import static com.relogiclabs.jschema.internal.engine.ScriptErrorHelper.failOnFunctionNotFound;
-import static com.relogiclabs.jschema.internal.engine.ScriptErrorHelper.failOnIdentifierNotFound;
 import static com.relogiclabs.jschema.internal.engine.ScriptErrorHelper.failOnIndexOutOfBounds;
+import static com.relogiclabs.jschema.internal.engine.ScriptErrorHelper.failOnInvalidIndexRange;
 import static com.relogiclabs.jschema.internal.engine.ScriptErrorHelper.failOnInvalidLeftValueDecrement;
 import static com.relogiclabs.jschema.internal.engine.ScriptErrorHelper.failOnInvalidLeftValueIncrement;
-import static com.relogiclabs.jschema.internal.engine.ScriptErrorHelper.failOnInvalidRangeIndex;
 import static com.relogiclabs.jschema.internal.engine.ScriptErrorHelper.failOnOperation;
-import static com.relogiclabs.jschema.internal.engine.ScriptErrorHelper.failOnPropertyNotExist;
-import static com.relogiclabs.jschema.internal.engine.ScriptErrorHelper.failOnRuntime;
+import static com.relogiclabs.jschema.internal.engine.ScriptErrorHelper.failOnPropertyNotFound;
 import static com.relogiclabs.jschema.internal.engine.ScriptErrorHelper.failOnStringUpdate;
 import static com.relogiclabs.jschema.internal.engine.ScriptErrorHelper.failOnTargetNotFound;
+import static com.relogiclabs.jschema.internal.engine.ScriptErrorHelper.failOnVariableNotFound;
 import static com.relogiclabs.jschema.internal.engine.ScriptTreeHelper.createTryofMonad;
 import static com.relogiclabs.jschema.internal.engine.ScriptTreeHelper.decrement;
 import static com.relogiclabs.jschema.internal.engine.ScriptTreeHelper.dereference;
@@ -70,56 +69,56 @@ import static com.relogiclabs.jschema.internal.tree.ScriptFunction.TARGET_HVAR;
 import static com.relogiclabs.jschema.internal.util.CollectionHelper.subList;
 import static com.relogiclabs.jschema.internal.util.CommonHelper.getToken;
 import static com.relogiclabs.jschema.internal.util.CommonHelper.hasToken;
-import static com.relogiclabs.jschema.message.ErrorCode.ARAS01;
-import static com.relogiclabs.jschema.message.ErrorCode.ARUD01;
-import static com.relogiclabs.jschema.message.ErrorCode.BKTA01;
-import static com.relogiclabs.jschema.message.ErrorCode.BKTR01;
-import static com.relogiclabs.jschema.message.ErrorCode.BKTR02;
-import static com.relogiclabs.jschema.message.ErrorCode.BKTU01;
-import static com.relogiclabs.jschema.message.ErrorCode.BKTU02;
-import static com.relogiclabs.jschema.message.ErrorCode.CALR02;
-import static com.relogiclabs.jschema.message.ErrorCode.DECE01;
-import static com.relogiclabs.jschema.message.ErrorCode.DECE02;
-import static com.relogiclabs.jschema.message.ErrorCode.DECE03;
-import static com.relogiclabs.jschema.message.ErrorCode.DECT01;
-import static com.relogiclabs.jschema.message.ErrorCode.DECT02;
-import static com.relogiclabs.jschema.message.ErrorCode.DECT03;
-import static com.relogiclabs.jschema.message.ErrorCode.FNVK04;
-import static com.relogiclabs.jschema.message.ErrorCode.IDEN01;
-import static com.relogiclabs.jschema.message.ErrorCode.IDEN02;
-import static com.relogiclabs.jschema.message.ErrorCode.IDXA01;
-import static com.relogiclabs.jschema.message.ErrorCode.IDXR01;
-import static com.relogiclabs.jschema.message.ErrorCode.IDXU01;
-import static com.relogiclabs.jschema.message.ErrorCode.INCE01;
-import static com.relogiclabs.jschema.message.ErrorCode.INCE02;
-import static com.relogiclabs.jschema.message.ErrorCode.INCE03;
-import static com.relogiclabs.jschema.message.ErrorCode.INCT01;
-import static com.relogiclabs.jschema.message.ErrorCode.INCT02;
-import static com.relogiclabs.jschema.message.ErrorCode.INCT03;
-import static com.relogiclabs.jschema.message.ErrorCode.MNVK02;
-import static com.relogiclabs.jschema.message.ErrorCode.PRPT01;
-import static com.relogiclabs.jschema.message.ErrorCode.PRPT02;
-import static com.relogiclabs.jschema.message.ErrorCode.PRPT03;
-import static com.relogiclabs.jschema.message.ErrorCode.PRPT04;
-import static com.relogiclabs.jschema.message.ErrorCode.RNGA01;
-import static com.relogiclabs.jschema.message.ErrorCode.RNGR01;
-import static com.relogiclabs.jschema.message.ErrorCode.RNGT01;
-import static com.relogiclabs.jschema.message.ErrorCode.RNGT02;
-import static com.relogiclabs.jschema.message.ErrorCode.RNGT03;
-import static com.relogiclabs.jschema.message.ErrorCode.RNGT04;
-import static com.relogiclabs.jschema.message.ErrorCode.RNGT05;
-import static com.relogiclabs.jschema.message.ErrorCode.RNGT06;
-import static com.relogiclabs.jschema.message.ErrorCode.RNGU01;
-import static com.relogiclabs.jschema.message.ErrorCode.SASN01;
-import static com.relogiclabs.jschema.message.ErrorCode.SUPD01;
-import static com.relogiclabs.jschema.message.ErrorCode.THRO01;
-import static com.relogiclabs.jschema.message.ErrorCode.THRO02;
-import static com.relogiclabs.jschema.message.ErrorCode.TRGT02;
+import static com.relogiclabs.jschema.message.ErrorCode.ARRASN01;
+import static com.relogiclabs.jschema.message.ErrorCode.ARRUPD01;
+import static com.relogiclabs.jschema.message.ErrorCode.BKTASN01;
+import static com.relogiclabs.jschema.message.ErrorCode.BKTUPD01;
+import static com.relogiclabs.jschema.message.ErrorCode.BKTUPD02;
+import static com.relogiclabs.jschema.message.ErrorCode.CALRSE02;
+import static com.relogiclabs.jschema.message.ErrorCode.DECPRE01;
+import static com.relogiclabs.jschema.message.ErrorCode.DECPRE02;
+import static com.relogiclabs.jschema.message.ErrorCode.DECPRE03;
+import static com.relogiclabs.jschema.message.ErrorCode.DECPST01;
+import static com.relogiclabs.jschema.message.ErrorCode.DECPST02;
+import static com.relogiclabs.jschema.message.ErrorCode.DECPST03;
+import static com.relogiclabs.jschema.message.ErrorCode.FNSNVK04;
+import static com.relogiclabs.jschema.message.ErrorCode.IDXASN01;
+import static com.relogiclabs.jschema.message.ErrorCode.IDXUPD01;
+import static com.relogiclabs.jschema.message.ErrorCode.INCPRE01;
+import static com.relogiclabs.jschema.message.ErrorCode.INCPRE02;
+import static com.relogiclabs.jschema.message.ErrorCode.INCPRE03;
+import static com.relogiclabs.jschema.message.ErrorCode.INCPST01;
+import static com.relogiclabs.jschema.message.ErrorCode.INCPST02;
+import static com.relogiclabs.jschema.message.ErrorCode.INCPST03;
+import static com.relogiclabs.jschema.message.ErrorCode.MTHNVK02;
+import static com.relogiclabs.jschema.message.ErrorCode.OPPRTY01;
+import static com.relogiclabs.jschema.message.ErrorCode.OPPRTY02;
+import static com.relogiclabs.jschema.message.ErrorCode.OPPRTY03;
+import static com.relogiclabs.jschema.message.ErrorCode.OPPRTY04;
+import static com.relogiclabs.jschema.message.ErrorCode.OPRNGT01;
+import static com.relogiclabs.jschema.message.ErrorCode.OPRNGT02;
+import static com.relogiclabs.jschema.message.ErrorCode.OPRNGT03;
+import static com.relogiclabs.jschema.message.ErrorCode.OPRNGT04;
+import static com.relogiclabs.jschema.message.ErrorCode.OPRNGT05;
+import static com.relogiclabs.jschema.message.ErrorCode.OPRNGT06;
+import static com.relogiclabs.jschema.message.ErrorCode.REDBKT01;
+import static com.relogiclabs.jschema.message.ErrorCode.REDBKT02;
+import static com.relogiclabs.jschema.message.ErrorCode.REDIDX01;
+import static com.relogiclabs.jschema.message.ErrorCode.REDRNG01;
+import static com.relogiclabs.jschema.message.ErrorCode.RNGASN01;
+import static com.relogiclabs.jschema.message.ErrorCode.RNGUPD01;
+import static com.relogiclabs.jschema.message.ErrorCode.STRASN01;
+import static com.relogiclabs.jschema.message.ErrorCode.STRUPD01;
+import static com.relogiclabs.jschema.message.ErrorCode.THRODF01;
+import static com.relogiclabs.jschema.message.ErrorCode.THROSE01;
+import static com.relogiclabs.jschema.message.ErrorCode.TRGTSE02;
+import static com.relogiclabs.jschema.message.ErrorCode.VARRES01;
+import static com.relogiclabs.jschema.message.ErrorCode.VARRES02;
 import static com.relogiclabs.jschema.message.MessageFormatter.formatForSchema;
 import static com.relogiclabs.jschema.type.EUndefined.UNDEFINED;
 
 public abstract class ScriptTreeVisitor2 extends ScriptTreeVisitor1 {
-    private static final Evaluator THROW_CODE_SUPPLIER = s -> GString.from(THRO01);
+    private static final Evaluator THROW_CODE_SUPPLIER = s -> GString.from(THRODF01);
 
     public ScriptTreeVisitor2(RuntimeContext runtime) {
         super(runtime);
@@ -136,14 +135,14 @@ public abstract class ScriptTreeVisitor2 extends ScriptTreeVisitor1 {
     }
 
     @Override
-    public Evaluator visitIdentifierExpression(IdentifierExpressionContext ctx) {
-        return handleIdentifierExpression(ctx);
+    public Evaluator visitVariableExpression(VariableExpressionContext ctx) {
+        return handleVariableExpression(ctx);
     }
 
     Evaluator handleLeftValueUpdateExpression(ParserRuleContext ctx) {
         if(hasToken(ctx, G_LBRACKET)) return handleBracketUpdateExpression(ctx);
         if(hasToken(ctx, G_DOT)) return handleDotExpression(ctx);
-        return handleIdentifierExpression(ctx);
+        return handleVariableExpression(ctx);
     }
 
     private Evaluator handleBracketReadExpression(ParserRuleContext ctx) {
@@ -163,10 +162,12 @@ public abstract class ScriptTreeVisitor2 extends ScriptTreeVisitor1 {
             if(v3 != null) return v3;
             v3 = evaluateObjectProperty(v1, v2, expressions.get(1));
             if(v3 != null) return v3;
-            if(v2 instanceof EInteger) throw failOnOperation(IDXR01, OpIndex, v1, getToken(ctx, G_LBRACKET));
-            if(v2 instanceof GRange) throw failOnOperation(RNGR01, OpRange, v1, getToken(ctx, G_LBRACKET));
-            throw failOnOperation(BKTR01, OpBracket, v1, v2, getToken(ctx, G_LBRACKET));
-        }, BKTR02, expressions.get(0));
+            if(v2 instanceof EInteger) throw failOnOperation(REDIDX01,
+                OpIndex, v1, getToken(ctx, G_LBRACKET));
+            if(v2 instanceof GRange) throw failOnOperation(REDRNG01,
+                OpRange, v1, getToken(ctx, G_LBRACKET));
+            throw failOnOperation(REDBKT01, OpBracket, v1, v2, getToken(ctx, G_LBRACKET));
+        }, REDBKT02, expressions.get(0));
     }
 
     private Evaluator handleBracketUpdateExpression(ParserRuleContext ctx) {
@@ -182,23 +183,23 @@ public abstract class ScriptTreeVisitor2 extends ScriptTreeVisitor1 {
             if(v3 != null) return v3;
             throwBracketUpdateException(v1, v2, ctx);
             throw new IllegalStateException("Invalid runtime state");
-        }, BKTU02, expressions.get(0));
+        }, BKTUPD02, expressions.get(0));
     }
 
     static void throwBracketUpdateException(EValue v1, EValue v2, ParserRuleContext ctx) {
         if(v1 instanceof EString) throw failOnStringUpdate(hasToken(ctx, G_ASSIGN)
-            ? SASN01 : SUPD01, getToken(ctx, G_LBRACKET));
+            ? STRASN01 : STRUPD01, getToken(ctx, G_LBRACKET));
         if(v1 instanceof EArray && v2 instanceof GRange)
             throw failOnArrayRangeUpdate(hasToken(ctx, G_ASSIGN)
-                ? ARAS01 : ARUD01, getToken(ctx, G_LBRACKET));
+                ? ARRASN01 : ARRUPD01, getToken(ctx, G_LBRACKET));
         if(v2 instanceof EInteger) throw failOnOperation(hasToken(ctx, G_ASSIGN)
-            ? IDXA01 : IDXU01, OpIndex, v1, getToken(ctx, G_LBRACKET));
+            ? IDXASN01 : IDXUPD01, OpIndex, v1, getToken(ctx, G_LBRACKET));
         if(v2 instanceof GRange) throw failOnOperation(hasToken(ctx, G_ASSIGN)
-            ? RNGA01 : RNGU01, OpRange, v1, getToken(ctx, G_LBRACKET));
+            ? RNGASN01 : RNGUPD01, OpRange, v1, getToken(ctx, G_LBRACKET));
 
-        if(hasToken(ctx, G_ASSIGN)) throw failOnOperation(BKTA01,
-                OpBracketedAssignment, v1, v2, getToken(ctx, G_LBRACKET));
-        throw failOnOperation(BKTU01, OpBracket, v1, v2, getToken(ctx, G_LBRACKET));
+        if(hasToken(ctx, G_ASSIGN)) throw failOnOperation(BKTASN01,
+            OpBracketedAssignment, v1, v2, getToken(ctx, G_LBRACKET));
+        throw failOnOperation(BKTUPD01, OpBracket, v1, v2, getToken(ctx, G_LBRACKET));
     }
 
     private Evaluator handleDotExpression(ParserRuleContext ctx) {
@@ -208,22 +209,22 @@ public abstract class ScriptTreeVisitor2 extends ScriptTreeVisitor1 {
         var key2 = identifier.getText();
         return tryCatch(scope -> {
             var v1 = dereference(object1.evaluate(scope));
-            if(!(v1 instanceof EObject o1)) throw failOnOperation(PRPT01, OpProperty,
+            if(!(v1 instanceof EObject o1)) throw failOnOperation(OPPRTY01, OpProperty,
                 v1, getToken(ctx, G_DOT));
             var v2 = o1.get(key2);
-            if(v2 == null) throw failOnPropertyNotExist(PRPT02, o1, key2, identifier.getSymbol());
+            if(v2 == null) throw failOnPropertyNotFound(OPPRTY02, o1, key2, identifier.getSymbol());
             return v2;
-        }, PRPT04, expressions.get(0));
+        }, OPPRTY03, expressions.get(0));
     }
 
-    private static Evaluator handleIdentifierExpression(ParserRuleContext ctx) {
+    private static Evaluator handleVariableExpression(ParserRuleContext ctx) {
         var identifier = getToken(ctx, G_IDENTIFIER);
         var name = identifier.getText();
         return tryCatch(scope -> {
             var v1 = scope.resolve(name);
-            if(v1 == null) throw failOnIdentifierNotFound(IDEN01, identifier.getSymbol());
+            if(v1 == null) throw failOnVariableNotFound(VARRES01, identifier.getSymbol());
             return v1;
-        }, IDEN02, ctx);
+        }, VARRES02, ctx);
     }
 
     private static EValue evaluateArrayIndex(EValue v1, EValue v2, ExpressionContext ctx) {
@@ -240,14 +241,14 @@ public abstract class ScriptTreeVisitor2 extends ScriptTreeVisitor1 {
         try {
             return GArray.from(a1, r2);
         } catch(IndexOutOfBoundsException | IllegalArgumentException e) {
-            throw failOnInvalidRangeIndex(a1, r2, ctx.getStart(), e);
+            throw failOnInvalidIndexRange(a1, r2, ctx.getStart(), e);
         }
     }
 
     private static EValue evaluateObjectProperty(EValue v1, EValue v2, ExpressionContext ctx) {
         if(!(v1 instanceof EObject o1) || !(v2 instanceof EString s2)) return null;
         var v3 = o1.get(s2.getValue());
-        if(v3 == null) throw failOnPropertyNotExist(PRPT03, o1, s2.getValue(), ctx.getStart());
+        if(v3 == null) throw failOnPropertyNotFound(OPPRTY04, o1, s2.getValue(), ctx.getStart());
         return v3;
     }
 
@@ -265,7 +266,7 @@ public abstract class ScriptTreeVisitor2 extends ScriptTreeVisitor1 {
         try {
             return GString.from(s1, r2);
         } catch(IndexOutOfBoundsException | IllegalArgumentException e) {
-            throw failOnInvalidRangeIndex(s1, r2, ctx.getStart(), e);
+            throw failOnInvalidIndexRange(s1, r2, ctx.getStart(), e);
         }
     }
 
@@ -281,15 +282,14 @@ public abstract class ScriptTreeVisitor2 extends ScriptTreeVisitor1 {
                 var v1 = scope.resolve(fid1);
                 if(v1 == null) v1 = scope.resolve(fid2);
                 if(!(v1 instanceof RFunction f1)) throw failOnFunctionNotFound(name1,
-                        param2.size(), fn1.getSymbol());
+                    param2.size(), fn1.getSymbol());
                 var p2 = param2.stream().map(a -> dereference(a.evaluate(scope))).toList();
                 return f1.invoke(f1.bind(scope, p2), p2);
-            } catch(ScriptInvocationException e) {
-                throw failOnRuntime(e.getCode(), e.getMessage(name1), e.getToken(fn1.getSymbol()), e);
-            } catch(ScriptArgumentException e) {
-                throw failOnRuntime(e.getCode(), e.getMessage(name1), fn1.getSymbol(), e);
+            } catch(InvocationRuntimeException e) {
+                e.setSubject(name1);
+                throw e.translate(fn1.getSymbol());
             }
-        }, FNVK04, ctx);
+        }, FNSNVK04, ctx);
     }
 
     @Override
@@ -299,11 +299,16 @@ public abstract class ScriptTreeVisitor2 extends ScriptTreeVisitor1 {
         var name2 = method2.getText();
         var param3 = subList(ctx.expression(), 1).stream().map(this::visit).toList();
         return tryCatch(scope -> {
-            var s1 = dereference(self1.evaluate(scope));
-            var m2 = s1.getMethod(name2, param3.size());
-            var p3 = param3.stream().map(p -> dereference(p.evaluate(scope))).toList();
-            return m2.evaluate(s1, p3, scope);
-        }, MNVK02, ctx);
+            try {
+                var s1 = dereference(self1.evaluate(scope));
+                var m2 = s1.getMethod(name2, param3.size());
+                var p3 = param3.stream().map(p -> dereference(p.evaluate(scope))).toList();
+                return m2.evaluate(s1, p3, scope);
+            } catch(InvocationRuntimeException e) {
+                e.setSubject(name2);
+                throw e.translate(method2.getSymbol());
+            }
+        }, MTHNVK02, ctx);
     }
 
     @Override
@@ -324,52 +329,52 @@ public abstract class ScriptTreeVisitor2 extends ScriptTreeVisitor1 {
         var lvalue1 = handleLeftValueUpdateExpression(ctx);
         return tryCatch(scope -> {
             var v1 = lvalue1.evaluate(scope);
-            if(!(v1 instanceof GLeftValue l1)) throw failOnInvalidLeftValueIncrement(INCT01,
+            if(!(v1 instanceof GLeftValue l1)) throw failOnInvalidLeftValueIncrement(INCPST01,
                 getToken(ctx, G_INC).getSymbol());
-            if(!(l1.getValue() instanceof ENumber n1)) throw failOnOperation(INCT02,
+            if(!(l1.getValue() instanceof ENumber n1)) throw failOnOperation(INCPST02,
                 OpIncrement, v1, getToken(ctx, G_INC));
             l1.setValue(increment(n1));
             return n1;
-        }, INCT03, ctx);
+        }, INCPST03, ctx);
     }
 
     private Evaluator handlePreIncrementExpression(ParserRuleContext ctx) {
         var lvalue1 = handleLeftValueUpdateExpression(ctx);
         return tryCatch(scope -> {
             var v1 = lvalue1.evaluate(scope);
-            if(!(v1 instanceof GLeftValue l1)) throw failOnInvalidLeftValueIncrement(INCE01,
+            if(!(v1 instanceof GLeftValue l1)) throw failOnInvalidLeftValueIncrement(INCPRE01,
                 getToken(ctx, G_INC).getSymbol());
-            if(!(l1.getValue() instanceof ENumber n1)) throw failOnOperation(INCE02,
+            if(!(l1.getValue() instanceof ENumber n1)) throw failOnOperation(INCPRE02,
                 OpIncrement, v1, getToken(ctx, G_INC));
             l1.setValue(n1 = increment(n1));
             return n1;
-        }, INCE03, ctx);
+        }, INCPRE03, ctx);
     }
 
     private Evaluator handlePostDecrementExpression(ParserRuleContext ctx) {
         var lvalue1 = handleLeftValueUpdateExpression(ctx);
         return tryCatch(scope -> {
             var v1 = lvalue1.evaluate(scope);
-            if(!(v1 instanceof GLeftValue l1)) throw failOnInvalidLeftValueDecrement(DECT01,
+            if(!(v1 instanceof GLeftValue l1)) throw failOnInvalidLeftValueDecrement(DECPST01,
                 getToken(ctx, G_DEC).getSymbol());
-            if(!(l1.getValue() instanceof ENumber n1)) throw failOnOperation(DECT02,
+            if(!(l1.getValue() instanceof ENumber n1)) throw failOnOperation(DECPST02,
                 OpDecrement, v1, getToken(ctx, G_DEC));
             l1.setValue(decrement(n1));
             return n1;
-        }, DECT03, ctx);
+        }, DECPST03, ctx);
     }
 
     private Evaluator handlePreDecrementExpression(ParserRuleContext ctx) {
         var lvalue1 = handleLeftValueUpdateExpression(ctx);
         return tryCatch(scope -> {
             var v1 = lvalue1.evaluate(scope);
-            if(!(v1 instanceof GLeftValue l1)) throw failOnInvalidLeftValueDecrement(DECE01,
+            if(!(v1 instanceof GLeftValue l1)) throw failOnInvalidLeftValueDecrement(DECPRE01,
                 getToken(ctx, G_DEC).getSymbol());
-            if(!(l1.getValue() instanceof ENumber n1)) throw failOnOperation(DECE02,
+            if(!(l1.getValue() instanceof ENumber n1)) throw failOnOperation(DECPRE02,
                 OpDecrement, v1, getToken(ctx, G_DEC));
             l1.setValue(n1 = decrement(n1));
             return n1;
-        }, DECE03, ctx);
+        }, DECPRE03, ctx);
     }
 
     @Override
@@ -379,9 +384,12 @@ public abstract class ScriptTreeVisitor2 extends ScriptTreeVisitor1 {
             try {
                 var value = dereference(expression.evaluate(scope));
                 return createTryofMonad(value, UNDEFINED);
-            } catch(Exception e) {
-                LogHelper.log(e, ctx.expression().getStart());
-                return createTryofMonad(UNDEFINED, GString.from(e.getMessage()));
+            } catch(Exception exInstance) {
+                var exception = exInstance;
+                if(exception instanceof MultilevelRuntimeException ex)
+                    exception = ex.translate(ctx.expression().getStart());
+                LogHelper.log(exception, ctx.expression().getStart());
+                return createTryofMonad(UNDEFINED, GString.from(exception.getMessage()));
             }
         };
     }
@@ -394,9 +402,9 @@ public abstract class ScriptTreeVisitor2 extends ScriptTreeVisitor1 {
         return tryCatch(scope -> {
             var c1 = stringify(dereference(code.evaluate(scope)));
             var m2 = stringify(dereference(message.evaluate(scope)));
-            throw new ScriptInitiatedException(formatForSchema(c1, m2,
-                    ctx.G_THROW().getSymbol()));
-        }, THRO02, ctx);
+            throw new ScriptThrowInitiatedException(formatForSchema(c1, m2,
+                ctx.G_THROW().getSymbol()));
+        }, THROSE01, ctx);
     }
 
     @Override
@@ -405,7 +413,7 @@ public abstract class ScriptTreeVisitor2 extends ScriptTreeVisitor1 {
             var v1 = scope.resolve(TARGET_HVAR);
             if(v1 == null) throw failOnTargetNotFound(ctx.G_TARGET().getSymbol());
             return v1;
-        }, TRGT02, ctx);
+        }, TRGTSE02, ctx);
     }
 
     @Override
@@ -414,7 +422,7 @@ public abstract class ScriptTreeVisitor2 extends ScriptTreeVisitor1 {
             var v1 = scope.resolve(CALLER_HVAR);
             if(v1 == null) throw failOnCallerNotFound(ctx.G_CALLER().getSymbol());
             return v1;
-        }, CALR02, ctx);
+        }, CALRSE02, ctx);
     }
 
     @Override
@@ -423,18 +431,18 @@ public abstract class ScriptTreeVisitor2 extends ScriptTreeVisitor1 {
         var expr2 = visit(ctx.expression(1), VOID_SUPPLIER);
         if(expr2 == VOID_SUPPLIER) return tryCatch(scope -> {
             var v1 = dereference(expr1.evaluate(scope));
-            if(!(v1 instanceof EInteger i1)) throw failOnOperation(RNGT01,
+            if(!(v1 instanceof EInteger i1)) throw failOnOperation(OPRNGT01,
                 OpRangeSetup, v1, ctx.G_RANGE());
             return GRange.from(i1, null);
-        }, RNGT02, ctx);
+        }, OPRNGT02, ctx);
 
         return tryCatch(scope -> {
             var v1 = dereference(expr1.evaluate(scope));
             var v2 = dereference(expr2.evaluate(scope));
             if(!(v1 instanceof EInteger i1) || !(v2 instanceof EInteger i2))
-                throw failOnOperation(RNGT03, OpRangeSetup, v1, v2, ctx.G_RANGE());
+                throw failOnOperation(OPRNGT03, OpRangeSetup, v1, v2, ctx.G_RANGE());
             return GRange.from(i1, i2);
-        }, RNGT04, ctx);
+        }, OPRNGT04, ctx);
     }
 
     @Override
@@ -442,9 +450,9 @@ public abstract class ScriptTreeVisitor2 extends ScriptTreeVisitor1 {
         var expr2 = visit(ctx.expression());
         return tryCatch(scope -> {
             var v2 = dereference(expr2.evaluate(scope));
-            if(!(v2 instanceof EInteger i2)) throw failOnOperation(RNGT05,
+            if(!(v2 instanceof EInteger i2)) throw failOnOperation(OPRNGT05,
                 OpRangeSetup, v2, ctx.G_RANGE());
             return GRange.from(null, i2);
-        }, RNGT06, ctx);
+        }, OPRNGT06, ctx);
     }
 }

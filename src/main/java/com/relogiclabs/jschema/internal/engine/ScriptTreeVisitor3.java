@@ -39,63 +39,63 @@ import static com.relogiclabs.jschema.internal.engine.ScriptErrorHelper.OpSubtra
 import static com.relogiclabs.jschema.internal.engine.ScriptErrorHelper.OpSubtractionAssignment;
 import static com.relogiclabs.jschema.internal.engine.ScriptErrorHelper.OpUnaryMinus;
 import static com.relogiclabs.jschema.internal.engine.ScriptErrorHelper.OpUnaryPlus;
-import static com.relogiclabs.jschema.internal.engine.ScriptErrorHelper.failOnIdentifierNotFound;
 import static com.relogiclabs.jschema.internal.engine.ScriptErrorHelper.failOnInvalidLeftValueAssignment;
 import static com.relogiclabs.jschema.internal.engine.ScriptErrorHelper.failOnOperation;
+import static com.relogiclabs.jschema.internal.engine.ScriptErrorHelper.failOnVariableNotFound;
 import static com.relogiclabs.jschema.internal.engine.ScriptTreeHelper.areEqual;
 import static com.relogiclabs.jschema.internal.engine.ScriptTreeHelper.dereference;
 import static com.relogiclabs.jschema.internal.engine.ScriptTreeHelper.stringify;
 import static com.relogiclabs.jschema.internal.script.GBoolean.FALSE;
 import static com.relogiclabs.jschema.internal.script.GBoolean.TRUE;
 import static com.relogiclabs.jschema.internal.util.CollectionHelper.getLast;
-import static com.relogiclabs.jschema.message.ErrorCode.ADDN01;
-import static com.relogiclabs.jschema.message.ErrorCode.ADDN02;
-import static com.relogiclabs.jschema.message.ErrorCode.ADDN03;
-import static com.relogiclabs.jschema.message.ErrorCode.ADDT01;
-import static com.relogiclabs.jschema.message.ErrorCode.ADDT02;
-import static com.relogiclabs.jschema.message.ErrorCode.ANDL01;
-import static com.relogiclabs.jschema.message.ErrorCode.ASIN01;
-import static com.relogiclabs.jschema.message.ErrorCode.ASIN02;
-import static com.relogiclabs.jschema.message.ErrorCode.ASIN03;
-import static com.relogiclabs.jschema.message.ErrorCode.ASIN04;
-import static com.relogiclabs.jschema.message.ErrorCode.ASIN05;
-import static com.relogiclabs.jschema.message.ErrorCode.DIVD01;
-import static com.relogiclabs.jschema.message.ErrorCode.DIVD02;
-import static com.relogiclabs.jschema.message.ErrorCode.DIVN01;
-import static com.relogiclabs.jschema.message.ErrorCode.DIVN02;
-import static com.relogiclabs.jschema.message.ErrorCode.DIVN03;
-import static com.relogiclabs.jschema.message.ErrorCode.EQUL01;
-import static com.relogiclabs.jschema.message.ErrorCode.IDEN03;
-import static com.relogiclabs.jschema.message.ErrorCode.MINS01;
-import static com.relogiclabs.jschema.message.ErrorCode.MINS02;
-import static com.relogiclabs.jschema.message.ErrorCode.MODN01;
-import static com.relogiclabs.jschema.message.ErrorCode.MODN02;
-import static com.relogiclabs.jschema.message.ErrorCode.MODN03;
-import static com.relogiclabs.jschema.message.ErrorCode.MODU01;
-import static com.relogiclabs.jschema.message.ErrorCode.MODU02;
-import static com.relogiclabs.jschema.message.ErrorCode.MULN01;
-import static com.relogiclabs.jschema.message.ErrorCode.MULN02;
-import static com.relogiclabs.jschema.message.ErrorCode.MULN03;
-import static com.relogiclabs.jschema.message.ErrorCode.MULT01;
-import static com.relogiclabs.jschema.message.ErrorCode.MULT02;
-import static com.relogiclabs.jschema.message.ErrorCode.NEQL01;
-import static com.relogiclabs.jschema.message.ErrorCode.NOTL01;
-import static com.relogiclabs.jschema.message.ErrorCode.ORLG01;
-import static com.relogiclabs.jschema.message.ErrorCode.PLUS01;
-import static com.relogiclabs.jschema.message.ErrorCode.PLUS02;
-import static com.relogiclabs.jschema.message.ErrorCode.RELA01;
-import static com.relogiclabs.jschema.message.ErrorCode.RELA02;
-import static com.relogiclabs.jschema.message.ErrorCode.RELA03;
-import static com.relogiclabs.jschema.message.ErrorCode.RELA04;
-import static com.relogiclabs.jschema.message.ErrorCode.RELA05;
-import static com.relogiclabs.jschema.message.ErrorCode.RELA06;
-import static com.relogiclabs.jschema.message.ErrorCode.RELA07;
-import static com.relogiclabs.jschema.message.ErrorCode.RELA08;
-import static com.relogiclabs.jschema.message.ErrorCode.SUBN01;
-import static com.relogiclabs.jschema.message.ErrorCode.SUBN02;
-import static com.relogiclabs.jschema.message.ErrorCode.SUBN03;
-import static com.relogiclabs.jschema.message.ErrorCode.SUBT01;
-import static com.relogiclabs.jschema.message.ErrorCode.SUBT02;
+import static com.relogiclabs.jschema.message.ErrorCode.ADDASN01;
+import static com.relogiclabs.jschema.message.ErrorCode.ADDASN02;
+import static com.relogiclabs.jschema.message.ErrorCode.ADDASN03;
+import static com.relogiclabs.jschema.message.ErrorCode.ASNBKT01;
+import static com.relogiclabs.jschema.message.ErrorCode.ASNDOT01;
+import static com.relogiclabs.jschema.message.ErrorCode.ASNDOT02;
+import static com.relogiclabs.jschema.message.ErrorCode.ASNVAR01;
+import static com.relogiclabs.jschema.message.ErrorCode.ASNVAR02;
+import static com.relogiclabs.jschema.message.ErrorCode.ASNVAR03;
+import static com.relogiclabs.jschema.message.ErrorCode.CMPSGE01;
+import static com.relogiclabs.jschema.message.ErrorCode.CMPSGE02;
+import static com.relogiclabs.jschema.message.ErrorCode.CMPSGT01;
+import static com.relogiclabs.jschema.message.ErrorCode.CMPSGT02;
+import static com.relogiclabs.jschema.message.ErrorCode.CMPSLE01;
+import static com.relogiclabs.jschema.message.ErrorCode.CMPSLE02;
+import static com.relogiclabs.jschema.message.ErrorCode.CMPSLT01;
+import static com.relogiclabs.jschema.message.ErrorCode.CMPSLT02;
+import static com.relogiclabs.jschema.message.ErrorCode.DIVASN01;
+import static com.relogiclabs.jschema.message.ErrorCode.DIVASN02;
+import static com.relogiclabs.jschema.message.ErrorCode.DIVASN03;
+import static com.relogiclabs.jschema.message.ErrorCode.MODASN01;
+import static com.relogiclabs.jschema.message.ErrorCode.MODASN02;
+import static com.relogiclabs.jschema.message.ErrorCode.MODASN03;
+import static com.relogiclabs.jschema.message.ErrorCode.MULASN01;
+import static com.relogiclabs.jschema.message.ErrorCode.MULASN02;
+import static com.relogiclabs.jschema.message.ErrorCode.MULASN03;
+import static com.relogiclabs.jschema.message.ErrorCode.OPADDT01;
+import static com.relogiclabs.jschema.message.ErrorCode.OPADDT02;
+import static com.relogiclabs.jschema.message.ErrorCode.OPANDL01;
+import static com.relogiclabs.jschema.message.ErrorCode.OPDIVD01;
+import static com.relogiclabs.jschema.message.ErrorCode.OPDIVD02;
+import static com.relogiclabs.jschema.message.ErrorCode.OPEQUL01;
+import static com.relogiclabs.jschema.message.ErrorCode.OPMINS01;
+import static com.relogiclabs.jschema.message.ErrorCode.OPMINS02;
+import static com.relogiclabs.jschema.message.ErrorCode.OPMODU01;
+import static com.relogiclabs.jschema.message.ErrorCode.OPMODU02;
+import static com.relogiclabs.jschema.message.ErrorCode.OPMULT01;
+import static com.relogiclabs.jschema.message.ErrorCode.OPMULT02;
+import static com.relogiclabs.jschema.message.ErrorCode.OPNEQL01;
+import static com.relogiclabs.jschema.message.ErrorCode.OPNOTL01;
+import static com.relogiclabs.jschema.message.ErrorCode.OPORLG01;
+import static com.relogiclabs.jschema.message.ErrorCode.OPPLUS01;
+import static com.relogiclabs.jschema.message.ErrorCode.OPPLUS02;
+import static com.relogiclabs.jschema.message.ErrorCode.OPSUBT01;
+import static com.relogiclabs.jschema.message.ErrorCode.OPSUBT02;
+import static com.relogiclabs.jschema.message.ErrorCode.SUBASN01;
+import static com.relogiclabs.jschema.message.ErrorCode.SUBASN02;
+import static com.relogiclabs.jschema.message.ErrorCode.SUBASN03;
 
 public final class ScriptTreeVisitor3 extends ScriptTreeVisitor2 {
     public ScriptTreeVisitor3(RuntimeContext runtime) {
@@ -107,10 +107,10 @@ public final class ScriptTreeVisitor3 extends ScriptTreeVisitor2 {
         var expr1 = visit(ctx.expression());
         return tryCatch(scope -> {
             var v1 = dereference(expr1.evaluate(scope));
-            if(!(v1 instanceof ENumber)) throw failOnOperation(PLUS01,
+            if(!(v1 instanceof ENumber)) throw failOnOperation(OPPLUS01,
                 OpUnaryPlus, v1, ctx.G_PLUS());
             return v1;
-        }, PLUS02, ctx);
+        }, OPPLUS02, ctx);
     }
 
     @Override
@@ -120,15 +120,15 @@ public final class ScriptTreeVisitor3 extends ScriptTreeVisitor2 {
             var v1 = dereference(expr1.evaluate(scope));
             if(v1 instanceof EInteger i1) return GInteger.from(-i1.getValue());
             if(v1 instanceof ENumber n1) return GDouble.from(-n1.toDouble());
-            throw failOnOperation(MINS01, OpUnaryMinus, v1, ctx.G_MINUS());
-        }, MINS02, ctx);
+            throw failOnOperation(OPMINS01, OpUnaryMinus, v1, ctx.G_MINUS());
+        }, OPMINS02, ctx);
     }
 
     @Override
     public Evaluator visitLogicalNotExpression(LogicalNotExpressionContext ctx) {
         var expr1 = visit(ctx.expression());
         return tryCatch(scope -> expr1.evaluate(scope).toBoolean()
-            ? FALSE : TRUE, NOTL01, ctx);
+            ? FALSE : TRUE, OPNOTL01, ctx);
     }
 
     @Override
@@ -142,8 +142,8 @@ public final class ScriptTreeVisitor3 extends ScriptTreeVisitor2 {
                 return GInteger.from(i1.getValue() * i2.getValue());
             if(v1 instanceof ENumber n1 && v2 instanceof ENumber n2)
                 return GDouble.from(n1.toDouble() * n2.toDouble());
-            throw failOnOperation(MULT01, OpMultiplication, v1, v2, ctx.G_MUL());
-        }, MULT02, ctx);
+            throw failOnOperation(OPMULT01, OpMultiplication, v1, v2, ctx.G_MUL());
+        }, OPMULT02, ctx);
 
         if(ctx.G_DIV() != null) return tryCatch(scope -> {
             var v1 = dereference(expr1.evaluate(scope));
@@ -152,8 +152,8 @@ public final class ScriptTreeVisitor3 extends ScriptTreeVisitor2 {
                 return GInteger.from(i1.getValue() / i2.getValue());
             if(v1 instanceof ENumber n1 && v2 instanceof ENumber n2)
                 return GDouble.from(n1.toDouble() / n2.toDouble());
-            throw failOnOperation(DIVD01, OpDivision, v1, v2, ctx.G_DIV());
-        }, DIVD02, ctx);
+            throw failOnOperation(OPDIVD01, OpDivision, v1, v2, ctx.G_DIV());
+        }, OPDIVD02, ctx);
 
         if(ctx.G_MOD() != null) return tryCatch(scope -> {
             var v1 = dereference(expr1.evaluate(scope));
@@ -162,8 +162,8 @@ public final class ScriptTreeVisitor3 extends ScriptTreeVisitor2 {
                 return GInteger.from(i1.getValue() % i2.getValue());
             if(v1 instanceof ENumber n1 && v2 instanceof ENumber n2)
                 return GDouble.from(n1.toDouble() % n2.toDouble());
-            throw failOnOperation(MODU01, OpModulus, v1, v2, ctx.G_MOD());
-        }, MODU02, ctx);
+            throw failOnOperation(OPMODU01, OpModulus, v1, v2, ctx.G_MOD());
+        }, OPMODU02, ctx);
 
         throw new IllegalStateException("Invalid parser state");
     }
@@ -181,8 +181,8 @@ public final class ScriptTreeVisitor3 extends ScriptTreeVisitor2 {
                 return GDouble.from(n1.toDouble() + n2.toDouble());
             if(v1 instanceof EString || v2 instanceof EString)
                 return GString.from(stringify(v1) + stringify(v2));
-            throw failOnOperation(ADDT01, OpAddition, v1, v2, ctx.G_PLUS());
-        }, ADDT02, ctx);
+            throw failOnOperation(OPADDT01, OpAddition, v1, v2, ctx.G_PLUS());
+        }, OPADDT02, ctx);
 
         if(ctx.G_MINUS() != null) return tryCatch(scope -> {
             var v1 = dereference(expr1.evaluate(scope));
@@ -191,8 +191,8 @@ public final class ScriptTreeVisitor3 extends ScriptTreeVisitor2 {
                 return GInteger.from(i1.getValue() - i2.getValue());
             if(v1 instanceof ENumber n1 && v2 instanceof ENumber n2)
                 return GDouble.from(n1.toDouble() - n2.toDouble());
-            throw failOnOperation(SUBT01, OpSubtraction, v1, v2, ctx.G_MINUS());
-        }, SUBT02, ctx);
+            throw failOnOperation(OPSUBT01, OpSubtraction, v1, v2, ctx.G_MINUS());
+        }, OPSUBT02, ctx);
 
         throw new IllegalStateException("Invalid parser state");
     }
@@ -205,41 +205,41 @@ public final class ScriptTreeVisitor3 extends ScriptTreeVisitor2 {
             var v1 = dereference(expr1.evaluate(scope));
             var v2 = dereference(expr2.evaluate(scope));
             if(!(v1 instanceof ENumber n1) || !(v2 instanceof ENumber n2))
-                throw failOnOperation(RELA01, OpComparison, v1, v2, ctx.G_GT());
+                throw failOnOperation(CMPSGT01, OpComparison, v1, v2, ctx.G_GT());
             double d1 = n1.toDouble(), d2 = n2.toDouble();
             if(runtime.areEqual(d1, d2)) return FALSE;
             return d1 > d2 ? TRUE : FALSE;
-        }, RELA05, ctx);
+        }, CMPSGT02, ctx);
 
         if(ctx.G_GE() != null) return tryCatch(scope -> {
             var v1 = dereference(expr1.evaluate(scope));
             var v2 = dereference(expr2.evaluate(scope));
             if(!(v1 instanceof ENumber n1) || !(v2 instanceof ENumber n2))
-                throw failOnOperation(RELA02, OpComparison, v1, v2, ctx.G_GE());
+                throw failOnOperation(CMPSGE01, OpComparison, v1, v2, ctx.G_GE());
             double d1 = n1.toDouble(), d2 = n2.toDouble();
             if(runtime.areEqual(d1, d2)) return TRUE;
             return d1 > d2 ? TRUE : FALSE;
-        }, RELA06, ctx);
+        }, CMPSGE02, ctx);
 
         if(ctx.G_LT() != null) return tryCatch(scope -> {
             var v1 = dereference(expr1.evaluate(scope));
             var v2 = dereference(expr2.evaluate(scope));
             if(!(v1 instanceof ENumber n1) || !(v2 instanceof ENumber n2))
-                throw failOnOperation(RELA03, OpComparison, v1, v2, ctx.G_LT());
+                throw failOnOperation(CMPSLT01, OpComparison, v1, v2, ctx.G_LT());
             double d1 = n1.toDouble(), d2 = n2.toDouble();
             if(runtime.areEqual(d1, d2)) return FALSE;
             return d1 < d2 ? TRUE : FALSE;
-        }, RELA07, ctx);
+        }, CMPSLT02, ctx);
 
         if(ctx.G_LE() != null) return tryCatch(scope -> {
             var v1 = dereference(expr1.evaluate(scope));
             var v2 = dereference(expr2.evaluate(scope));
             if(!(v1 instanceof ENumber n1) || !(v2 instanceof ENumber n2))
-                throw failOnOperation(RELA04, OpComparison, v1, v2, ctx.G_LE());
+                throw failOnOperation(CMPSLE01, OpComparison, v1, v2, ctx.G_LE());
             double d1 = n1.toDouble(), d2 = n2.toDouble();
             if(runtime.areEqual(d1, d2)) return TRUE;
             return d1 < d2 ? TRUE : FALSE;
-        }, RELA08, ctx);
+        }, CMPSLE02, ctx);
 
         throw new IllegalStateException("Invalid parser state");
     }
@@ -252,13 +252,13 @@ public final class ScriptTreeVisitor3 extends ScriptTreeVisitor2 {
             var v1 = dereference(expr1.evaluate(scope));
             var v2 = dereference(expr2.evaluate(scope));
             return areEqual(v1, v2, runtime) ? TRUE : FALSE;
-        }, EQUL01, ctx);
+        }, OPEQUL01, ctx);
 
         if(ctx.G_NE() != null) return tryCatch(scope -> {
             var v1 = dereference(expr1.evaluate(scope));
             var v2 = dereference(expr2.evaluate(scope));
             return areEqual(v1, v2, runtime) ? FALSE : TRUE;
-        }, NEQL01, ctx);
+        }, OPNEQL01, ctx);
 
         throw new IllegalStateException("Invalid parser state");
     }
@@ -271,7 +271,7 @@ public final class ScriptTreeVisitor3 extends ScriptTreeVisitor2 {
             var v1 = expr1.evaluate(scope);
             if(!v1.toBoolean()) return v1;
             return expr2.evaluate(scope);
-        }, ANDL01, ctx);
+        }, OPANDL01, ctx);
     }
 
     @Override
@@ -282,7 +282,7 @@ public final class ScriptTreeVisitor3 extends ScriptTreeVisitor2 {
             var v1 = expr1.evaluate(scope);
             if(v1.toBoolean()) return v1;
             return expr2.evaluate(scope);
-        }, ORLG01, ctx);
+        }, OPORLG01, ctx);
     }
 
     @Override
@@ -292,7 +292,7 @@ public final class ScriptTreeVisitor3 extends ScriptTreeVisitor2 {
         if(ctx.G_ADD_ASSIGN() != null) return tryCatch(scope -> {
             var v2 = dereference(expr2.evaluate(scope));
             if(!(lvalue1.evaluate(scope) instanceof GLeftValue l1))
-                throw failOnInvalidLeftValueAssignment(ADDN01, ctx.getStart());
+                throw failOnInvalidLeftValueAssignment(ADDASN01, ctx.getStart());
             var v1 = l1.getValue();
             if(v1 instanceof EInteger i1 && v2 instanceof EInteger i2) {
                 var v3 = GInteger.from(i1.getValue() + i2.getValue());
@@ -309,13 +309,13 @@ public final class ScriptTreeVisitor3 extends ScriptTreeVisitor2 {
                 l1.setValue(v3);
                 return v3;
             }
-            throw failOnOperation(ADDN02, OpAdditionAssignment, v1, v2, ctx.G_ADD_ASSIGN());
-        }, ADDN03, ctx);
+            throw failOnOperation(ADDASN02, OpAdditionAssignment, v1, v2, ctx.G_ADD_ASSIGN());
+        }, ADDASN03, ctx);
 
         if(ctx.G_SUB_ASSIGN() != null) return tryCatch(scope -> {
             var v2 = dereference(expr2.evaluate(scope));
             if(!(lvalue1.evaluate(scope) instanceof GLeftValue l1))
-                throw failOnInvalidLeftValueAssignment(SUBN01, ctx.getStart());
+                throw failOnInvalidLeftValueAssignment(SUBASN01, ctx.getStart());
             var v1 = l1.getValue();
             if(v1 instanceof EInteger i1 && v2 instanceof EInteger i2) {
                 var v3 = GInteger.from(i1.getValue() - i2.getValue());
@@ -327,13 +327,13 @@ public final class ScriptTreeVisitor3 extends ScriptTreeVisitor2 {
                 l1.setValue(v3);
                 return v3;
             }
-            throw failOnOperation(SUBN02, OpSubtractionAssignment, v1, v2, ctx.G_SUB_ASSIGN());
-        }, SUBN03, ctx);
+            throw failOnOperation(SUBASN02, OpSubtractionAssignment, v1, v2, ctx.G_SUB_ASSIGN());
+        }, SUBASN03, ctx);
 
         if(ctx.G_MUL_ASSIGN() != null) return tryCatch(scope -> {
             var v2 = dereference(expr2.evaluate(scope));
             if(!(lvalue1.evaluate(scope) instanceof GLeftValue l1))
-                throw failOnInvalidLeftValueAssignment(MULN01, ctx.getStart());
+                throw failOnInvalidLeftValueAssignment(MULASN01, ctx.getStart());
             var v1 = l1.getValue();
             if(v1 instanceof EInteger i1 && v2 instanceof EInteger i2) {
                 var v3 = GInteger.from(i1.getValue() * i2.getValue());
@@ -345,13 +345,13 @@ public final class ScriptTreeVisitor3 extends ScriptTreeVisitor2 {
                 l1.setValue(v3);
                 return v3;
             }
-            throw failOnOperation(MULN02, OpMultiplicationAssignment, v1, v2, ctx.G_MUL_ASSIGN());
-        }, MULN03, ctx);
+            throw failOnOperation(MULASN02, OpMultiplicationAssignment, v1, v2, ctx.G_MUL_ASSIGN());
+        }, MULASN03, ctx);
 
         if(ctx.G_DIV_ASSIGN() != null) return tryCatch(scope -> {
             var v2 = dereference(expr2.evaluate(scope));
             if(!(lvalue1.evaluate(scope) instanceof GLeftValue l1))
-                throw failOnInvalidLeftValueAssignment(DIVN01, ctx.getStart());
+                throw failOnInvalidLeftValueAssignment(DIVASN01, ctx.getStart());
             var v1 = l1.getValue();
             if(v1 instanceof EInteger i1 && v2 instanceof EInteger i2) {
                 var v3 = GInteger.from(i1.getValue() / i2.getValue());
@@ -363,13 +363,13 @@ public final class ScriptTreeVisitor3 extends ScriptTreeVisitor2 {
                 l1.setValue(v3);
                 return v3;
             }
-            throw failOnOperation(DIVN02, OpDivisionAssignment, v1, v2, ctx.G_DIV_ASSIGN());
-        }, DIVN03, ctx);
+            throw failOnOperation(DIVASN02, OpDivisionAssignment, v1, v2, ctx.G_DIV_ASSIGN());
+        }, DIVASN03, ctx);
 
         if(ctx.G_MOD_ASSIGN() != null) return tryCatch(scope -> {
             var v2 = dereference(expr2.evaluate(scope));
             if(!(lvalue1.evaluate(scope) instanceof GLeftValue l1))
-                throw failOnInvalidLeftValueAssignment(MODN01, ctx.getStart());
+                throw failOnInvalidLeftValueAssignment(MODASN01, ctx.getStart());
             var v1 = l1.getValue();
             if(v1 instanceof EInteger i1 && v2 instanceof EInteger i2) {
                 var v3 = GInteger.from(i1.getValue() % i2.getValue());
@@ -381,8 +381,8 @@ public final class ScriptTreeVisitor3 extends ScriptTreeVisitor2 {
                 l1.setValue(v3);
                 return v3;
             }
-            throw failOnOperation(MODN02, OpModulusAssignment, v1, v2, ctx.G_MOD_ASSIGN());
-        }, MODN03, ctx);
+            throw failOnOperation(MODASN02, OpModulusAssignment, v1, v2, ctx.G_MOD_ASSIGN());
+        }, MODASN03, ctx);
 
         throw new IllegalStateException("Invalid parser state");
     }
@@ -406,7 +406,7 @@ public final class ScriptTreeVisitor3 extends ScriptTreeVisitor2 {
             }
             throwBracketUpdateException(v1, v2, ctx);
             throw new IllegalStateException("Invalid runtime state");
-        }, ASIN01, ctx);
+        }, ASNBKT01, ctx);
     }
 
     @Override
@@ -422,8 +422,8 @@ public final class ScriptTreeVisitor3 extends ScriptTreeVisitor2 {
                 o1.set(ids2, v3);
                 return v3;
             }
-            throw failOnOperation(ASIN02, OpPropertyAssignment, v1, ctx.G_DOT());
-        }, ASIN03, ctx);
+            throw failOnOperation(ASNDOT01, OpPropertyAssignment, v1, ctx.G_DOT());
+        }, ASNDOT02, ctx);
     }
 
     @Override
@@ -434,12 +434,12 @@ public final class ScriptTreeVisitor3 extends ScriptTreeVisitor2 {
         return tryCatch(scope -> {
             var v2 = dereference(expr2.evaluate(scope));
             var v1 = scope.resolve(ids1);
-            if(v1 == null) throw failOnIdentifierNotFound(IDEN03, id1.getSymbol());
+            if(v1 == null) throw failOnVariableNotFound(ASNVAR01, id1.getSymbol());
             if(!(v1 instanceof GLeftValue l1))
-                throw failOnInvalidLeftValueAssignment(ASIN04, id1.getSymbol());
+                throw failOnInvalidLeftValueAssignment(ASNVAR02, id1.getSymbol());
             l1.setValue(v2);
             return v2;
-        }, ASIN05, ctx);
+        }, ASNVAR03, ctx);
     }
 
     @Override

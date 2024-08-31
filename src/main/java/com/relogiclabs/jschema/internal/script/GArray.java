@@ -1,6 +1,6 @@
 package com.relogiclabs.jschema.internal.script;
 
-import com.relogiclabs.jschema.exception.ScriptCommonException;
+import com.relogiclabs.jschema.exception.ScriptArrayInsertException;
 import com.relogiclabs.jschema.exception.UpdateNotSupportedException;
 import com.relogiclabs.jschema.type.EArray;
 import com.relogiclabs.jschema.type.EValue;
@@ -12,9 +12,9 @@ import java.util.Collection;
 import java.util.List;
 
 import static com.relogiclabs.jschema.internal.util.StringHelper.joinWith;
-import static com.relogiclabs.jschema.message.ErrorCode.AUPD03;
-import static com.relogiclabs.jschema.message.ErrorCode.AWRT01;
-import static com.relogiclabs.jschema.message.ErrorCode.AWRT02;
+import static com.relogiclabs.jschema.message.ErrorCode.ARNSRT01;
+import static com.relogiclabs.jschema.message.ErrorCode.ARNSRT02;
+import static com.relogiclabs.jschema.message.ErrorCode.ROARRY03;
 
 @Getter
 @EqualsAndHashCode
@@ -51,16 +51,16 @@ public final class GArray implements EArray {
     @Override
     public void set(int index, EValue value) {
         var size = elements.size();
-        if(index > MAX_LIMIT) throw new ScriptCommonException(AWRT02,
+        if(index > MAX_LIMIT) throw new ScriptArrayInsertException(ARNSRT01,
             "Array index " + index + " exceeds maximum size limit");
         if(index == size) elements.add(new GLeftValue(value));
         else if(index < size) {
             if(!(elements.get(index) instanceof GLeftValue l))
-                throw new UpdateNotSupportedException(AUPD03,
+                throw new UpdateNotSupportedException(ROARRY03,
                     "Readonly array index " + index + " cannot be updated");
             l.setValue(value);
-        } else throw new ScriptCommonException(AWRT01,
-            "Index " + index + " is out of bounds for writing to array length " + size);
+        } else throw new ScriptArrayInsertException(ARNSRT02,
+            "Index " + index + " is out of bounds for inserting to array length " + size);
     }
 
     @Override

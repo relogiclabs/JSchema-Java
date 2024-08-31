@@ -1,6 +1,6 @@
 package com.relogiclabs.jschema.internal.script;
 
-import com.relogiclabs.jschema.exception.ScriptCommonException;
+import com.relogiclabs.jschema.exception.ScriptIteratorException;
 import com.relogiclabs.jschema.type.EArray;
 import com.relogiclabs.jschema.type.EObject;
 import com.relogiclabs.jschema.type.EString;
@@ -10,7 +10,7 @@ import lombok.RequiredArgsConstructor;
 
 import java.util.Iterator;
 
-import static com.relogiclabs.jschema.message.ErrorCode.ITER01;
+import static com.relogiclabs.jschema.message.ErrorCode.ITERSE01;
 
 @Getter
 @RequiredArgsConstructor
@@ -22,7 +22,7 @@ public final class GIterator implements Iterable<EValue> {
         if(iterable instanceof EArray array) return iterator(array);
         if(iterable instanceof EObject object) return iterator(object);
         if(iterable instanceof EString string) return iterator(string);
-        throw new ScriptCommonException(ITER01, "Invalid type "
+        throw new ScriptIteratorException(ITERSE01, "Invalid type "
             + iterable.getType() + " for iteration");
     }
 

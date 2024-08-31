@@ -2,9 +2,9 @@ package com.relogiclabs.jschema.message;
 
 import com.relogiclabs.jschema.node.JNode;
 import com.relogiclabs.jschema.tree.Context;
-import com.relogiclabs.jschema.tree.Location;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import org.antlr.v4.runtime.Token;
 
 @Getter
 @AllArgsConstructor
@@ -17,7 +17,11 @@ public abstract class ContextDetail {
         this.message = message;
     }
 
-    public Location getLocation() {
-        return context.getLocation();
+    public String getLocation() {
+        return getLocation(context.getToken());
+    }
+
+    public static String getLocation(Token token) {
+        return token.getLine() + ":" + token.getCharPositionInLine();
     }
 }

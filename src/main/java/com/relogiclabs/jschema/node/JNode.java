@@ -1,6 +1,6 @@
 package com.relogiclabs.jschema.node;
 
-import com.relogiclabs.jschema.exception.JsonSchemaException;
+import com.relogiclabs.jschema.exception.DataTypeValidationException;
 import com.relogiclabs.jschema.internal.builder.JNodeBuilder;
 import com.relogiclabs.jschema.internal.message.ActualHelper;
 import com.relogiclabs.jschema.internal.message.ExpectedHelper;
@@ -13,8 +13,8 @@ import lombok.Getter;
 import java.util.Collection;
 import java.util.Map;
 
-import static com.relogiclabs.jschema.internal.message.MessageHelper.DataTypeMismatch;
-import static com.relogiclabs.jschema.message.ErrorCode.DTYP02;
+import static com.relogiclabs.jschema.internal.message.MessageHelper.DataTypeMismatched;
+import static com.relogiclabs.jschema.message.ErrorCode.DTYCST01;
 import static com.relogiclabs.jschema.message.OutlineFormatter.createOutline;
 import static java.util.Collections.emptyList;
 import static java.util.Objects.requireNonNull;
@@ -53,10 +53,10 @@ public abstract class JNode implements EValue {
 
     <T> T castType(JNode node, Class<T> type) {
         if(type.isInstance(node)) return type.cast(node);
-        fail(new JsonSchemaException(
-                new ErrorDetail(DTYP02, DataTypeMismatch),
-                ExpectedHelper.asDataTypeMismatch(this),
-                ActualHelper.asDataTypeMismatch(node)));
+        fail(new DataTypeValidationException(
+            new ErrorDetail(DTYCST01, DataTypeMismatched),
+            ExpectedHelper.asDataTypeMismatched(this),
+            ActualHelper.asDataTypeMismatched(node)));
         return null;
     }
 

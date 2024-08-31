@@ -2,13 +2,16 @@ package com.relogiclabs.jschema.test.negative;
 
 import com.relogiclabs.jschema.JsonAssert;
 import com.relogiclabs.jschema.JsonSchema;
-import com.relogiclabs.jschema.exception.ScriptRuntimeException;
+import com.relogiclabs.jschema.exception.DuplicateVariableException;
+import com.relogiclabs.jschema.exception.ScriptIteratorException;
 import com.relogiclabs.jschema.exception.SystemOperationException;
+import com.relogiclabs.jschema.exception.VariableNotFoundException;
 import org.junit.jupiter.api.Test;
 
-import static com.relogiclabs.jschema.message.ErrorCode.DIVD02;
-import static com.relogiclabs.jschema.message.ErrorCode.ITER01;
-import static com.relogiclabs.jschema.message.ErrorCode.VARD01;
+import static com.relogiclabs.jschema.message.ErrorCode.ITERSE01;
+import static com.relogiclabs.jschema.message.ErrorCode.OPDIVD02;
+import static com.relogiclabs.jschema.message.ErrorCode.VARDUP01;
+import static com.relogiclabs.jschema.message.ErrorCode.VARRES01;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -42,9 +45,37 @@ public class ScriptBasicTests {
             }
             """;
         JsonSchema.isValid(schema, json);
-        var exception = assertThrows(ScriptRuntimeException.class,
+        var exception = assertThrows(DuplicateVariableException.class,
             () -> JsonAssert.isValid(schema, json));
-        assertEquals(VARD01, exception.getCode());
+        assertEquals(VARDUP01, exception.getCode());
+        exception.printStackTrace();
+    }
+
+    @Test
+    public void When_VariableDeclarationNotFound_ExceptionThrown() {
+        var schema =
+            """
+            %schema:
+            {
+                "variableTest": @variableTest #integer
+            }
+            %script: {
+                constraint variableTest() {
+                    var test = 10;
+                    print(test2); //test2 is not declared
+                }
+            }
+            """;
+        var json =
+            """
+            {
+                "variableTest": 2
+            }
+            """;
+        JsonSchema.isValid(schema, json);
+        var exception = assertThrows(VariableNotFoundException.class,
+            () -> JsonAssert.isValid(schema, json));
+        assertEquals(VARRES01, exception.getCode());
         exception.printStackTrace();
     }
 
@@ -69,9 +100,9 @@ public class ScriptBasicTests {
             }
             """;
         JsonSchema.isValid(schema, json);
-        var exception = assertThrows(ScriptRuntimeException.class,
+        var exception = assertThrows(ScriptIteratorException.class,
             () -> JsonAssert.isValid(schema, json));
-        assertEquals(ITER01, exception.getCode());
+        assertEquals(ITERSE01, exception.getCode());
         exception.printStackTrace();
     }
 
@@ -87,33 +118,33 @@ public class ScriptBasicTests {
             %script: {
                 constraint stringTest() {
                     var result1 = tryof(target[100]);
-                    if(!result1.error.find("[SIDX01]")) throw("Invalid: " + target);
+                    if(!result1.error.find("[STRIDX01]")) throw("Invalid: " + target);
                     var result2 = tryof(target[-1]);
-                    if(!result2.error.find("[SIDX02]")) throw("Invalid: " + target);
+                    if(!result2.error.find("[STRIDX02]")) throw("Invalid: " + target);
                     var result3 = tryof(target[100..]);
-                    if(!result3.error.find("[SRNG01]")) throw("Invalid: " + target);
+                    if(!result3.error.find("[STRRNG01]")) throw("Invalid: " + target);
                     var result4 = tryof(target[..100]);
-                    if(!result4.error.find("[SRNG02]")) throw("Invalid: " + target);
+                    if(!result4.error.find("[STRRNG02]")) throw("Invalid: " + target);
                     var result5 = tryof(target[8..6]);
-                    if(!result5.error.find("[SRNG03]")) throw("Invalid: " + target);
+                    if(!result5.error.find("[STRRNG03]")) throw("Invalid: " + target);
                 }
 
                 constraint arrayTest() {
                     var result1 = tryof(target[10]);
-                    if(!result1.error.find("[AIDX01]")) throw("Invalid: " + target);
+                    if(!result1.error.find("[ARRIDX01]")) throw("Invalid: " + target);
                     var result2 = tryof(target[-1]);
-                    if(!result2.error.find("[AIDX02]")) throw("Invalid: " + target);
+                    if(!result2.error.find("[ARRIDX02]")) throw("Invalid: " + target);
                     var result3 = tryof(target[10..]);
-                    if(!result3.error.find("[ARNG01]")) throw("Invalid: " + target);
+                    if(!result3.error.find("[ARRRNG01]")) throw("Invalid: " + target);
                     var result4 = tryof(target[..10]);
-                    if(!result4.error.find("[ARNG02]")) throw("Invalid: " + target);
+                    if(!result4.error.find("[ARRRNG02]")) throw("Invalid: " + target);
                     var result5 = tryof(target[-2..-4]);
-                    if(!result5.error.find("[ARNG03]")) throw("Invalid: " + target);
+                    if(!result5.error.find("[ARRRNG03]")) throw("Invalid: " + target);
                     var array = [0, 1];
                     // only assign at the end of array to add
                     // use fill method for array of specific size
                     var result6 = tryof(array[10] = 10);
-                    if(!result6.error.find("[AWRT01]")) throw("Invalid: " + array);
+                    if(!result6.error.find("[ARNSRT02]")) throw("Invalid: " + array);
                 }
             }
             """;
@@ -141,33 +172,33 @@ public class ScriptBasicTests {
             %script: {
                 constraint unaryOperation() {
                     var result1 = tryof(+target);
-                    if(!result1.error.find("[PLUS01]")) throw("Invalid: " + target);
+                    if(!result1.error.find("[OPPLUS01]")) throw("Invalid: " + target);
                     var result2 = tryof(-target);
-                    if(!result2.error.find("[MINS01]")) throw("Invalid: " + target);
+                    if(!result2.error.find("[OPMINS01]")) throw("Invalid: " + target);
                 }
 
                 constraint binaryOperation() {
                     var result1 = tryof(target + 10);
-                    if(!result1.error.find("[ADDT01]")) throw("Invalid: " + target);
+                    if(!result1.error.find("[OPADDT01]")) throw("Invalid: " + target);
                     var result2 = tryof(target - 10);
-                    if(!result2.error.find("[SUBT01]")) throw("Invalid: " + target);
+                    if(!result2.error.find("[OPSUBT01]")) throw("Invalid: " + target);
                     var result3 = tryof(target * 10);
-                    if(!result3.error.find("[MULT01]")) throw("Invalid: " + target);
+                    if(!result3.error.find("[OPMULT01]")) throw("Invalid: " + target);
                     var result4 = tryof(target / 10);
-                    if(!result4.error.find("[DIVD01]")) throw("Invalid: " + target);
+                    if(!result4.error.find("[OPDIVD01]")) throw("Invalid: " + target);
                     var result5 = tryof(target % 10);
-                    if(!result5.error.find("[MODU01]")) throw("Invalid: " + target);
+                    if(!result5.error.find("[OPMODU01]")) throw("Invalid: " + target);
                 }
 
                 constraint comparisonOperation() {
                     var result1 = tryof(target > 10);
-                    if(!result1.error.find("[RELA01]")) throw("Invalid: " + target);
+                    if(!result1.error.find("[CMPSGT01]")) throw("Invalid: " + target);
                     var result2 = tryof(target >= 10);
-                    if(!result2.error.find("[RELA02]")) throw("Invalid: " + target);
+                    if(!result2.error.find("[CMPSGE01]")) throw("Invalid: " + target);
                     var result3 = tryof(target < 10);
-                    if(!result3.error.find("[RELA03]")) throw("Invalid: " + target);
+                    if(!result3.error.find("[CMPSLT01]")) throw("Invalid: " + target);
                     var result4 = tryof(target <= 10);
-                    if(!result4.error.find("[RELA04]")) throw("Invalid: " + target);
+                    if(!result4.error.find("[CMPSLE01]")) throw("Invalid: " + target);
                 }
             }
             """;
@@ -196,13 +227,13 @@ public class ScriptBasicTests {
                 constraint incDecTest() {
                     var t = target;
                     var result1 = tryof(t++);
-                    if(!result1.error.find("[INCT02]")) throw("Invalid: " + target);
+                    if(!result1.error.find("[INCPST02]")) throw("Invalid: " + target);
                     var result2 = tryof(++t);
-                    if(!result2.error.find("[INCE02]")) throw("Invalid: " + target);
+                    if(!result2.error.find("[INCPRE02]")) throw("Invalid: " + target);
                     var result3 = tryof(t--);
-                    if(!result3.error.find("[DECT02]")) throw("Invalid: " + target);
+                    if(!result3.error.find("[DECPST02]")) throw("Invalid: " + target);
                     var result4 = tryof(--t);
-                    if(!result4.error.find("[DECE02]")) throw("Invalid: " + target);
+                    if(!result4.error.find("[DECPRE02]")) throw("Invalid: " + target);
                 }
             }
             """;
@@ -230,24 +261,24 @@ public class ScriptBasicTests {
             %script: {
                 constraint lvalueTest1() {
                     var result1 = tryof(target[2] = 10);
-                    if(!result1.error.find("[AUPD01]")) throw("Invalid: " + target);
+                    if(!result1.error.find("[ROARRY01]")) throw("Invalid: " + target);
                     var result2 = tryof(target[0] = 10);
-                    if(!result2.error.find("[AUPD01]")) throw("Invalid: " + target);
+                    if(!result2.error.find("[ROARRY01]")) throw("Invalid: " + target);
                 }
 
                 constraint lvalueTest2() {
                     var result1 = tryof(target.test = 10);
-                    if(!result1.error.find("[OUPD01]")) throw("Invalid: " + target);
+                    if(!result1.error.find("[ROOBJT01]")) throw("Invalid: " + target);
                     var result2 = tryof(target.k1 = 10);
-                    if(!result2.error.find("[OUPD01]")) throw("Invalid: " + target);
+                    if(!result2.error.find("[ROOBJT01]")) throw("Invalid: " + target);
                 }
 
                 constraint lvalueTest3() {
                     // String values are designed to be immutable
                     var result1 = tryof(target[1] = "f");
-                    if(!result1.error.find("[SASN01]")) throw("Invalid: " + target);
+                    if(!result1.error.find("[STRASN01]")) throw("Invalid: " + target);
                     var result2 = tryof(target[11] = "f");
-                    if(!result2.error.find("[SASN01]")) throw("Invalid: " + target);
+                    if(!result2.error.find("[STRASN01]")) throw("Invalid: " + target);
                 }
             }
             """;
@@ -277,41 +308,41 @@ public class ScriptBasicTests {
             %script: {
                 constraint lvalueTest1() {
                     var result1 = tryof(target.test);
-                    if(!result1.error.find("[PRPT01]")) throw("Invalid: " + target);
+                    if(!result1.error.find("[OPPRTY01]")) throw("Invalid: " + target);
                     var result2 = tryof(target["test"]);
-                    if(!result2.error.find("[BKTR01]")) throw("Invalid: " + target);
+                    if(!result2.error.find("[REDBKT01]")) throw("Invalid: " + target);
                 }
 
                 constraint lvalueTest2() {
                     var result1 = tryof(target[0]);
-                    if(!result1.error.find("[IDXR01]")) throw("Invalid: " + target);
+                    if(!result1.error.find("[REDIDX01]")) throw("Invalid: " + target);
                     var result2 = tryof(target[0..]);
-                    if(!result2.error.find("[RNGR01]")) throw("Invalid: " + target);
+                    if(!result2.error.find("[REDRNG01]")) throw("Invalid: " + target);
                 }
 
                 constraint lvalueTest3() {
                     var result1 = tryof(target.test);
-                    if(!result1.error.find("[PRPT01]")) throw("Invalid: " + target);
+                    if(!result1.error.find("[OPPRTY01]")) throw("Invalid: " + target);
                     var result2 = tryof(target[0]);
-                    if(!result2.error.find("[IDXR01]")) throw("Invalid: " + target);
+                    if(!result2.error.find("[REDIDX01]")) throw("Invalid: " + target);
                     var result3 = tryof(target[0..]);
-                    if(!result3.error.find("[RNGR01]")) throw("Invalid: " + target);
+                    if(!result3.error.find("[REDRNG01]")) throw("Invalid: " + target);
                     var result4 = tryof(target[0] = 0);
-                    if(!result4.error.find("[IDXA01]")) throw("Invalid: " + target);
+                    if(!result4.error.find("[IDXASN01]")) throw("Invalid: " + target);
                     var result5 = tryof(target[0..] = 10);
-                    if(!result5.error.find("[RNGA01]")) throw("Invalid: " + target);
+                    if(!result5.error.find("[RNGASN01]")) throw("Invalid: " + target);
                 }
 
                 constraint lvalueTest4() {
                     var string = "Strings are designed to be immutable";
                     var result1 = tryof(string[1] = "f");
-                    if(!result1.error.find("[SASN01]")) throw("Invalid: " + string);
+                    if(!result1.error.find("[STRASN01]")) throw("Invalid: " + string);
                     var array = [10, 20, 30, 40];
                     // an array range update is not supported
                     var result2 = tryof(array[1..3]++);
-                    if(!result2.error.find("[ARUD01]")) throw("Invalid: " + array);
+                    if(!result2.error.find("[ARRUPD01]")) throw("Invalid: " + array);
                     var result3 = tryof(array[1..3] = "test");
-                    if(!result3.error.find("[ARAS01]")) throw("Invalid: " + array);
+                    if(!result3.error.find("[ARRASN01]")) throw("Invalid: " + array);
                 }
             }
             """;
@@ -329,7 +360,7 @@ public class ScriptBasicTests {
     }
 
     @Test
-    public void When_InvalidRangeSetupForWrongBoundaryValue_ExceptionThrown() {
+    public void When_InvalidRangeForWrongBoundaryValueType_ExceptionThrown() {
         var schema =
             """
             %schema:
@@ -339,11 +370,11 @@ public class ScriptBasicTests {
             %script: {
                 constraint testRangeSetup() {
                     var result1 = tryof(target..);
-                    if(!result1.error.find("[RNGT01]")) throw("Invalid: " + target);
+                    if(!result1.error.find("[OPRNGT01]")) throw("Invalid: " + target);
                     var result2 = tryof(5..target);
-                    if(!result2.error.find("[RNGT03]")) throw("Invalid: " + target);
+                    if(!result2.error.find("[OPRNGT03]")) throw("Invalid: " + target);
                     var result3 = tryof(..target);
-                    if(!result3.error.find("[RNGT05]")) throw("Invalid: " + target);
+                    if(!result3.error.find("[OPRNGT05]")) throw("Invalid: " + target);
                 }
             }
             """;
@@ -381,7 +412,7 @@ public class ScriptBasicTests {
         JsonSchema.isValid(schema, json);
         var exception = assertThrows(SystemOperationException.class,
             () -> JsonAssert.isValid(schema, json));
-        assertEquals(DIVD02, exception.getCode());
+        assertEquals(OPDIVD02, exception.getCode());
         exception.printStackTrace();
     }
 }

@@ -67,6 +67,7 @@ The next example represents an expanded version of the previous one, which bring
 ```cpp
 %title: "Extended User Profile Dashboard API Response"
 %version: "2.0.0-extended"
+%import: com.relogiclabs.jschema.test.external.ExternalFunctions
 
 %pragma DateDataTypeFormat: "DD-MM-YYYY"
 %pragma TimeDataTypeFormat: "DD-MM-YYYY hh:mm:ss"
@@ -105,6 +106,7 @@ The next example represents an expanded version of the previous one, which bring
         "isActive": #boolean, //user account current status
         "registeredAt": @after("01-01-2010 00:00:00") #time,
         "dataAccess": @checkAccess(&role) #integer,
+        "ipAddress": @checkIPAddress #string,
         "profile": {
             "firstName": @regex("[A-Za-z]{3,50}") #string,
             "lastName": @regex("[A-Za-z]{3,50}") #string,
@@ -140,7 +142,7 @@ The next example represents an expanded version of the previous one, which bring
         if(role == "user" && target > 5) return fail(
             "ERRACCESS01", "Data access incompatible with 'user' role",
             expected("an access at most 5 for 'user' role"),
-            actual("found access " + target + " which is greater than 5"));
+            actual("found access " + target + " that is greater than 5"));
     }
 }
 ```
@@ -148,12 +150,13 @@ The subsequent JSON sample is an illustrative example that successfully validate
 ```json
 {
     "user": {
-        "id": 1234,
+        "id": 1111,
         "username": "johndoe",
         "role": "admin",
         "isActive": true,
         "registeredAt": "06-09-2023 15:10:30",
         "dataAccess": 10,
+        "ipAddress": "127.0.0.1",
         "profile": {
             "firstName": "John",
             "lastName": "Doe",
@@ -183,7 +186,7 @@ The subsequent JSON sample is an illustrative example that successfully validate
                 "title": "Working with JSON in Java",
                 "content": "Java provides great support for working with JSON...",
                 "tags": [
-                    "CSharp",
+                    "Java",
                     "JSON",
                     "tutorial"
                 ]

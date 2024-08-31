@@ -1,16 +1,19 @@
 package com.relogiclabs.jschema.node;
 
 import com.relogiclabs.jschema.exception.InvalidDataTypeException;
-import com.relogiclabs.jschema.tree.Location;
+import com.relogiclabs.jschema.exception.InvalidDateTimeException;
+import com.relogiclabs.jschema.internal.util.LogHelper;
+import com.relogiclabs.jschema.internal.util.MatchResult;
 import com.relogiclabs.jschema.type.EType;
-import com.relogiclabs.jschema.util.Reference;
 import lombok.RequiredArgsConstructor;
-import org.antlr.v4.runtime.tree.TerminalNode;
+import org.antlr.v4.runtime.Token;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.relogiclabs.jschema.message.ErrorCode.DTYP01;
+import static com.relogiclabs.jschema.internal.util.MatchResult.FAILURE;
+import static com.relogiclabs.jschema.internal.util.MatchResult.SUCCESS;
+import static com.relogiclabs.jschema.message.ErrorCode.DTYVDF01;
 import static com.relogiclabs.jschema.message.MessageFormatter.formatForSchema;
 import static com.relogiclabs.jschema.type.EType.ANY;
 import static com.relogiclabs.jschema.type.EType.ARRAY;
@@ -58,33 +61,33 @@ public final class JsonType {
         typeClassMap.put(type, typeClass);
     }
 
-    public static JsonType from(TerminalNode node) {
-        return from(node.getText(), Location.from(node.getSymbol()));
-    }
-
-    private static JsonType from(String name, Location location) {
-        var type = stringTypeMap.get(name);
-        if(type == null) throw new InvalidDataTypeException(formatForSchema(DTYP01,
-            "Invalid data type " + name, location));
+    public static JsonType from(Token token) {
+        var type = stringTypeMap.get(token.getText());
+        if(type == null) throw new InvalidDataTypeException(formatForSchema(DTYVDF01,
+            "Invalid data type " + token.getText(), token));
         return new JsonType(type);
     }
 
-    public boolean match(JNode node, Reference<String> error) {
-        if(!typeClassMap.get(type).isInstance(node)) return false;
-        if(type == DATE) {
-            var date = (JString) node;
-            var dateTime = node.getRuntime().getPragmas().getDateTypeParser()
-                .tryParse(date.getValue(), error);
-            if(dateTime == null) return false;
-            date.setDerived(JDate.from(date, dateTime));
-        } else if(type == TIME) {
-            var time = (JString) node;
-            var dateTime = node.getRuntime().getPragmas().getTimeTypeParser()
-                .tryParse(time.getValue(), error);
-            if(dateTime == null) return false;
-            time.setDerived(JTime.from(time, dateTime));
+    public MatchResult match(JNode node) {
+        if(!typeClassMap.get(type).isInstance(node)) return FAILURE;
+        try {
+            if(type == DATE) {
+                var string = (JString) node;
+                var dateTime = node.getRuntime().getPragmas().getDateTypeParser()
+                    .parse(string.getValue());
+                string.setDerived(JDate.from(string, dateTime));
+            } else if(type == TIME) {
+                var string = (JString) node;
+                var dateTime = node.getRuntime().getPragmas().getTimeTypeParser()
+                    .parse(string.getValue());
+                string.setDerived(JTime.from(string, dateTime));
+            }
+        } catch(InvalidDateTimeException e) {
+            LogHelper.debug(e);
+            return new MatchResult(false, e.getMessage(),
+                e.getContext().getParser().getPattern());
         }
-        return true;
+        return SUCCESS;
     }
 
     boolean isNullType() {

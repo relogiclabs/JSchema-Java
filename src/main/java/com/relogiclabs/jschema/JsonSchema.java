@@ -45,13 +45,19 @@ public class JsonSchema {
     /**
      *  Writes error messages that occur during JSchema validation process, to the
      *  standard error output stream.
+     * @return Returns the number of errors written in the standard error stream.
      */
-    public void writeError() {
+    public int writeError() {
         if(exceptions.getCount() == 0) {
             System.out.println("No error has occurred");
-            return;
+            return 0;
         }
-        for(var exception : exceptions) System.err.println(exception.getMessage());
+        for(var exception : exceptions) System.err.println(formatMessage(exception));
+        return exceptions.getCount();
+    }
+
+    private static String formatMessage(Exception exception) {
+        return exception.getClass().getSimpleName() + ": " + exception.getMessage();
     }
 
     /**

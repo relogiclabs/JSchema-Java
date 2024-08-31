@@ -3128,6 +3128,16 @@ public class SchemaParser extends Parser {
 		}
 	}
 	@SuppressWarnings("CheckReturnValue")
+	public static class VariableExpressionContext extends ExpressionContext {
+		public TerminalNode G_IDENTIFIER() { return getToken(SchemaParser.G_IDENTIFIER, 0); }
+		public VariableExpressionContext(ExpressionContext ctx) { copyFrom(ctx); }
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof SchemaParserVisitor ) return ((SchemaParserVisitor<? extends T>)visitor).visitVariableExpression(this);
+			else return visitor.visitChildren(this);
+		}
+	}
+	@SuppressWarnings("CheckReturnValue")
 	public static class ThrowExpressionContext extends ExpressionContext {
 		public TerminalNode G_THROW() { return getToken(SchemaParser.G_THROW, 0); }
 		public TerminalNode G_LPAREN() { return getToken(SchemaParser.G_LPAREN, 0); }
@@ -3143,16 +3153,6 @@ public class SchemaParser extends Parser {
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
 			if ( visitor instanceof SchemaParserVisitor ) return ((SchemaParserVisitor<? extends T>)visitor).visitThrowExpression(this);
-			else return visitor.visitChildren(this);
-		}
-	}
-	@SuppressWarnings("CheckReturnValue")
-	public static class IdentifierExpressionContext extends ExpressionContext {
-		public TerminalNode G_IDENTIFIER() { return getToken(SchemaParser.G_IDENTIFIER, 0); }
-		public IdentifierExpressionContext(ExpressionContext ctx) { copyFrom(ctx); }
-		@Override
-		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof SchemaParserVisitor ) return ((SchemaParserVisitor<? extends T>)visitor).visitIdentifierExpression(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -3493,7 +3493,7 @@ public class SchemaParser extends Parser {
 				break;
 			case 14:
 				{
-				_localctx = new IdentifierExpressionContext(_localctx);
+				_localctx = new VariableExpressionContext(_localctx);
 				_ctx = _localctx;
 				_prevctx = _localctx;
 				setState(470);

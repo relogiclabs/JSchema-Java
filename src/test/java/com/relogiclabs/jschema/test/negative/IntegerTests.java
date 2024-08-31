@@ -2,16 +2,18 @@ package com.relogiclabs.jschema.test.negative;
 
 import com.relogiclabs.jschema.JsonAssert;
 import com.relogiclabs.jschema.JsonSchema;
-import com.relogiclabs.jschema.exception.JsonSchemaException;
+import com.relogiclabs.jschema.exception.DataTypeValidationException;
+import com.relogiclabs.jschema.exception.FunctionValidationException;
+import com.relogiclabs.jschema.exception.ValueValidationException;
 import org.junit.jupiter.api.Test;
 
-import static com.relogiclabs.jschema.message.ErrorCode.DTYP04;
-import static com.relogiclabs.jschema.message.ErrorCode.DTYP06;
-import static com.relogiclabs.jschema.message.ErrorCode.FUNC06;
-import static com.relogiclabs.jschema.message.ErrorCode.INTE01;
-import static com.relogiclabs.jschema.message.ErrorCode.RANG01;
-import static com.relogiclabs.jschema.message.ErrorCode.RANG03;
-import static com.relogiclabs.jschema.message.ErrorCode.RANG04;
+import static com.relogiclabs.jschema.message.ErrorCode.DTYPMS01;
+import static com.relogiclabs.jschema.message.ErrorCode.DTYPMS02;
+import static com.relogiclabs.jschema.message.ErrorCode.FNCFAL01;
+import static com.relogiclabs.jschema.message.ErrorCode.INTVAL01;
+import static com.relogiclabs.jschema.message.ErrorCode.RNGNUM01;
+import static com.relogiclabs.jschema.message.ErrorCode.RNGNUM03;
+import static com.relogiclabs.jschema.message.ErrorCode.RNGNUM04;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -22,9 +24,9 @@ public class IntegerTests {
         var json = "10.5";
 
         JsonSchema.isValid(schema, json);
-        var exception = assertThrows(JsonSchemaException.class,
+        var exception = assertThrows(DataTypeValidationException.class,
             () -> JsonAssert.isValid(schema, json));
-        assertEquals(DTYP04, exception.getCode());
+        assertEquals(DTYPMS01, exception.getCode());
         exception.printStackTrace();
     }
 
@@ -34,9 +36,9 @@ public class IntegerTests {
         var json = "9";
 
         JsonSchema.isValid(schema, json);
-        var exception = assertThrows(JsonSchemaException.class,
+        var exception = assertThrows(ValueValidationException.class,
             () -> JsonAssert.isValid(schema, json));
-        assertEquals(INTE01, exception.getCode());
+        assertEquals(INTVAL01, exception.getCode());
         exception.printStackTrace();
     }
 
@@ -59,9 +61,9 @@ public class IntegerTests {
             }
             """;
         JsonSchema.isValid(schema, json);
-        var exception = assertThrows(JsonSchemaException.class,
+        var exception = assertThrows(DataTypeValidationException.class,
             () -> JsonAssert.isValid(schema, json));
-        assertEquals(DTYP04, exception.getCode());
+        assertEquals(DTYPMS01, exception.getCode());
         exception.printStackTrace();
     }
 
@@ -76,9 +78,9 @@ public class IntegerTests {
             [true, -4568.57, 100]
             """;
         JsonSchema.isValid(schema, json);
-        var exception = assertThrows(JsonSchemaException.class,
+        var exception = assertThrows(DataTypeValidationException.class,
             () -> JsonAssert.isValid(schema, json));
-        assertEquals(DTYP04, exception.getCode());
+        assertEquals(DTYPMS01, exception.getCode());
         exception.printStackTrace();
     }
 
@@ -93,9 +95,9 @@ public class IntegerTests {
             [null, 2.2, "40000000"]
             """;
         JsonSchema.isValid(schema, json);
-        var exception = assertThrows(JsonSchemaException.class,
+        var exception = assertThrows(DataTypeValidationException.class,
             () -> JsonAssert.isValid(schema, json));
-        assertEquals(DTYP06, exception.getCode());
+        assertEquals(DTYPMS02, exception.getCode());
         exception.printStackTrace();
     }
 
@@ -114,9 +116,9 @@ public class IntegerTests {
             }
             """;
         JsonSchema.isValid(schema, json);
-        var exception = assertThrows(JsonSchemaException.class,
+        var exception = assertThrows(DataTypeValidationException.class,
             () -> JsonAssert.isValid(schema, json));
-        assertEquals(DTYP06, exception.getCode());
+        assertEquals(DTYPMS02, exception.getCode());
         exception.printStackTrace();
     }
 
@@ -135,14 +137,14 @@ public class IntegerTests {
             }
             """;
         JsonSchema.isValid(schema, json);
-        var exception = assertThrows(JsonSchemaException.class,
+        var exception = assertThrows(DataTypeValidationException.class,
             () -> JsonAssert.isValid(schema, json));
-        assertEquals(DTYP06, exception.getCode());
+        assertEquals(DTYPMS02, exception.getCode());
         exception.printStackTrace();
     }
 
     @Test
-    public void When_NestedRangeWithNonCompositeJsonInObject_ExceptionThrown() {
+    public void When_NestedRangeWithNonCompositeJsonValue_ExceptionThrown() {
         var schema =
             """
             @range*(100, !)
@@ -152,9 +154,9 @@ public class IntegerTests {
             "value1"
             """;
         JsonSchema.isValid(schema, json);
-        var exception = assertThrows(JsonSchemaException.class,
+        var exception = assertThrows(FunctionValidationException.class,
             () -> JsonAssert.isValid(schema, json));
-        assertEquals(FUNC06, exception.getCode());
+        assertEquals(FNCFAL01, exception.getCode());
         exception.printStackTrace();
     }
 
@@ -173,9 +175,9 @@ public class IntegerTests {
             }
             """;
         JsonSchema.isValid(schema, json);
-        var exception = assertThrows(JsonSchemaException.class,
+        var exception = assertThrows(FunctionValidationException.class,
             () -> JsonAssert.isValid(schema, json));
-        assertEquals(RANG01, exception.getCode());
+        assertEquals(RNGNUM01, exception.getCode());
         exception.printStackTrace();
     }
 
@@ -190,9 +192,9 @@ public class IntegerTests {
             [100, 500, 900]
             """;
         JsonSchema.isValid(schema, json);
-        var exception = assertThrows(JsonSchemaException.class,
+        var exception = assertThrows(FunctionValidationException.class,
             () -> JsonAssert.isValid(schema, json));
-        assertEquals(RANG04, exception.getCode());
+        assertEquals(RNGNUM04, exception.getCode());
         exception.printStackTrace();
     }
 
@@ -207,9 +209,9 @@ public class IntegerTests {
             [2000, 1000, 900]
             """;
         JsonSchema.isValid(schema, json);
-        var exception = assertThrows(JsonSchemaException.class,
+        var exception = assertThrows(FunctionValidationException.class,
             () -> JsonAssert.isValid(schema, json));
-        assertEquals(RANG03, exception.getCode());
+        assertEquals(RNGNUM03, exception.getCode());
         exception.printStackTrace();
     }
 }

@@ -1,7 +1,8 @@
 package com.relogiclabs.jschema.type;
 
+import com.relogiclabs.jschema.exception.MethodNotFoundException;
 import com.relogiclabs.jschema.internal.library.MethodEvaluator;
-import com.relogiclabs.jschema.internal.library.ObjectLibrary;
+import com.relogiclabs.jschema.internal.library.ObjectMethods;
 
 import java.util.Set;
 
@@ -18,6 +19,11 @@ public interface EObject extends EValue {
 
     @Override
     default MethodEvaluator getMethod(String name, int argCount) {
-        return ObjectLibrary.getInstance().getMethod(name, argCount);
+        try {
+            return ObjectMethods.getInstance().getMethod(name, argCount);
+        } catch(MethodNotFoundException e) {
+            e.setType(getType());
+            throw e;
+        }
     }
 }

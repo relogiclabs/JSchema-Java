@@ -60,12 +60,12 @@ public class ReceiverTests {
         var schema =
             """
             %import: com.relogiclabs.jschema.test.external.ExternalFunctions
-            
+
             %define $numbers: @range(1, 10) #integer &relatedValues
             %schema:
             {
                 "key1": #integer*($numbers) #array,
-                "key2": @conditionAll(&relatedValues) #integer
+                "key2": @conditionMany(&relatedValues) #integer
             }
             """;
         var json =

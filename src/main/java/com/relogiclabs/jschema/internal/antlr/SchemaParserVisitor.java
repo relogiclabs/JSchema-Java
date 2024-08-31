@@ -419,19 +419,19 @@ public interface SchemaParserVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitLogicalNotExpression(SchemaParser.LogicalNotExpressionContext ctx);
 	/**
+	 * Visit a parse tree produced by the {@code VariableExpression}
+	 * labeled alternative in {@link SchemaParser#expression}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitVariableExpression(SchemaParser.VariableExpressionContext ctx);
+	/**
 	 * Visit a parse tree produced by the {@code ThrowExpression}
 	 * labeled alternative in {@link SchemaParser#expression}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
 	T visitThrowExpression(SchemaParser.ThrowExpressionContext ctx);
-	/**
-	 * Visit a parse tree produced by the {@code IdentifierExpression}
-	 * labeled alternative in {@link SchemaParser#expression}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitIdentifierExpression(SchemaParser.IdentifierExpressionContext ctx);
 	/**
 	 * Visit a parse tree produced by the {@code InvokeFunctionExpression}
 	 * labeled alternative in {@link SchemaParser#expression}.

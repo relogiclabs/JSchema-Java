@@ -118,13 +118,13 @@ public class ScriptLiteralTests {
             %script: {
                 future constraint checkRange(min, max) {
                     if(min != undefined && target < min) return fail(
-                        "RANGEERR01", "The value is less than minimum",
-                        expected("a value in range " + [min, max]),
-                        actual("found " + target + " which is out of range"));
+                        "EX_RANGEERR01", "Target number is less than minimum",
+                        expected("a number in range " + [min, max]),
+                        actual("found " + target + " that is out of range"));
                     if(max != undefined && target > max) return fail(
-                        "RANGEERR02", "The value is greater than maximum",
-                        expected("a value in range " + [min, max]),
-                        actual("found " + target + " which is out of range"));
+                        "EX_RANGEERR02", "Target number is greater than maximum",
+                        expected("a number in range " + [min, max]),
+                        actual("found " + target + " that is out of range"));
                 }
             }
             """;
@@ -150,13 +150,13 @@ public class ScriptLiteralTests {
             %script: {
                 future constraint checkRange(min, max) {
                     if(min != null && target < min) return fail(
-                        "RANGEERR01", "The value is less than minimum",
-                        expected("a value in range " + [min, max]),
-                        actual("found " + target + " which is out of range"));
+                        "EX_RANGEERR01", "Target number is less than minimum",
+                        expected("a number in range " + [min, max]),
+                        actual("found " + target + " that is out of range"));
                     if(max != null && target > max) return fail(
-                        "RANGEERR02", "The value is greater than maximum",
-                        expected("a value in range " + [min, max]),
-                        actual("found " + target + " which is out of range"));
+                        "EX_RANGEERR02", "Target number is greater than maximum",
+                        expected("a number in range " + [min, max]),
+                        actual("found " + target + " that is out of range"));
                 }
             }
             """;
@@ -184,13 +184,13 @@ public class ScriptLiteralTests {
             %script: {
                 future constraint checkRange(min, max) {
                     if(min && target < min) return fail(
-                        "RANGEERR01", "The value is less than minimum",
-                        expected("a value in range " + [min, max]),
-                        actual("found " + target + " which is out of range"));
+                        "EX_RANGEERR01", "Target number is less than minimum",
+                        expected("a number in range " + [min, max]),
+                        actual("found " + target + " that is out of range"));
                     if(max && target > max) return fail(
-                        "RANGEERR02", "The value is greater than maximum",
-                        expected("a value in range " + [min, max]),
-                        actual("found " + target + " which is out of range"));
+                        "EX_RANGEERR02", "Target number is greater than maximum",
+                        expected("a number in range " + [min, max]),
+                        actual("found " + target + " that is out of range"));
                 }
             }
             """;

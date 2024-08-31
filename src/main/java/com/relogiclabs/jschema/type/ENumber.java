@@ -1,7 +1,8 @@
 package com.relogiclabs.jschema.type;
 
+import com.relogiclabs.jschema.exception.MethodNotFoundException;
 import com.relogiclabs.jschema.internal.library.MethodEvaluator;
-import com.relogiclabs.jschema.internal.library.NumberLibrary;
+import com.relogiclabs.jschema.internal.library.NumberMethods;
 
 public interface ENumber extends EValue {
     double toDouble();
@@ -13,6 +14,11 @@ public interface ENumber extends EValue {
 
     @Override
     default MethodEvaluator getMethod(String name, int argCount) {
-        return NumberLibrary.getInstance().getMethod(name, argCount);
+        try {
+            return NumberMethods.getInstance().getMethod(name, argCount);
+        } catch(MethodNotFoundException e) {
+            e.setType(getType());
+            throw e;
+        }
     }
 }

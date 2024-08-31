@@ -6,7 +6,6 @@ import com.relogiclabs.jschema.internal.util.LexerErrorListener;
 import com.relogiclabs.jschema.internal.util.LogHelper;
 import com.relogiclabs.jschema.time.DateTimeType;
 import com.relogiclabs.jschema.time.JsonDateTime;
-import com.relogiclabs.jschema.util.Reference;
 import lombok.Getter;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.Token;
@@ -77,7 +76,7 @@ import static com.relogiclabs.jschema.internal.time.SegmentProcessor.WeekdayShor
 import static com.relogiclabs.jschema.internal.time.SegmentProcessor.Whitespace;
 import static com.relogiclabs.jschema.internal.time.SegmentProcessor.YearNumber2;
 import static com.relogiclabs.jschema.internal.time.SegmentProcessor.YearNumber4;
-import static com.relogiclabs.jschema.message.ErrorCode.DINV02;
+import static com.relogiclabs.jschema.message.ErrorCode.INVLDT01;
 
 public final class DateTimeParser {
     private static final Map<String, SegmentProcessor> PROCESSORS;
@@ -138,11 +137,12 @@ public final class DateTimeParser {
 
     private JsonDateTime parse(String input, DateTimeContext context) {
         for(var token : lexerTokens) {
-            var processor = PROCESSORS.get(dateTimeLexer.getVocabulary().getSymbolicName(token.getType()));
+            var processor = PROCESSORS.get(dateTimeLexer.getVocabulary()
+                .getSymbolicName(token.getType()));
             input = processor.process(input, token, context);
         }
-        if(!input.isEmpty()) throw new InvalidDateTimeException(DINV02,
-            "Invalid " + context.getType() + " input format");
+        if(!input.isEmpty()) throw new InvalidDateTimeException(INVLDT01,
+            "Invalid " + type + " input malformed", context);
 
         var dateTime = context.validate();
         LogHelper.debug(context);
@@ -150,16 +150,6 @@ public final class DateTimeParser {
     }
 
     public JsonDateTime parse(String input) {
-        return parse(input, new DateTimeContext(type));
-    }
-
-    public JsonDateTime tryParse(String input, Reference<String> error) {
-        try {
-            return parse(input);
-        } catch(InvalidDateTimeException e) {
-            LogHelper.debug(e);
-            error.setValue(e.getMessage());
-            return null;
-        }
+        return parse(input, new DateTimeContext(this));
     }
 }

@@ -1,11 +1,11 @@
 package com.relogiclabs.jschema.node;
 
-import com.relogiclabs.jschema.exception.DefinitionNotFoundException;
+import com.relogiclabs.jschema.exception.AliasNotFoundException;
 import com.relogiclabs.jschema.internal.builder.JAliasBuilder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
-import static com.relogiclabs.jschema.message.ErrorCode.DEFI02;
+import static com.relogiclabs.jschema.message.ErrorCode.ALSDEF01;
 import static com.relogiclabs.jschema.message.MessageFormatter.formatForSchema;
 import static java.util.Objects.requireNonNull;
 
@@ -26,8 +26,8 @@ public final class JAlias extends JLeaf {
     @Override
     public boolean match(JNode node) {
         var definitions = getRuntime().getDefinitions();
-        if(!definitions.containsKey(this)) throw new DefinitionNotFoundException(formatForSchema(
-            DEFI02, "Definition of '" + name + "' not found", getContext()));
+        if(!definitions.containsKey(this)) throw new AliasNotFoundException(formatForSchema(
+            ALSDEF01, "Definition of '" + name + "' not found", getContext()));
         return definitions.get(this).match(node);
     }
 

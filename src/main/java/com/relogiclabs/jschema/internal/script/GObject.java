@@ -13,7 +13,7 @@ import java.util.Set;
 
 import static com.relogiclabs.jschema.internal.util.StringHelper.joinWith;
 import static com.relogiclabs.jschema.internal.util.StringHelper.quote;
-import static com.relogiclabs.jschema.message.ErrorCode.OUPD02;
+import static com.relogiclabs.jschema.message.ErrorCode.ROOBJT02;
 
 @Getter
 @EqualsAndHashCode
@@ -47,7 +47,7 @@ public final class GObject implements EObject {
             properties.put(key, new GLeftValue(value));
             return;
         }
-        if(!(oldValue instanceof GLeftValue l)) throw new UpdateNotSupportedException(OUPD02,
+        if(!(oldValue instanceof GLeftValue l)) throw new UpdateNotSupportedException(ROOBJT02,
             "Readonly object property '" + key + "' cannot be updated");
         l.setValue(value);
     }

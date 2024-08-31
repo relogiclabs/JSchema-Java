@@ -1,6 +1,6 @@
 package com.relogiclabs.jschema.node;
 
-import com.relogiclabs.jschema.exception.JsonSchemaException;
+import com.relogiclabs.jschema.exception.FunctionValidationException;
 import com.relogiclabs.jschema.exception.TargetInvocationException;
 import com.relogiclabs.jschema.internal.builder.JFunctionBuilder;
 import com.relogiclabs.jschema.internal.message.ActualHelper;
@@ -12,11 +12,11 @@ import lombok.Getter;
 
 import java.util.List;
 
-import static com.relogiclabs.jschema.internal.message.MessageHelper.InvalidNestedFunction;
+import static com.relogiclabs.jschema.internal.message.MessageHelper.NestedFunctionFailed;
 import static com.relogiclabs.jschema.internal.util.CommonHelper.nonNullFrom;
 import static com.relogiclabs.jschema.internal.util.StreamHelper.forEachTrue;
 import static com.relogiclabs.jschema.internal.util.StringHelper.join;
-import static com.relogiclabs.jschema.message.ErrorCode.FUNC06;
+import static com.relogiclabs.jschema.message.ErrorCode.FNCFAL01;
 import static java.util.Objects.requireNonNull;
 
 @Getter
@@ -44,11 +44,10 @@ public final class JFunction extends JBranch implements NestedMode {
     @Override
     public boolean match(JNode node) {
         if(!nested) return invokeFunction(node);
-        if(!(node instanceof JComposite composite))
-            return fail(new JsonSchemaException(
-                new ErrorDetail(FUNC06, InvalidNestedFunction),
-                ExpectedHelper.asInvalidFunction(this),
-                ActualHelper.asInvalidFunction(node)));
+        if(!(node instanceof JComposite composite)) return fail(new FunctionValidationException(
+            new ErrorDetail(FNCFAL01, NestedFunctionFailed),
+            ExpectedHelper.asNestedFunctionFailed(this),
+            ActualHelper.asNestedFunctionFailed(node)));
         return forEachTrue(composite.components().stream().map(this::invokeFunction));
     }
 

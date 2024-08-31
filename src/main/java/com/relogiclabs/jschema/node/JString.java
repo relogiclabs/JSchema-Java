@@ -1,6 +1,6 @@
 package com.relogiclabs.jschema.node;
 
-import com.relogiclabs.jschema.exception.JsonSchemaException;
+import com.relogiclabs.jschema.exception.ValueValidationException;
 import com.relogiclabs.jschema.internal.builder.JStringBuilder;
 import com.relogiclabs.jschema.internal.message.ActualHelper;
 import com.relogiclabs.jschema.internal.message.ExpectedHelper;
@@ -10,9 +10,9 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 
-import static com.relogiclabs.jschema.internal.message.MessageHelper.ValueMismatch;
+import static com.relogiclabs.jschema.internal.message.MessageHelper.ValueMismatched;
 import static com.relogiclabs.jschema.internal.util.StringHelper.quote;
-import static com.relogiclabs.jschema.message.ErrorCode.STRV01;
+import static com.relogiclabs.jschema.message.ErrorCode.STRVAL01;
 import static java.util.Objects.requireNonNull;
 
 @Getter
@@ -40,10 +40,10 @@ public class JString extends JPrimitive implements EString, Derivable, PragmaVal
         var other = castType(node, JString.class);
         if(other == null) return false;
         if(value.equals(other.value)) return true;
-        return fail(new JsonSchemaException(
-                new ErrorDetail(STRV01, ValueMismatch),
-                ExpectedHelper.asValueMismatch(this),
-                ActualHelper.asValueMismatch(other)));
+        return fail(new ValueValidationException(
+            new ErrorDetail(STRVAL01, ValueMismatched),
+            ExpectedHelper.asValueMismatched(this),
+            ActualHelper.asValueMismatched(other)));
     }
 
     @Override

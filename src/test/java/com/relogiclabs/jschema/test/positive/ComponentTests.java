@@ -46,8 +46,7 @@ public class ComponentTests {
     public void When_ComponentAlternativeFormInArray_ValidTrue() {
         var schema1 =
             """
-            %define $cmp: @range*(1, 10) #integer*
-            %schema: @length(5) #array($cmp)
+            %schema: @range*(1, 10) @length(5) #integer* #array
             """;
         var schema2 =
             """
@@ -56,7 +55,13 @@ public class ComponentTests {
             """;
         var schema3 =
             """
-            @range*(1, 10) @length(5) #integer* #array
+            %define $cmp: @range*(1, 10) #integer*
+            %schema: @length(5) #array($cmp)
+            """;
+        var schema4 =
+            """
+            %define $cmp: @range*(1, 10) @length(5) #integer* #array
+            %schema: $cmp
             """;
         var json =
             """
@@ -65,6 +70,7 @@ public class ComponentTests {
         JsonAssert.isValid(schema1, json);
         JsonAssert.isValid(schema2, json);
         JsonAssert.isValid(schema3, json);
+        JsonAssert.isValid(schema4, json);
     }
 
     @Test

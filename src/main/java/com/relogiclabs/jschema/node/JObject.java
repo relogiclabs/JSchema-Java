@@ -1,8 +1,9 @@
 package com.relogiclabs.jschema.node;
 
 import com.relogiclabs.jschema.collection.IndexMap;
-import com.relogiclabs.jschema.exception.JsonSchemaException;
+import com.relogiclabs.jschema.exception.PropertyOrderException;
 import com.relogiclabs.jschema.exception.UpdateNotSupportedException;
+import com.relogiclabs.jschema.exception.ValueValidationException;
 import com.relogiclabs.jschema.internal.builder.JObjectBuilder;
 import com.relogiclabs.jschema.internal.message.ActualHelper;
 import com.relogiclabs.jschema.internal.message.ExpectedHelper;
@@ -19,14 +20,14 @@ import java.util.List;
 import java.util.Set;
 
 import static com.relogiclabs.jschema.internal.message.MessageHelper.PropertyNotFound;
-import static com.relogiclabs.jschema.internal.message.MessageHelper.PropertyOrderMismatch;
+import static com.relogiclabs.jschema.internal.message.MessageHelper.PropertyOrderMismatched;
 import static com.relogiclabs.jschema.internal.message.MessageHelper.UndefinedPropertyFound;
 import static com.relogiclabs.jschema.internal.util.CommonHelper.nonNullFrom;
 import static com.relogiclabs.jschema.internal.util.StringHelper.joinWith;
-import static com.relogiclabs.jschema.message.ErrorCode.OUPD01;
-import static com.relogiclabs.jschema.message.ErrorCode.PROP05;
-import static com.relogiclabs.jschema.message.ErrorCode.PROP06;
-import static com.relogiclabs.jschema.message.ErrorCode.PROP07;
+import static com.relogiclabs.jschema.message.ErrorCode.PRTFND01;
+import static com.relogiclabs.jschema.message.ErrorCode.PRTORD01;
+import static com.relogiclabs.jschema.message.ErrorCode.PRTUDF01;
+import static com.relogiclabs.jschema.message.ErrorCode.ROOBJT01;
 import static java.util.Objects.requireNonNull;
 
 @EqualsAndHashCode
@@ -53,26 +54,34 @@ public final class JObject extends JComposite implements EObject, Iterable<JProp
         var unresolved = new HashSet<>(other.properties.keySet());
         for(var i = 0; i < properties.size(); i++) {
             var thisProp = properties.get(i);
-            var otherProp = getOtherProp(other, i);
-            if(otherProp != null) {
-                result &= thisProp.getValue().match(otherProp.getValue());
-                unresolved.remove(thisProp.getKey());
-                continue;
-            }
-            if(!((JValidator) thisProp.getValue()).isOptional())
-                return fail(new JsonSchemaException(
-                        new ErrorDetail(PROP05, PropertyNotFound),
+            try {
+                var otherProp = getOtherProp(other, i);
+                if(otherProp != null) {
+                    result &= thisProp.getValue().match(otherProp.getValue());
+                    unresolved.remove(thisProp.getKey());
+                    continue;
+                }
+                if(!((JValidator) thisProp.getValue()).isOptional())
+                    result &= fail(new ValueValidationException(
+                        new ErrorDetail(PRTFND01, PropertyNotFound),
                         ExpectedHelper.asPropertyNotFound(thisProp),
-                        ActualHelper.asPropertyNotFound(node, thisProp)));
+                        ActualHelper.asPropertyNotFound(node, thisProp, other)));
+            } catch(PropertyOrderException e) {
+                result &= fail(new ValueValidationException(
+                    new ErrorDetail(e.getCode(), e.getMessage()),
+                    ExpectedHelper.asPropertyOrderMismatched(thisProp),
+                    ActualHelper.asPropertyOrderMismatched(nonNullFrom(e.getFailOn(), other)), e));
+                unresolved.remove(thisProp.getKey());
+            }
         }
         if(unresolved.isEmpty() || getRuntime().getPragmas()
-                .isIgnoreUndefinedProperties()) return result;
+            .isIgnoreUndefinedProperties()) return result;
         for(String key : unresolved) {
             var property = other.properties.get(key);
-            result &= fail(new JsonSchemaException(
-                    new ErrorDetail(PROP06, UndefinedPropertyFound),
-                    ExpectedHelper.asUndefinedProperty(this, property),
-                    ActualHelper.asUndefinedProperty(property)));
+            result &= fail(new ValueValidationException(
+                new ErrorDetail(PRTUDF01, UndefinedPropertyFound),
+                ExpectedHelper.asUndefinedPropertyFound(this, property),
+                ActualHelper.asUndefinedPropertyFound(property)));
         }
         return result;
     }
@@ -85,11 +94,8 @@ public final class JObject extends JComposite implements EObject, Iterable<JProp
             if(areKeysEqual(atProp, thisProp)) otherProp = atProp;
             JProperty existing = null;
             if(otherProp == null) existing = other.properties.get(thisProp.getKey());
-            if(otherProp == null && existing != null)
-                fail(new JsonSchemaException(
-                        new ErrorDetail(PROP07, PropertyOrderMismatch),
-                        ExpectedHelper.asPropertyOrderMismatch(thisProp),
-                        ActualHelper.asPropertyOrderMismatch(nonNullFrom(atProp, other))));
+            if(otherProp == null && existing != null) throw new PropertyOrderException(PRTORD01,
+                PropertyOrderMismatched, atProp);
         } else otherProp = other.properties.get(thisProp.getKey());
         return otherProp;
     }
@@ -116,7 +122,7 @@ public final class JObject extends JComposite implements EObject, Iterable<JProp
 
     @Override
     public void set(String key, EValue value) {
-        throw new UpdateNotSupportedException(OUPD01, "Readonly object cannot be updated");
+        throw new UpdateNotSupportedException(ROOBJT01, "Readonly object cannot be updated");
     }
 
     @Override

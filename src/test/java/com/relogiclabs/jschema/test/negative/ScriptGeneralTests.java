@@ -2,10 +2,12 @@ package com.relogiclabs.jschema.test.negative;
 
 import com.relogiclabs.jschema.JsonAssert;
 import com.relogiclabs.jschema.JsonSchema;
-import com.relogiclabs.jschema.exception.JsonSchemaException;
-import com.relogiclabs.jschema.exception.ScriptInitiatedException;
+import com.relogiclabs.jschema.exception.FunctionValidationException;
+import com.relogiclabs.jschema.exception.ScriptThrowInitiatedException;
 import org.junit.jupiter.api.Test;
 
+import static com.relogiclabs.jschema.message.ErrorCode.FAILDF01;
+import static com.relogiclabs.jschema.message.ErrorCode.THRODF01;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -22,11 +24,11 @@ public class ScriptGeneralTests {
             %script: {
                 future constraint checkAccess(role) {
                     if(role == "user" && target > 5) return fail(
-                        "ERRACCESS01", "Data access incompatible with 'user' role",
+                        "EX_ERRACCESS01", "Data access incompatible with 'user' role",
                         // 'caller' is the default node added automatically
                         expected("an access at most 5 for 'user' role"),
                         // 'target' is the default node added automatically
-                        actual("found access " + target + " which is greater than 5"));
+                        actual("found access " + target + " that is greater than 5"));
                 }
             }
             """;
@@ -38,9 +40,9 @@ public class ScriptGeneralTests {
             }
             """;
         JsonSchema.isValid(schema, json);
-        var exception = assertThrows(JsonSchemaException.class,
+        var exception = assertThrows(FunctionValidationException.class,
             () -> JsonAssert.isValid(schema, json));
-        assertEquals("ERRACCESS01", exception.getCode());
+        assertEquals("EX_ERRACCESS01", exception.getCode());
         exception.printStackTrace();
     }
 
@@ -56,11 +58,11 @@ public class ScriptGeneralTests {
             %script: {
                 future constraint checkAccess(role) {
                     if(role == "user" && target > 5) return fail(
-                        "ERRACCESS01", "Data access incompatible with 'user' role",
+                        "EX_ERRACCESS01", "Data access incompatible with 'user' role",
                         // Pass any node explicitly to the expected function
                         expected(caller, "an access at most 5 for 'user' role"),
                         // Pass any node explicitly to the actual function
-                        actual(target, "found access " + target + " which is greater than 5"));
+                        actual(target, "found access " + target + " that is greater than 5"));
                 }
             }
             """;
@@ -72,9 +74,9 @@ public class ScriptGeneralTests {
             }
             """;
         JsonSchema.isValid(schema, json);
-        var exception = assertThrows(JsonSchemaException.class,
+        var exception = assertThrows(FunctionValidationException.class,
             () -> JsonAssert.isValid(schema, json));
-        assertEquals("ERRACCESS01", exception.getCode());
+        assertEquals("EX_ERRACCESS01", exception.getCode());
         exception.printStackTrace();
     }
 
@@ -90,12 +92,12 @@ public class ScriptGeneralTests {
             %script: {
                 constraint checkAccess(role) {
                     if(role == "user" && target > 5) return fail(
-                        "ERRACCESS01", "Data access incompatible with 'user' role",
+                        "EX_ERRACCESS01", "Data access incompatible with 'user' role",
                         // Create an expected object explicitly without any function
                         { node: caller, message: "an access at most 5 for 'user' role" },
                         // Create an actual object explicitly without any function
                         { node: target, message: "found access " + target
-                                + " which is greater than 5" });
+                                + " that is greater than 5" });
                 }
             }
             """;
@@ -107,9 +109,9 @@ public class ScriptGeneralTests {
             }
             """;
         JsonSchema.isValid(schema, json);
-        var exception = assertThrows(JsonSchemaException.class,
+        var exception = assertThrows(FunctionValidationException.class,
             () -> JsonAssert.isValid(schema, json));
-        assertEquals("ERRACCESS01", exception.getCode());
+        assertEquals("EX_ERRACCESS01", exception.getCode());
         exception.printStackTrace();
     }
 
@@ -126,7 +128,7 @@ public class ScriptGeneralTests {
                 future constraint checkAccess(role) {
                     // Fail with simple message and a code
                     if(role == "user" && target > 5) return fail(
-                        "ERRACCESS01", "Data access incompatible with 'user' role");
+                        "EX_ERRACCESS01", "Data access incompatible with 'user' role");
                 }
             }
             """;
@@ -138,9 +140,9 @@ public class ScriptGeneralTests {
             }
             """;
         JsonSchema.isValid(schema, json);
-        var exception = assertThrows(ScriptInitiatedException.class,
+        var exception = assertThrows(FunctionValidationException.class,
             () -> JsonAssert.isValid(schema, json));
-        assertEquals("ERRACCESS01", exception.getCode());
+        assertEquals("EX_ERRACCESS01", exception.getCode());
         exception.printStackTrace();
     }
 
@@ -169,10 +171,10 @@ public class ScriptGeneralTests {
             }
             """;
         JsonSchema.isValid(schema, json);
-        var exception = assertThrows(ScriptInitiatedException.class,
+        var exception = assertThrows(FunctionValidationException.class,
             () -> JsonAssert.isValid(schema, json));
-        // FAIL01 is the default code if no code provided
-        assertEquals("FAIL01", exception.getCode());
+        // FAILDF01 is the default code if no code provided
+        assertEquals(FAILDF01, exception.getCode());
         exception.printStackTrace();
     }
 
@@ -188,8 +190,8 @@ public class ScriptGeneralTests {
                 future constraint throwTest() {
                     if(target.type() != "#array") return fail("Invalid: " + target);
                     if(!target.find(45.5)) return fail("Invalid: " + target);
-                    if(target[1] == 20) throw("ERROR01", "Throw test with code");
-                    return fail("NOTTHRO01", "Exception not thrown");
+                    if(target[1] == 20) throw("EX_ERROR01", "Throw test with code");
+                    return fail("EX_NOTTHRO01", "Exception not thrown");
                 }
             }
             """;
@@ -200,9 +202,9 @@ public class ScriptGeneralTests {
             }
             """;
         //JsonSchema.isValid(schema, json);
-        var exception = assertThrows(ScriptInitiatedException.class,
+        var exception = assertThrows(ScriptThrowInitiatedException.class,
             () -> JsonAssert.isValid(schema, json));
-        assertEquals("ERROR01", exception.getCode());
+        assertEquals("EX_ERROR01", exception.getCode());
         exception.printStackTrace();
     }
 
@@ -221,7 +223,7 @@ public class ScriptGeneralTests {
                     if(c1 != 10) return fail("Invalid: " + target);
                     if(c2 != 45.5) return fail("Invalid: " + target);
                     if(target[2] == 30) throw("Throw test without code");
-                    return fail("NOTTHRO01", "Exception not thrown");
+                    return fail("EX_NOTTHRO01", "Exception not thrown");
                 }
             }
             """;
@@ -232,10 +234,10 @@ public class ScriptGeneralTests {
             }
             """;
         //JsonSchema.isValid(schema, json);
-        var exception = assertThrows(ScriptInitiatedException.class,
+        var exception = assertThrows(ScriptThrowInitiatedException.class,
             () -> JsonAssert.isValid(schema, json));
-        // THRO01 is the default code if no code provided
-        assertEquals("THRO01", exception.getCode());
+        // THRODF01 is the default code if no code provided
+        assertEquals(THRODF01, exception.getCode());
         exception.printStackTrace();
     }
 }

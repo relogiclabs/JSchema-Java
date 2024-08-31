@@ -2,20 +2,29 @@ package com.relogiclabs.jschema.test.negative;
 
 import com.relogiclabs.jschema.JsonAssert;
 import com.relogiclabs.jschema.JsonSchema;
+import com.relogiclabs.jschema.exception.DuplicateFunctionException;
+import com.relogiclabs.jschema.exception.FunctionArgumentTypeException;
+import com.relogiclabs.jschema.exception.FunctionArgumentValueException;
 import com.relogiclabs.jschema.exception.FunctionNotFoundException;
-import com.relogiclabs.jschema.exception.ScriptRuntimeException;
+import com.relogiclabs.jschema.exception.InvalidContextException;
+import com.relogiclabs.jschema.exception.InvalidReturnTypeException;
+import com.relogiclabs.jschema.exception.InvocationRuntimeException;
+import com.relogiclabs.jschema.exception.MethodArgumentTypeException;
+import com.relogiclabs.jschema.exception.MethodNotFoundException;
 import org.junit.jupiter.api.Test;
 
-import static com.relogiclabs.jschema.message.ErrorCode.CALR01;
-import static com.relogiclabs.jschema.message.ErrorCode.FAIL09;
-import static com.relogiclabs.jschema.message.ErrorCode.FNVK01;
-import static com.relogiclabs.jschema.message.ErrorCode.FNVK02;
-import static com.relogiclabs.jschema.message.ErrorCode.FUNC05;
-import static com.relogiclabs.jschema.message.ErrorCode.FUND01;
-import static com.relogiclabs.jschema.message.ErrorCode.FUND02;
-import static com.relogiclabs.jschema.message.ErrorCode.MNVK01;
-import static com.relogiclabs.jschema.message.ErrorCode.RETN01;
-import static com.relogiclabs.jschema.message.ErrorCode.TRGT01;
+import static com.relogiclabs.jschema.message.ErrorCode.CALRSE01;
+import static com.relogiclabs.jschema.message.ErrorCode.FAILBS01;
+import static com.relogiclabs.jschema.message.ErrorCode.FAILMV01;
+import static com.relogiclabs.jschema.message.ErrorCode.FNCDEF01;
+import static com.relogiclabs.jschema.message.ErrorCode.FNDSTR01;
+import static com.relogiclabs.jschema.message.ErrorCode.FNSDUP01;
+import static com.relogiclabs.jschema.message.ErrorCode.FNSDUP02;
+import static com.relogiclabs.jschema.message.ErrorCode.FNSNVK01;
+import static com.relogiclabs.jschema.message.ErrorCode.FNSNVK02;
+import static com.relogiclabs.jschema.message.ErrorCode.MTHNVK01;
+import static com.relogiclabs.jschema.message.ErrorCode.RETNSE02;
+import static com.relogiclabs.jschema.message.ErrorCode.TRGTSE01;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -26,7 +35,7 @@ public class ScriptFunctionTests {
             """
             %schema:
             {
-                "funcTest": @funcTest #integer
+                "funcTest": @notExists #integer
             }
             """;
         var json =
@@ -38,7 +47,7 @@ public class ScriptFunctionTests {
         //JsonSchema.isValid(schema, json);
         var exception = assertThrows(FunctionNotFoundException.class,
             () -> JsonAssert.isValid(schema, json));
-        assertEquals(FUNC05, exception.getCode());
+        assertEquals(FNCDEF01, exception.getCode());
         exception.printStackTrace();
     }
 
@@ -52,8 +61,10 @@ public class ScriptFunctionTests {
             }
 
             %script: {
+                // constraint functions are available to schema context
+                // subroutine functions are not available to schema context
                 constraint funcTest() {
-                    subroutineFunction(target);
+                    subroutineNotExists(target);
                 }
             }
             """;
@@ -64,9 +75,9 @@ public class ScriptFunctionTests {
             }
             """;
         JsonSchema.isValid(schema, json);
-        var exception = assertThrows(ScriptRuntimeException.class,
+        var exception = assertThrows(FunctionNotFoundException.class,
             () -> JsonAssert.isValid(schema, json));
-        assertEquals(FNVK01, exception.getCode());
+        assertEquals(FNSNVK01, exception.getCode());
         exception.printStackTrace();
     }
 
@@ -96,9 +107,9 @@ public class ScriptFunctionTests {
             }
             """;
         JsonSchema.isValid(schema, json);
-        var exception = assertThrows(ScriptRuntimeException.class,
+        var exception = assertThrows(InvocationRuntimeException.class,
             () -> JsonAssert.isValid(schema, json));
-        assertEquals(FNVK02, exception.getCode());
+        assertEquals(FNSNVK02, exception.getCode());
         exception.printStackTrace();
     }
 
@@ -111,8 +122,6 @@ public class ScriptFunctionTests {
                 "funcTest": @funcTest #integer
             }
             %script: {
-                // constraint functions are available to schema context
-                // subroutine functions are not available to schema context
                 constraint function funcTest() {
                     return 10;
                 }
@@ -125,9 +134,9 @@ public class ScriptFunctionTests {
             }
             """;
         JsonSchema.isValid(schema, json);
-        var exception = assertThrows(ScriptRuntimeException.class,
+        var exception = assertThrows(InvalidReturnTypeException.class,
             () -> JsonAssert.isValid(schema, json));
-        assertEquals(RETN01, exception.getCode());
+        assertEquals(RETNSE02, exception.getCode());
         exception.printStackTrace();
     }
 
@@ -163,14 +172,14 @@ public class ScriptFunctionTests {
             }
             """;
         //JsonSchema.isValid(schema, json);
-        var exception = assertThrows(ScriptRuntimeException.class,
+        var exception = assertThrows(DuplicateFunctionException.class,
             () -> JsonAssert.isValid(schema, json));
-        assertEquals(FUND02, exception.getCode());
+        assertEquals(FNSDUP02, exception.getCode());
         exception.printStackTrace();
     }
 
     @Test
-    public void When_InvalidBuiltinMethodCallWithWrongType_ExceptionThrown() {
+    public void When_BuiltinMethodCallOnWrongType_ExceptionThrown() {
         var schema =
             """
             %schema:
@@ -192,9 +201,63 @@ public class ScriptFunctionTests {
             }
             """;
         JsonSchema.isValid(schema, json);
-        var exception = assertThrows(ScriptRuntimeException.class,
+        var exception = assertThrows(MethodNotFoundException.class,
             () -> JsonAssert.isValid(schema, json));
-        assertEquals(MNVK01, exception.getCode());
+        assertEquals(MTHNVK01, exception.getCode());
+        exception.printStackTrace();
+    }
+
+    @Test
+    public void When_BuiltinSubroutineCallWithWrongType_ExceptionThrown() {
+        var schema =
+            """
+            %schema:
+            {
+                "funcTest": @funcTest
+            }
+            %script: {
+                constraint funcTest() {
+                    var result = fail(target);
+                }
+            }
+            """;
+        var json =
+            """
+            {
+                "funcTest": 2
+            }
+            """;
+        JsonSchema.isValid(schema, json);
+        var exception = assertThrows(FunctionArgumentTypeException.class,
+            () -> JsonAssert.isValid(schema, json));
+        assertEquals(FAILBS01, exception.getCode());
+        exception.printStackTrace();
+    }
+
+    @Test
+    public void When_BuiltinMethodCallWithWrongType_ExceptionThrown() {
+        var schema =
+            """
+            %schema:
+            {
+                "methodTest": @methodTest
+            }
+            %script: {
+                constraint methodTest() {
+                    var result = target.find(-10);
+                }
+            }
+            """;
+        var json =
+            """
+            {
+                "methodTest": "test string method"
+            }
+            """;
+        JsonSchema.isValid(schema, json);
+        var exception = assertThrows(MethodArgumentTypeException.class,
+            () -> JsonAssert.isValid(schema, json));
+        assertEquals(FNDSTR01, exception.getCode());
         exception.printStackTrace();
     }
 
@@ -208,7 +271,7 @@ public class ScriptFunctionTests {
             }
             %script: {
                 constraint funcTest() {
-                    return fail("ERR01", "Test Message", { node: null }, {});
+                    return fail("EX_ERR01", "Test Message", { node: null }, {});
                 }
             }
             """;
@@ -219,9 +282,9 @@ public class ScriptFunctionTests {
             }
             """;
         JsonSchema.isValid(schema, json);
-        var exception = assertThrows(ScriptRuntimeException.class,
+        var exception = assertThrows(FunctionArgumentValueException.class,
             () -> JsonAssert.isValid(schema, json));
-        assertEquals(FAIL09, exception.getCode());
+        assertEquals(FAILMV01, exception.getCode());
         exception.printStackTrace();
     }
 
@@ -237,8 +300,7 @@ public class ScriptFunctionTests {
                 // target is only available inside subroutine from call stack
                 // when call initiated from schema but not from script
                 subroutine targetTest() {
-                    var test = target;
-                    return 5;
+                    var result = target;
                 }
                 var test = targetTest();
             }
@@ -250,9 +312,9 @@ public class ScriptFunctionTests {
             }
             """;
         //JsonSchema.isValid(schema, json);
-        var exception = assertThrows(ScriptRuntimeException.class,
+        var exception = assertThrows(InvalidContextException.class,
             () -> JsonAssert.isValid(schema, json));
-        assertEquals(TRGT01, exception.getCode());
+        assertEquals(TRGTSE01, exception.getCode());
         exception.printStackTrace();
     }
 
@@ -268,8 +330,7 @@ public class ScriptFunctionTests {
                 // caller is only available inside subroutine from call stack
                 // when call initiated from schema but not from script
                 subroutine callerTest() {
-                    var test = caller;
-                    return 5;
+                    var result = caller;
                 }
                 var test = callerTest();
             }
@@ -281,9 +342,9 @@ public class ScriptFunctionTests {
             }
             """;
         //JsonSchema.isValid(schema, json);
-        var exception = assertThrows(ScriptRuntimeException.class,
+        var exception = assertThrows(InvalidContextException.class,
             () -> JsonAssert.isValid(schema, json));
-        assertEquals(CALR01, exception.getCode());
+        assertEquals(CALRSE01, exception.getCode());
         exception.printStackTrace();
     }
 
@@ -293,7 +354,7 @@ public class ScriptFunctionTests {
             """
             %schema:
             {
-                "funcTest": @funcTest(5)
+                "funcTest": @funcTest(3)
             }
             %script: {
                 constraint funcTest(param1) {
@@ -308,13 +369,13 @@ public class ScriptFunctionTests {
         var json =
             """
             {
-                "funcTest": 10
+                "funcTest": 2
             }
             """;
         //JsonSchema.isValid(schema, json);
-        var exception = assertThrows(ScriptRuntimeException.class,
+        var exception = assertThrows(DuplicateFunctionException.class,
             () -> JsonAssert.isValid(schema, json));
-        assertEquals(FUND01, exception.getCode());
+        assertEquals(FNSDUP01, exception.getCode());
         exception.printStackTrace();
     }
 
@@ -324,7 +385,7 @@ public class ScriptFunctionTests {
             """
             %schema:
             {
-                "funcTest": @funcTest(5)
+                "funcTest": @funcTest(3)
             }
             %script: {
                 constraint funcTest(param1) {
@@ -340,13 +401,13 @@ public class ScriptFunctionTests {
         var json =
             """
             {
-                "funcTest": 10
+                "funcTest": 2
             }
             """;
         //JsonSchema.isValid(schema, json);
-        var exception = assertThrows(ScriptRuntimeException.class,
+        var exception = assertThrows(DuplicateFunctionException.class,
             () -> JsonAssert.isValid(schema, json));
-        assertEquals(FUND01, exception.getCode());
+        assertEquals(FNSDUP01, exception.getCode());
         exception.printStackTrace();
     }
 
@@ -356,11 +417,11 @@ public class ScriptFunctionTests {
             """
             %schema:
             {
-                "funcTest": @funcTest(5)
+                "funcTest": @funcTest(3)
             }
             %script: {
                 constraint funcTest(param1) {
-                    return true;
+                    return funcTest(param1);
                 }
 
                 // Constraint functions are special functions and are not callable
@@ -377,13 +438,13 @@ public class ScriptFunctionTests {
         var json =
             """
             {
-                "funcTest": 10
+                "funcTest": 2
             }
             """;
         //JsonSchema.isValid(schema, json);
-        var exception = assertThrows(ScriptRuntimeException.class,
+        var exception = assertThrows(DuplicateFunctionException.class,
             () -> JsonAssert.isValid(schema, json));
-        assertEquals(FUND02, exception.getCode());
+        assertEquals(FNSDUP02, exception.getCode());
         exception.printStackTrace();
     }
 }

@@ -2,21 +2,19 @@ package com.relogiclabs.jschema.tree;
 
 import lombok.Getter;
 import org.antlr.v4.runtime.ParserRuleContext;
+import org.antlr.v4.runtime.Token;
 
 @Getter
 public final class Context {
     private final ParserRuleContext parser;
     private final RuntimeContext runtime;
-    private final Location location;
 
     public Context(ParserRuleContext parser, RuntimeContext runtime) {
         this.parser = parser;
         this.runtime = runtime;
-        this.location = getLocation(parser);
     }
 
-    private Location getLocation(ParserRuleContext parser) {
-        var token = parser.getStart();
-        return new Location(token.getLine(), token.getCharPositionInLine());
+    public Token getToken() {
+        return parser.getStart();
     }
 }

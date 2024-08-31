@@ -2,22 +2,23 @@ package com.relogiclabs.jschema.test.negative;
 
 import com.relogiclabs.jschema.JsonAssert;
 import com.relogiclabs.jschema.JsonSchema;
+import com.relogiclabs.jschema.exception.DataTypeValidationException;
 import com.relogiclabs.jschema.exception.DuplicatePropertyKeyException;
-import com.relogiclabs.jschema.exception.JsonSchemaException;
+import com.relogiclabs.jschema.exception.FunctionValidationException;
 import org.junit.jupiter.api.Test;
 
-import static com.relogiclabs.jschema.message.ErrorCode.DTYP04;
-import static com.relogiclabs.jschema.message.ErrorCode.DTYP06;
-import static com.relogiclabs.jschema.message.ErrorCode.ENUM02;
-import static com.relogiclabs.jschema.message.ErrorCode.KEYS01;
-import static com.relogiclabs.jschema.message.ErrorCode.NEMT03;
-import static com.relogiclabs.jschema.message.ErrorCode.OLEN01;
-import static com.relogiclabs.jschema.message.ErrorCode.OLEN02;
-import static com.relogiclabs.jschema.message.ErrorCode.OLEN04;
-import static com.relogiclabs.jschema.message.ErrorCode.OLEN05;
-import static com.relogiclabs.jschema.message.ErrorCode.PROP03;
-import static com.relogiclabs.jschema.message.ErrorCode.PROP04;
-import static com.relogiclabs.jschema.message.ErrorCode.VALU01;
+import static com.relogiclabs.jschema.message.ErrorCode.DTYPMS01;
+import static com.relogiclabs.jschema.message.ErrorCode.DTYPMS02;
+import static com.relogiclabs.jschema.message.ErrorCode.EMPTCF03;
+import static com.relogiclabs.jschema.message.ErrorCode.ENMNUM01;
+import static com.relogiclabs.jschema.message.ErrorCode.KEYFND01;
+import static com.relogiclabs.jschema.message.ErrorCode.LENOBJ01;
+import static com.relogiclabs.jschema.message.ErrorCode.LENOBJ02;
+import static com.relogiclabs.jschema.message.ErrorCode.LENOBJ04;
+import static com.relogiclabs.jschema.message.ErrorCode.LENOBJ05;
+import static com.relogiclabs.jschema.message.ErrorCode.PRTDUP01;
+import static com.relogiclabs.jschema.message.ErrorCode.PRTDUP02;
+import static com.relogiclabs.jschema.message.ErrorCode.VALFND01;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -28,9 +29,9 @@ public class ObjectTests {
         var json = "100";
 
         JsonSchema.isValid(schema, json);
-        var exception = assertThrows(JsonSchemaException.class,
+        var exception = assertThrows(DataTypeValidationException.class,
             () -> JsonAssert.isValid(schema, json));
-        assertEquals(DTYP04, exception.getCode());
+        assertEquals(DTYPMS01, exception.getCode());
         exception.printStackTrace();
     }
 
@@ -53,9 +54,9 @@ public class ObjectTests {
             }
             """;
         JsonSchema.isValid(schema, json);
-        var exception = assertThrows(JsonSchemaException.class,
+        var exception = assertThrows(DataTypeValidationException.class,
             () -> JsonAssert.isValid(schema, json));
-        assertEquals(DTYP04, exception.getCode());
+        assertEquals(DTYPMS01, exception.getCode());
         exception.printStackTrace();
     }
 
@@ -70,9 +71,9 @@ public class ObjectTests {
             [null, "value1", true]
             """;
         JsonSchema.isValid(schema, json);
-        var exception = assertThrows(JsonSchemaException.class,
+        var exception = assertThrows(DataTypeValidationException.class,
             () -> JsonAssert.isValid(schema, json));
-        assertEquals(DTYP04, exception.getCode());
+        assertEquals(DTYPMS01, exception.getCode());
         exception.printStackTrace();
     }
 
@@ -87,9 +88,9 @@ public class ObjectTests {
             [ 100, true, false ]
             """;
         JsonSchema.isValid(schema, json);
-        var exception = assertThrows(JsonSchemaException.class,
+        var exception = assertThrows(DataTypeValidationException.class,
             () -> JsonAssert.isValid(schema, json));
-        assertEquals(DTYP06, exception.getCode());
+        assertEquals(DTYPMS02, exception.getCode());
         exception.printStackTrace();
     }
 
@@ -108,9 +109,9 @@ public class ObjectTests {
             }
             """;
         JsonSchema.isValid(schema, json);
-        var exception = assertThrows(JsonSchemaException.class,
+        var exception = assertThrows(DataTypeValidationException.class,
             () -> JsonAssert.isValid(schema, json));
-        assertEquals(DTYP06, exception.getCode());
+        assertEquals(DTYPMS02, exception.getCode());
         exception.printStackTrace();
     }
 
@@ -129,9 +130,9 @@ public class ObjectTests {
             }
             """;
         JsonSchema.isValid(schema, json);
-        var exception = assertThrows(JsonSchemaException.class,
+        var exception = assertThrows(FunctionValidationException.class,
             () -> JsonAssert.isValid(schema, json));
-        assertEquals(KEYS01, exception.getCode());
+        assertEquals(KEYFND01, exception.getCode());
         exception.printStackTrace();
     }
 
@@ -150,9 +151,9 @@ public class ObjectTests {
             }
             """;
         JsonSchema.isValid(schema, json);
-        var exception = assertThrows(JsonSchemaException.class,
+        var exception = assertThrows(FunctionValidationException.class,
             () -> JsonAssert.isValid(schema, json));
-        assertEquals(VALU01, exception.getCode());
+        assertEquals(VALFND01, exception.getCode());
         exception.printStackTrace();
     }
 
@@ -165,15 +166,15 @@ public class ObjectTests {
         var json =
             """
             {
-                "key1": {"value": 10},
-                "key2": {"value": 150},
-                "key3": {"value": 1000}
+                "key1": {"number": 10},
+                "key2": {"number": 150},
+                "key3": {"number": 1000}
             }
             """;
         JsonSchema.isValid(schema, json);
-        var exception = assertThrows(JsonSchemaException.class,
+        var exception = assertThrows(FunctionValidationException.class,
             () -> JsonAssert.isValid(schema, json));
-        assertEquals(KEYS01, exception.getCode());
+        assertEquals(KEYFND01, exception.getCode());
         exception.printStackTrace();
     }
 
@@ -185,37 +186,37 @@ public class ObjectTests {
             """;
         var json =
             """
-            [{"value": 10}, {"value": 20}, {"value": 30}]
+            [{"number": 10}, {"number": 20}, {"number": 30}]
             """;
         JsonSchema.isValid(schema, json);
-        var exception = assertThrows(JsonSchemaException.class,
+        var exception = assertThrows(FunctionValidationException.class,
             () -> JsonAssert.isValid(schema, json));
-        assertEquals(KEYS01, exception.getCode());
+        assertEquals(KEYFND01, exception.getCode());
         exception.printStackTrace();
     }
 
     @Test
-    public void When_EnumWithWrongObject_ExceptionThrown() {
+    public void When_EnumWithWrongValuesInObject_ExceptionThrown() {
         var schema =
             """
             {
-            "key1": @enum(5, 10, 15),
-            "key2": @enum(100, 150, 200),
-            "key3": @enum("abc", "pqr", "xyz")
+                "key1": @enum(5, 10, 15),
+                "key2": @enum(100, 150, 200),
+                "key3": @enum("abc", "pqr", "xyz")
             } #object
             """;
         var json =
             """
             {
-            "key1": 1,
-            "key2": 10,
-            "key3": "efg"
+                "key1": 1,
+                "key2": 10,
+                "key3": "efg"
             }
             """;
         JsonSchema.isValid(schema, json);
-        var exception = assertThrows(JsonSchemaException.class,
+        var exception = assertThrows(FunctionValidationException.class,
             () -> JsonAssert.isValid(schema, json));
-        assertEquals(ENUM02, exception.getCode());
+        assertEquals(ENMNUM01, exception.getCode());
         exception.printStackTrace();
     }
 
@@ -240,7 +241,7 @@ public class ObjectTests {
         //JsonSchema.isValid(schema, json);
         var exception = assertThrows(DuplicatePropertyKeyException.class,
             () -> JsonAssert.isValid(schema, json));
-        assertEquals(PROP03, exception.getCode());
+        assertEquals(PRTDUP01, exception.getCode());
         exception.printStackTrace();
     }
 
@@ -265,7 +266,7 @@ public class ObjectTests {
         //JsonSchema.isValid(schema, json);
         var exception = assertThrows(DuplicatePropertyKeyException.class,
             () -> JsonAssert.isValid(schema, json));
-        assertEquals(PROP04, exception.getCode());
+        assertEquals(PRTDUP02, exception.getCode());
         exception.printStackTrace();
     }
 
@@ -286,14 +287,14 @@ public class ObjectTests {
             ]
             """;
         JsonSchema.isValid(schema, json);
-        var exception = assertThrows(JsonSchemaException.class,
+        var exception = assertThrows(FunctionValidationException.class,
             () -> JsonAssert.isValid(schema, json));
-        assertEquals(NEMT03, exception.getCode());
+        assertEquals(EMPTCF03, exception.getCode());
         exception.printStackTrace();
     }
 
     @Test
-    public void When_WrongLengthOfObjectInArray1_ExceptionThrown() {
+    public void When_FixedLengthForWrongObjectInArray_ExceptionThrown() {
         var schema =
             """
             [
@@ -307,35 +308,35 @@ public class ObjectTests {
             ]
             """;
         JsonSchema.isValid(schema, json);
-        var exception = assertThrows(JsonSchemaException.class,
+        var exception = assertThrows(FunctionValidationException.class,
             () -> JsonAssert.isValid(schema, json));
-        assertEquals(OLEN01, exception.getCode());
+        assertEquals(LENOBJ01, exception.getCode());
         exception.printStackTrace();
     }
 
     @Test
-    public void When_WrongLengthOfObjectInArray2_ExceptionThrown() {
+    public void When_LengthRangeForWrongObjectInArray_ExceptionThrown() {
         var schema =
             """
             [
-                @length(1, 4) #object
+                @length(2, 4) #object
             ]
             """;
         var json =
             """
             [
-                { }
+                { "key1": 10 }
             ]
             """;
         JsonSchema.isValid(schema, json);
-        var exception = assertThrows(JsonSchemaException.class,
+        var exception = assertThrows(FunctionValidationException.class,
             () -> JsonAssert.isValid(schema, json));
-        assertEquals(OLEN02, exception.getCode());
+        assertEquals(LENOBJ02, exception.getCode());
         exception.printStackTrace();
     }
 
     @Test
-    public void When_WrongLengthOfObjectInArray3_ExceptionThrown() {
+    public void When_LengthWithMinUndefinedForWrongObjectInArray_ExceptionThrown() {
         var schema =
             """
             [
@@ -349,14 +350,14 @@ public class ObjectTests {
             ]
             """;
         JsonSchema.isValid(schema, json);
-        var exception = assertThrows(JsonSchemaException.class,
+        var exception = assertThrows(FunctionValidationException.class,
             () -> JsonAssert.isValid(schema, json));
-        assertEquals(OLEN05, exception.getCode());
+        assertEquals(LENOBJ05, exception.getCode());
         exception.printStackTrace();
     }
 
     @Test
-    public void When_WrongLengthOfObjectInArray4_ExceptionThrown() {
+    public void When_LengthWithMaxUndefinedForWrongObjectInArray_ExceptionThrown() {
         var schema =
             """
             [
@@ -370,9 +371,9 @@ public class ObjectTests {
             ]
             """;
         JsonSchema.isValid(schema, json);
-        var exception = assertThrows(JsonSchemaException.class,
+        var exception = assertThrows(FunctionValidationException.class,
             () -> JsonAssert.isValid(schema, json));
-        assertEquals(OLEN04, exception.getCode());
+        assertEquals(LENOBJ04, exception.getCode());
         exception.printStackTrace();
     }
 }

@@ -1,7 +1,7 @@
 package com.relogiclabs.jschema.internal.engine;
 
-import com.relogiclabs.jschema.exception.ScriptFunctionException;
-import com.relogiclabs.jschema.exception.ScriptVariableException;
+import com.relogiclabs.jschema.exception.DuplicateFunctionException;
+import com.relogiclabs.jschema.exception.DuplicateVariableException;
 import com.relogiclabs.jschema.internal.script.GFunction;
 import com.relogiclabs.jschema.internal.script.GLeftValue;
 import com.relogiclabs.jschema.tree.RuntimeContext;
@@ -11,11 +11,11 @@ import lombok.Getter;
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.relogiclabs.jschema.internal.library.ScriptLibrary3.resolveStatic;
+import static com.relogiclabs.jschema.internal.library.LibraryFunctions3.resolveStatic;
 import static com.relogiclabs.jschema.internal.tree.EFunction.CONSTRAINT_PREFIX;
-import static com.relogiclabs.jschema.message.ErrorCode.FUND01;
-import static com.relogiclabs.jschema.message.ErrorCode.FUND02;
-import static com.relogiclabs.jschema.message.ErrorCode.VARD01;
+import static com.relogiclabs.jschema.message.ErrorCode.FNSDUP01;
+import static com.relogiclabs.jschema.message.ErrorCode.FNSDUP02;
+import static com.relogiclabs.jschema.message.ErrorCode.VARDUP01;
 import static org.apache.commons.lang3.StringUtils.substringBefore;
 
 public class ScriptScope {
@@ -31,22 +31,22 @@ public class ScriptScope {
         var lvalue = new GLeftValue(value);
         var oldValue = symbols.put(name, lvalue);
         if(oldValue == null) return lvalue;
-        throw new ScriptVariableException(VARD01,
-            "Variable '" + name + "' already defined in the scope");
+        throw new DuplicateVariableException(VARDUP01,
+            "Variable '" + name + "' already declared in the scope");
     }
 
-    public void addFunction(String name, GFunction function) {
-        var oldValue = symbols.put(name, function);
+    public void addFunction(String functionId, GFunction function) {
+        var oldValue = symbols.put(functionId, function);
         if(oldValue == null) return;
-        if(name.startsWith(CONSTRAINT_PREFIX))
-            throw failOnDuplicateDefinition(FUND01, "Constraint", name);
-        else throw failOnDuplicateDefinition(FUND02, "Subroutine", name);
+        if(functionId.startsWith(CONSTRAINT_PREFIX))
+            throw failOnDuplicateFunction(FNSDUP01, "Constraint", functionId);
+        else throw failOnDuplicateFunction(FNSDUP02, "Subroutine", functionId);
     }
 
-    private static ScriptFunctionException failOnDuplicateDefinition(String code,
-                String functionType, String name) {
-        return new ScriptFunctionException(code, functionType + " function '"
-            + substringBefore(name, '#') + "' with matching parameter(s) already defined");
+    private static DuplicateFunctionException failOnDuplicateFunction(String code,
+                String functionType, String functionId) {
+        return new DuplicateFunctionException(code, functionType + " function '"
+            + substringBefore(functionId, '#') + "' with matching parameter(s) already defined");
     }
 
     public EValue resolve(String name) {

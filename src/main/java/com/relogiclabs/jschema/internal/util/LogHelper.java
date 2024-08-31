@@ -1,7 +1,7 @@
 package com.relogiclabs.jschema.internal.util;
 
-import com.relogiclabs.jschema.exception.CommonException;
-import com.relogiclabs.jschema.exception.ScriptRuntimeException;
+import com.relogiclabs.jschema.exception.BaseRuntimeException;
+import com.relogiclabs.jschema.exception.MultilevelRuntimeException;
 import com.relogiclabs.jschema.internal.time.DateTimeContext;
 import com.relogiclabs.jschema.tree.DataTree;
 import org.antlr.v4.runtime.Parser;
@@ -11,7 +11,7 @@ import org.antlr.v4.runtime.Token;
 import java.util.Collections;
 import java.util.List;
 
-import static com.relogiclabs.jschema.message.ErrorCode.TRYS01;
+import static com.relogiclabs.jschema.message.ErrorCode.TRYFSE01;
 import static com.relogiclabs.jschema.message.MessageFormatter.formatForSchema;
 
 // Logging library may require
@@ -61,10 +61,12 @@ public final class LogHelper {
         if(level > INFO) return;
         System.out.println("[INFO] [TRYOF ERROR]: " + exception.getMessage());
         if(level > DEBUG) return;
-        Exception ex = exception instanceof CommonException ? exception
-                : new ScriptRuntimeException(formatForSchema(
-                TRYS01, exception.getMessage(), token), exception);
+        if((exception instanceof MultilevelRuntimeException ex && ex.isLowLevel())
+            || !(exception instanceof BaseRuntimeException)) {
+            exception = new BaseRuntimeException(formatForSchema(TRYFSE01,
+                exception.getMessage(), token), exception);
+        }
         System.out.print("[DEBUG] [TRYOF ERROR]: ");
-        ex.printStackTrace(System.out);
+        exception.printStackTrace(System.out);
     }
 }
