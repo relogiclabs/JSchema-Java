@@ -140,7 +140,7 @@ public final class SchemaTreeVisitor extends SchemaParserBaseVisitor<JNode> {
             .context(new Context(ctx, runtime))
             .className(ctx.S_GENERAL_ID().stream().map(ParseTree::getText).collect(joining(",")))
             .build();
-        return runtime.getFunctions().addClass(importNode);
+        return runtime.getImports().addImport(importNode);
     }
 
     @Override
