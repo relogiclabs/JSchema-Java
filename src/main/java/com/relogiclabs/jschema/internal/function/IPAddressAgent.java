@@ -2,7 +2,7 @@ package com.relogiclabs.jschema.internal.function;
 
 import java.util.regex.Pattern;
 
-public final class IPAddress {
+public final class IPAddressAgent {
     public static final int IPV4_VERSION = 4;
     public static final int IPV6_VERSION = 6;
 
@@ -32,7 +32,7 @@ public final class IPAddress {
     private static final Pattern IPV4_PATTERN = Pattern.compile(IPV4_REGEX);
     private static final Pattern IPV6_PATTERN = Pattern.compile(IPV6_REGEX);
 
-    private IPAddress() {
+    private IPAddressAgent() {
         throw new UnsupportedOperationException("This class is not intended for instantiation");
     }
 

@@ -1,15 +1,18 @@
-package com.relogiclabs.jschema.function;
+package com.relogiclabs.jschema.internal.function;
 
 import com.relogiclabs.jschema.exception.FunctionValidationException;
+import com.relogiclabs.jschema.extension.ConstraintFunction;
 import com.relogiclabs.jschema.message.ActualDetail;
 import com.relogiclabs.jschema.message.ErrorDetail;
 import com.relogiclabs.jschema.message.ExpectedDetail;
 import com.relogiclabs.jschema.node.JArray;
-import com.relogiclabs.jschema.node.JBoolean;
 import com.relogiclabs.jschema.node.JNumber;
 import com.relogiclabs.jschema.node.JObject;
 import com.relogiclabs.jschema.node.JString;
-import com.relogiclabs.jschema.node.JUndefined;
+import com.relogiclabs.jschema.type.EBoolean;
+import com.relogiclabs.jschema.type.ENumber;
+import com.relogiclabs.jschema.type.EString;
+import com.relogiclabs.jschema.type.EUndefined;
 
 import java.util.Arrays;
 
@@ -34,153 +37,170 @@ import static com.relogiclabs.jschema.message.ErrorCode.RNGNUM02;
 import static com.relogiclabs.jschema.message.ErrorCode.RNGNUM03;
 import static com.relogiclabs.jschema.message.ErrorCode.RNGNUM04;
 
-public abstract class CoreFunctions2 extends CoreFunctions1 {
-    // enum is a keyword in Java and _ will be escaped
-    public boolean _enum(JString target, JString... items) {
+public abstract class SchemaFunctions2 extends SchemaFunctions1 {
+    @ConstraintFunction("enum")
+    public boolean enums(JString target, EString... items) {
         var list = Arrays.asList(items);
         if(!list.contains(target)) return fail(new FunctionValidationException(
             new ErrorDetail(ENMSTR01, "Target string is not in enum listing"),
-            new ExpectedDetail(caller, "a string in listing " + joinWith(list, ", ", "[", "]")),
+            new ExpectedDetail(invoker, "a string in listing " + joinWith(list, ", ", "[", "]")),
             new ActualDetail(target, "target " + target + " is not in listing")));
         return true;
     }
 
-    public boolean _enum(JNumber target, JNumber... items) {
+    @ConstraintFunction("enum")
+    public boolean enums(JNumber target, ENumber... items) {
         var list = Arrays.asList(items);
         if(!list.contains(target)) return fail(new FunctionValidationException(
             new ErrorDetail(ENMNUM01, "Target number is not in enum listing"),
-            new ExpectedDetail(caller, "a number in listing " + joinWith(list, ", ", "[", "]")),
+            new ExpectedDetail(invoker, "a number in listing " + joinWith(list, ", ", "[", "]")),
             new ActualDetail(target, "target " + target + " is not in listing")));
         return true;
     }
 
-    public boolean minimum(JNumber target, JNumber minimum) {
-        if(target.compare(minimum) < 0) return fail(new FunctionValidationException(
+    @ConstraintFunction({"minimum", "min"})
+    public boolean minimum(JNumber target, ENumber minimum) {
+        if(target.compareTo(minimum) < 0) return fail(new FunctionValidationException(
             new ErrorDetail(MINICF01, "Target number must not be less than minimum"),
-            new ExpectedDetail(caller, "a number greater than or equal to " + minimum),
+            new ExpectedDetail(invoker, "a number greater than or equal to " + minimum),
             new ActualDetail(target, "target " + target + " is less than " + minimum)));
         return true;
     }
 
-    public boolean minimum(JNumber target, JNumber minimum, JBoolean exclusive) {
+    @ConstraintFunction({"minimum", "min"})
+    public boolean minimum(JNumber target, ENumber minimum, EBoolean exclusive) {
         var relationTo = exclusive.getValue() ? "greater than " : "greater than or equal to ";
-        if(target.compare(minimum) < 0) return fail(new FunctionValidationException(
+        var compareToMin = target.compareTo(minimum);
+        if(compareToMin < 0) return fail(new FunctionValidationException(
             new ErrorDetail(MINICF02, "Target number must not be less than minimum"),
-            new ExpectedDetail(caller, "a number " + relationTo + minimum),
+            new ExpectedDetail(invoker, "a number " + relationTo + minimum),
             new ActualDetail(target, "target " + target + " is less than " + minimum)));
-        if(exclusive.getValue() && target.compare(minimum) == 0)
+        if(exclusive.getValue() && compareToMin == 0)
             return fail(new FunctionValidationException(
                 new ErrorDetail(MINICF03, "Target number must be greater than minimum"),
-                new ExpectedDetail(caller, "a number " + relationTo + minimum),
+                new ExpectedDetail(invoker, "a number " + relationTo + minimum),
                 new ActualDetail(target, "target " + target + " is equal to " + minimum)));
         return true;
     }
 
-    public boolean maximum(JNumber target, JNumber maximum) {
-        if(target.compare(maximum) > 0) return fail(new FunctionValidationException(
+    @ConstraintFunction({"maximum", "max"})
+    public boolean maximum(JNumber target, ENumber maximum) {
+        if(target.compareTo(maximum) > 0) return fail(new FunctionValidationException(
             new ErrorDetail(MAXICF01, "Target number must not be greater than maximum"),
-            new ExpectedDetail(caller, "a number less than or equal " + maximum),
+            new ExpectedDetail(invoker, "a number less than or equal " + maximum),
             new ActualDetail(target, "target " + target + " is greater than " + maximum)));
         return true;
     }
 
-    public boolean maximum(JNumber target, JNumber maximum, JBoolean exclusive) {
+    @ConstraintFunction({"maximum", "max"})
+    public boolean maximum(JNumber target, ENumber maximum, EBoolean exclusive) {
         var relationTo = exclusive.getValue() ? "less than " : "less than or equal to ";
-        if(target.compare(maximum) > 0) return fail(new FunctionValidationException(
+        var compareToMax = target.compareTo(maximum);
+        if(compareToMax > 0) return fail(new FunctionValidationException(
             new ErrorDetail(MAXICF02, "Target number must not be greater than maximum"),
-            new ExpectedDetail(caller, "a number " + relationTo + maximum),
+            new ExpectedDetail(invoker, "a number " + relationTo + maximum),
             new ActualDetail(target, "target " + target + " is greater than " + maximum)));
-        if(exclusive.getValue() && target.compare(maximum) == 0)
+        if(exclusive.getValue() && compareToMax == 0)
             return fail(new FunctionValidationException(
                 new ErrorDetail(MAXICF03, "Target number must be less than maximum"),
-                new ExpectedDetail(caller, "a number " + relationTo + maximum),
+                new ExpectedDetail(invoker, "a number " + relationTo + maximum),
                 new ActualDetail(target, "target " + target + " is equal to " + maximum)));
         return true;
     }
 
+    @ConstraintFunction
     public boolean positive(JNumber target) {
-        if(target.compare(0) <= 0) return fail(new FunctionValidationException(
+        if(target.compareTo(0) <= 0) return fail(new FunctionValidationException(
             new ErrorDetail(POSICF01, "Target number must be positive"),
-            new ExpectedDetail(caller, "a positive number"),
+            new ExpectedDetail(invoker, "a positive number"),
             new ActualDetail(target, "target " + target + " is less than or equal to zero")));
         return true;
     }
 
+    @ConstraintFunction
     public boolean negative(JNumber target) {
-        if(target.compare(0) >= 0) return fail(new FunctionValidationException(
+        if(target.compareTo(0) >= 0) return fail(new FunctionValidationException(
             new ErrorDetail(NEGICF01, "Target number must be negative"),
-            new ExpectedDetail(caller, "a negative number"),
+            new ExpectedDetail(invoker, "a negative number"),
             new ActualDetail(target, "target " + target + " is greater than or equal to zero")));
         return true;
     }
 
-    public boolean positive(JNumber target, JNumber reference) {
-        if(target.compare(reference) < 0) return fail(new FunctionValidationException(
+    @ConstraintFunction
+    public boolean positive(JNumber target, ENumber reference) {
+        if(target.compareTo(reference) < 0) return fail(new FunctionValidationException(
             new ErrorDetail(POSICF02, "Target number must be positive from reference"),
-            new ExpectedDetail(caller, "a positive number from " + reference),
+            new ExpectedDetail(invoker, "a positive number from " + reference),
             new ActualDetail(target, "target " + target + " is less than reference")));
         return true;
     }
 
-    public boolean negative(JNumber target, JNumber reference) {
-        if(target.compare(reference) > 0) return fail(new FunctionValidationException(
+    @ConstraintFunction
+    public boolean negative(JNumber target, ENumber reference) {
+        if(target.compareTo(reference) > 0) return fail(new FunctionValidationException(
             new ErrorDetail(NEGICF02, "Target number must be negative from reference"),
-            new ExpectedDetail(caller, "a negative number from " + reference),
+            new ExpectedDetail(invoker, "a negative number from " + reference),
             new ActualDetail(target, "target " + target + " is greater than reference")));
         return true;
     }
 
-    public boolean range(JNumber target, JNumber minimum, JNumber maximum) {
-        if(target.compare(minimum) < 0) return fail(new FunctionValidationException(
+    @ConstraintFunction
+    public boolean range(JNumber target, ENumber minimum, ENumber maximum) {
+        if(target.compareTo(minimum) < 0) return fail(new FunctionValidationException(
             new ErrorDetail(RNGNUM01, "Target number is outside of range"),
-            new ExpectedDetail(caller, "a number in range [" + minimum + ", " + maximum + "]"),
+            new ExpectedDetail(invoker, "a number in range [" + minimum + ", " + maximum + "]"),
             new ActualDetail(target, "target " + target + " is less than " + minimum)));
-        if(target.compare(maximum) > 0) return fail(new FunctionValidationException(
+        if(target.compareTo(maximum) > 0) return fail(new FunctionValidationException(
             new ErrorDetail(RNGNUM02, "Target number is outside of range"),
-            new ExpectedDetail(caller, "a number in range [" + minimum + ", " + maximum + "]"),
+            new ExpectedDetail(invoker, "a number in range [" + minimum + ", " + maximum + "]"),
             new ActualDetail(target, "target " + target + " is greater than " + maximum)));
         return true;
     }
 
-    public boolean range(JNumber target, JNumber minimum, JUndefined undefined) {
-        if(target.compare(minimum) < 0) return fail(new FunctionValidationException(
+    @ConstraintFunction
+    public boolean range(JNumber target, ENumber minimum, EUndefined undefined) {
+        if(target.compareTo(minimum) < 0) return fail(new FunctionValidationException(
             new ErrorDetail(RNGNUM03, "Target number is outside of range"),
-            new ExpectedDetail(caller, "a number in range [" + minimum + ", " + undefined + "]"),
+            new ExpectedDetail(invoker, "a number in range [" + minimum + ", " + undefined + "]"),
             new ActualDetail(target, "target " + target + " is less than " + minimum)));
         return true;
     }
 
-    public boolean range(JNumber target, JUndefined undefined, JNumber maximum) {
-        if(target.compare(maximum) > 0) return fail(new FunctionValidationException(
+    @ConstraintFunction
+    public boolean range(JNumber target, EUndefined undefined, ENumber maximum) {
+        if(target.compareTo(maximum) > 0) return fail(new FunctionValidationException(
             new ErrorDetail(RNGNUM04, "Target number is outside of range"),
-            new ExpectedDetail(caller, "a number in range [" + undefined + ", " + maximum + "]"),
+            new ExpectedDetail(invoker, "a number in range [" + undefined + ", " + maximum + "]"),
             new ActualDetail(target, "target " + target + " is greater than " + maximum)));
         return true;
     }
 
+    @ConstraintFunction({"nonempty", "notEmpty"})
     public boolean nonempty(JString target) {
         var length = target.length();
         if(length <= 0) return fail(new FunctionValidationException(
             new ErrorDetail(EMPTCF01, "Target string must not be empty"),
-            new ExpectedDetail(caller, "a non-empty string"),
+            new ExpectedDetail(invoker, "a non-empty string"),
             new ActualDetail(target, "found empty target string")));
         return true;
     }
 
+    @ConstraintFunction({"nonempty", "notEmpty"})
     public boolean nonempty(JArray target) {
-        var length = target.getElements().size();
+        var length = target.size();
         if(length <= 0) return fail(new FunctionValidationException(
             new ErrorDetail(EMPTCF02, "Target array must not be empty"),
-            new ExpectedDetail(caller, "a non-empty array"),
+            new ExpectedDetail(invoker, "a non-empty array"),
             new ActualDetail(target, "found empty target array")));
         return true;
     }
 
+    @ConstraintFunction({"nonempty", "notEmpty"})
     public boolean nonempty(JObject target) {
-        var length = target.getProperties().size();
+        var length = target.size();
         if(length <= 0) return fail(new FunctionValidationException(
             new ErrorDetail(EMPTCF03, "Target object must not be empty"),
-            new ExpectedDetail(caller, "a non-empty object"),
+            new ExpectedDetail(invoker, "a non-empty object"),
             new ActualDetail(target, "found empty target object")));
         return true;
     }
