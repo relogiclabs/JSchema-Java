@@ -52,6 +52,11 @@ public final class GObject implements EObject {
         l.setValue(value);
     }
 
+    @Override
+    public boolean isReadonly() {
+        return false;
+    }
+
     public void put(String key, EValue value) {
         properties.put(key, value);
     }

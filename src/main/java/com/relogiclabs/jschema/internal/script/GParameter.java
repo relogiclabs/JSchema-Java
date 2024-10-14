@@ -21,4 +21,8 @@ public final class GParameter {
     public String toString() {
         return variadic ? name.concat(VARIADIC_SUFFIX) : name;
     }
+
+    public static boolean hasVariadic(GParameter[] parameters) {
+        return parameters.length != 0 && parameters[parameters.length - 1].isVariadic();
+    }
 }

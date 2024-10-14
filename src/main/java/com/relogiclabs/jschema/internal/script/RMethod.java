@@ -6,8 +6,8 @@ import com.relogiclabs.jschema.type.EValue;
 
 import java.util.List;
 
-public interface RFunction extends EValue {
-    EValue invoke(List<EValue> arguments, ScriptScope parentScope);
+public interface RMethod extends EValue {
+    EValue invoke(EValue self, List<EValue> arguments, ScriptScope parentScope);
 
     @Override
     default EType getType() {
