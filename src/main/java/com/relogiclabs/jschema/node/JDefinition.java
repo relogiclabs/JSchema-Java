@@ -4,7 +4,7 @@ import com.relogiclabs.jschema.internal.builder.JDefinitionBuilder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
-import static com.relogiclabs.jschema.internal.util.CollectionHelper.asList;
+import static com.relogiclabs.jschema.internal.util.CollectionHelper.asNonNullList;
 import static java.util.Objects.requireNonNull;
 
 @Getter
@@ -18,7 +18,7 @@ public final class JDefinition extends JDirective {
         super(builder);
         alias = requireNonNull(builder.alias());
         validator = requireNonNull(builder.validator());
-        children = asList(alias, validator);
+        children = asNonNullList(alias, validator);
     }
 
     public static JDefinition from(JDefinitionBuilder builder) {

@@ -14,6 +14,7 @@ import com.relogiclabs.jschema.internal.script.GLeftValue;
 import com.relogiclabs.jschema.internal.script.GRange;
 import com.relogiclabs.jschema.internal.script.GString;
 import com.relogiclabs.jschema.internal.script.RFunction;
+import com.relogiclabs.jschema.internal.tree.ScriptRegistry;
 import com.relogiclabs.jschema.internal.util.LogHelper;
 import com.relogiclabs.jschema.tree.RuntimeContext;
 import com.relogiclabs.jschema.type.EArray;
@@ -53,6 +54,7 @@ import static com.relogiclabs.jschema.internal.engine.ScriptErrorHelper.failOnIn
 import static com.relogiclabs.jschema.internal.engine.ScriptErrorHelper.failOnInvalidIndexRange;
 import static com.relogiclabs.jschema.internal.engine.ScriptErrorHelper.failOnInvalidLeftValueDecrement;
 import static com.relogiclabs.jschema.internal.engine.ScriptErrorHelper.failOnInvalidLeftValueIncrement;
+import static com.relogiclabs.jschema.internal.engine.ScriptErrorHelper.failOnMethodNotFound;
 import static com.relogiclabs.jschema.internal.engine.ScriptErrorHelper.failOnOperation;
 import static com.relogiclabs.jschema.internal.engine.ScriptErrorHelper.failOnPropertyNotFound;
 import static com.relogiclabs.jschema.internal.engine.ScriptErrorHelper.failOnStringUpdate;
@@ -63,9 +65,9 @@ import static com.relogiclabs.jschema.internal.engine.ScriptTreeHelper.decrement
 import static com.relogiclabs.jschema.internal.engine.ScriptTreeHelper.dereference;
 import static com.relogiclabs.jschema.internal.engine.ScriptTreeHelper.increment;
 import static com.relogiclabs.jschema.internal.engine.ScriptTreeHelper.stringify;
-import static com.relogiclabs.jschema.internal.tree.EFunction.VARIADIC_ARITY;
-import static com.relogiclabs.jschema.internal.tree.ScriptFunction.CALLER_HVAR;
-import static com.relogiclabs.jschema.internal.tree.ScriptFunction.TARGET_HVAR;
+import static com.relogiclabs.jschema.internal.loader.SchemaFunction.VARIADIC_ARITY;
+import static com.relogiclabs.jschema.internal.loader.ScriptSchemaFunction.CALLER_HVAR;
+import static com.relogiclabs.jschema.internal.loader.ScriptSchemaFunction.TARGET_HVAR;
 import static com.relogiclabs.jschema.internal.util.CollectionHelper.subList;
 import static com.relogiclabs.jschema.internal.util.CommonHelper.getToken;
 import static com.relogiclabs.jschema.internal.util.CommonHelper.hasToken;
@@ -81,7 +83,7 @@ import static com.relogiclabs.jschema.message.ErrorCode.DECPRE03;
 import static com.relogiclabs.jschema.message.ErrorCode.DECPST01;
 import static com.relogiclabs.jschema.message.ErrorCode.DECPST02;
 import static com.relogiclabs.jschema.message.ErrorCode.DECPST03;
-import static com.relogiclabs.jschema.message.ErrorCode.FNSNVK04;
+import static com.relogiclabs.jschema.message.ErrorCode.FNSNVK03;
 import static com.relogiclabs.jschema.message.ErrorCode.IDXASN01;
 import static com.relogiclabs.jschema.message.ErrorCode.IDXUPD01;
 import static com.relogiclabs.jschema.message.ErrorCode.INCPRE01;
@@ -119,9 +121,11 @@ import static com.relogiclabs.jschema.type.EUndefined.UNDEFINED;
 
 public abstract class ScriptTreeVisitor2 extends ScriptTreeVisitor1 {
     private static final Evaluator THROW_CODE_SUPPLIER = s -> GString.from(THRODF01);
+    private final ScriptRegistry scriptRegistry;
 
     public ScriptTreeVisitor2(RuntimeContext runtime) {
         super(runtime);
+        this.scriptRegistry = runtime.getScripts();
     }
 
     @Override
@@ -274,22 +278,22 @@ public abstract class ScriptTreeVisitor2 extends ScriptTreeVisitor1 {
     public Evaluator visitInvokeFunctionExpression(InvokeFunctionExpressionContext ctx) {
         var fn1 = ctx.G_IDENTIFIER();
         var name1 = fn1.getText();
-        var param2 = ctx.expression().stream().map(this::visit).toList();
-        var fid1 = name1 + "#" + param2.size();
-        var fid2 = name1 + "#" + VARIADIC_ARITY;
+        var args2 = ctx.expression().stream().map(this::visit).toList();
+        var key1 = name1 + "#" + args2.size();
+        var key2 = name1 + "#" + VARIADIC_ARITY;
         return tryCatch(scope -> {
             try {
-                var v1 = scope.resolve(fid1);
-                if(v1 == null) v1 = scope.resolve(fid2);
+                var v1 = scope.resolve(key1, key2);
+                if(v1 == null) v1 = scriptRegistry.getFunction(key1, key2);
                 if(!(v1 instanceof RFunction f1)) throw failOnFunctionNotFound(name1,
-                    param2.size(), fn1.getSymbol());
-                var p2 = param2.stream().map(a -> dereference(a.evaluate(scope))).toList();
-                return f1.invoke(f1.bind(scope, p2), p2);
+                    args2.size(), fn1.getSymbol());
+                var a2 = args2.stream().map(a -> dereference(a.evaluate(scope))).toList();
+                return f1.invoke(a2, scope);
             } catch(InvocationRuntimeException e) {
                 e.setSubject(name1);
                 throw e.translate(fn1.getSymbol());
             }
-        }, FNSNVK04, ctx);
+        }, FNSNVK03, ctx);
     }
 
     @Override
@@ -297,13 +301,17 @@ public abstract class ScriptTreeVisitor2 extends ScriptTreeVisitor1 {
         var self1 = visit(ctx.expression(0));
         var method2 = ctx.G_IDENTIFIER();
         var name2 = method2.getText();
-        var param3 = subList(ctx.expression(), 1).stream().map(this::visit).toList();
+        var args3 = subList(ctx.expression(), 1).stream().map(this::visit).toList();
+        var key1 = name2 + "#" + args3.size();
+        var key2 = name2 + "#" + VARIADIC_ARITY;
         return tryCatch(scope -> {
             try {
                 var s1 = dereference(self1.evaluate(scope));
-                var m2 = s1.getMethod(name2, param3.size());
-                var p3 = param3.stream().map(p -> dereference(p.evaluate(scope))).toList();
-                return m2.evaluate(s1, p3, scope);
+                var m2 = scriptRegistry.getMethod(s1, key1, key2);
+                if(m2 == null) throw failOnMethodNotFound(name2, args3.size(),
+                    s1, method2.getSymbol());
+                var a3 = args3.stream().map(p -> dereference(p.evaluate(scope))).toList();
+                return m2.invoke(s1, a3, scope);
             } catch(InvocationRuntimeException e) {
                 e.setSubject(name2);
                 throw e.translate(method2.getSymbol());

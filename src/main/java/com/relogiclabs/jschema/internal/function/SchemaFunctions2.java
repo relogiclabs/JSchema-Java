@@ -39,7 +39,7 @@ import static com.relogiclabs.jschema.message.ErrorCode.RNGNUM04;
 
 public abstract class SchemaFunctions2 extends SchemaFunctions1 {
     @ConstraintFunction("enum")
-    public boolean enums(JString target, EString... items) {
+    public boolean enum1(JString target, EString... items) {
         var list = Arrays.asList(items);
         if(!list.contains(target)) return fail(new FunctionValidationException(
             new ErrorDetail(ENMSTR01, "Target string is not in enum listing"),
@@ -49,7 +49,7 @@ public abstract class SchemaFunctions2 extends SchemaFunctions1 {
     }
 
     @ConstraintFunction("enum")
-    public boolean enums(JNumber target, ENumber... items) {
+    public boolean enum1(JNumber target, ENumber... items) {
         var list = Arrays.asList(items);
         if(!list.contains(target)) return fail(new FunctionValidationException(
             new ErrorDetail(ENMNUM01, "Target number is not in enum listing"),

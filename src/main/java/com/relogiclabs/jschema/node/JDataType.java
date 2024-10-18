@@ -12,7 +12,7 @@ import lombok.Getter;
 
 import static com.relogiclabs.jschema.internal.message.MessageHelper.DataTypeArgumentFailed;
 import static com.relogiclabs.jschema.internal.message.MessageHelper.DataTypeMismatched;
-import static com.relogiclabs.jschema.internal.util.CollectionHelper.asList;
+import static com.relogiclabs.jschema.internal.util.CollectionHelper.asNonNullList;
 import static com.relogiclabs.jschema.message.ErrorCode.ALSDEF02;
 import static com.relogiclabs.jschema.message.ErrorCode.ALSDEF03;
 import static com.relogiclabs.jschema.message.ErrorCode.DTYARG01;
@@ -36,7 +36,7 @@ public final class JDataType extends JBranch implements NestedMode {
         jsonType = requireNonNull(builder.jsonType());
         nested = requireNonNull(builder.nested());
         alias = builder.alias();
-        children = asList(alias);
+        children = asNonNullList(alias);
     }
 
     public static JDataType from(JDataTypeBuilder builder) {

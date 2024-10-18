@@ -9,17 +9,22 @@ import org.antlr.v4.runtime.Token;
 import static com.relogiclabs.jschema.message.MessageFormatter.formatForSchema;
 
 @Getter @Setter
-public class MethodArgumentValueException extends ArgumentValueException {
+public class InvalidSelfStateException extends InvocationRuntimeException {
     private EValue self;
 
-    public MethodArgumentValueException(ErrorDetail detail, Throwable cause) {
+    public InvalidSelfStateException(String code, String message) {
+        super(code, message);
+    }
+
+    public InvalidSelfStateException(ErrorDetail detail, Throwable cause) {
         super(detail, cause);
     }
 
     @Override
     public RuntimeException translate(Token token) {
         if(isHighLevel() || getSubject() == null) return this;
-        return new MethodArgumentValueException(formatForSchema(getCode(),
-            formatMethodMessage(self), token), this);
+        var message = addSelf(getMessage() + " of method '" + getSubject() + "'", self);
+        return new InvalidSelfStateException(formatForSchema(getCode(),
+            addNative(message), token), this);
     }
 }

@@ -11,14 +11,15 @@ import lombok.Getter;
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.relogiclabs.jschema.internal.library.LibraryFunctions3.resolveStatic;
-import static com.relogiclabs.jschema.internal.tree.EFunction.CONSTRAINT_PREFIX;
+import static com.relogiclabs.jschema.internal.loader.SchemaFunction.CONSTRAINT_PREFIX;
 import static com.relogiclabs.jschema.message.ErrorCode.FNSDUP01;
-import static com.relogiclabs.jschema.message.ErrorCode.FNSDUP02;
 import static com.relogiclabs.jschema.message.ErrorCode.VARDUP01;
 import static org.apache.commons.lang3.StringUtils.substringBefore;
 
 public class ScriptScope {
+    private static final String CONSTRAINT_TYPE = "Constraint";
+    private static final String SUBROUTINE_TYPE = "Subroutine";
+
     @Getter private final ScriptScope parent;
     private final Map<String, EValue> symbols;
 
@@ -27,36 +28,40 @@ public class ScriptScope {
         this.symbols = new HashMap<>();
     }
 
-    public GLeftValue addVariable(String name, EValue value) {
+    public GLeftValue addVariable(String key, EValue value) {
         var lvalue = new GLeftValue(value);
-        var oldValue = symbols.put(name, lvalue);
+        var oldValue = symbols.put(key, lvalue);
         if(oldValue == null) return lvalue;
         throw new DuplicateVariableException(VARDUP01,
-            "Variable '" + name + "' already declared in the scope");
+            "Variable '" + key + "' already declared in the scope");
     }
 
-    public void addFunction(String functionId, GFunction function) {
-        var oldValue = symbols.put(functionId, function);
-        if(oldValue == null) return;
-        if(functionId.startsWith(CONSTRAINT_PREFIX))
-            throw failOnDuplicateFunction(FNSDUP01, "Constraint", functionId);
-        else throw failOnDuplicateFunction(FNSDUP02, "Subroutine", functionId);
+    public void addFunction(String key, GFunction function) {
+        var oldValue = symbols.put(key, function);
+        if(oldValue != null) throw failOnDuplicateFunction(key);
     }
 
-    private static DuplicateFunctionException failOnDuplicateFunction(String code,
-                String functionType, String functionId) {
-        return new DuplicateFunctionException(code, functionType + " function '"
-            + substringBefore(functionId, '#') + "' with matching parameter(s) already defined");
+    private static DuplicateFunctionException failOnDuplicateFunction(String key) {
+        return new DuplicateFunctionException(FNSDUP01,
+            (key.startsWith(CONSTRAINT_PREFIX) ? CONSTRAINT_TYPE : SUBROUTINE_TYPE)
+                + " function '" + substringBefore(key, '#')
+                + "' with matching parameter(s) already defined");
     }
 
-    public EValue resolve(String name) {
+    public EValue resolve(String key) {
         var current = this;
         do {
-            var value = current.symbols.get(name);
+            var value = current.symbols.get(key);
             if(value != null) return value;
             current = current.parent;
         } while(current != null);
-        return resolveStatic(name);
+        return null;
+    }
+
+    public EValue resolve(String key1, String key2) {
+        var value = resolve(key1);
+        if(value != null) return value;
+        return resolve(key2);
     }
 
     public RuntimeContext getRuntime() {
@@ -65,7 +70,7 @@ public class ScriptScope {
         return current.getRuntime();
     }
 
-    public void update(String name, EValue value) {
-        symbols.put(name, value);
+    public void update(String key, EValue value) {
+        symbols.put(key, value);
     }
 }

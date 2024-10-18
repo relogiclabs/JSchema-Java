@@ -7,12 +7,14 @@ import com.relogiclabs.jschema.exception.InvalidContextException;
 import com.relogiclabs.jschema.exception.InvalidLeftValueException;
 import com.relogiclabs.jschema.exception.InvalidReturnTypeException;
 import com.relogiclabs.jschema.exception.InvocationRuntimeException;
+import com.relogiclabs.jschema.exception.MethodNotFoundException;
 import com.relogiclabs.jschema.exception.PropertyNotFoundException;
 import com.relogiclabs.jschema.exception.ScriptOperationException;
 import com.relogiclabs.jschema.exception.StringIndexOutOfBoundsException;
 import com.relogiclabs.jschema.exception.SystemOperationException;
 import com.relogiclabs.jschema.exception.UpdateNotSupportedException;
 import com.relogiclabs.jschema.exception.VariableNotFoundException;
+import com.relogiclabs.jschema.exception.VariadicInvocationException;
 import com.relogiclabs.jschema.internal.script.GRange;
 import com.relogiclabs.jschema.type.EArray;
 import com.relogiclabs.jschema.type.EInteger;
@@ -29,7 +31,8 @@ import static com.relogiclabs.jschema.message.ErrorCode.ARRRNG02;
 import static com.relogiclabs.jschema.message.ErrorCode.ARRRNG03;
 import static com.relogiclabs.jschema.message.ErrorCode.CALRSE01;
 import static com.relogiclabs.jschema.message.ErrorCode.FNSNVK01;
-import static com.relogiclabs.jschema.message.ErrorCode.PARMSF01;
+import static com.relogiclabs.jschema.message.ErrorCode.MTHNVK01;
+import static com.relogiclabs.jschema.message.ErrorCode.PRMDUP01;
 import static com.relogiclabs.jschema.message.ErrorCode.RETNSE02;
 import static com.relogiclabs.jschema.message.ErrorCode.STRIDX01;
 import static com.relogiclabs.jschema.message.ErrorCode.STRIDX02;
@@ -68,7 +71,7 @@ public final class ScriptErrorHelper {
     }
 
     static DuplicateParameterException failOnDuplicateParameterName(TerminalNode node) {
-        return new DuplicateParameterException(formatForSchema(PARMSF01,
+        return new DuplicateParameterException(formatForSchema(PRMDUP01,
             "Duplicate parameter name '" + node.getText() + "'", node.getSymbol()));
     }
 
@@ -167,13 +170,20 @@ public final class ScriptErrorHelper {
             "Variable '" + identifier.getText() + "' not found", identifier));
     }
 
-    static FunctionNotFoundException failOnFunctionNotFound(String name, int argCount, Token token) {
+    static FunctionNotFoundException failOnFunctionNotFound(String name, int argCount,
+                Token token) {
         return new FunctionNotFoundException(formatForSchema(FNSNVK01,
-            "Function '" + name + "' with " + argCount + " parameter(s) not found", token));
+            "Script function '" + name + "' for " + argCount + " argument(s) not found", token));
     }
 
-    static InvocationRuntimeException failOnVariadicArity(String code) {
-        return new InvocationRuntimeException(code,
+    static MethodNotFoundException failOnMethodNotFound(String name, int argCount, EValue self,
+                Token token) {
+        return new MethodNotFoundException(formatForSchema(MTHNVK01, "Script method '"
+            + name + "' for " + argCount + " argument(s) not found in " + self.getType(), token));
+    }
+
+    static VariadicInvocationException failOnVariadicArity(String code) {
+        return new VariadicInvocationException(code,
             "Too few arguments for invocation of variadic function");
     }
 

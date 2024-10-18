@@ -8,13 +8,9 @@ import static java.util.Arrays.copyOfRange;
 
 @Getter @Setter
 public class BaseRuntimeException extends RuntimeException {
-    // Exception creation method
+    // Exception creation method prefix
     private static final String FAIL_METHOD_PREFIX = "fail";
     private String code;
-
-    public BaseRuntimeException(String message) {
-        this(null, message, null);
-    }
 
     public BaseRuntimeException(String code, String message) {
         this(code, message, null);

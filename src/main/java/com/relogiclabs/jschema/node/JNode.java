@@ -15,7 +15,6 @@ import java.util.Map;
 
 import static com.relogiclabs.jschema.internal.message.MessageHelper.DataTypeMismatched;
 import static com.relogiclabs.jschema.message.ErrorCode.DTYCST01;
-import static com.relogiclabs.jschema.message.OutlineFormatter.createOutline;
 import static java.util.Collections.emptyList;
 import static java.util.Objects.requireNonNull;
 
@@ -68,7 +67,7 @@ public abstract class JNode implements EValue {
     public abstract String toString();
 
     public String getOutline() {
-        return createOutline(this);
+        return getRuntime().getOutlineFormatter().getOutline(this);
     }
 
     boolean fail(RuntimeException exception) {

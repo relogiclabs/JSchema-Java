@@ -6,9 +6,8 @@ import org.antlr.v4.runtime.Token;
 import static com.relogiclabs.jschema.message.MessageFormatter.formatForSchema;
 
 public class FunctionArgumentTypeException extends ArgumentTypeException {
-    FunctionArgumentTypeException(ArgumentTypeException cause) {
-        super(cause.getCode(), cause.getMessage(), cause);
-        setParameter(cause.getParameter());
+    public FunctionArgumentTypeException(String code, String message) {
+        super(code, message);
     }
 
     public FunctionArgumentTypeException(ErrorDetail detail, Throwable cause) {

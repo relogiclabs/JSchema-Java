@@ -17,7 +17,7 @@ import java.util.List;
 import static com.relogiclabs.jschema.internal.message.MessageHelper.DataTypeMismatched;
 import static com.relogiclabs.jschema.internal.message.MessageHelper.InvalidNonCompositeType;
 import static com.relogiclabs.jschema.internal.message.MessageHelper.ValidationFailed;
-import static com.relogiclabs.jschema.internal.util.CollectionHelper.addToList;
+import static com.relogiclabs.jschema.internal.util.CollectionHelper.addIfNonNull;
 import static com.relogiclabs.jschema.internal.util.CollectionHelper.tryGetLast;
 import static com.relogiclabs.jschema.internal.util.CommonHelper.nonNullFrom;
 import static com.relogiclabs.jschema.internal.util.StreamHelper.forEachTrue;
@@ -52,8 +52,8 @@ public final class JValidator extends JBranch {
         exceptions = new LinkedList<>();
         getRuntime().getReceivers().register(receivers);
         var nodes = new ArrayList<JNode>();
-        addToList(nodes, value);
-        addToList(nodes, functions, dataTypes, receivers);
+        addIfNonNull(nodes, value);
+        addIfNonNull(nodes, functions, dataTypes, receivers);
         children = unmodifiableCollection(nodes);
     }
 

@@ -14,6 +14,7 @@ import com.relogiclabs.jschema.internal.antlr.SchemaParser.ParenthesizedExpressi
 import com.relogiclabs.jschema.internal.antlr.SchemaParser.RelationalExpressionContext;
 import com.relogiclabs.jschema.internal.antlr.SchemaParser.UnaryMinusExpressionContext;
 import com.relogiclabs.jschema.internal.antlr.SchemaParser.UnaryPlusExpressionContext;
+import com.relogiclabs.jschema.internal.script.GBoolean;
 import com.relogiclabs.jschema.internal.script.GDouble;
 import com.relogiclabs.jschema.internal.script.GInteger;
 import com.relogiclabs.jschema.internal.script.GLeftValue;
@@ -251,13 +252,13 @@ public final class ScriptTreeVisitor3 extends ScriptTreeVisitor2 {
         if(ctx.G_EQ() != null) return tryCatch(scope -> {
             var v1 = dereference(expr1.evaluate(scope));
             var v2 = dereference(expr2.evaluate(scope));
-            return areEqual(v1, v2, runtime) ? TRUE : FALSE;
+            return GBoolean.from(areEqual(v1, v2, runtime));
         }, OPEQUL01, ctx);
 
         if(ctx.G_NE() != null) return tryCatch(scope -> {
             var v1 = dereference(expr1.evaluate(scope));
             var v2 = dereference(expr2.evaluate(scope));
-            return areEqual(v1, v2, runtime) ? FALSE : TRUE;
+            return GBoolean.from(!areEqual(v1, v2, runtime));
         }, OPNEQL01, ctx);
 
         throw new IllegalStateException("Invalid parser state");
@@ -430,10 +431,10 @@ public final class ScriptTreeVisitor3 extends ScriptTreeVisitor2 {
     public Evaluator visitAssignmentIdExpression(AssignmentIdExpressionContext ctx) {
         var id1 = ctx.G_IDENTIFIER();
         var expr2 = visit(ctx.expression());
-        var ids1 = id1.getText();
+        var key1 = id1.getText();
         return tryCatch(scope -> {
             var v2 = dereference(expr2.evaluate(scope));
-            var v1 = scope.resolve(ids1);
+            var v1 = scope.resolve(key1);
             if(v1 == null) throw failOnVariableNotFound(ASNVAR01, id1.getSymbol());
             if(!(v1 instanceof GLeftValue l1))
                 throw failOnInvalidLeftValueAssignment(ASNVAR02, id1.getSymbol());

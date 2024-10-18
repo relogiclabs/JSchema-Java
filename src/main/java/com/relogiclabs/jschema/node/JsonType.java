@@ -8,6 +8,7 @@ import com.relogiclabs.jschema.type.EType;
 import lombok.RequiredArgsConstructor;
 import org.antlr.v4.runtime.Token;
 
+import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -32,9 +33,9 @@ import static com.relogiclabs.jschema.type.EType.TIME;
 
 @RequiredArgsConstructor
 public final class JsonType {
-    private static final Map<String, EType> stringTypeMap = new HashMap<>();
-    private static final Map<EType, Class<?>> typeClassMap = new HashMap<>();
-    private static final Map<Class<?>, EType> classTypeMap = new HashMap<>();
+    private static final Map<String, EType> stringTypeMap = new HashMap<>(EType.count);
+    private static final Map<EType, Class<?>> typeClassMap = new EnumMap<>(EType.class);
+    private static final Map<Class<?>, EType> classTypeMap = new HashMap<>(EType.count);
 
     private final EType type;
 

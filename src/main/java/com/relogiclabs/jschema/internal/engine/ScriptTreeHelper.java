@@ -28,10 +28,12 @@ import java.util.stream.Collectors;
 import static com.relogiclabs.jschema.internal.engine.ScriptErrorHelper.failOnDuplicateParameterName;
 import static com.relogiclabs.jschema.internal.engine.ScriptErrorHelper.failOnFixedArity;
 import static com.relogiclabs.jschema.internal.engine.ScriptErrorHelper.failOnVariadicArity;
+import static com.relogiclabs.jschema.internal.loader.SchemaFunction.CONSTRAINT_PREFIX;
+import static com.relogiclabs.jschema.internal.loader.SchemaFunction.VARIADIC_ARITY;
 import static com.relogiclabs.jschema.internal.script.GFunction.CONSTRAINT_MODE;
 import static com.relogiclabs.jschema.internal.script.GFunction.FUTURE_MODE;
 import static com.relogiclabs.jschema.internal.script.GFunction.SUBROUTINE_MODE;
-import static com.relogiclabs.jschema.internal.script.RFunction.hasVariadic;
+import static com.relogiclabs.jschema.internal.script.GParameter.hasVariadic;
 import static com.relogiclabs.jschema.internal.util.CommonHelper.hasFlag;
 import static com.relogiclabs.jschema.internal.util.StreamHelper.halt;
 import static java.util.stream.Collectors.toMap;
@@ -107,6 +109,12 @@ public final class ScriptTreeHelper {
     static ENumber decrement(ENumber number) {
         if(number instanceof EInteger i) return GInteger.from(i.getValue() - 1);
         return GDouble.from(number.toDouble() - 1);
+    }
+
+    static String generateKey(String baseName, GParameter[] parameters, boolean constraint) {
+        var arity = hasVariadic(parameters) ? VARIADIC_ARITY : parameters.length;
+        var baseKey = baseName + "#" + arity;
+        return constraint ? CONSTRAINT_PREFIX + baseKey : baseKey;
     }
 
     static GParameter[] toParameters(List<TerminalNode> identifiers,

@@ -6,11 +6,6 @@ import org.antlr.v4.runtime.Token;
 import static com.relogiclabs.jschema.message.MessageFormatter.formatForSchema;
 
 public class FunctionArgumentValueException extends ArgumentValueException {
-    FunctionArgumentValueException(ArgumentValueException cause) {
-        super(cause.getCode(), cause.getMessage(), cause);
-        setParameter(cause.getParameter());
-    }
-
     public FunctionArgumentValueException(ErrorDetail detail) {
         super(detail, null);
     }

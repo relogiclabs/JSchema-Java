@@ -12,7 +12,7 @@ import java.util.Objects;
 
 import static com.relogiclabs.jschema.internal.message.MessageHelper.PropertyKeyMismatched;
 import static com.relogiclabs.jschema.internal.message.MessageHelper.PropertyValueMismatched;
-import static com.relogiclabs.jschema.internal.util.CollectionHelper.asList;
+import static com.relogiclabs.jschema.internal.util.CollectionHelper.asNonNullList;
 import static com.relogiclabs.jschema.internal.util.StringHelper.quote;
 import static com.relogiclabs.jschema.message.ErrorCode.PROPMS01;
 import static com.relogiclabs.jschema.message.ErrorCode.PROPMS02;
@@ -27,7 +27,7 @@ public final class JProperty extends JBranch implements Keyable<String> {
         super(builder);
         key = requireNonNull(builder.key());
         value = requireNonNull(builder.value());
-        children = asList(value);
+        children = asNonNullList(value);
     }
 
     public static JProperty from(JPropertyBuilder builder) {

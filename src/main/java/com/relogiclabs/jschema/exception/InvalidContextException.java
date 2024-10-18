@@ -12,6 +12,10 @@ import static com.relogiclabs.jschema.message.MessageFormatter.formatForSchema;
 public class InvalidContextException extends InvocationRuntimeException {
     private Token mainToken;
 
+    public InvalidContextException(String code, String message) {
+        super(code, message);
+    }
+
     public InvalidContextException(String code, String message, Token mainToken) {
         super(code, message);
         this.mainToken = mainToken;

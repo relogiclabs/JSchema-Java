@@ -16,7 +16,7 @@ import static com.relogiclabs.jschema.time.JsonUtcOffset.DEFAULT_UTC_OFFSET;
 import static lombok.AccessLevel.PACKAGE;
 import static org.apache.commons.lang3.StringUtils.removeEnd;
 
-public class JsonDateTime {
+public class JsonDateTime implements Comparable<JsonDateTime> {
     private static final int DEFAULT_YEAR = 2000;
     private static final int DEFAULT_MONTH = 1;
     private static final int DEFAULT_DAY = 1;
@@ -72,7 +72,8 @@ public class JsonDateTime {
         return null;
     }
 
-    public int compare(JsonDateTime other) {
+    @Override
+    public int compareTo(JsonDateTime other) {
         return dateTime.compareTo(other.dateTime);
     }
 
