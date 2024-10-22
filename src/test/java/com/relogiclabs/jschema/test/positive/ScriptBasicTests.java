@@ -310,7 +310,6 @@ public class ScriptBasicTests {
                     var object = {};
                     var nullVal = null;
                     var undefVal = undefined;
-                    var noneAssigned;
 
                     if(integer.type() != "#integer") throw("Invalid: " + integer.type());
                     if(double.type() != "#double") throw("Invalid: " + double.type());
@@ -320,7 +319,6 @@ public class ScriptBasicTests {
                     if(object.type() != "#object") throw("Invalid: " + object.type());
                     if(nullVal.type() != "#null") throw("Invalid: " + nullVal.type());
                     if(undefVal.type() != "#undefined") throw("Invalid: " + undefVal.type());
-                    if(noneAssigned.type() != "#void") throw("Invalid: " + noneAssigned.type());
                 }
             }
             """;

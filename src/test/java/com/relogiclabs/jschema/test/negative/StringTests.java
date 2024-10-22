@@ -331,8 +331,8 @@ public class StringTests {
         var schema =
             """
             {
-                "key1": @url("ftps") #string,
-                "key2": @url("https") #string,
+                "key1": @url("ftp", "ftps") #string,
+                "key2": @url("http", "https") #string,
                 "key3": @url("irc") #string
             }
             """;

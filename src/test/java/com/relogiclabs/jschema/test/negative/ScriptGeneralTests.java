@@ -90,41 +90,6 @@ public class ScriptGeneralTests {
                 "dataAccess": @checkAccess(&role) #integer
             }
             %script: {
-                constraint checkAccess(role) {
-                    if(role == "user" && target > 5) return fail(
-                        "EX_ERRACCESS01", "Data access incompatible with 'user' role",
-                        // Create an expected object explicitly without any function
-                        { node: caller, message: "an access at most 5 for 'user' role" },
-                        // Create an actual object explicitly without any function
-                        { node: target, message: "found access " + target
-                                + " that is greater than 5" });
-                }
-            }
-            """;
-        var json =
-            """
-            {
-                "role": "user",
-                "dataAccess": 8
-            }
-            """;
-        JsonSchema.isValid(schema, json);
-        var exception = assertThrows(FunctionValidationException.class,
-            () -> JsonAssert.isValid(schema, json));
-        assertEquals("EX_ERRACCESS01", exception.getCode());
-        exception.printStackTrace();
-    }
-
-    @Test
-    public void When_WrongValueConditionUnsatisfiedV4_ExceptionThrown() {
-        var schema =
-            """
-            %schema:
-            {
-                "role": #string &role,
-                "dataAccess": @checkAccess(&role) #integer
-            }
-            %script: {
                 future constraint checkAccess(role) {
                     // Fail with simple message and a code
                     if(role == "user" && target > 5) return fail(
@@ -147,7 +112,7 @@ public class ScriptGeneralTests {
     }
 
     @Test
-    public void When_WrongValueConditionUnsatisfiedV5_ExceptionThrown() {
+    public void When_WrongValueConditionUnsatisfiedV4_ExceptionThrown() {
         var schema =
             """
             %schema:

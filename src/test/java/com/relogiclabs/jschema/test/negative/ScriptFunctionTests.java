@@ -2,9 +2,10 @@ package com.relogiclabs.jschema.test.negative;
 
 import com.relogiclabs.jschema.JsonAssert;
 import com.relogiclabs.jschema.JsonSchema;
+import com.relogiclabs.jschema.exception.DataOwnerMismatchedException;
 import com.relogiclabs.jschema.exception.DuplicateFunctionException;
+import com.relogiclabs.jschema.exception.DuplicateParameterException;
 import com.relogiclabs.jschema.exception.FunctionArgumentTypeException;
-import com.relogiclabs.jschema.exception.FunctionArgumentValueException;
 import com.relogiclabs.jschema.exception.FunctionNotFoundException;
 import com.relogiclabs.jschema.exception.InvalidContextException;
 import com.relogiclabs.jschema.exception.InvalidReturnTypeException;
@@ -14,15 +15,15 @@ import com.relogiclabs.jschema.exception.MethodNotFoundException;
 import org.junit.jupiter.api.Test;
 
 import static com.relogiclabs.jschema.message.ErrorCode.CALRSE01;
-import static com.relogiclabs.jschema.message.ErrorCode.FAILBS01;
-import static com.relogiclabs.jschema.message.ErrorCode.FAILMV01;
 import static com.relogiclabs.jschema.message.ErrorCode.FNCDEF01;
-import static com.relogiclabs.jschema.message.ErrorCode.FNDSTR01;
+import static com.relogiclabs.jschema.message.ErrorCode.FNSARG01;
 import static com.relogiclabs.jschema.message.ErrorCode.FNSDUP01;
-import static com.relogiclabs.jschema.message.ErrorCode.FNSDUP02;
 import static com.relogiclabs.jschema.message.ErrorCode.FNSNVK01;
 import static com.relogiclabs.jschema.message.ErrorCode.FNSNVK02;
+import static com.relogiclabs.jschema.message.ErrorCode.MTHARG01;
 import static com.relogiclabs.jschema.message.ErrorCode.MTHNVK01;
+import static com.relogiclabs.jschema.message.ErrorCode.OWNRMS01;
+import static com.relogiclabs.jschema.message.ErrorCode.PRMDUP01;
 import static com.relogiclabs.jschema.message.ErrorCode.RETNSE02;
 import static com.relogiclabs.jschema.message.ErrorCode.TRGTSE01;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -174,7 +175,7 @@ public class ScriptFunctionTests {
         //JsonSchema.isValid(schema, json);
         var exception = assertThrows(DuplicateFunctionException.class,
             () -> JsonAssert.isValid(schema, json));
-        assertEquals(FNSDUP02, exception.getCode());
+        assertEquals(FNSDUP01, exception.getCode());
         exception.printStackTrace();
     }
 
@@ -230,7 +231,7 @@ public class ScriptFunctionTests {
         JsonSchema.isValid(schema, json);
         var exception = assertThrows(FunctionArgumentTypeException.class,
             () -> JsonAssert.isValid(schema, json));
-        assertEquals(FAILBS01, exception.getCode());
+        assertEquals(FNSARG01, exception.getCode());
         exception.printStackTrace();
     }
 
@@ -257,12 +258,12 @@ public class ScriptFunctionTests {
         JsonSchema.isValid(schema, json);
         var exception = assertThrows(MethodArgumentTypeException.class,
             () -> JsonAssert.isValid(schema, json));
-        assertEquals(FNDSTR01, exception.getCode());
+        assertEquals(MTHARG01, exception.getCode());
         exception.printStackTrace();
     }
 
     @Test
-    public void When_InvalidArgumentValueWithBuiltinSubroutine_ExceptionThrown() {
+    public void When_WrongNativeDataPassToBuiltinSubroutine_ExceptionThrown() {
         var schema =
             """
             %schema:
@@ -271,7 +272,9 @@ public class ScriptFunctionTests {
             }
             %script: {
                 constraint funcTest() {
-                    return fail("EX_ERR01", "Test Message", { node: null }, {});
+                    return fail("EX_ERR01", "Test Message",
+                        actual("must be from expected function"),
+                        expected("must be from actual function"));
                 }
             }
             """;
@@ -282,9 +285,9 @@ public class ScriptFunctionTests {
             }
             """;
         JsonSchema.isValid(schema, json);
-        var exception = assertThrows(FunctionArgumentValueException.class,
+        var exception = assertThrows(DataOwnerMismatchedException.class,
             () -> JsonAssert.isValid(schema, json));
-        assertEquals(FAILMV01, exception.getCode());
+        assertEquals(OWNRMS01, exception.getCode());
         exception.printStackTrace();
     }
 
@@ -444,7 +447,34 @@ public class ScriptFunctionTests {
         //JsonSchema.isValid(schema, json);
         var exception = assertThrows(DuplicateFunctionException.class,
             () -> JsonAssert.isValid(schema, json));
-        assertEquals(FNSDUP02, exception.getCode());
+        assertEquals(FNSDUP01, exception.getCode());
+        exception.printStackTrace();
+    }
+
+    @Test
+    public void When_DuplicateParameterNamesConflict_ExceptionThrown() {
+        var schema =
+            """
+            %schema:
+            {
+                "funcTest": @funcTest(2, 3)
+            }
+            %script: {
+                constraint funcTest(param1, param1) {
+                    return true;
+                }
+            }
+            """;
+        var json =
+            """
+            {
+                "funcTest": 2
+            }
+            """;
+        //JsonSchema.isValid(schema, json);
+        var exception = assertThrows(DuplicateParameterException.class,
+            () -> JsonAssert.isValid(schema, json));
+        assertEquals(PRMDUP01, exception.getCode());
         exception.printStackTrace();
     }
 }

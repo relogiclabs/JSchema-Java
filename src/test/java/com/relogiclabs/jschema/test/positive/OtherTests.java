@@ -37,7 +37,7 @@ public class OtherTests {
         var schema =
             """
             %version: "October 09, 2010"
-            %import: com.relogiclabs.jschema.test.external.ExternalFunctions
+            %import: com.relogiclabs.jschema.test.extension.ConstraintExtension1
             %pragma IgnoreUndefinedProperties: true
             %define $element: @range(1, 100) #integer
             %schema: {

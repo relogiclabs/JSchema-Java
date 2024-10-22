@@ -9,10 +9,10 @@ import org.junit.jupiter.api.Test;
 
 import static com.relogiclabs.jschema.message.ErrorCode.RECVER01;
 import static com.relogiclabs.jschema.message.ErrorCode.RECVER02;
-import static com.relogiclabs.jschema.test.external.ExternalFunctions.EX_CONDFUNC01;
-import static com.relogiclabs.jschema.test.external.ExternalFunctions.EX_CONDFUNC02;
-import static com.relogiclabs.jschema.test.external.ExternalFunctions.EX_MINMAX01;
-import static com.relogiclabs.jschema.test.external.ExternalFunctions.EX_SUMEQUAL01;
+import static com.relogiclabs.jschema.test.extension.ConstraintExtension1.EX_CONDFUNC01;
+import static com.relogiclabs.jschema.test.extension.ConstraintExtension1.EX_CONDFUNC02;
+import static com.relogiclabs.jschema.test.extension.ConstraintExtension1.EX_MINMAX01;
+import static com.relogiclabs.jschema.test.extension.ConstraintExtension1.EX_SUMEQUAL01;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -21,7 +21,7 @@ public class ReceiverTests {
     public void When_WrongReceiverNameInObject_ExceptionThrown() {
         var schema =
             """
-            %import: com.relogiclabs.jschema.test.external.ExternalFunctions
+            %import: com.relogiclabs.jschema.test.extension.ConstraintExtension1
             %schema:
             {
                 "key1": #integer &someName,
@@ -46,7 +46,7 @@ public class ReceiverTests {
     public void When_NoValueReceiveInObject_ExceptionThrown() {
         var schema =
             """
-            %import: com.relogiclabs.jschema.test.external.ExternalFunctions
+            %import: com.relogiclabs.jschema.test.extension.ConstraintExtension1
 
             %schema:
             {
@@ -72,7 +72,7 @@ public class ReceiverTests {
     public void When_ConditionFailedInObject_ExceptionThrown() {
         var schema =
             """
-            %import: com.relogiclabs.jschema.test.external.ExternalFunctions
+            %import: com.relogiclabs.jschema.test.extension.ConstraintExtension1
 
             %schema:
             {
@@ -98,7 +98,7 @@ public class ReceiverTests {
     public void When_ConditionManyFailedInObject_ExceptionThrown() {
         var schema =
             """
-            %import: com.relogiclabs.jschema.test.external.ExternalFunctions
+            %import: com.relogiclabs.jschema.test.extension.ConstraintExtension1
 
             %define $numbers: @range(1, 10) #integer &relatedValues
             %schema:
@@ -125,7 +125,7 @@ public class ReceiverTests {
     public void When_ReceiveWrongValuesInObject_ExceptionThrown() {
         var schema =
             """
-            %import: com.relogiclabs.jschema.test.external.ExternalFunctions
+            %import: com.relogiclabs.jschema.test.extension.ConstraintExtension1
             %schema:
             {
                 "key10": @sumEqual(&relatedData) #integer,
@@ -158,7 +158,7 @@ public class ReceiverTests {
     public void When_MultiReceiverFunctionWrongValuesInObject_ExceptionThrown() {
         var schema =
             """
-            %import: com.relogiclabs.jschema.test.external.ExternalFunctions
+            %import: com.relogiclabs.jschema.test.extension.ConstraintExtension1
 
             %schema:
             {
