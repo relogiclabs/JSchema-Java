@@ -160,9 +160,9 @@ Validates whether the `target` string represents a valid email address. It follo
 
 ### URL & URI Address
 ```stylus
-#string target - @url(#string scheme)
+#string target - @url(#string... schemes)
 ```
-Validates whether the `target` string is a valid URL (Uniform Resource Locator) or URI (Uniform Resource Identifier) with a specific scheme provided by the `scheme` parameter. It follows the RFC 3986 URI Generic Syntax to determine the validity of the URL or URI. In addition to conforming to this standard, it recognizes all widely used URL and URI address formats, ensuring compatibility with a wide range of systems and user requirements.
+Validates whether the `target` string is a valid URL (Uniform Resource Locator) or URI (Uniform Resource Identifier) with a specific scheme that matches one of the schemes provided by the `schemes` parameter. It follows the RFC 3986 URI Generic Syntax to determine the validity of the URL or URI. In addition to conforming to this standard, it recognizes all widely used URL and URI address formats, ensuring compatibility with a wide range of systems and user requirements.
 
 ```stylus
 #string target - @url
