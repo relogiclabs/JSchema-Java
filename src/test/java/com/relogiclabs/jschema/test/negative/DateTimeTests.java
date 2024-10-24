@@ -57,7 +57,7 @@ public class DateTimeTests {
         var json =
             """
             [
-                "This is not a date",
+                "This is a string",
                 "1939-13-10",
                 "1939-02-29"
             ]
@@ -79,7 +79,7 @@ public class DateTimeTests {
         var json =
             """
             [
-                "This is not a time",
+                "This is a string",
                 "1939-09-02T24:02:02.000Z",
                 "1939-09-20T02:60:09.000Z"
             ]

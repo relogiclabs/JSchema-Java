@@ -64,6 +64,11 @@ public final class GArray implements EArray {
     }
 
     @Override
+    public boolean isReadonly() {
+        return false;
+    }
+
+    @Override
     public List<? extends EValue> elements() {
         return elements;
     }

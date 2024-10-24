@@ -49,20 +49,18 @@ public final class JReceiver extends JLeaf implements EArray, Iterable<JNode> {
         return list;
     }
 
-    @SuppressWarnings("unchecked")
-    public <T extends JNode> T getValueNode() {
+    public <T extends JNode> T getValueNode(Class<T> type) {
         var list = fetchValueNodes();
         if(list.isEmpty()) throw new InvalidReceiverStateException(formatForSchema(RECVER02,
             "No value received for '" + name + "'", this));
         if(list.size() > 1) throw new InvalidReceiverStateException(formatForSchema(RECVER03,
             "Multiple values received for '" + name + "'", this));
-        return (T) list.get(0);
+        return type.cast(list.get(0));
     }
 
-    @SuppressWarnings("unchecked")
-    public <T extends JNode> List<T> getValueNodes() {
+    public <T extends JNode> List<T> getValueNodes(Class<T> type) {
         var list = fetchValueNodes();
-        return list.stream().map(i -> (T) i).toList();
+        return list.stream().map(type::cast).toList();
     }
 
     @Override

@@ -9,7 +9,7 @@ import lombok.RequiredArgsConstructor;
 import java.util.List;
 
 import static com.relogiclabs.jschema.internal.engine.ScriptTreeHelper.areCompatible;
-import static com.relogiclabs.jschema.internal.script.RFunction.hasVariadic;
+import static com.relogiclabs.jschema.internal.script.GParameter.hasVariadic;
 import static com.relogiclabs.jschema.internal.util.CollectionHelper.subList;
 import static com.relogiclabs.jschema.internal.util.CommonHelper.hasFlag;
 import static com.relogiclabs.jschema.message.ErrorCode.FNSNVK02;
@@ -34,18 +34,21 @@ public final class GFunction implements RFunction {
     }
 
     @Override
-    public ScriptScope bind(ScriptScope parentScope, List<EValue> arguments) {
-        areCompatible(parameters, arguments, FNSNVK02);
-        var scope = new ScriptScope(parentScope);
-        var i = 0;
-        for(var p : parameters) scope.addVariable(p.getName(), p.isVariadic()
-                ? new GArray(subList(arguments, i)) : arguments.get(i++));
-        return scope;
+    public EValue invoke(List<EValue> arguments, ScriptScope parentScope) {
+        return invoke(bind(arguments, parentScope));
     }
 
-    @Override
-    public EValue invoke(ScriptScope functionScope, List<EValue> arguments) {
-        return invoke(functionScope);
+    private ScriptScope bind(List<EValue> arguments, ScriptScope parentScope) {
+        areCompatible(parameters, arguments, FNSNVK02);
+        var scope = new ScriptScope(parentScope);
+        if(parameters.length == 0) return scope;
+        var endIndex = parameters.length - 1;
+        for(int i = 0; i < endIndex; i++)
+            scope.addVariable(parameters[i].getName(), arguments.get(i));
+        if(parameters[endIndex].isVariadic()) scope.addVariable(parameters[endIndex].getName(),
+            new GArray(subList(arguments, endIndex)));
+        else scope.addVariable(parameters[endIndex].getName(), arguments.get(endIndex));
+        return scope;
     }
 
     public EValue invoke(ScriptScope functionScope) {

@@ -16,6 +16,10 @@ import static com.relogiclabs.jschema.internal.engine.ScriptTreeHelper.dereferen
 public final class GLeftValue implements EValue {
     private EValue value;
 
+    public <T extends EValue> T getValue(Class<T> type) {
+        return type.cast(value);
+    }
+
     @Override
     public EType getType() {
         return value.getType();

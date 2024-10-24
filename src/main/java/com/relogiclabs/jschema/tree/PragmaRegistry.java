@@ -3,7 +3,6 @@ package com.relogiclabs.jschema.tree;
 import com.relogiclabs.jschema.exception.DuplicatePragmaException;
 import com.relogiclabs.jschema.internal.time.DateTimeParser;
 import com.relogiclabs.jschema.internal.tree.PragmaDescriptor;
-import com.relogiclabs.jschema.message.OutlineFormatter;
 import com.relogiclabs.jschema.node.JPragma;
 import lombok.Getter;
 
@@ -19,6 +18,7 @@ import static com.relogiclabs.jschema.internal.tree.PragmaDescriptor.IGNORE_UNDE
 import static com.relogiclabs.jschema.internal.tree.PragmaDescriptor.TIME_DATA_TYPE_FORMAT;
 import static com.relogiclabs.jschema.message.ErrorCode.PRGDUP01;
 import static com.relogiclabs.jschema.message.MessageFormatter.formatForSchema;
+import static com.relogiclabs.jschema.message.OutlineFormatter.setMaxLength;
 import static com.relogiclabs.jschema.time.DateTimeType.DATE_TYPE;
 import static com.relogiclabs.jschema.time.DateTimeType.TIME_TYPE;
 
@@ -41,10 +41,12 @@ public final class PragmaRegistry implements Iterable<Map.Entry<String, JPragma>
     private String timeDataTypeFormat = TIME_DATA_TYPE_FORMAT.getDefaultValue();
     private boolean enableContextualException = ENABLE_CONTEXTUAL_EXCEPTION.getDefaultValue();
 
+    private final RuntimeContext runtime;
     private DateTimeParser dateTypeParser;
     private DateTimeParser timeTypeParser;
 
-    public PragmaRegistry() {
+    public PragmaRegistry(RuntimeContext runtime) {
+        this.runtime = runtime;
         this.pragmas = new HashMap<>();
         this.dateTypeParser = new DateTimeParser(dateDataTypeFormat, DATE_TYPE);
         this.timeTypeParser = new DateTimeParser(timeDataTypeFormat, TIME_TYPE);
@@ -73,7 +75,7 @@ public final class PragmaRegistry implements Iterable<Map.Entry<String, JPragma>
                 timeTypeParser = new DateTimeParser(timeDataTypeFormat, TIME_TYPE);
             }
             case NAME_ENABLE_CONTEXTUAL_EXCEPTION -> enableContextualException = (boolean) value;
-            case NAME_OUTLINE_MAXIMUM_LENGTH -> OutlineFormatter.setMaximumLength((int) (long) value);
+            case NAME_OUTLINE_MAXIMUM_LENGTH -> setMaxLength(runtime, (long) value);
         }
     }
 

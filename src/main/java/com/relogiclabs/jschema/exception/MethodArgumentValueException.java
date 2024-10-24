@@ -2,18 +2,15 @@ package com.relogiclabs.jschema.exception;
 
 import com.relogiclabs.jschema.message.ErrorDetail;
 import com.relogiclabs.jschema.type.EValue;
+import lombok.Getter;
+import lombok.Setter;
 import org.antlr.v4.runtime.Token;
 
 import static com.relogiclabs.jschema.message.MessageFormatter.formatForSchema;
 
+@Getter @Setter
 public class MethodArgumentValueException extends ArgumentValueException {
     private EValue self;
-
-    MethodArgumentValueException(EValue self, ArgumentValueException cause) {
-        super(cause.getCode(), cause.getMessage(), cause);
-        setParameter(cause.getParameter());
-        this.self = self;
-    }
 
     public MethodArgumentValueException(ErrorDetail detail, Throwable cause) {
         super(detail, cause);

@@ -113,7 +113,8 @@ public class ScriptBasicTests {
             %schema:
             {
                 "stringTest": @stringTest #string,
-                "arrayTest": @arrayTest #array
+                "arrayTest": @arrayTest #array,
+                "objectTest": @objectTest #object
             }
             %script: {
                 constraint stringTest() {
@@ -146,13 +147,31 @@ public class ScriptBasicTests {
                     var result6 = tryof(array[10] = 10);
                     if(!result6.error.find("[ARNSRT02]")) throw("Invalid: " + array);
                 }
+
+                constraint objectTest() {
+                    var result1 = tryof(target[10]);
+                    if(!result1.error.find("[REDIDX01]")) throw("Invalid: " + target);
+                    var result2 = tryof(target[-1]);
+                    if(!result2.error.find("[REDIDX01]")) throw("Invalid: " + target);
+                    var result3 = tryof(target[10..]);
+                    if(!result3.error.find("[REDRNG01]")) throw("Invalid: " + target);
+                    var result4 = tryof(target[..10]);
+                    if(!result4.error.find("[REDRNG01]")) throw("Invalid: " + target);
+                    var result5 = tryof(target[-2..-4]);
+                    if(!result5.error.find("[REDRNG01]")) throw("Invalid: " + target);
+                    var result6 = tryof(target.notExist);
+                    if(!result6.error.find("[OPPRTY02]")) throw("Invalid: " + target);
+                    var result7 = tryof(target["notExist"]);
+                    if(!result7.error.find("[OPPRTY04]")) throw("Invalid: " + target);
+                }
             }
             """;
         var json =
             """
             {
                 "stringTest": "This is a test",
-                "arrayTest": [1, 2, 3, 4, 5, 6]
+                "arrayTest": [1, 2, 3, 4, 5, 6],
+                "objectTest": { "key1": 10 }
             }
             """;
         //JsonSchema.isValid(schema, json);
@@ -225,6 +244,8 @@ public class ScriptBasicTests {
             }
             %script: {
                 constraint incDecTest() {
+                    // target is a read-only reference to the schema node
+                    // and cannot be modified
                     var t = target;
                     var result1 = tryof(t++);
                     if(!result1.error.find("[INCPST02]")) throw("Invalid: " + target);
@@ -256,7 +277,8 @@ public class ScriptBasicTests {
             {
                 "lvalueTest1": @lvalueTest1 #array,
                 "lvalueTest2": @lvalueTest2 #object,
-                "lvalueTest3": @lvalueTest3 #string
+                "lvalueTest3": @lvalueTest3 #string,
+                "lvalueTest4": @lvalueTest4 #array
             }
             %script: {
                 constraint lvalueTest1() {
@@ -280,6 +302,16 @@ public class ScriptBasicTests {
                     var result2 = tryof(target[11] = "f");
                     if(!result2.error.find("[STRASN01]")) throw("Invalid: " + target);
                 }
+
+                constraint lvalueTest4() {
+                    // Schema nodes are read-only and not modifiable
+                    // Primitive types create an auto copy on modification, while composite
+                    // types require a manual copy
+                    var result1 = tryof(target[0]++);
+                    if(!result1.error.find("[INCPST01]")) throw("Invalid: " + target);
+                    var result2 = tryof(target[0]--);
+                    if(!result2.error.find("[DECPST01]")) throw("Invalid: " + target);
+                }
             }
             """;
         var json =
@@ -287,7 +319,8 @@ public class ScriptBasicTests {
             {
                 "lvalueTest1": [100, 200],
                 "lvalueTest2": {"k1": 100},
-                "lvalueTest3": "test string"
+                "lvalueTest3": "test string",
+                "lvalueTest4": [-100, -200]
             }
             """;
         //JsonSchema.isValid(schema, json);

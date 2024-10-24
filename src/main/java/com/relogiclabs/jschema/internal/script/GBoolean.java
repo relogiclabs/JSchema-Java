@@ -14,6 +14,10 @@ public final class GBoolean implements EBoolean {
 
     private final boolean value;
 
+    public static GBoolean from(boolean value) {
+        return value ? TRUE : FALSE;
+    }
+
     @Override
     public boolean getValue() {
         return value;

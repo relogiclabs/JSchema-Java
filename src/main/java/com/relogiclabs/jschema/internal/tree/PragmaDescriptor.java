@@ -9,7 +9,7 @@ import lombok.Getter;
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.relogiclabs.jschema.message.OutlineFormatter.DEFAULT_MAXIMUM_LENGTH;
+import static com.relogiclabs.jschema.message.OutlineFormatter.DEFAULT_MAX_LENGTH;
 import static com.relogiclabs.jschema.tree.PragmaRegistry.NAME_DATE_DATA_TYPE_FORMAT;
 import static com.relogiclabs.jschema.tree.PragmaRegistry.NAME_ENABLE_CONTEXTUAL_EXCEPTION;
 import static com.relogiclabs.jschema.tree.PragmaRegistry.NAME_FLOATING_POINT_TOLERANCE;
@@ -38,8 +38,7 @@ public final class PragmaDescriptor<T> {
     public static final PragmaDescriptor<Boolean> ENABLE_CONTEXTUAL_EXCEPTION
             = new PragmaDescriptor<>(NAME_ENABLE_CONTEXTUAL_EXCEPTION, JBoolean.class, false);
     public static final PragmaDescriptor<Integer> OUTLINE_MAXIMUM_LENGTH
-            = new PragmaDescriptor<>(NAME_OUTLINE_MAXIMUM_LENGTH, JInteger.class,
-                DEFAULT_MAXIMUM_LENGTH);
+            = new PragmaDescriptor<>(NAME_OUTLINE_MAXIMUM_LENGTH, JInteger.class, DEFAULT_MAX_LENGTH);
 
     private final String name;
     private final Class<?> type;

@@ -49,23 +49,16 @@ public final class StringHelper {
         return target;
     }
 
-    public static String join(Collection<?> list, String delimiter,
+    public static String join(Stream<?> stream, String delimiter,
                               String prefix, String suffix) {
-        var result = list.stream().map(Object::toString).collect(joining(delimiter));
+        var result = stream.map(Object::toString).collect(joining(delimiter));
         if(!result.isEmpty()) return prefix + result + suffix;
         return result;
     }
 
-    public static String joinWith(Collection<?> list, String delimiter,
-                                  String prefix, String suffix) {
-        var result = list.stream().map(Object::toString).collect(joining(delimiter));
-        return prefix + result + suffix;
-    }
-
-    public static String joinWith(Stream<?> stream, String delimiter,
-                                  String prefix, String suffix) {
-        var result = stream.map(Object::toString).collect(joining(delimiter));
-        return prefix + result + suffix;
+    public static String join(Collection<?> list, String delimiter,
+                              String prefix, String suffix) {
+        return join(list.stream(), delimiter, prefix, suffix);
     }
 
     public static String join(Collection<?> list, String delimiter, String prefix) {
@@ -74,5 +67,20 @@ public final class StringHelper {
 
     public static String join(Collection<?> list, String delimiter) {
         return join(list, delimiter, "", "");
+    }
+
+    public static String join(Stream<?> stream, String delimiter) {
+        return join(stream, delimiter, "", "");
+    }
+
+    public static String joinWith(Stream<?> stream, String delimiter,
+                                  String prefix, String suffix) {
+        var result = stream.map(Object::toString).collect(joining(delimiter));
+        return prefix + result + suffix;
+    }
+
+    public static String joinWith(Collection<?> list, String delimiter,
+                                  String prefix, String suffix) {
+        return joinWith(list.stream(), delimiter, prefix, suffix);
     }
 }

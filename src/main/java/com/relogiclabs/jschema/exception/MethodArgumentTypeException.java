@@ -12,10 +12,8 @@ import static com.relogiclabs.jschema.message.MessageFormatter.formatForSchema;
 public class MethodArgumentTypeException extends ArgumentTypeException {
     private EValue self;
 
-    MethodArgumentTypeException(EValue self, ArgumentTypeException cause) {
-        super(cause.getCode(), cause.getMessage(), cause);
-        setParameter(cause.getParameter());
-        this.self = self;
+    public MethodArgumentTypeException(String code, String message) {
+        super(code, message);
     }
 
     public MethodArgumentTypeException(ErrorDetail detail, Throwable cause) {

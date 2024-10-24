@@ -4,7 +4,7 @@ import com.relogiclabs.jschema.internal.builder.JPragmaBuilder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
-import static com.relogiclabs.jschema.internal.util.CollectionHelper.asList;
+import static com.relogiclabs.jschema.internal.util.CollectionHelper.asNonNullList;
 import static java.util.Objects.requireNonNull;
 
 @Getter
@@ -18,7 +18,7 @@ public final class JPragma extends JDirective {
         super(builder);
         name = requireNonNull(builder.name());
         value = (PragmaValue<?>) requireNonNull(builder.value());
-        children = asList(builder.value());
+        children = asNonNullList(builder.value());
     }
 
     public static JPragma from(JPragmaBuilder builder) {

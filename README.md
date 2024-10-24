@@ -67,7 +67,7 @@ The next example represents an expanded version of the previous one, which bring
 ```cpp
 %title: "Extended User Profile Dashboard API Response"
 %version: "2.0.0-extended"
-%import: com.relogiclabs.jschema.test.external.ExternalFunctions
+%import: com.relogiclabs.jschema.test.extension.GeneralExtension1
 
 %pragma DateDataTypeFormat: "DD-MM-YYYY"
 %pragma TimeDataTypeFormat: "DD-MM-YYYY hh:mm:ss"

@@ -1,20 +1,16 @@
 package com.relogiclabs.jschema.exception;
 
-import com.relogiclabs.jschema.internal.util.ExceptionLevel;
 import com.relogiclabs.jschema.message.ErrorDetail;
 import lombok.Getter;
 import org.antlr.v4.runtime.Token;
 
-import static com.relogiclabs.jschema.internal.util.ExceptionLevel.HIGH_LEVEL;
-import static com.relogiclabs.jschema.internal.util.ExceptionLevel.LOW_LEVEL;
+import static com.relogiclabs.jschema.exception.MultilevelRuntimeException.Level.HIGH_LEVEL;
+import static com.relogiclabs.jschema.exception.MultilevelRuntimeException.Level.LOW_LEVEL;
 
 @Getter
 public abstract class MultilevelRuntimeException extends BaseRuntimeException {
-    private final ExceptionLevel level;
-
-    public MultilevelRuntimeException(String message) {
-        this(null, message, null);
-    }
+    public enum Level { LOW_LEVEL, HIGH_LEVEL }
+    private final Level level;
 
     public MultilevelRuntimeException(String code, String message) {
         this(code, message, null);

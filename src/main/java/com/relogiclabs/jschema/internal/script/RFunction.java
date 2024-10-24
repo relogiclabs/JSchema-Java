@@ -1,17 +1,16 @@
 package com.relogiclabs.jschema.internal.script;
 
 import com.relogiclabs.jschema.internal.engine.ScriptScope;
+import com.relogiclabs.jschema.type.EType;
 import com.relogiclabs.jschema.type.EValue;
 
 import java.util.List;
 
 public interface RFunction extends EValue {
-    GParameter[] getParameters();
-    boolean isVariadic();
-    ScriptScope bind(ScriptScope parentScope, List<EValue> arguments);
-    EValue invoke(ScriptScope functionScope, List<EValue> arguments);
+    EValue invoke(List<EValue> arguments, ScriptScope parentScope);
 
-    static boolean hasVariadic(GParameter[] parameters) {
-        return parameters.length != 0 && parameters[parameters.length - 1].isVariadic();
+    @Override
+    default EType getType() {
+        return EType.INVOCABLE;
     }
 }

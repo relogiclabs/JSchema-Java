@@ -1,33 +1,36 @@
 package com.relogiclabs.jschema.type;
 
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
 @Getter
+@RequiredArgsConstructor
 public enum EType {
-    NUMBER("#number"),
-    INTEGER("#integer"),
-    FLOAT("#float"),
-    DOUBLE("#double"),
-    STRING("#string"),
-    ARRAY("#array"),
-    RANGE("#range"),
-    OBJECT("#object"),
-    BOOLEAN("#boolean"),
-    DATETIME("#datetime"),
-    DATE("#date"),
-    TIME("#time"),
-    PRIMITIVE("#primitive"),
-    COMPOSITE("#composite"),
-    ANY("#any"),
-    NULL("#null"),
-    UNDEFINED("#undefined"),
-    VOID("#void");
+    ANY("#any", null),
+    PRIMITIVE("#primitive", ANY),
+    NUMBER("#number", PRIMITIVE),
+    INTEGER("#integer", NUMBER),
+    FLOAT("#float", NUMBER),
+    DOUBLE("#double", NUMBER),
+    BOOLEAN("#boolean", PRIMITIVE),
+    STRING("#string", PRIMITIVE),
+    DATETIME("#datetime", STRING),
+    DATE("#date", DATETIME),
+    TIME("#time", DATETIME),
+    NULL("#null", PRIMITIVE),
+    UNDEFINED("#undefined", PRIMITIVE),
+    COMPOSITE("#composite", ANY),
+    ARRAY("#array", COMPOSITE),
+    OBJECT("#object", COMPOSITE),
+    RANGE("#range", ANY),
+    NATIVE("#native", ANY),
+    INVOCABLE("#invocable", null),
+    VOID("#void", null);
+
+    public static final int count = EType.values().length;
 
     private final String name;
-
-    EType(String name) {
-        this.name = name;
-    }
+    private final EType parent;
 
     @Override
     public String toString() {

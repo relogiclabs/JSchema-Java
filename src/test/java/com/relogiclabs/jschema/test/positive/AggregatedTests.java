@@ -9,7 +9,7 @@ public class AggregatedTests {
         var schema = """
         %title: "Example Schema For Some Json HTTP Request or Response"
         %version: "February 11, 2023"
-        %import: com.relogiclabs.jschema.test.external.ExternalFunctions
+        %import: com.relogiclabs.jschema.test.extension.ConstraintExtension1
         %pragma IgnoreUndefinedProperties: true
 
         %define $component1: {
@@ -195,7 +195,7 @@ public class AggregatedTests {
         var schema = """
         %title: "Extended User Profile Dashboard API Response"
         %version: "2.0.0-extended"
-        %import: com.relogiclabs.jschema.test.external.ExternalFunctions
+        %import: com.relogiclabs.jschema.test.extension.GeneralExtension1
 
         %pragma DateDataTypeFormat: "DD-MM-YYYY"
         %pragma TimeDataTypeFormat: "DD-MM-YYYY hh:mm:ss"
@@ -361,7 +361,7 @@ public class AggregatedTests {
         var schema = """
         %title: "Extended User Profile Dashboard API Response"
         %version: "2.0.0-extended"
-        %import: com.relogiclabs.jschema.test.external.ExternalFunctions
+        %import: com.relogiclabs.jschema.test.extension.GeneralExtension1
 
         %pragma DateDataTypeFormat: "DD-MM-YYYY"
         %pragma TimeDataTypeFormat: "DD-MM-YYYY hh:mm:ss"

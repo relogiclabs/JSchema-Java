@@ -7,8 +7,8 @@ import com.relogiclabs.jschema.exception.FunctionValidationException;
 import org.junit.jupiter.api.Test;
 
 import static com.relogiclabs.jschema.message.ErrorCode.DTYPMS01;
-import static com.relogiclabs.jschema.test.external.ExternalFunctions.EX_ERRACCESS01;
-import static com.relogiclabs.jschema.test.external.ExternalFunctions.EX_ERRORIP02;
+import static com.relogiclabs.jschema.test.extension.GeneralExtension1.EX_ERRACCESS01;
+import static com.relogiclabs.jschema.test.extension.GeneralExtension1.EX_ERRORIP01;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -83,7 +83,7 @@ public class AggregatedTests {
             """
             %title: "Extended User Profile Dashboard API Response"
             %version: "2.0.0-extended"
-            %import: com.relogiclabs.jschema.test.external.ExternalFunctions
+            %import: com.relogiclabs.jschema.test.extension.GeneralExtension1
             %pragma IgnoreUndefinedProperties: true
 
             %define $post: {
@@ -247,7 +247,7 @@ public class AggregatedTests {
             """
             %title: "Profile Dashboard Request"
             %version: "1.0.0-IPTest"
-            %import: com.relogiclabs.jschema.test.external.ExternalFunctions
+            %import: com.relogiclabs.jschema.test.extension.GeneralExtension1
 
             %schema:
             {
@@ -285,7 +285,7 @@ public class AggregatedTests {
         JsonSchema.isValid(schema, json);
         var exception = assertThrows(FunctionValidationException.class,
             () -> JsonAssert.isValid(schema, json));
-        assertEquals(EX_ERRORIP02, exception.getCode());
+        assertEquals(EX_ERRORIP01, exception.getCode());
         exception.printStackTrace();
     }
 
@@ -295,7 +295,7 @@ public class AggregatedTests {
             """
             %title: "Extended User Profile Dashboard API Response"
             %version: "2.0.0-extended"
-            %import: com.relogiclabs.jschema.test.external.ExternalFunctions
+            %import: com.relogiclabs.jschema.test.extension.GeneralExtension1
 
             %pragma DateDataTypeFormat: "DD-MM-YYYY"
             %pragma TimeDataTypeFormat: "DD-MM-YYYY hh:mm:ss"

@@ -27,7 +27,7 @@ import com.relogiclabs.jschema.internal.antlr.SchemaParser.VarDeclarationContext
 import com.relogiclabs.jschema.internal.antlr.SchemaParser.VarStatementContext;
 import com.relogiclabs.jschema.internal.antlr.SchemaParser.WhileStatementContext;
 import com.relogiclabs.jschema.internal.antlr.SchemaParserBaseVisitor;
-import com.relogiclabs.jschema.internal.function.FunctionId;
+import com.relogiclabs.jschema.internal.loader.ScriptSchemaFunction;
 import com.relogiclabs.jschema.internal.script.GArray;
 import com.relogiclabs.jschema.internal.script.GControl;
 import com.relogiclabs.jschema.internal.script.GDouble;
@@ -36,7 +36,6 @@ import com.relogiclabs.jschema.internal.script.GInteger;
 import com.relogiclabs.jschema.internal.script.GIterator;
 import com.relogiclabs.jschema.internal.script.GObject;
 import com.relogiclabs.jschema.internal.script.GString;
-import com.relogiclabs.jschema.internal.tree.ScriptFunction;
 import com.relogiclabs.jschema.tree.RuntimeContext;
 import com.relogiclabs.jschema.type.EBoolean;
 import lombok.Getter;
@@ -48,6 +47,7 @@ import static com.relogiclabs.jschema.internal.antlr.SchemaLexer.G_STRING;
 import static com.relogiclabs.jschema.internal.engine.ScriptErrorHelper.failOnInvalidReturnType;
 import static com.relogiclabs.jschema.internal.engine.ScriptErrorHelper.failOnSystemException;
 import static com.relogiclabs.jschema.internal.engine.ScriptTreeHelper.dereference;
+import static com.relogiclabs.jschema.internal.engine.ScriptTreeHelper.generateKey;
 import static com.relogiclabs.jschema.internal.engine.ScriptTreeHelper.getFunctionMode;
 import static com.relogiclabs.jschema.internal.engine.ScriptTreeHelper.isConstraint;
 import static com.relogiclabs.jschema.internal.engine.ScriptTreeHelper.toParameters;
@@ -133,15 +133,15 @@ public abstract class ScriptTreeVisitor1 extends SchemaParserBaseVisitor<Evaluat
         var mode = getFunctionMode(ctx.G_CONSTRAINT(), ctx.G_FUTURE(), ctx.G_SUBROUTINE());
         var parameters = toParameters(subList(ctx.G_IDENTIFIER(), 1), ctx.G_ELLIPSIS());
         var constraint = isConstraint(mode);
-        var functionId = FunctionId.generate(baseName, parameters, constraint);
+        var functionKey = generateKey(baseName, parameters, constraint);
         if(constraint) returnType = EBoolean.class;
         var functionBody = visit(ctx.blockStatement());
         returnType = null;
         var function = new GFunction(parameters, functionBody, mode);
         return tryCatch(scope -> {
-            scope.addFunction(functionId, function);
-            if(constraint) runtime.getFunctions()
-                .addFunction(new ScriptFunction(baseName, function));
+            scope.addFunction(functionKey, function);
+            if(constraint) runtime.getConstraints()
+                .addFunction(new ScriptSchemaFunction(baseName, function));
             return VOID;
         }, FNSDEC01, ctx);
     }

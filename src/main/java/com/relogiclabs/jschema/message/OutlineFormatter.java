@@ -1,32 +1,42 @@
 package com.relogiclabs.jschema.message;
 
+import com.relogiclabs.jschema.tree.RuntimeContext;
 import lombok.Getter;
 
 import static org.apache.commons.lang3.StringUtils.left;
 import static org.apache.commons.lang3.StringUtils.right;
 
 public final class OutlineFormatter {
-    public static final int DEFAULT_MAXIMUM_LENGTH = 200;
+    public static final int DEFAULT_MAX_LENGTH = 200;
     private static final String ABBREVIATE_MARKER = "...";
 
     @Getter
-    private static int maximumLength = DEFAULT_MAXIMUM_LENGTH;
-    private static int startLength = 2 * maximumLength / 3;
-    private static int endLength = maximumLength / 3;
+    private int maxLength;
+    private int startLength;
+    private int endLength;
 
-    private OutlineFormatter() {
-        throw new UnsupportedOperationException("This class is not intended for instantiation");
+    public OutlineFormatter() {
+        this(DEFAULT_MAX_LENGTH);
     }
 
-    public static void setMaximumLength(int length) {
-        maximumLength = length;
-        startLength = 2 * length / 3;
-        endLength = length / 3;
+    public OutlineFormatter(int maxLength) {
+        setMaxLength(maxLength);
     }
 
-    public static String createOutline(Object object) {
+    public void setMaxLength(int length) {
+        maxLength = length;
+        var netLength = length - ABBREVIATE_MARKER.length();
+        startLength = 2 * netLength / 3;
+        endLength = netLength / 3;
+    }
+
+    public String getOutline(Object object) {
         var string = object.toString();
-        return string.length() <= maximumLength ? string
+        return string.length() <= maxLength ? string
             : left(string, startLength) + ABBREVIATE_MARKER + right(string, endLength);
+    }
+
+    public static void setMaxLength(RuntimeContext runtime, long length) {
+        runtime.getOutlineFormatter().setMaxLength((int) length);
     }
 }

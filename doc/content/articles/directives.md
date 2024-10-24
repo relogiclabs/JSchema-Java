@@ -28,7 +28,7 @@ In a schema, the version directive is used to provide a version label of the sch
 ## Import Directive
 Import directive enables the addition or inclusion of a class, as defined by object-oriented programming, to a schema along with a set of methods that have specific signatures for performing custom validations. This feature extends the built-in validation capabilities of the schema. The example below illustrates how to utilize the import directive in Java language:
 ```js
-%import: com.relogiclabs.jschema.test.external.ExternalFunctions
+%import: com.relogiclabs.jschema.test.extension.GeneralExtension1
 ```
 
 ## Pragma Directive

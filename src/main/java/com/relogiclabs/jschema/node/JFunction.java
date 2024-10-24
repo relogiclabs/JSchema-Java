@@ -1,7 +1,6 @@
 package com.relogiclabs.jschema.node;
 
 import com.relogiclabs.jschema.exception.FunctionValidationException;
-import com.relogiclabs.jschema.exception.TargetInvocationException;
 import com.relogiclabs.jschema.internal.builder.JFunctionBuilder;
 import com.relogiclabs.jschema.internal.message.ActualHelper;
 import com.relogiclabs.jschema.internal.message.ExpectedHelper;
@@ -13,7 +12,6 @@ import lombok.Getter;
 import java.util.List;
 
 import static com.relogiclabs.jschema.internal.message.MessageHelper.NestedFunctionFailed;
-import static com.relogiclabs.jschema.internal.util.CommonHelper.nonNullFrom;
 import static com.relogiclabs.jschema.internal.util.StreamHelper.forEachTrue;
 import static com.relogiclabs.jschema.internal.util.StringHelper.join;
 import static com.relogiclabs.jschema.message.ErrorCode.FNCFAL01;
@@ -52,14 +50,7 @@ public final class JFunction extends JBranch implements NestedMode {
     }
 
     private boolean invokeFunction(JNode node) {
-        try {
-            return getRuntime().getFunctions().invokeFunction(this, node);
-        } catch(Exception ex) {
-            var exception = ex instanceof TargetInvocationException
-                ? nonNullFrom(ex.getCause(), ex) : ex;
-            if(exception instanceof RuntimeException runtimeException) throw runtimeException;
-            else throw new RuntimeException(exception);
-        }
+        return getRuntime().getConstraints().invoke(this, node);
     }
 
     @Override

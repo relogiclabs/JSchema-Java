@@ -1,7 +1,9 @@
 com.relogiclabs.jschema
 com.relogiclabs.jschema.collection
 com.relogiclabs.jschema.exception
+com.relogiclabs.jschema.extension
 com.relogiclabs.jschema.function
+com.relogiclabs.jschema.library
 com.relogiclabs.jschema.message
 com.relogiclabs.jschema.node
 com.relogiclabs.jschema.time

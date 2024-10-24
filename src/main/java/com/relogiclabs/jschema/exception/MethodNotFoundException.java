@@ -12,8 +12,8 @@ import static com.relogiclabs.jschema.message.MessageFormatter.formatForSchema;
 public class MethodNotFoundException extends MultilevelRuntimeException {
     private EType type;
 
-    public MethodNotFoundException(String code, String message) {
-        super(code, message);
+    public MethodNotFoundException(ErrorDetail detail) {
+        super(detail);
     }
 
     public MethodNotFoundException(ErrorDetail detail, Throwable cause) {
@@ -24,6 +24,6 @@ public class MethodNotFoundException extends MultilevelRuntimeException {
     public RuntimeException translate(Token token) {
         if(isHighLevel() || type == null) return this;
         return new MethodNotFoundException(formatForSchema(getCode(),
-            getMessage() + " for " + type, token), this);
+            getMessage() + " in " + type, token), this);
     }
 }

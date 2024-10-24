@@ -7,7 +7,7 @@ import lombok.Getter;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.relogiclabs.jschema.internal.util.CollectionHelper.addToList;
+import static com.relogiclabs.jschema.internal.util.CollectionHelper.addIfNonNull;
 import static com.relogiclabs.jschema.internal.util.StringHelper.join;
 import static java.util.Collections.unmodifiableCollection;
 import static java.util.Objects.requireNonNull;
@@ -35,9 +35,9 @@ public final class JRoot extends JNode {
         scripts = builder.scripts();
         value = requireNonNull(builder.value());
         var nodes = new ArrayList<JNode>();
-        addToList(nodes, title, version);
-        addToList(nodes, imports, pragmas, definitions);
-        addToList(nodes, value);
+        addIfNonNull(nodes, title, version);
+        addIfNonNull(nodes, imports, pragmas, definitions);
+        addIfNonNull(nodes, value);
         children = unmodifiableCollection(children);
     }
 
